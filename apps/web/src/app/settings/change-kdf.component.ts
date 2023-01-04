@@ -31,7 +31,10 @@ export class ChangeKdfComponent implements OnInit {
     private logService: LogService,
     private stateService: StateService
   ) {
-    this.kdfOptions = [{ name: "PBKDF2 SHA-256", value: KdfType.PBKDF2_SHA256 }];
+    this.kdfOptions = [
+      { name: "PBKDF2 SHA-256", value: KdfType.PBKDF2_SHA256 },
+      { name: "SCRYPT", value: KdfType.SCRYPT },
+    ];
   }
 
   async ngOnInit() {

@@ -8,6 +8,14 @@ export abstract class CryptoFunctionService {
     algorithm: "sha256" | "sha512",
     iterations: number
   ) => Promise<ArrayBuffer>;
+  scrypt: (
+    password: string | ArrayBuffer,
+    salt: string | ArrayBuffer,
+    N: number,
+    r: number,
+    p: number,
+    dkLen: number
+  ) => Promise<ArrayBuffer>;
   hkdf: (
     ikm: ArrayBuffer,
     salt: string | ArrayBuffer,

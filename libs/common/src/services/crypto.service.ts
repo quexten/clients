@@ -418,6 +418,8 @@ export class CryptoService implements CryptoServiceAbstraction {
         throw new Error("PBKDF2 iteration minimum is 5000.");
       }
       key = await this.cryptoFunctionService.pbkdf2(password, salt, "sha256", kdfIterations);
+    } else if (kdf === KdfType.SCRYPT) {
+      key = await this.cryptoFunctionService.scrypt(password, salt, 2 ** kdfIterations, 8, 1, 32);
     } else {
       throw new Error("Unknown Kdf.");
     }

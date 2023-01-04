@@ -1,3 +1,4 @@
+import { scryptAsync } from "@noble/hashes/scrypt";
 import * as forge from "node-forge";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
@@ -40,6 +41,17 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       ["deriveBits"]
     );
     return await this.subtle.deriveBits(pbkdf2Params, impKey, wcLen);
+  }
+
+  async scrypt(
+    password: string,
+    salt: string,
+    N: number,
+    r: number,
+    p: number,
+    dkLen: number
+  ): Promise<ArrayBuffer> {
+    return await scryptAsync(password, salt, { N, r, p, dkLen });
   }
 
   async hkdf(
