@@ -419,7 +419,13 @@ export class CryptoService implements CryptoServiceAbstraction {
       }
       key = await this.cryptoFunctionService.pbkdf2(password, salt, "sha256", kdfIterations);
     } else if (kdf === KdfType.SCRYPT) {
-      key = await this.cryptoFunctionService.scrypt(password, salt, 2 ** kdfIterations, 8, 1, 32);
+      // parameters selected according to https://words.filippo.io/the-scrypt-parameters/
+      const dkLen = 32; // output length in bytes, i.e 256 bits
+      const p = 1; // parallelization factor leads to a tradeoff between memory and CPU
+      const r = 8; // r is the block width, which scales linearly with memory usage
+      const n = kdfIterations; // n is the CPU/memory cost parameter, it needs to be a power of two
+
+      key = await this.cryptoFunctionService.scrypt(password, salt, n, r, p, dkLen);
     } else {
       throw new Error("Unknown Kdf.");
     }

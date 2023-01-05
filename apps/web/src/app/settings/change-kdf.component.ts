@@ -7,7 +7,12 @@ import { LogService } from "@bitwarden/common/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { DEFAULT_KDF_ITERATIONS, KdfType } from "@bitwarden/common/enums/kdfType";
+import {
+  DEFAULT_KDF_ITERATIONS,
+  DEFAULT_SCRYPT_WORK_FACTOR,
+  SCRYPT_WORK_FACTORS,
+  KdfType,
+} from "@bitwarden/common/enums/kdfType";
 import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 
 @Component({
@@ -17,10 +22,13 @@ import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 export class ChangeKdfComponent implements OnInit {
   masterPassword: string;
   kdfIterations: number;
+  scryptWorkFactor: number;
   kdf = KdfType.PBKDF2_SHA256;
   kdfOptions: any[] = [];
   formPromise: Promise<any>;
   recommendedKdfIterations = DEFAULT_KDF_ITERATIONS;
+  recommendedSCryptWorkFactor = DEFAULT_SCRYPT_WORK_FACTOR;
+  scryptWorkFactorOptions = SCRYPT_WORK_FACTORS;
 
   constructor(
     private apiService: ApiService,
@@ -39,7 +47,16 @@ export class ChangeKdfComponent implements OnInit {
 
   async ngOnInit() {
     this.kdf = await this.stateService.getKdfType();
-    this.kdfIterations = await this.stateService.getKdfIterations();
+    switch (this.kdf) {
+      case KdfType.PBKDF2_SHA256:
+        this.kdfIterations = await this.stateService.getKdfIterations();
+        this.scryptWorkFactor = DEFAULT_SCRYPT_WORK_FACTOR;
+        break;
+      case KdfType.SCRYPT:
+        this.scryptWorkFactor = await this.stateService.getKdfIterations();
+        this.kdfIterations = DEFAULT_KDF_ITERATIONS;
+        break;
+    }
   }
 
   async submit() {
@@ -49,16 +66,26 @@ export class ChangeKdfComponent implements OnInit {
       return;
     }
 
+    let kdfParameters = DEFAULT_KDF_ITERATIONS;
+    switch (this.kdf) {
+      case KdfType.PBKDF2_SHA256:
+        kdfParameters = this.kdfIterations;
+        break;
+      case KdfType.SCRYPT:
+        kdfParameters = this.scryptWorkFactor;
+        break;
+    }
+
     const request = new KdfRequest();
     request.kdf = this.kdf;
-    request.kdfIterations = this.kdfIterations;
+    request.kdfIterations = kdfParameters;
     request.masterPasswordHash = await this.cryptoService.hashPassword(this.masterPassword, null);
     const email = await this.stateService.getEmail();
     const newKey = await this.cryptoService.makeKey(
       this.masterPassword,
       email,
       this.kdf,
-      this.kdfIterations
+      kdfParameters
     );
     request.newMasterPasswordHash = await this.cryptoService.hashPassword(
       this.masterPassword,
