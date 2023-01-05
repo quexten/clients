@@ -1,5 +1,6 @@
 import * as crypto from "crypto";
 
+import { scryptAsync } from "@noble/hashes/scrypt";
 import * as forge from "node-forge";
 
 import { CryptoFunctionService } from "@bitwarden/common/abstractions/cryptoFunction.service";
@@ -26,6 +27,17 @@ export class NodeCryptoFunctionService implements CryptoFunctionService {
         }
       });
     });
+  }
+
+  async scrypt(
+    password: string,
+    salt: string,
+    N: number,
+    r: number,
+    p: number,
+    dkLen: number
+  ): Promise<ArrayBuffer> {
+    return await scryptAsync(password, salt, { N, r, p, dkLen });
   }
 
   // ref: https://tools.ietf.org/html/rfc5869
