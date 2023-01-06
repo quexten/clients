@@ -29,6 +29,7 @@ export class ChangeKdfComponent implements OnInit {
   recommendedKdfIterations = DEFAULT_KDF_ITERATIONS;
   recommendedSCryptWorkFactor = DEFAULT_SCRYPT_WORK_FACTOR;
   scryptWorkFactorOptions = SCRYPT_WORK_FACTORS;
+  log2 = Math.log2;
 
   constructor(
     private apiService: ApiService,

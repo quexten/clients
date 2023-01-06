@@ -79,7 +79,7 @@
             class="form-control"
             required
           >
-            <option *ngFor="let o of scryptWorkFactorOptions" [ngValue]="o">{{ o }}</option>
+            <option *ngFor="let o of scryptWorkFactorOptions" [ngValue]="o">2^{{ log2(o) }}</option>
           </select>
         </ng-container>
       </div>
