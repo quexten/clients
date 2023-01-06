@@ -1097,7 +1097,7 @@
     "message": "Scrypt Work Factor"
   },
   "scryptWorkFactorDesc": {
-    "message": "Higher Scrypt work factors can help protect your master password from being brute forced by an attacker. We recommend a value of $VALUE$ or more. It can only be a power of two.",
+    "message": "Higher Scrypt work factors can help protect your master password from being brute forced by an attacker. We recommend a value of $VALUE$ or more. Each level doubles the amount of memory and time consumed.",
     "placeholders": {
       "value": {
         "content": "$1",
