@@ -8,7 +8,7 @@ import { PlatformUtilsService } from "../abstractions/platformUtils.service";
 import { StateService } from "../abstractions/state.service";
 import { EncryptionType } from "../enums/encryptionType";
 import { HashPurpose } from "../enums/hashPurpose";
-import { KdfType } from "../enums/kdfType";
+import { KdfType, DEFAULT_SCRYPT_WORK_FACTOR } from "../enums/kdfType";
 import { KeySuffixOptions } from "../enums/keySuffixOptions";
 import { sequentialize } from "../misc/sequentialize";
 import { Utils } from "../misc/utils";
@@ -419,6 +419,12 @@ export class CryptoService implements CryptoServiceAbstraction {
       }
       key = await this.cryptoFunctionService.pbkdf2(password, salt, "sha256", kdfIterations);
     } else if (kdf === KdfType.SCRYPT) {
+      if (kdfIterations == null) {
+        kdfIterations = DEFAULT_SCRYPT_WORK_FACTOR;
+      } else if (kdfIterations < 2 ** 15) {
+        throw new Error("PBKDF2 iteration minimum is 2^15.");
+      }
+
       // parameters selected according to https://words.filippo.io/the-scrypt-parameters/
       const dkLen = 32; // output length in bytes, i.e 256 bits
       const p = 1; // parallelization factor leads to a tradeoff between memory and CPU
