@@ -58,6 +58,14 @@ describe("WebCrypto Function Service", () => {
     testPbkdf2("sha512", regular512Key, utf8512Key, unicode512Key);
   });
 
+  describe("scrypt", () => {
+    const regularKey = "+S8MshS/IqnZoF3hSPR75nHzFqG55ABV0KCUJZSKoho=";
+    const utf8Key = "cJs9aV29D/QHMYCqEbkhilQpIHAwyTeYrzZllZO2yig=";
+    const unicodeKey = "wAaiECJmnUrcAMIB16HXnWTMiL8l7Rr7M9BcRu6YeOo=";
+
+    testScrypt(regularKey, utf8Key, unicodeKey);
+  });
+
   describe("hkdf", () => {
     const regular256Key = "qBUmEYtwTwwGPuw/z6bs/qYXXYNUlocFlyAuuANI8Pw=";
     const utf8256Key = "6DfJwW1R3txgiZKkIFTvVAb7qVlG7lKcmJGJoxR2GBU=";
@@ -397,6 +405,48 @@ function testPbkdf2(
     expect(Utils.fromBufferToB64(key)).toBe(regularKey);
   });
 }
+
+function testScrypt(regularKey: string, utf8Key: string, unicodeKey: string) {
+  const regularEmail = "user@example.com";
+  const utf8Email = "üser@example.com";
+
+  const regularPassword = "password";
+  const utf8Password = "pǻssword";
+  const unicodePassword = "😀password🙏";
+
+  it("should create valid scrypt key from regular input", async () => {
+    const cryptoFunctionService = getWebCryptoFunctionService();
+    const key = await cryptoFunctionService.scrypt(
+      regularPassword,
+      regularEmail,
+      2 ** 16,
+      8,
+      1,
+      32
+    );
+    expect(Utils.fromBufferToB64(key)).toBe(regularKey);
+  });
+
+  it("should create valid scrypt key from utf8 input", async () => {
+    const cryptoFunctionService = getWebCryptoFunctionService();
+    const key = await cryptoFunctionService.scrypt(utf8Password, utf8Email, 2 ** 16, 8, 1, 32);
+    expect(Utils.fromBufferToB64(key)).toBe(utf8Key);
+  });
+
+  it("should create valid scrypt key from unicode input", async () => {
+    const cryptoFunctionService = getWebCryptoFunctionService();
+    const key = await cryptoFunctionService.scrypt(
+      unicodePassword,
+      regularEmail,
+      2 ** 16,
+      8,
+      1,
+      32
+    );
+    expect(Utils.fromBufferToB64(key)).toBe(unicodeKey);
+  });
+}
+2;
 
 function testHkdf(
   algorithm: "sha256" | "sha512",
