@@ -51,7 +51,9 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     p: number,
     dkLen: number
   ): Promise<ArrayBuffer> {
-    return await scryptAsync(password, salt, { N, r, p, dkLen });
+    const passwordBuf = new Uint8Array(this.toBuf(password));
+    const saltBuf = new Uint8Array(this.toBuf(salt));
+    return await scryptAsync(passwordBuf, saltBuf, { N, r, p, dkLen });
   }
 
   async hkdf(
