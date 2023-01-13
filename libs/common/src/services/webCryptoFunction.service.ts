@@ -43,17 +43,17 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return await this.subtle.deriveBits(pbkdf2Params, impKey, wcLen);
   }
 
-  async scrypt(
-    password: string,
-    salt: string,
-    N: number,
-    r: number,
-    p: number,
-    dkLen: number
-  ): Promise<ArrayBuffer> {
+  async scrypt(password: string, salt: string, N: number): Promise<ArrayBuffer> {
     const passwordBuf = new Uint8Array(this.toBuf(password));
     const saltBuf = new Uint8Array(this.toBuf(salt));
-    return await scryptAsync(passwordBuf, saltBuf, { N, r, p, dkLen });
+
+    // parameters selected according to https://words.filippo.io/the-scrypt-parameters/
+    const dkLen = 32; // output length in bytes, i.e 256 bits
+    const p = 1; // parallelization factor leads to a tradeoff between memory and CPU
+    const r = 8; // r is the block width, which scales linearly with memory usage
+    const maxmem = 2 ** 32 + 128 * 8 * 1; // set the maxmem such that N can be up to 2^22
+
+    return await scryptAsync(passwordBuf, saltBuf, { N, r, p, dkLen, maxmem });
   }
 
   async hkdf(

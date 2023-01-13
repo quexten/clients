@@ -11,10 +11,7 @@ export abstract class CryptoFunctionService {
   scrypt: (
     password: string | ArrayBuffer,
     salt: string | ArrayBuffer,
-    N: number,
-    r: number,
-    p: number,
-    dkLen: number
+    N: number
   ) => Promise<ArrayBuffer>;
   hkdf: (
     ikm: ArrayBuffer,
