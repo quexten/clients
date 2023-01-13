@@ -1093,6 +1093,18 @@
       }
     }
   },
+  "argon2MemoryDesc": {
+    "message": "Higher Argon2 memory can help protect your master password from being brute forced by an attacker. We recommend a value of $VALUE$ or more.",
+    "placeholders": {
+      "value": {
+        "content": "$1",
+        "example": "16384"
+      }
+    }
+  },
+  "argon2Warning": {
+    "message": "Argon2 support requires WebAssembly support. If you are using a browser that does not support WebAssembly, you will not be able to change your KDF algorithm to Argon2."
+  },
   "changeKdf": {
     "message": "Change KDF"
   },

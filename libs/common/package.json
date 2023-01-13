@@ -16,5 +16,9 @@
     "clean": "rimraf dist/**/*",
     "build": "npm run clean && tsc",
     "build:watch": "npm run clean && tsc -watch"
+  },
+  "dependencies": {
+    "argon2-browser": "^1.18.0",
+    "base64-loader": "^1.0.0"
   }
 }

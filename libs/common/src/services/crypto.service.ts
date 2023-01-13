@@ -418,6 +418,18 @@ export class CryptoService implements CryptoServiceAbstraction {
         throw new Error("PBKDF2 iteration minimum is 5000.");
       }
       key = await this.cryptoFunctionService.pbkdf2(password, salt, "sha256", kdfIterations);
+    } else if (kdf == KdfType.Argon2id) {
+      const parallelism = 1;
+      const iterations = 2;
+      const memory = kdfIterations; // convert from KiB to bytes
+
+      key = await this.cryptoFunctionService.argon2(
+        password,
+        salt,
+        iterations,
+        memory,
+        parallelism
+      );
     } else {
       throw new Error("Unknown Kdf.");
     }

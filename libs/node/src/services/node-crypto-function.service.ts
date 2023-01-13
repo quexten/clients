@@ -1,5 +1,6 @@
 import * as crypto from "crypto";
 
+import * as argon2 from "argon2";
 import * as forge from "node-forge";
 
 import { CryptoFunctionService } from "@bitwarden/common/abstractions/cryptoFunction.service";
@@ -26,6 +27,27 @@ export class NodeCryptoFunctionService implements CryptoFunctionService {
         }
       });
     });
+  }
+
+  async argon2(
+    password: string,
+    salt: string,
+    iterations: number,
+    memory: number,
+    parallelism: number
+  ): Promise<ArrayBuffer> {
+    const nodePassword = this.toNodeValue(password);
+
+    const options: any = {
+      salt: Buffer.from(salt, "utf-8"),
+      raw: true,
+      hashLength: 32,
+      timeCost: iterations,
+      memoryCost: memory,
+      parallelism: parallelism,
+      type: argon2.argon2id,
+    };
+    return this.toArrayBuffer(await argon2.hash(nodePassword, options));
   }
 
   // ref: https://tools.ietf.org/html/rfc5869

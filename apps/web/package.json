@@ -23,5 +23,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:watch:all": "jest --watchAll"
+  },
+  "devDependencies": {
+    "@types/argon2-browser": "^1.18.1"
   }
 }
