@@ -10,7 +10,6 @@ import {
 } from "../abstractions/export.service";
 import { FolderService } from "../abstractions/folder/folder.service.abstraction";
 import { CipherType } from "../enums/cipherType";
-import { DEFAULT_KDF_ITERATIONS, KdfType } from "../enums/kdfType";
 import { Utils } from "../misc/utils";
 import { CipherData } from "../models/data/cipher.data";
 import { CollectionData } from "../models/data/collection.data";
@@ -27,13 +26,16 @@ import { CollectionView } from "../models/view/collection.view";
 import { EventView } from "../models/view/event.view";
 import { FolderView } from "../models/view/folder.view";
 
+import { StateService } from "./state.service";
+
 export class ExportService implements ExportServiceAbstraction {
   constructor(
     private folderService: FolderService,
     private cipherService: CipherService,
     private apiService: ApiService,
     private cryptoService: CryptoService,
-    private cryptoFunctionService: CryptoFunctionService
+    private cryptoFunctionService: CryptoFunctionService,
+    private stateService: StateService
   ) {}
 
   async getExport(format: ExportFormat = "csv", organizationId?: string): Promise<string> {
@@ -54,12 +56,11 @@ export class ExportService implements ExportServiceAbstraction {
       : await this.getExport("json");
 
     const salt = Utils.fromBufferToB64(await this.cryptoFunctionService.randomBytes(16));
-    const kdfIterations = DEFAULT_KDF_ITERATIONS;
     const key = await this.cryptoService.makePinKey(
       password,
       salt,
-      KdfType.PBKDF2_SHA256,
-      kdfIterations
+      await this.stateService.getKdfType(),
+      await this.stateService.getKdfIterations()
     );
 
     const encKeyValidation = await this.cryptoService.encrypt(Utils.newGuid(), key);
@@ -69,8 +70,8 @@ export class ExportService implements ExportServiceAbstraction {
       encrypted: true,
       passwordProtected: true,
       salt: salt,
-      kdfIterations: kdfIterations,
-      kdfType: KdfType.PBKDF2_SHA256,
+      kdfIterations: await this.stateService.getKdfIterations(),
+      kdfType: await this.stateService.getKdfType(),
       encKeyValidation_DO_NOT_EDIT: encKeyValidation.encryptedString,
       data: encText.encryptedString,
     };

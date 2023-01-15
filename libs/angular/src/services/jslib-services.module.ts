@@ -436,6 +436,7 @@ import { AbstractThemingService } from "./theming/theming.service.abstraction";
         ApiServiceAbstraction,
         CryptoServiceAbstraction,
         CryptoFunctionServiceAbstraction,
+        StateServiceAbstraction,
       ],
     },
     {

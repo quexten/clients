@@ -18,6 +18,7 @@ import { CipherView } from "@bitwarden/common/models/view/cipher.view";
 import { FolderView } from "@bitwarden/common/models/view/folder.view";
 import { LoginView } from "@bitwarden/common/models/view/login.view";
 import { ExportService } from "@bitwarden/common/services/export.service";
+import { StateService } from "@bitwarden/common/services/state.service";
 
 import { BuildTestObject, GetUniqueString } from "../utils";
 
@@ -144,6 +145,7 @@ describe("ExportService", () => {
   let cipherService: SubstituteOf<CipherService>;
   let folderService: SubstituteOf<FolderService>;
   let cryptoService: SubstituteOf<CryptoService>;
+  let stateService: SubstituteOf<StateService>;
 
   beforeEach(() => {
     apiService = Substitute.for<ApiService>();
@@ -160,7 +162,8 @@ describe("ExportService", () => {
       cipherService,
       apiService,
       cryptoService,
-      cryptoFunctionService
+      cryptoFunctionService,
+      stateService
     );
   });
 
