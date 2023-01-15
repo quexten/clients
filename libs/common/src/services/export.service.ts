@@ -12,7 +12,6 @@ import { Collection } from "../admin-console/models/domain/collection";
 import { CollectionDetailsResponse } from "../admin-console/models/response/collection.response";
 import { CollectionView } from "../admin-console/models/view/collection.view";
 import { KdfConfig } from "../auth/models/domain/kdf-config";
-import { DEFAULT_PBKDF2_ITERATIONS, KdfType } from "../enums/kdfType";
 import { Utils } from "../misc/utils";
 import { CipherWithIdExport as CipherExport } from "../models/export/cipher-with-ids.export";
 import { CollectionWithIdExport as CollectionExport } from "../models/export/collection-with-id.export";
@@ -28,13 +27,16 @@ import { Folder } from "../vault/models/domain/folder";
 import { CipherView } from "../vault/models/view/cipher.view";
 import { FolderView } from "../vault/models/view/folder.view";
 
+import { StateService } from "./state.service";
+
 export class ExportService implements ExportServiceAbstraction {
   constructor(
     private folderService: FolderService,
     private cipherService: CipherService,
     private apiService: ApiService,
     private cryptoService: CryptoService,
-    private cryptoFunctionService: CryptoFunctionService
+    private cryptoFunctionService: CryptoFunctionService,
+    private stateService: StateService
   ) {}
 
   async getExport(format: ExportFormat = "csv", organizationId?: string): Promise<string> {
@@ -55,23 +57,25 @@ export class ExportService implements ExportServiceAbstraction {
       : await this.getExport("json");
 
     const salt = Utils.fromBufferToB64(await this.cryptoFunctionService.randomBytes(16));
-    const kdfConfig = new KdfConfig(DEFAULT_PBKDF2_ITERATIONS);
     const key = await this.cryptoService.makePinKey(
       password,
       salt,
-      KdfType.PBKDF2_SHA256,
-      kdfConfig
+      await this.stateService.getKdfType(),
+      await this.stateService.getKdfConfig()
     );
 
     const encKeyValidation = await this.cryptoService.encrypt(Utils.newGuid(), key);
     const encText = await this.cryptoService.encrypt(clearText, key);
 
+    const kdfConfig: KdfConfig = await this.stateService.getKdfConfig();
     const jsonDoc: any = {
       encrypted: true,
       passwordProtected: true,
       salt: salt,
+      kdfType: await this.stateService.getKdfType(),
       kdfIterations: kdfConfig.iterations,
-      kdfType: KdfType.PBKDF2_SHA256,
+      kdfMemory: kdfConfig.memory,
+      kdfParallelism: kdfConfig.parallelism,
       encKeyValidation_DO_NOT_EDIT: encKeyValidation.encryptedString,
       data: encText.encryptedString,
     };

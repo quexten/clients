@@ -15,6 +15,8 @@ interface BitwardenPasswordProtectedFileFormat {
   passwordProtected: boolean;
   salt: string;
   kdfIterations: number;
+  kdfMemory?: number;
+  kdfParallelism?: number;
   kdfType: number;
   encKeyValidation_DO_NOT_EDIT: string;
   data: string;
@@ -51,7 +53,7 @@ export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter im
       this.password,
       jdoc.salt,
       KdfType.PBKDF2_SHA256,
-      new KdfConfig(jdoc.kdfIterations)
+      new KdfConfig(jdoc.kdfIterations, jdoc.kdfMemory, jdoc.kdfParallelism)
     );
 
     const encKeyValidation = new EncString(jdoc.encKeyValidation_DO_NOT_EDIT);
