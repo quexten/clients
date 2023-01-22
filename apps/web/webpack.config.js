@@ -79,6 +79,11 @@ const moduleRules = [
     test: /\.[jt]sx?$/,
     loader: "@ngtools/webpack",
   },
+  {
+    test: /\.wasm$/,
+    loader: "base64-loader",
+    type: "javascript/auto",
+  },
 ];
 
 const plugins = [
@@ -143,6 +148,7 @@ const plugins = [
           return content.toString().replace("process.env.APPLICATION_VERSION", pjson.version);
         },
       },
+      { from: "../../node_modules/ssh-keygen-wasm/ssh-keygen.wasm", to: "scripts" },
     ],
   }),
   new MiniCssExtractPlugin({
@@ -223,6 +229,8 @@ const devServer =
                 default-src 'self'
                 ;script-src
                   'self'
+                  'wasm-eval'
+                  'wasm-unsafe-eval'
                   'sha256-ryoU+5+IUZTuUyTElqkrQGBJXr1brEv6r2CA62WUw8w='
                   https://js.stripe.com
                   https://js.braintreegateway.com
@@ -348,6 +356,8 @@ const webpackConfig = {
       util: require.resolve("util/"),
       assert: false,
       url: false,
+      path: false,
+      fs: false,
     },
   },
   output: {

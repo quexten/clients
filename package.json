@@ -183,6 +183,7 @@
     "proper-lockfile": "^4.1.2",
     "qrious": "4.0.2",
     "rxjs": "^7.5.5",
+    "ssh-keygen-wasm": "^1.0.6",
     "sweetalert2": "^10.16.6",
     "tldts": "^5.7.84",
     "utf-8-validate": "^5.0.9",

@@ -1,6 +1,7 @@
 import { Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
+import { generatePrivateKey } from "ssh-keygen-wasm"; // move to service
 
 import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/abstractions/log.service";
@@ -27,6 +28,7 @@ export class GeneratorComponent implements OnInit {
   passwordOptions: any = {};
   username = "-";
   password = "-";
+  sshKey = "sshkey"
   showOptions = false;
   avoidAmbiguous = false;
   enforcedPasswordPolicyOptions: PasswordGeneratorPolicyOptions;
@@ -45,6 +47,7 @@ export class GeneratorComponent implements OnInit {
     this.typeOptions = [
       { name: i18nService.t("password"), value: "password" },
       { name: i18nService.t("username"), value: "username" },
+      { name: "SSH Key", value: "ssh-key" }
     ];
     this.passTypeOptions = [
       { name: i18nService.t("password"), value: "password" },
@@ -178,6 +181,15 @@ export class GeneratorComponent implements OnInit {
       if (this.username === "" || this.username === null) {
         this.username = "-";
       }
+    } catch (e) {
+      this.logService.error(e);
+    }
+  }
+
+  async generateSSHKey() {
+    try {
+      const key = await generatePrivateKey("ed25519");
+      this.sshKey = key
     } catch (e) {
       this.logService.error(e);
     }

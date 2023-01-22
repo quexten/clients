@@ -9,7 +9,11 @@
     <bit-color-password
       [password]="type === 'password' ? password : username"
       appSelectCopy
+      *ngIf="type === 'password' || type === 'username'"
     ></bit-color-password>
+    <div class="text-center" *ngIf="type === 'ssh-key'">
+      {{ sshKey }}
+    </div>
   </div>
 </div>
 <div class="form-group" role="radiogroup" aria-labelledby="typeHeading">
@@ -407,6 +411,14 @@
     </button>
     <button type="button" class="btn btn-outline-secondary" (click)="copy()">
       {{ "copyUsername" | i18n }}
+    </button>
+  </div>
+</ng-container>
+<ng-container *ngIf="type === 'ssh-key'">
+  <div>
+    <button type="button" class="btn btn-submit btn-primary" (click)="generateSSHKey()">
+      <i class="bwi bwi-spinner bwi-spin" title="{{ 'loading' | i18n }}" aria-hidden="true"></i>
+      <span>Generate</span>
     </button>
   </div>
 </ng-container>
