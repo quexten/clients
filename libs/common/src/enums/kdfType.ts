@@ -7,7 +7,7 @@ export enum KdfType {
 
 export const DEFAULT_PBKDF2_ITERATIONS = 100000;
 
-export const DEFAULT_ARGON2_MEMORY = 16 * 1024; // 16 MiB
+export const DEFAULT_ARGON2_MEMORY = 16;
 export const DEFAULT_ARGON2_PARALLELISM = 2;
 export const DEFAULT_ARGON2_ITERATIONS = 2;
 
