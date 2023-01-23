@@ -7,7 +7,11 @@ import { LogService } from "@bitwarden/common/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { DEFAULT_KDF_ITERATIONS, KdfType } from "@bitwarden/common/enums/kdfType";
+import {
+  DEFAULT_PBKDF2_ITERATIONS,
+  DEFAULT_ARGON2_ITERATIONS,
+  KdfType,
+} from "@bitwarden/common/enums/kdfType";
 import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 
 @Component({
@@ -16,11 +20,11 @@ import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 })
 export class ChangeKdfComponent implements OnInit {
   masterPassword: string;
-  kdfIterations: number;
   kdf = KdfType.PBKDF2_SHA256;
+  kdfIterations = DEFAULT_PBKDF2_ITERATIONS;
   kdfOptions: any[] = [];
   formPromise: Promise<any>;
-  recommendedKdfIterations = DEFAULT_KDF_ITERATIONS;
+  recommendedPBKDF2Iterations = DEFAULT_PBKDF2_ITERATIONS;
 
   constructor(
     private apiService: ApiService,
@@ -31,7 +35,10 @@ export class ChangeKdfComponent implements OnInit {
     private logService: LogService,
     private stateService: StateService
   ) {
-    this.kdfOptions = [{ name: "PBKDF2 SHA-256", value: KdfType.PBKDF2_SHA256 }];
+    this.kdfOptions = [
+      { name: "PBKDF2 SHA-256", value: KdfType.PBKDF2_SHA256 },
+      { name: "Argon2id", value: KdfType.Argon2id },
+    ];
   }
 
   async ngOnInit() {
@@ -74,6 +81,16 @@ export class ChangeKdfComponent implements OnInit {
       this.messagingService.send("logout");
     } catch (e) {
       this.logService.error(e);
+    }
+  }
+
+  async onChangeKdf(newValue: KdfType) {
+    if (newValue === KdfType.PBKDF2_SHA256) {
+      this.kdfIterations = DEFAULT_PBKDF2_ITERATIONS;
+    } else if (newValue === KdfType.Argon2id) {
+      this.kdfIterations = DEFAULT_ARGON2_ITERATIONS;
+    } else {
+      throw new Error("Unknown KDF type.");
     }
   }
 }

@@ -32,41 +32,80 @@
         >
           <i class="bwi bwi-question-circle" aria-hidden="true"></i>
         </a>
-        <select id="kdf" name="Kdf" [(ngModel)]="kdf" class="form-control" required>
+        <select
+          id="kdf"
+          name="Kdf"
+          [(ngModel)]="kdf"
+          (ngModelChange)="onChangeKdf($event)"
+          class="form-control"
+          required
+        >
           <option *ngFor="let o of kdfOptions" [ngValue]="o.value">{{ o.name }}</option>
         </select>
       </div>
     </div>
     <div class="col-6">
       <div class="form-group mb-0">
-        <label for="kdfIterations">{{ "kdfIterations" | i18n }}</label>
-        <a
-          class="ml-auto"
-          href="https://bitwarden.com/help/what-encryption-is-used/#pbkdf2"
-          target="_blank"
-          rel="noopener"
-          appA11yTitle="{{ 'learnMore' | i18n }}"
-        >
-          <i class="bwi bwi-question-circle" aria-hidden="true"></i>
-        </a>
-        <input
-          id="kdfIterations"
-          type="number"
-          min="5000"
-          max="2000000"
-          name="KdfIterations"
-          class="form-control"
-          [(ngModel)]="kdfIterations"
-          required
-        />
+        <ng-container *ngIf="kdf == 0">
+          <label for="kdfIterations">{{ "kdfIterations" | i18n }}</label>
+          <a
+            class="ml-auto"
+            href="https://bitwarden.com/help/what-encryption-is-used/#pbkdf2"
+            target="_blank"
+            rel="noopener"
+            appA11yTitle="{{ 'learnMore' | i18n }}"
+          >
+            <i class="bwi bwi-question-circle" aria-hidden="true"></i>
+          </a>
+          <input
+            id="kdfIterations"
+            type="number"
+            min="5000"
+            max="2000000"
+            name="KdfIterations"
+            class="form-control"
+            [(ngModel)]="kdfIterations"
+            required
+          />
+        </ng-container>
+        <ng-container *ngIf="kdf == 1">
+          <label for="kdfIterations">KDF Iterations</label>
+          <a
+            class="ml-auto"
+            href="https://bitwarden.com/help/what-encryption-is-used/#argon2"
+            target="_blank"
+            rel="noopener"
+            appA11yTitle="{{ 'learnMore' | i18n }}"
+          >
+            <i class="bwi bwi-question-circle" aria-hidden="true"></i>
+          </a>
+          <input
+            id="iterations"
+            type="number"
+            min="1"
+            max="1024"
+            name="Iterations"
+            class="form-control mb-3"
+            [(ngModel)]="kdfIterations"
+            required
+          />
+        </ng-container>
       </div>
     </div>
     <div class="col-12">
       <div class="form-group">
         <div class="small form-text text-muted">
-          <p>{{ "kdfIterationsDesc" | i18n: (recommendedKdfIterations | number) }}</p>
-          <strong>{{ "warning" | i18n }}</strong
-          >: {{ "kdfIterationsWarning" | i18n: (50000 | number) }}
+          <ng-container *ngIf="kdf == 0">
+            <p>{{ "kdfIterationsDesc" | i18n: (recommendedPBKDF2Iterations | number) }}</p>
+            <strong>{{ "warning" | i18n }}</strong
+            >: {{ "kdfIterationsWarning" | i18n: (50000 | number) }}
+          </ng-container>
+          <ng-container *ngIf="kdf == 1">
+            <p>
+              {{ "argon2MemoryDesc" | i18n }}
+            </p>
+            <bit-callout type="warning"> {{ "argon2Warning" | i18n }}} </bit-callout>
+          </ng-container>
         </div>
       </div>
     </div>

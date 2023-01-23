@@ -1,3 +1,4 @@
+import * as argon2 from "argon2-browser";
 import * as forge from "node-forge";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
@@ -40,6 +41,28 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       ["deriveBits"]
     );
     return await this.subtle.deriveBits(pbkdf2Params, impKey, wcLen);
+  }
+
+  async argon2(
+    password: string,
+    salt: string,
+    iterations: number,
+    memory: number,
+    parallelism: number
+  ): Promise<ArrayBuffer> {
+    const passwordBuf = new Uint8Array(this.toBuf(password));
+    const saltBuf = new Uint8Array(this.toBuf(salt));
+
+    const argon2hash = await argon2.hash({
+      pass: passwordBuf,
+      salt: saltBuf,
+      time: iterations,
+      mem: memory,
+      hashLen: 32,
+      parallelism: parallelism,
+      type: argon2.ArgonType.Argon2id,
+    });
+    return argon2hash.hash;
   }
 
   async hkdf(
