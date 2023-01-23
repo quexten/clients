@@ -46,7 +46,7 @@
     </div>
     <div class="col-6">
       <div class="form-group mb-0">
-        <ng-container *ngIf="kdf == 0">
+        <ng-container *ngIf="kdf == kdfType.PBKDF2_SHA256">
           <label for="kdfIterations">{{ "kdfIterations" | i18n }}</label>
           <a
             class="ml-auto"
@@ -68,7 +68,7 @@
             required
           />
         </ng-container>
-        <ng-container *ngIf="kdf == 1">
+        <ng-container *ngIf="kdf == kdfType.Argon2id">
           <label for="kdfIterations">KDF Iterations</label>
           <a
             class="ml-auto"
@@ -95,12 +95,12 @@
     <div class="col-12">
       <div class="form-group">
         <div class="small form-text text-muted">
-          <ng-container *ngIf="kdf == 0">
+          <ng-container *ngIf="kdf == kdfType.PBKDF2_SHA256">
             <p>{{ "kdfIterationsDesc" | i18n: (recommendedPBKDF2Iterations | number) }}</p>
             <strong>{{ "warning" | i18n }}</strong
             >: {{ "kdfIterationsWarning" | i18n: (50000 | number) }}
           </ng-container>
-          <ng-container *ngIf="kdf == 1">
+          <ng-container *ngIf="kdf == kdfType.Argon2id">
             <p>
               {{ "argon2MemoryDesc" | i18n }}
             </p>

@@ -22,6 +22,7 @@ export class ChangeKdfComponent implements OnInit {
   masterPassword: string;
   kdf = KdfType.PBKDF2_SHA256;
   kdfIterations = DEFAULT_PBKDF2_ITERATIONS;
+  kdfType = KdfType;
   kdfOptions: any[] = [];
   formPromise: Promise<any>;
   recommendedPBKDF2Iterations = DEFAULT_PBKDF2_ITERATIONS;
