@@ -8,10 +8,14 @@ import { MessagingService } from "@bitwarden/common/abstractions/messaging.servi
 import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { StateService } from "@bitwarden/common/abstractions/state.service";
 import {
+  DEFAULT_KDF_CONFIG,
   DEFAULT_PBKDF2_ITERATIONS,
   DEFAULT_ARGON2_ITERATIONS,
+  DEFAULT_ARGON2_MEMORY,
+  DEFAULT_ARGON2_PARALLELISM,
   KdfType,
 } from "@bitwarden/common/enums/kdfType";
+import { KdfConfig } from "@bitwarden/common/models/domain/kdf-config";
 import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 
 @Component({
@@ -21,7 +25,7 @@ import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 export class ChangeKdfComponent implements OnInit {
   masterPassword: string;
   kdf = KdfType.PBKDF2_SHA256;
-  kdfIterations = DEFAULT_PBKDF2_ITERATIONS;
+  kdfConfig: KdfConfig = DEFAULT_KDF_CONFIG;
   kdfType = KdfType;
   kdfOptions: any[] = [];
   formPromise: Promise<any>;
@@ -44,7 +48,7 @@ export class ChangeKdfComponent implements OnInit {
 
   async ngOnInit() {
     this.kdf = await this.stateService.getKdfType();
-    this.kdfIterations = await this.stateService.getKdfIterations();
+    this.kdfConfig = await this.stateService.getKdfConfig();
   }
 
   async submit() {
@@ -56,14 +60,16 @@ export class ChangeKdfComponent implements OnInit {
 
     const request = new KdfRequest();
     request.kdf = this.kdf;
-    request.kdfIterations = this.kdfIterations;
+    request.kdfIterations = this.kdfConfig.iterations;
+    request.kdfMemory = this.kdfConfig.memory;
+    request.kdfParallelism = this.kdfConfig.parallelism;
     request.masterPasswordHash = await this.cryptoService.hashPassword(this.masterPassword, null);
     const email = await this.stateService.getEmail();
     const newKey = await this.cryptoService.makeKey(
       this.masterPassword,
       email,
       this.kdf,
-      this.kdfIterations
+      this.kdfConfig
     );
     request.newMasterPasswordHash = await this.cryptoService.hashPassword(
       this.masterPassword,
@@ -87,9 +93,13 @@ export class ChangeKdfComponent implements OnInit {
 
   async onChangeKdf(newValue: KdfType) {
     if (newValue === KdfType.PBKDF2_SHA256) {
-      this.kdfIterations = DEFAULT_PBKDF2_ITERATIONS;
+      this.kdfConfig = new KdfConfig(DEFAULT_PBKDF2_ITERATIONS);
     } else if (newValue === KdfType.Argon2id) {
-      this.kdfIterations = DEFAULT_ARGON2_ITERATIONS;
+      this.kdfConfig = new KdfConfig(
+        DEFAULT_ARGON2_ITERATIONS,
+        DEFAULT_ARGON2_MEMORY,
+        DEFAULT_ARGON2_PARALLELISM
+      );
     } else {
       throw new Error("Unknown KDF type.");
     }

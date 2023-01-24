@@ -64,7 +64,7 @@
             max="2000000"
             name="KdfIterations"
             class="form-control"
-            [(ngModel)]="kdfIterations"
+            [(ngModel)]="kdfConfig.iterations"
             required
           />
         </ng-container>
@@ -86,7 +86,29 @@
             max="1024"
             name="Iterations"
             class="form-control mb-3"
-            [(ngModel)]="kdfIterations"
+            [(ngModel)]="kdfConfig.iterations"
+            required
+          />
+          <label for="kdfMemory">KDF Memory (in MiB)</label>
+          <input
+            id="kdfMemory"
+            type="number"
+            min="16"
+            max="1024"
+            name="Memory"
+            class="form-control mb-3"
+            [(ngModel)]="kdfConfig.memory"
+            required
+          />
+          <label for="kdfMemory">KDF Parallelism</label>
+          <input
+            id="kdfParallelism"
+            type="number"
+            min="1"
+            max="16"
+            name="Parallelism"
+            class="form-control"
+            [(ngModel)]="kdfConfig.parallelism"
             required
           />
         </ng-container>
