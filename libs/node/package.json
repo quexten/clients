@@ -18,7 +18,6 @@
     "build:watch": "npm run clean && tsc -watch"
   },
   "dependencies": {
-    "@bitwarden/common": "file:../common",
-    "argon2": "^0.30.3"
+    "@bitwarden/common": "file:../common"
   }
 }
