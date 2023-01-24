@@ -44,25 +44,25 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
   }
 
   async argon2(
-    password: string,
-    salt: string,
+    password: string | ArrayBuffer,
+    salt: string | ArrayBuffer,
     iterations: number,
     memory: number,
     parallelism: number
   ): Promise<ArrayBuffer> {
-    const passwordBuf = new Uint8Array(this.toBuf(password));
-    const saltBuf = new Uint8Array(this.toBuf(salt));
+    const passwordArr = new Uint8Array(this.toBuf(password));
+    const saltArr = new Uint8Array(this.toBuf(salt));
 
-    const argon2hash = await argon2.hash({
-      pass: passwordBuf,
-      salt: saltBuf,
+    const result = await argon2.hash({
+      pass: passwordArr,
+      salt: saltArr,
       time: iterations,
       mem: memory,
-      hashLen: 32,
       parallelism: parallelism,
+      hashLen: 32,
       type: argon2.ArgonType.Argon2id,
     });
-    return argon2hash.hash;
+    return result.hash;
   }
 
   async hkdf(

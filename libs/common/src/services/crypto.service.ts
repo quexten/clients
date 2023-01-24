@@ -424,7 +424,6 @@ export class CryptoService implements CryptoServiceAbstraction {
       } else if (kdfIterations < 2) {
         throw new Error("Argon2 iteration minimum is 2.");
       }
-
       key = await this.cryptoFunctionService.argon2(
         password,
         salt,
