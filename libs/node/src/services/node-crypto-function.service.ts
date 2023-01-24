@@ -30,24 +30,25 @@ export class NodeCryptoFunctionService implements CryptoFunctionService {
   }
 
   async argon2(
-    password: string,
-    salt: string,
+    password: string | ArrayBuffer,
+    salt: string | ArrayBuffer,
     iterations: number,
     memory: number,
     parallelism: number
   ): Promise<ArrayBuffer> {
     const nodePassword = this.toNodeValue(password);
+    const nodeSalt = this.toNodeBuffer(this.toArrayBuffer(salt));
 
-    const options: any = {
-      salt: Buffer.from(salt, "utf-8"),
+    const hash = await argon2.hash(nodePassword, {
+      salt: nodeSalt,
       raw: true,
       hashLength: 32,
       timeCost: iterations,
       memoryCost: memory,
       parallelism: parallelism,
       type: argon2.argon2id,
-    };
-    return this.toArrayBuffer(await argon2.hash(nodePassword, options));
+    });
+    return this.toArrayBuffer(hash);
   }
 
   // ref: https://tools.ietf.org/html/rfc5869

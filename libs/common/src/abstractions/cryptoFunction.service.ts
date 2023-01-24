@@ -9,8 +9,8 @@ export abstract class CryptoFunctionService {
     iterations: number
   ) => Promise<ArrayBuffer>;
   argon2: (
-    password: string,
-    salt: string,
+    password: string | ArrayBuffer,
+    salt: string | ArrayBuffer,
     iterations: number,
     memory: number,
     parallelism: number
