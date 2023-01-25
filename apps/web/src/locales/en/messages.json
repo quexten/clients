@@ -135,7 +135,7 @@
   },
   "mx": {
     "message": "Mx"
-  },  
+  },
   "dr": {
     "message": "Dr"
   },
@@ -1154,9 +1154,6 @@
         "example": "50,000"
       }
     }
-  },
-  "argon2MemoryDesc": {
-    "message": "Higher Argon2 memory, iterations and parallelism can help protect your master password from being brute forced by an attacker."
   },
   "changeKdf": {
     "message": "Change KDF"
