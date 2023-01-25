@@ -228,7 +228,6 @@ const devServer =
                 default-src 'self'
                 ;script-src
                   'self'
-                  'wasm-eval'
                   'wasm-unsafe-eval'
                   'sha256-ryoU+5+IUZTuUyTElqkrQGBJXr1brEv6r2CA62WUw8w='
                   https://js.stripe.com
