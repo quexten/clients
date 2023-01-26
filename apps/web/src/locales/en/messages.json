@@ -1158,7 +1158,16 @@
       }
     }
   },
-  "argon2MemoryDesc": {
+  "kdfMemory": {
+    "message": "KDF memory (in MiB)"
+  },
+  "argon2Warning": {
+    "message": "Setting your iterations, memory and parralellism too high could result in poor performance when logging in. We recommend changing these individually, in small increments and then testing all of your devices."
+  },
+  "kdfParallelism": {
+    "message": "KDF parallelism"
+  },
+  "argon2Desc": {
     "message": "Higher Argon2 memory, iterations and parallelism can help protect your master password from being brute forced by an attacker."
   },
   "changeKdf": {

@@ -37,11 +37,24 @@
           name="Kdf"
           [(ngModel)]="kdf"
           (ngModelChange)="onChangeKdf($event)"
-          class="form-control"
+          class="form-control mb-3"
           required
         >
           <option *ngFor="let o of kdfOptions" [ngValue]="o.value">{{ o.name }}</option>
         </select>
+        <ng-container *ngIf="kdf == kdfType.Argon2id">
+          <label for="kdfParallelism">{{ "kdfParallelism" | i18n }}</label>
+          <input
+            id="kdfParallelism"
+            type="number"
+            min="1"
+            max="16"
+            name="Parallelism"
+            class="form-control"
+            [(ngModel)]="kdfConfig.parallelism"
+            required
+          />
+        </ng-container>
       </div>
     </div>
     <div class="col-6">
@@ -69,7 +82,7 @@
           />
         </ng-container>
         <ng-container *ngIf="kdf == kdfType.Argon2id">
-          <label for="kdfIterations">KDF Iterations</label>
+          <label for="kdfIterations">{{ "kdfIterations" | i18n }}</label>
           <a
             class="ml-auto"
             href="https://bitwarden.com/help/what-encryption-is-used/#argon2"
@@ -89,7 +102,7 @@
             [(ngModel)]="kdfConfig.iterations"
             required
           />
-          <label for="kdfMemory">KDF Memory (in MiB)</label>
+          <label for="kdfMemory">{{ "kdfMemory" | i18n }}</label>
           <input
             id="kdfMemory"
             type="number"
@@ -100,17 +113,6 @@
             [(ngModel)]="kdfConfig.memory"
             required
           />
-          <label for="kdfMemory">KDF Parallelism</label>
-          <input
-            id="kdfParallelism"
-            type="number"
-            min="1"
-            max="16"
-            name="Parallelism"
-            class="form-control"
-            [(ngModel)]="kdfConfig.parallelism"
-            required
-          />
         </ng-container>
       </div>
     </div>
@@ -119,12 +121,14 @@
         <div class="small form-text text-muted">
           <ng-container *ngIf="kdf == kdfType.PBKDF2_SHA256">
             <p>{{ "kdfIterationsDesc" | i18n: (recommendedPBKDF2Iterations | number) }}</p>
-            <strong>{{ "warning" | i18n }}</strong
-            >: {{ "kdfIterationsWarning" | i18n: (50000 | number) }}
+            <bit-callout type="warning">
+              {{ "kdfIterationsWarning" | i18n: (50000 | number) }}
+            </bit-callout>
           </ng-container>
           <ng-container *ngIf="kdf == kdfType.Argon2id">
             <p>
-              {{ "argon2MemoryDesc" | i18n }}
+              {{ "argon2Desc" | i18n }}
+              <bit-callout type="warning"> {{ "argon2Warning" | i18n }} </bit-callout>
             </p>
           </ng-container>
         </div>
