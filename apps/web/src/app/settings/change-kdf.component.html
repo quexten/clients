@@ -43,15 +43,15 @@
           <option *ngFor="let o of kdfOptions" [ngValue]="o.value">{{ o.name }}</option>
         </select>
         <ng-container *ngIf="kdf == kdfType.Argon2id">
-          <label for="kdfParallelism">{{ "kdfParallelism" | i18n }}</label>
+          <label for="kdfMemory">{{ "kdfMemory" | i18n }}</label>
           <input
-            id="kdfParallelism"
+            id="kdfMemory"
             type="number"
-            min="1"
-            max="16"
-            name="Parallelism"
-            class="form-control"
-            [(ngModel)]="kdfConfig.parallelism"
+            min="16"
+            max="1024"
+            name="Memory"
+            class="form-control mb-3"
+            [(ngModel)]="kdfConfig.memory"
             required
           />
         </ng-container>
@@ -102,15 +102,15 @@
             [(ngModel)]="kdfConfig.iterations"
             required
           />
-          <label for="kdfMemory">{{ "kdfMemory" | i18n }}</label>
+          <label for="kdfParallelism">{{ "kdfParallelism" | i18n }}</label>
           <input
-            id="kdfMemory"
+            id="kdfParallelism"
             type="number"
-            min="16"
-            max="1024"
-            name="Memory"
-            class="form-control mb-3"
-            [(ngModel)]="kdfConfig.memory"
+            min="1"
+            max="16"
+            name="Parallelism"
+            class="form-control"
+            [(ngModel)]="kdfConfig.parallelism"
             required
           />
         </ng-container>
