@@ -58,27 +58,8 @@ export class ChangeKdfComponent implements OnInit {
       return;
     }
 
-    const request = new KdfRequest();
-    request.kdf = this.kdf;
-    request.kdfIterations = this.kdfConfig.iterations;
-    request.kdfMemory = this.kdfConfig.memory;
-    request.kdfParallelism = this.kdfConfig.parallelism;
-    request.masterPasswordHash = await this.cryptoService.hashPassword(this.masterPassword, null);
-    const email = await this.stateService.getEmail();
-    const newKey = await this.cryptoService.makeKey(
-      this.masterPassword,
-      email,
-      this.kdf,
-      this.kdfConfig
-    );
-    request.newMasterPasswordHash = await this.cryptoService.hashPassword(
-      this.masterPassword,
-      newKey
-    );
-    const newEncKey = await this.cryptoService.remakeEncKey(newKey);
-    request.key = newEncKey[1].encryptedString;
     try {
-      this.formPromise = this.apiService.postAccountKdf(request);
+      this.formPromise = this.makeKeyAndSaveAsync();
       await this.formPromise;
       this.platformUtilsService.showToast(
         "success",
@@ -103,5 +84,29 @@ export class ChangeKdfComponent implements OnInit {
     } else {
       throw new Error("Unknown KDF type.");
     }
+  }
+
+  private async makeKeyAndSaveAsync() {
+    const request = new KdfRequest();
+    request.kdf = this.kdf;
+    request.kdfIterations = this.kdfConfig.iterations;
+    request.kdfMemory = this.kdfConfig.memory;
+    request.kdfParallelism = this.kdfConfig.parallelism;
+    request.masterPasswordHash = await this.cryptoService.hashPassword(this.masterPassword, null);
+    const email = await this.stateService.getEmail();
+    const newKey = await this.cryptoService.makeKey(
+      this.masterPassword,
+      email,
+      this.kdf,
+      this.kdfConfig
+    );
+    request.newMasterPasswordHash = await this.cryptoService.hashPassword(
+      this.masterPassword,
+      newKey
+    );
+    const newEncKey = await this.cryptoService.remakeEncKey(newKey);
+    request.key = newEncKey[1].encryptedString;
+
+    await this.apiService.postAccountKdf(request);
   }
 }
