@@ -9,11 +9,13 @@ import { SymmetricCryptoKey } from "../models/domain/symmetric-crypto-key";
 export class WebCryptoFunctionService implements CryptoFunctionService {
   private crypto: Crypto;
   private subtle: SubtleCrypto;
+  private wasmSupported: boolean;
 
   constructor(win: Window | typeof global) {
     this.crypto = typeof win.crypto !== "undefined" ? win.crypto : null;
     this.subtle =
       !!this.crypto && typeof win.crypto.subtle !== "undefined" ? win.crypto.subtle : null;
+    this.wasmSupported = this.checkIfWasmSupported();
   }
 
   async pbkdf2(
@@ -50,6 +52,10 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     memory: number,
     parallelism: number
   ): Promise<ArrayBuffer> {
+    if (!this.wasmSupported) {
+      throw "Webassembly support is required for the Argon2 KDF feature.";
+    }
+
     const passwordArr = new Uint8Array(this.toBuf(password));
     const saltArr = new Uint8Array(this.toBuf(salt));
 
@@ -375,5 +381,22 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       throw new Error("MD5 is not supported in WebCrypto.");
     }
     return algorithm === "sha1" ? "SHA-1" : algorithm === "sha256" ? "SHA-256" : "SHA-512";
+  }
+
+  // ref: https://stackoverflow.com/a/47880734/1090359
+  private checkIfWasmSupported(): boolean {
+    try {
+      if (typeof WebAssembly === "object" && typeof WebAssembly.instantiate === "function") {
+        const module = new WebAssembly.Module(
+          Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00)
+        );
+        if (module instanceof WebAssembly.Module) {
+          return new WebAssembly.Instance(module) instanceof WebAssembly.Instance;
+        }
+      }
+    } catch {
+      return false;
+    }
+    return false;
   }
 }
