@@ -4,7 +4,7 @@ export enum KdfType {
 }
 
 export const DEFAULT_ARGON2_MEMORY = 19;
-export const DEFAULT_ARGON2_PARALLELISM = 2;
+export const DEFAULT_ARGON2_PARALLELISM = 1;
 export const DEFAULT_ARGON2_ITERATIONS = 2;
 
 export const DEFAULT_KDF_TYPE = KdfType.PBKDF2_SHA256;
