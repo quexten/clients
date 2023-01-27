@@ -1382,7 +1382,13 @@
   "unlockWithWindowsHello": {
     "message": "Unlock with Windows Hello"
   },
+  "unlockWithPAM": {
+    "message": "Unlock with PAM"
+  },
   "windowsHelloConsentMessage": {
+    "message": "Verify for Bitwarden."
+  },
+  "PAMConsentMessage": {
     "message": "Verify for Bitwarden."
   },
   "unlockWithTouchId": {
@@ -1393,6 +1399,9 @@
   },
   "autoPromptWindowsHello": {
     "message": "Ask for Windows Hello on launch"
+  },
+  "autoPromptPAM": {
+    "message": "Ask for PAM on launch"
   },
   "autoPromptTouchId": {
     "message": "Ask for Touch ID on launch"

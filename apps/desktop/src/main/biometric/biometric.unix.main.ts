@@ -25,8 +25,8 @@ export default class BiometricUnixMain implements BiometricMain {
       this.logService.error(e);
     }
     await this.stateService.setEnableBiometric(supportsBiometric);
-    await this.stateService.setBiometricText("unlockWithWindowsHello");
-    await this.stateService.setNoAutoPromptBiometricsText("autoPromptWindowsHello");
+    await this.stateService.setBiometricText("unlockWithPAM");
+    await this.stateService.setNoAutoPromptBiometricsText("autoPromptPAM");
 
     ipcMain.handle("biometric", async () => {
       return await this.authenticateBiometric();
@@ -43,6 +43,6 @@ export default class BiometricUnixMain implements BiometricMain {
 
   async authenticateBiometric(): Promise<boolean> {
     const hwnd = this.windowMain.win.getNativeWindowHandle();
-    return await biometrics.prompt(hwnd, this.i18nservice.t("windowsHelloConsentMessage"));
+    return await biometrics.prompt(hwnd, this.i18nservice.t("PAMConsentMessag"));
   }
 }
