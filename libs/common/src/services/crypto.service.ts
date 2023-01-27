@@ -434,9 +434,9 @@ export class CryptoService implements CryptoServiceAbstraction {
       if (kdfConfig.memory == null) {
         kdfConfig.memory = DEFAULT_ARGON2_MEMORY;
       } else if (kdfConfig.memory < 16) {
-        throw new Error("Argon2 memory minimum is 16MiB");
+        throw new Error("Argon2 memory minimum is 16 MB");
       } else if (kdfConfig.memory > 1024) {
-        throw new Error("Argon2 memory maximum is 1GiB");
+        throw new Error("Argon2 memory maximum is 1024 MB");
       }
 
       if (kdfConfig.parallelism == null) {
