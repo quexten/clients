@@ -43,6 +43,6 @@ export default class BiometricUnixMain implements BiometricMain {
 
   async authenticateBiometric(): Promise<boolean> {
     const hwnd = this.windowMain.win.getNativeWindowHandle();
-    return await biometrics.prompt(hwnd, this.i18nservice.t("PAMConsentMessag"));
+    return await biometrics.prompt(hwnd, this.i18nservice.t("PAMConsentMessage"));
   }
 }
