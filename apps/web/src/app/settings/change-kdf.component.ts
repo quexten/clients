@@ -29,7 +29,7 @@ export class ChangeKdfComponent implements OnInit {
   kdfType = KdfType;
   kdfOptions: any[] = [];
   formPromise: Promise<any>;
-  recommendedPBKDF2Iterations = DEFAULT_PBKDF2_ITERATIONS;
+  recommendedPbkdf2Iterations = DEFAULT_PBKDF2_ITERATIONS;
 
   constructor(
     private apiService: ApiService,
