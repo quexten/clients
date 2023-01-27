@@ -30,7 +30,7 @@ pub fn available() -> Result<bool> {
         Some(&whoami::username()),
         Conversation::new()
     ) {
-        Ok(_) => return OK(true),
+        Ok(_) => return Ok(true),
         Err(_) => return Ok(false)
     };
 }
