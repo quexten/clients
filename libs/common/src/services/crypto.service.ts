@@ -445,9 +445,10 @@ export class CryptoService implements CryptoServiceAbstraction {
         throw new Error("Argon2 parallelism minimum is 1.");
       }
 
+      const saltHash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(salt));
       key = await this.cryptoFunctionService.argon2(
         password,
-        salt,
+        saltHash,
         kdfConfig.iterations,
         kdfConfig.memory * 1024, // convert to KiB from MiB
         kdfConfig.parallelism
