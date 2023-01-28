@@ -445,7 +445,7 @@ export class CryptoService implements CryptoServiceAbstraction {
         throw new Error("Argon2 parallelism minimum is 1.");
       }
 
-      const saltHash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(salt));
+      const saltHash = await this.cryptoFunctionService.hash(salt, "sha256");
       key = await this.cryptoFunctionService.argon2(
         password,
         saltHash,
