@@ -1,36 +1,41 @@
 use anyhow::{bail, Result};
-use pam_client::{Context, Flag};
-use pam_client::conv_cli::Conversation;
-use whoami;
 
-pub fn prompt(_hwnd: Vec<u8>, _message: String) -> Result<bool> {
-    let mut context = Context::new(
-        "bitwarden", 
-        Some(&whoami::username()),
-        Conversation::new()
-    ).expect("Failed to initialize PAM context");
+use zbus::Connection;
+use zbus_polkit::policykit1::*;
 
-    let result = context.authenticate(Flag::NONE);
-    if result.is_err() {
-        println!("Authentication failed");
-        println!("Error: {:?}", result.err().unwrap());
-        return Ok(false);
-    } else {
-        println!("Authentication succeeded");
-        return Ok(true);
-    }
+// Although we use `async-std` here, you can use any async runtime of choice.
+async fn authenticate_polkit() -> bool {
+    let connection = Connection::system().await.unwrap();
+    let proxy = AuthorityProxy::new(&connection).await.unwrap();
+    let subject = Subject::new_for_owner(std::process::id(), None, None).unwrap();
+    let result = proxy.check_authorization(
+        &subject,
+        "com.bitwarden.Bitwarden.unlock",
+        &std::collections::HashMap::new(),
+        CheckAuthorizationFlags::AllowUserInteraction.into(),
+        "",
+    ).await.unwrap();
+
+    return result.is_authorized
 }
 
-pub fn available() -> Result<bool> {
-    // This check only validates that a pam context can be created
-    // it does not validate that the PAM configuration is correct for
-    // fprintd / howdy
-    let mut context = match Context::new(
-        "bitwarden", 
-        Some(&whoami::username()),
-        Conversation::new()
-    ) {
-        Ok(_) => return Ok(true),
-        Err(_) => return Ok(false)
-    };
+async fn polkit_available() -> bool {
+    let connection_result = Connection::system().await;
+    if connection_result.is_err() {
+        return false;
+    }
+    let connection = connection_result.unwrap();
+    let proxy_result = AuthorityProxy::new(&connection).await;
+    if proxy_result.is_err() {
+        return false;
+    }
+    return true;   
+}
+
+pub async fn prompt(_hwnd: Vec<u8>, _message: String) -> Result<bool> {
+    return Ok(authenticate_polkit().await);
+}
+
+pub async fn available() -> Result<bool> {
+    return Ok(polkit_available().await);
 }

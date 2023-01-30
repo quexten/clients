@@ -1382,13 +1382,13 @@
   "unlockWithWindowsHello": {
     "message": "Unlock with Windows Hello"
   },
-  "unlockWithPAM": {
-    "message": "Unlock with PAM"
+  "unlockWithPolkit": {
+    "message": "Unlock with Polkit"
   },
   "windowsHelloConsentMessage": {
     "message": "Verify for Bitwarden."
   },
-  "PAMConsentMessage": {
+  "PolkitConsentMessage": {
     "message": "Verify for Bitwarden."
   },
   "unlockWithTouchId": {
@@ -1400,8 +1400,8 @@
   "autoPromptWindowsHello": {
     "message": "Ask for Windows Hello on launch"
   },
-  "autoPromptPAM": {
-    "message": "Ask for PAM on launch"
+  "autoPromptPolkit": {
+    "message": "Ask for Polkit on launch"
   },
   "autoPromptTouchId": {
     "message": "Ask for Touch ID on launch"
