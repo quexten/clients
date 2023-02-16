@@ -52,6 +52,9 @@ const common = {
     extensions: [".tsx", ".ts", ".js"],
     symlinks: false,
     modules: [path.resolve("../../node_modules")],
+    alias: {
+      argon2SIMD: require.resolve("../../node_modules/argon2-browser/dist/argon2-simd.wasm"),
+    },
   },
   output: {
     filename: "[name].js",

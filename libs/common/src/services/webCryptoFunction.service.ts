@@ -1,5 +1,7 @@
 import * as argon2 from "argon2-browser";
+import argon2SimdModule = require("argon2SIMD");
 import * as forge from "node-forge";
+import { simd } from "wasm-feature-detect";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
 import { Utils } from "../misc/utils";
@@ -54,6 +56,20 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
   ): Promise<ArrayBuffer> {
     if (!this.wasmSupported) {
       throw "Webassembly support is required for the Argon2 KDF feature.";
+    }
+
+    if (await simd()) {
+      const globalRef: any = typeof global !== "undefined" ? global : window;
+      globalRef.loadArgon2WasmBinary = async function () {
+        // eslint-disable-next-line
+        var argon2Module = argon2SimdModule;
+        const text = atob(argon2Module);
+        const binary = new Uint8Array(new ArrayBuffer(text.length));
+        for (let i = 0; i < text.length; i++) {
+          binary[i] = text.charCodeAt(i);
+        }
+        return binary;
+      };
     }
 
     const passwordArr = new Uint8Array(this.toBuf(password));
