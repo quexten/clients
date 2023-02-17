@@ -1,5 +1,4 @@
 import * as argon2 from "argon2-browser";
-import argon2SimdModule = require("argon2SIMD");
 import * as forge from "node-forge";
 import { simd } from "wasm-feature-detect";
 
@@ -59,10 +58,9 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     }
 
     if (await simd()) {
-      const globalRef: any = typeof global !== "undefined" ? global : window;
-      globalRef.loadArgon2WasmBinary = async function () {
-        // eslint-disable-next-line
-        var argon2Module = argon2SimdModule;
+      (window as any).loadArgon2WasmBinary = async function () {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const argon2Module = require("argon2SIMD");
         const text = atob(argon2Module);
         const binary = new Uint8Array(new ArrayBuffer(text.length));
         for (let i = 0; i < text.length; i++) {
