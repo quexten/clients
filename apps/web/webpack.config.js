@@ -143,6 +143,26 @@ const plugins = [
       { from: "../../node_modules/qrious/dist/qrious.min.js", to: "scripts" },
       { from: "../../node_modules/braintree-web-drop-in/dist/browser/dropin.js", to: "scripts" },
       {
+        from: "../../libs/common/src/services/cryptography/argon2-threaded/argon2-threaded-loader.js",
+        to: "scripts",
+      },
+      {
+        from: "../../libs/common/src/services/cryptography/argon2-threaded/argon2.worker.js",
+        to: "scripts",
+      },
+      {
+        from: "../../libs/common/src/services/cryptography/argon2-threaded/argon2.js",
+        to: "scripts",
+      },
+      {
+        from: "../../libs/common/src/services/cryptography/argon2-threaded/argon2-threaded.wasm",
+        to: "scripts",
+      },
+      {
+        from: "../../libs/common/src/services/cryptography/argon2-threaded/argon2-simd-threaded.wasm",
+        to: "scripts",
+      },
+      {
         from: "./src/version.json",
         transform(content, path) {
           return content.toString().replace("process.env.APPLICATION_VERSION", pjson.version);
@@ -287,6 +307,8 @@ const devServer =
                 ;`
                 .replace(/\n/g, " ")
                 .replace(/ +(?= )/g, ""),
+              "Cross-Origin-Opener-Policy": "same-origin",
+              "Cross-Origin-Embedder-Policy": "require-corp",
             };
           }
         },
@@ -358,6 +380,7 @@ const webpackConfig = {
       url: false,
       fs: false,
       process: false,
+      perf_hooks: false,
       path: require.resolve("path-browserify"),
     },
   },

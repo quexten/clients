@@ -1,6 +1,6 @@
 import * as argon2 from "argon2-browser";
 import * as forge from "node-forge";
-import { simd } from "wasm-feature-detect";
+import { simd, threads } from "wasm-feature-detect";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
 import { Utils } from "../misc/utils";
@@ -57,23 +57,12 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       throw "Webassembly support is required for the Argon2 KDF feature.";
     }
 
-    if (await simd()) {
-      (window as any).loadArgon2WasmBinary = async function () {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const argon2Module = require("argon2SIMD");
-        const text = atob(argon2Module);
-        const binary = new Uint8Array(new ArrayBuffer(text.length));
-        for (let i = 0; i < text.length; i++) {
-          binary[i] = text.charCodeAt(i);
-        }
-        return binary;
-      };
-    }
+    const argon2Implementation = await this.getArgon2Implementation();
 
     const passwordArr = new Uint8Array(this.toBuf(password));
     const saltArr = new Uint8Array(this.toBuf(salt));
 
-    const result = await argon2.hash({
+    const result = await argon2Implementation({
       pass: passwordArr,
       salt: saltArr,
       time: iterations,
@@ -82,6 +71,7 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       hashLen: 32,
       type: argon2.ArgonType.Argon2id,
     });
+
     return result.hash;
   }
 
@@ -412,5 +402,36 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       return false;
     }
     return false;
+  }
+
+  private async getArgon2Implementation(): Promise<(options: argon2.Argon2BrowserHashOptions) => Promise<argon2.Argon2BrowserHashResult>> {
+    const threadsSupported = await threads();
+    const simdSupported = await simd();
+
+    if (threadsSupported) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const loader = require("./cryptography/argon2-threaded/argon2-threaded-loader.js");
+
+      if (!loader.isLoaded()) {
+        await loader.loadWasmModule(simdSupported)
+      }
+
+      return loader.hash
+    } else {
+      if (simdSupported) {
+        (window as any).loadArgon2WasmBinary = async function () {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const argon2Module = require("argon2SIMD");
+          const text = atob(argon2Module);
+          const binary = new Uint8Array(new ArrayBuffer(text.length));
+          for (let i = 0; i < text.length; i++) {
+            binary[i] = text.charCodeAt(i);
+          }
+          return binary;
+        };
+      }
+
+      return argon2.hash
+    }
   }
 }
