@@ -159,7 +159,7 @@
     "@microsoft/signalr-protocol-msgpack": "^6.0.7",
     "@ng-select/ng-select": "^9.0.2",
     "argon2": "^0.30.3",
-    "argon2-browser-bw": "^1.18.2",
+    "argon2-browser-bw": "^1.18.4",
     "big-integer": "^1.6.51",
     "bootstrap": "4.6.0",
     "braintree-web-drop-in": "^1.33.1",
