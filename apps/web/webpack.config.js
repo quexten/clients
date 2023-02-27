@@ -349,7 +349,7 @@ const webpackConfig = {
     alias: {
       sweetalert2: require.resolve("sweetalert2/dist/sweetalert2.js"),
       "#sweetalert2": require.resolve("sweetalert2/src/sweetalert2.scss"),
-      argon2SIMD: require.resolve("../../node_modules/argon2-browser/dist/argon2-simd.wasm"),
+      argon2wasm: require.resolve("../../node_modules/argon2-browser-bw/dist/argon2.wasm"),
     },
     fallback: {
       buffer: false,
