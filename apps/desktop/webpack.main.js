@@ -20,11 +20,6 @@ const common = {
         use: "ts-loader",
         exclude: /node_modules\/(?!(@bitwarden)\/).*/,
       },
-      {
-        test: /\.wasm$/,
-        loader: "base64-loader",
-        type: "javascript/auto",
-      },
     ],
   },
   plugins: [],
