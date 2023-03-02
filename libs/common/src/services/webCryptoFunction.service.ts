@@ -1,6 +1,5 @@
 import * as argon2 from "argon2-browser-bw";
 import * as forge from "node-forge";
-import { simd } from "wasm-feature-detect";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
 import { Utils } from "../misc/utils";
@@ -17,7 +16,6 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     this.subtle =
       !!this.crypto && typeof win.crypto.subtle !== "undefined" ? win.crypto.subtle : null;
     this.wasmSupported = this.checkIfWasmSupported();
-    this.loadArgon2Implementation(win);
   }
 
   async pbkdf2(
@@ -400,21 +398,5 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       return false;
     }
     return false;
-  }
-
-  private async loadArgon2Implementation(win: Window | typeof global): Promise<void> {
-    if (!(await simd())) {
-      (win as any).loadArgon2WasmBinary = async function () {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const argon2Module = require("argon2wasm");
-        const text = atob(argon2Module);
-        const binary = new Uint8Array(new ArrayBuffer(text.length));
-        for (let i = 0; i < text.length; i++) {
-          binary[i] = text.charCodeAt(i);
-        }
-
-        return binary;
-      };
-    }
   }
 }
