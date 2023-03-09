@@ -127,6 +127,15 @@ export class Main {
       // eslint-disable-next-line
       const BiometricDarwinMain = require("./main/biometric/biometric.darwin.main").default;
       this.biometricMain = new BiometricDarwinMain(this.i18nService, this.stateService);
+    } else {
+      // eslint-disable-next-line
+      const BiometricWindowsMain = require("./main/biometric/biometric.unix.main").default;
+      this.biometricMain = new BiometricWindowsMain(
+        this.i18nService,
+        this.windowMain,
+        this.stateService,
+        this.logService
+      );
     }
 
     this.desktopCredentialStorageListener = new DesktopCredentialStorageListener(

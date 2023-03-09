@@ -47,12 +47,13 @@ pub mod biometrics {
         hwnd: napi::bindgen_prelude::Buffer,
         message: String,
     ) -> napi::Result<bool> {
-        super::biometric::prompt(hwnd.into(), message)
+        super::biometric::prompt(hwnd.into(), message).await
             .map_err(|e| napi::Error::from_reason(e.to_string()))
     }
 
     #[napi]
     pub async fn available() -> napi::Result<bool> {
-        super::biometric::available().map_err(|e| napi::Error::from_reason(e.to_string()))
+        super::biometric::available().await
+            .map_err(|e| napi::Error::from_reason(e.to_string()))
     }
 }

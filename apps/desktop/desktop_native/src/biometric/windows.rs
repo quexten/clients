@@ -16,7 +16,7 @@ use windows::{
     },
 };
 
-pub fn prompt(hwnd: Vec<u8>, message: String) -> Result<bool> {
+pub async fn prompt(hwnd: Vec<u8>, message: String) -> Result<bool> {
     let h = isize::from_le_bytes(hwnd.clone().try_into().unwrap());
     let window = HWND(h);
 
@@ -35,7 +35,7 @@ pub fn prompt(hwnd: Vec<u8>, message: String) -> Result<bool> {
     }
 }
 
-pub fn available() -> Result<bool> {
+pub async fn available() -> Result<bool> {
     let ucv_available = UserConsentVerifier::CheckAvailabilityAsync()?.get()?;
 
     match ucv_available {
