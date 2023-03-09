@@ -1,4 +1,4 @@
-import * as argon2 from "argon2-browser";
+import * as argon2 from "argon2-browser-bw";
 import * as forge from "node-forge";
 
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
