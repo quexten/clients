@@ -1,17 +1,18 @@
 .left-nav {
+  margin-right: 6px;
   order: 1;
   display: flex;
   flex-direction: column;
   width: 22%;
   min-width: 175px;
   max-width: 250px;
-  border-right: 1px solid #000000;
+  border-radius: $border-radius;
+  overflow: hidden;
   flex-grow: 1;
   justify-content: space-between;
 
   @include themify($themes) {
     background-color: themed("backgroundColorAlt");
-    border-right-color: themed("borderColor");
   }
 }
 
@@ -35,7 +36,6 @@
 
 .filter-heading {
   display: flex;
-  text-transform: uppercase;
   font-weight: normal;
   margin-bottom: 5px;
   align-items: center;
@@ -51,7 +51,7 @@
 
   button {
     @extend .no-btn;
-    text-transform: uppercase;
+    font-weight: 700;
 
     @include themify($themes) {
       color: themed("headingButtonColor");
@@ -93,12 +93,19 @@
   padding: 0;
   list-style: none;
   width: 100%;
-  margin: 0 0 15px 0;
+  margin-bottom: 20px;
+
   .nested-filter-options {
     list-style: none;
     margin-bottom: 0px;
-    padding-left: 0.85em;
+    margin-left: 20px;
   }
+}
+
+.filter-options#collection-filters,
+.filter-options#folder-filters,
+.filter-options#type-filters {
+  margin-left: 20px;
 }
 
 .filter-option {
@@ -120,6 +127,7 @@
 
       .edit-button {
         visibility: visible;
+        flex-shrink: 0;
       }
     }
   }
@@ -161,25 +169,43 @@
 }
 
 .nav {
-  height: 55px;
-  width: 100%;
+  height: 57px;
   display: flex;
-  .btn {
-    width: 100%;
-    font-size: $font-size-base * 0.8;
-    flex: 1;
-    border: 0;
-    border-radius: 0;
-    padding-bottom: 4px;
+  gap: 5px;
+  width: 100%;
 
-    &:not(.active) {
+  @include themify($themes) {
+    background-color: themed("backgroundColorAlt2");
+  }
+
+  .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+    width: 100%;
+    padding: 13px;
+    border: 0;
+    border-radius: 0 0 6px 6px;
+
+    @include themify($themes) {
+      background-color: themed("backgroundColorAlt");
+    }
+
+    &:hover {
       @include themify($themes) {
         background-color: themed("backgroundColorAlt");
       }
     }
 
+    &:not(.active) {
+      @include themify($themes) {
+        background-color: themed("backgroundColorAlt3");
+      }
+    }
+
     i {
-      font-size: $font-size-base * 1.5;
+      font-size: 17px;
       display: block;
       margin-bottom: 2px;
       text-align: center;

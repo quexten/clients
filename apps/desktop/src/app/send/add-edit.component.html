@@ -264,6 +264,7 @@
     >
       <i class="bwi bwi-spinner bwi-spin" title="{{ 'loading' | i18n }}" aria-hidden="true"></i>
       <span><i class="bwi bwi-save-changes bwi-lg bwi-fw" aria-hidden="true"></i></span>
+      {{ "save" | i18n }}
     </button>
     <button type="button" (click)="cancel()" [disabled]="form.loading">
       {{ "cancel" | i18n }}
@@ -295,6 +296,7 @@
           [hidden]="!$any(deleteBtn).loading"
           aria-hidden="true"
         ></i>
+        {{ "delete" | i18n }}
       </button>
     </div>
   </div>

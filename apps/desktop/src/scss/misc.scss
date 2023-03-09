@@ -301,10 +301,10 @@ p.lead {
 form,
 .form {
   .form-group {
-    margin-bottom: 1.25rem;
+    margin: 0 15px 1rem;
 
     &:last-child {
-      margin-bottom: 0;
+      padding-bottom: 1rem;
     }
 
     label {
@@ -400,6 +400,11 @@ form,
       }
     }
   }
+}
+
+.radio + .help-block,
+.checkbox + .help-block {
+  padding-left: 18px;
 }
 
 app-root > #loading,
@@ -534,6 +539,13 @@ app-root > #loading,
 
 .rounded-circle {
   border-radius: 50% !important;
+}
+
+// hide button text at small sizes
+@media screen and (max-width: 830px) {
+  .sm-hide {
+    display: none;
+  }
 }
 
 // Text selection styles

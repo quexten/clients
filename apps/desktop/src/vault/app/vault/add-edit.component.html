@@ -665,6 +665,7 @@
         [hidden]="!$any(form).loading"
         aria-hidden="true"
       ></i>
+      {{ "save" | i18n }}
     </button>
     <button type="button" (click)="cancel()">
       {{ "cancel" | i18n }}
@@ -698,6 +699,7 @@
           [hidden]="!$any(deleteBtn).loading"
           aria-hidden="true"
         ></i>
+        {{ "delete" | i18n }}
       </button>
     </div>
   </div>

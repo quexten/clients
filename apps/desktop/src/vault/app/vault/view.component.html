@@ -538,6 +538,7 @@
     *ngIf="!cipher.isDeleted"
   >
     <i class="bwi bwi-pencil bwi-fw bwi-lg" aria-hidden="true"></i>
+    <span class="sm-hide">{{ "edit" | i18n }}</span>
   </button>
   <button
     class="primary"
@@ -546,6 +547,7 @@
     *ngIf="cipher.isDeleted"
   >
     <i class="bwi bwi-undo bwi-fw bwi-lg" aria-hidden="true"></i>
+    <span class="sm-hide">{{ "restore" | i18n }}</span>
   </button>
   <button
     class="primary"
@@ -554,6 +556,7 @@
     appA11yTitle="{{ 'clone' | i18n }}"
   >
     <i class="bwi bwi-files bwi-fw bwi-lg" aria-hidden="true"></i>
+    <span class="sm-hide">{{ "clone" | i18n }}</span>
   </button>
   <div class="right" *ngIf="cipher.edit">
     <button
@@ -563,6 +566,7 @@
       appA11yTitle="{{ (cipher.isDeleted ? 'permanentlyDelete' : 'delete') | i18n }}"
     >
       <i class="bwi bwi-trash bwi-lg bwi-fw" aria-hidden="true"></i>
+      <span class="sm-hide">{{ "delete" | i18n }}</span>
     </button>
   </div>
 </div>

@@ -12,7 +12,7 @@ $border-color: #f0f0f0;
 $border-color-dark: #ddd;
 $list-item-hover: #fbfbfb;
 $list-icon-color: #c7c7cd;
-$border-radius: 3px;
+$border-radius: 6px;
 $line-height-base: 1.42857143;
 
 $gray: #555;
@@ -51,6 +51,8 @@ $themes: (
     borderColorAlt: $border-color-alt,
     backgroundColorAlt: $background-color-alt,
     backgroundColorAlt2: $background-color-alt2,
+    backgroundColorAlt3: #dcdcdc,
+    backgroundGradient: linear-gradient(270deg, #ededed 28.15%, #fff 100%),
     scrollbarColor: rgba(100, 100, 100, 0.2),
     scrollbarHoverColor: rgba(100, 100, 100, 0.4),
     boxBackgroundColor: $box-background-color,
@@ -68,8 +70,9 @@ $themes: (
     groupingsActiveColor: darken($background-color-alt, 5%),
     disabledIconColor: $list-icon-color,
     headingColor: $gray-light,
-    headingButtonColor: lighten($gray-light, 30%),
-    headingButtonHoverColor: $gray-light,
+    headingButtonColor: $gray,
+    headingButtonHoverColor: darken($gray, 15%),
+    iconColor: #444,
     labelColor: $gray-light,
     mutedColor: $text-muted,
     totpStrokeColor: $brand-primary,
@@ -79,6 +82,7 @@ $themes: (
     inputBackgroundColor: #ffffff,
     inputPlaceholderColor: lighten($gray-light, 35%),
     buttonBackgroundColor: $button-background-color,
+    buttonBackgroundHoverColor: darken($button-background-color, 10%),
     buttonBorderColor: $button-border-color,
     buttonColor: $button-color,
     buttonPrimaryColor: $button-color-primary,
@@ -108,6 +112,8 @@ $themes: (
     borderColorAlt: #6e788a,
     backgroundColorAlt: #3d3d3d,
     backgroundColorAlt2: #222222,
+    backgroundColorAlt3: #2e2e2e,
+    backgroundGradient: linear-gradient(270deg, #222222 28.15%, #363636 100%),
     scrollbarColor: #4d4d4d,
     scrollbarHoverColor: #5f5f5f,
     boxBackgroundColor: #363636,
@@ -127,6 +133,7 @@ $themes: (
     headingColor: #a3a3a3,
     headingButtonColor: #a3a3a3,
     headingButtonHoverColor: #ffffff,
+    iconColor: #cecece,
     labelColor: #a3a3a3,
     mutedColor: #a3a3a3,
     totpStrokeColor: #cacaca,
@@ -136,6 +143,7 @@ $themes: (
     inputBackgroundColor: #363636,
     inputPlaceholderColor: #707070,
     buttonBackgroundColor: #363636,
+    buttonBackgroundHoverColor: #303030,
     buttonBorderColor: #1f1f1f,
     buttonColor: #e0e0e0,
     buttonPrimaryColor: #46ace7,
@@ -162,9 +170,10 @@ $themes: (
     textColor: $nord5,
     borderColor: $nord0,
     backgroundColor: $nord2,
-    borderColorAlt: $nord5,
-    backgroundColorAlt: $nord1,
+    backgroundColorAlt: $nord3,
     backgroundColorAlt2: $nord1,
+    backgroundColorAlt3: $nord2,
+    backgroundGradient: linear-gradient(270deg, #3b4252 28.15%, #4c566a 100%),
     scrollbarColor: $nord4,
     scrollbarHoverColor: $nord6,
     boxBackgroundColor: $nord2,
@@ -184,6 +193,7 @@ $themes: (
     headingColor: $nord4,
     headingButtonColor: $nord5,
     headingButtonHoverColor: $nord6,
+    iconColor: #cecece,
     labelColor: $nord4,
     mutedColor: $nord4,
     totpStrokeColor: $nord4,
@@ -192,7 +202,8 @@ $themes: (
     inputBorderColor: $nord0,
     inputBackgroundColor: $nord2,
     inputPlaceholderColor: lighten($nord3, 20%),
-    buttonBackgroundColor: $nord3,
+    buttonBackgroundColor: $nord2,
+    buttonBackgroundHoverColor: $nord1,
     buttonBorderColor: $nord0,
     buttonColor: $nord5,
     buttonPrimaryColor: $nord8,

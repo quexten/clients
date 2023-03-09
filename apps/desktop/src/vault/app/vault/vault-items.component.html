@@ -3,6 +3,7 @@
 <div class="container loading-spinner" *ngIf="!loaded">
   <i class="bwi bwi-spinner bwi-spin bwi-3x" aria-hidden="true"></i>
 </div>
+
 <ng-container *ngIf="loaded">
   <div class="content">
     <cdk-virtual-scroll-viewport
@@ -65,6 +66,7 @@
         [disabled]="deleted"
       >
         <i class="bwi bwi-plus bwi-lg" aria-hidden="true"></i>
+        {{ "addItem" | i18n }}
       </button>
     </div>
   </div>

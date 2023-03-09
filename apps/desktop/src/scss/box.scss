@@ -6,7 +6,6 @@
 
   .box-header {
     margin: 0 10px 5px 10px;
-    text-transform: uppercase;
     display: flex;
 
     @include themify($themes) {
@@ -35,12 +34,13 @@
 
   .box-header-expandable {
     border: none;
-    padding: 5px 0px;
+    padding: 10px 15px;
     text-transform: uppercase;
     display: flex;
     width: 100%;
     box-sizing: border-box;
     align-items: center;
+    border-radius: $border-radius $border-radius 0 0;
 
     @include themify($themes) {
       color: themed("headingColor");
@@ -51,7 +51,7 @@
     &:focus-visible,
     &.active {
       @include themify($themes) {
-        background-color: themed("boxBackgroundHoverColor");
+        background-color: themed("buttonBackgroundHoverColor");
       }
     }
 
@@ -68,15 +68,13 @@
 
   .box-content {
     border-radius: $border-radius;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
-      0 1px 5px 0 rgba(0, 0, 0, 0.2);
 
     @include themify($themes) {
       background-color: themed("boxBackgroundColor");
     }
 
     &.box-content-padded {
-      padding: 10px 15px;
+      padding: 0;
 
       .box-header-expandable[aria-expanded="true"] {
         margin-bottom: 1rem;
@@ -124,20 +122,6 @@
   z-index: 1;
   text-align: left;
 
-  &:before {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    height: 1px;
-    width: calc(100% - 10px);
-    border-bottom: 1px solid #000000;
-
-    @include themify($themes) {
-      border-bottom-color: themed("boxBorderColor");
-    }
-  }
-
   &:first-child,
   &:last-child {
     border-radius: $border-radius;
@@ -153,12 +137,6 @@
       border: none;
       height: 0;
     }
-  }
-
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
   }
 
   &:hover,

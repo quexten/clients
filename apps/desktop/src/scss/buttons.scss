@@ -4,15 +4,13 @@
 .vault .footer button,
 .modal-footer button {
   border-radius: $border-radius;
-  padding: 7px 15px;
-  border: 1px solid #000000;
+  padding: 12px 15px;
   font-size: $font-size-base;
   text-align: center;
   cursor: pointer;
 
   @include themify($themes) {
     background-color: themed("buttonBackgroundColor");
-    border-color: themed("buttonBorderColor");
     color: themed("buttonColor");
   }
 
@@ -32,9 +30,7 @@
     cursor: pointer;
 
     @include themify($themes) {
-      background-color: darken(themed("buttonBackgroundColor"), 1.5%);
-      border-color: darken(themed("buttonBorderColor"), 17%);
-      color: darken(themed("buttonColor"), 10%);
+      background-color: darken(themed("buttonBackgroundColor"), 4%);
     }
 
     &.primary {
