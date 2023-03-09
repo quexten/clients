@@ -151,13 +151,13 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(
-          join(__dirname, 'desktop_native.linux-x64-musl.node')
+          join(__dirname, 'desktop_native.linux-x64-gnu.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./desktop_native.linux-x64-musl.node')
+            nativeBinding = require('./desktop_native.linux-x64-gnu.node')
           } else {
-            nativeBinding = require('@bitwarden/desktop-native-linux-x64-musl')
+            nativeBinding = require('@bitwarden/desktop-native-linux-x64-gnu')
           }
         } catch (e) {
           loadError = e
