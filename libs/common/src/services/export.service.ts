@@ -1,5 +1,7 @@
 import * as papa from "papaparse";
 
+import { BitwardenPasswordProtectedFileFormat } from "@bitwarden/importer/src/importers/bitwarden/bitwarden-password-protected-importer";
+
 import { ApiService } from "../abstractions/api.service";
 import { CryptoService } from "../abstractions/crypto.service";
 import { CryptoFunctionService } from "../abstractions/cryptoFunction.service";
@@ -12,6 +14,7 @@ import { Collection } from "../admin-console/models/domain/collection";
 import { CollectionDetailsResponse } from "../admin-console/models/response/collection.response";
 import { CollectionView } from "../admin-console/models/view/collection.view";
 import { KdfConfig } from "../auth/models/domain/kdf-config";
+import { KdfType } from "../enums/kdfType";
 import { Utils } from "../misc/utils";
 import { CipherWithIdExport as CipherExport } from "../models/export/cipher-with-ids.export";
 import { CollectionWithIdExport as CollectionExport } from "../models/export/collection-with-id.export";
@@ -56,23 +59,20 @@ export class ExportService implements ExportServiceAbstraction {
       ? await this.getOrganizationExport(organizationId, "json")
       : await this.getExport("json");
 
+    const kdfType: KdfType = await this.stateService.getKdfType();
+    const kdfConfig: KdfConfig = await this.stateService.getKdfConfig();
+
     const salt = Utils.fromBufferToB64(await this.cryptoFunctionService.randomBytes(16));
-    const key = await this.cryptoService.makePinKey(
-      password,
-      salt,
-      await this.stateService.getKdfType(),
-      await this.stateService.getKdfConfig()
-    );
+    const key = await this.cryptoService.makePinKey(password, salt, kdfType, kdfConfig);
 
     const encKeyValidation = await this.cryptoService.encrypt(Utils.newGuid(), key);
     const encText = await this.cryptoService.encrypt(clearText, key);
 
-    const kdfConfig: KdfConfig = await this.stateService.getKdfConfig();
-    const jsonDoc: any = {
+    const jsonDoc: BitwardenPasswordProtectedFileFormat = {
       encrypted: true,
       passwordProtected: true,
       salt: salt,
-      kdfType: await this.stateService.getKdfType(),
+      kdfType: kdfType,
       kdfIterations: kdfConfig.iterations,
       kdfMemory: kdfConfig.memory,
       kdfParallelism: kdfConfig.parallelism,

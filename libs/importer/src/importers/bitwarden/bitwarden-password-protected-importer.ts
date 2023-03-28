@@ -10,7 +10,7 @@ import { Importer } from "../importer";
 
 import { BitwardenJsonImporter } from "./bitwarden-json-importer";
 
-interface BitwardenPasswordProtectedFileFormat {
+export interface BitwardenPasswordProtectedFileFormat {
   encrypted: boolean;
   passwordProtected: boolean;
   salt: string;
