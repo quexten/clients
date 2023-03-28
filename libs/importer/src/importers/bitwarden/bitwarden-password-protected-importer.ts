@@ -9,19 +9,7 @@ import { ImportResult } from "../../models/import-result";
 import { Importer } from "../importer";
 
 import { BitwardenJsonImporter } from "./bitwarden-json-importer";
-
-export interface BitwardenPasswordProtectedFileFormat {
-  encrypted: boolean;
-  passwordProtected: boolean;
-  salt: string;
-  kdfIterations: number;
-  kdfMemory?: number;
-  kdfParallelism?: number;
-  kdfType: number;
-  encKeyValidation_DO_NOT_EDIT: string;
-  data: string;
-}
-
+import { BitwardenPasswordProtectedFileFormat } from "./bitwarden-json-types";
 export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter implements Importer {
   private key: SymmetricCryptoKey;
 

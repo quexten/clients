@@ -1,6 +1,6 @@
 import * as papa from "papaparse";
 
-import { BitwardenPasswordProtectedFileFormat } from "@bitwarden/importer/src/importers/bitwarden/bitwarden-password-protected-importer";
+import { BitwardenPasswordProtectedFileFormat } from "@bitwarden/importer/src/importers/bitwarden/bitwarden-json-types";
 
 import { ApiService } from "../abstractions/api.service";
 import { CryptoService } from "../abstractions/crypto.service";
