@@ -21,7 +21,6 @@ import { CollectionWithIdExport as CollectionExport } from "../models/export/col
 import { EventExport } from "../models/export/event.export";
 import { FolderWithIdExport as FolderExport } from "../models/export/folder-with-id.export";
 import { EventView } from "../models/view/event.view";
-import { StateService } from "./state.service";
 import { CipherService } from "../vault/abstractions/cipher.service";
 import { FolderService } from "../vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "../vault/enums/cipher-type";
@@ -30,6 +29,8 @@ import { Cipher } from "../vault/models/domain/cipher";
 import { Folder } from "../vault/models/domain/folder";
 import { CipherView } from "../vault/models/view/cipher.view";
 import { FolderView } from "../vault/models/view/folder.view";
+
+import { StateService } from "./state.service";
 
 export class ExportService implements ExportServiceAbstraction {
   constructor(

@@ -9,6 +9,7 @@ import { Utils } from "@bitwarden/common/misc/utils";
 import { EncString } from "@bitwarden/common/models/domain/enc-string";
 import { CipherWithIdExport as CipherExport } from "@bitwarden/common/models/export/cipher-with-ids.export";
 import { ExportService } from "@bitwarden/common/services/export.service";
+import { StateService } from "@bitwarden/common/services/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
@@ -18,7 +19,6 @@ import { Login } from "@bitwarden/common/vault/models/domain/login";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import { LoginView } from "@bitwarden/common/vault/models/view/login.view";
-import { StateService } from "@bitwarden/common/services/state.service";
 
 import { BuildTestObject, GetUniqueString } from "../utils";
 
