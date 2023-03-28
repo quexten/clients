@@ -9,7 +9,7 @@ import { ImportResult } from "../../models/import-result";
 import { Importer } from "../importer";
 
 import { BitwardenJsonImporter } from "./bitwarden-json-importer";
-import { BitwardenPasswordProtectedFileFormat } from "./bitwarden-json-types";
+import { BitwardenPasswordProtectedFileFormat } from "./bitwarden-password-protected-types";
 export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter implements Importer {
   private key: SymmetricCryptoKey;
 
