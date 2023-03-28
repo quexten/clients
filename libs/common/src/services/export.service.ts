@@ -9,6 +9,7 @@ import {
   ExportFormat,
   ExportService as ExportServiceAbstraction,
 } from "../abstractions/export.service";
+import { StateService } from "../abstractions/state.service";
 import { CollectionData } from "../admin-console/models/data/collection.data";
 import { Collection } from "../admin-console/models/domain/collection";
 import { CollectionDetailsResponse } from "../admin-console/models/response/collection.response";
@@ -29,8 +30,6 @@ import { Cipher } from "../vault/models/domain/cipher";
 import { Folder } from "../vault/models/domain/folder";
 import { CipherView } from "../vault/models/view/cipher.view";
 import { FolderView } from "../vault/models/view/folder.view";
-
-import { StateService } from "./state.service";
 
 export class ExportService implements ExportServiceAbstraction {
   constructor(
