@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "项目已自动填充 "
   },
+  "insecurePageWarning": {
+    "message": "警告：这是一个不安全的 HTTP 页面，您提交的任何信息都可能被其他人看到和更改。此登录信息最初保存在安全 (HTTPS) 页面上。"
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "您仍然想要填充此登录信息吗？"
+  },
+  "autofillIframeWarning": {
+    "message": "该表单由不同于您保存的登录的 URI 域名托管。选择「确定」以自动填充，或选择「取消」停止填充。"
+  },
+  "autofillIframeWarningTip": {
+    "message": "要防止以后出现此警告，请将此站点的 URI $HOSTNAME$ 保存到您的 Bitwarden 登录项目中。",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "设置主密码"
+  },
+  "currentMasterPass": {
+    "message": "当前主密码"
+  },
+  "newMasterPass": {
+    "message": "新主密码"
+  },
+  "confirmNewMasterPass": {
+    "message": "确认新主密码"
   },
   "masterPasswordPolicyInEffect": {
     "message": "一个或多个组织策略要求您的主密码满足下列要求："
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "您的主密码最近被您组织的管理员更改过。要访问密码库，您必须立即更新它。继续操作将使您退出当前会话并要求您重新登录。其他设备上的活动会话可能会继续保持活动状态长达一小时。"
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "您的主密码不符合某一项或多项组织策略要求。要访问密码库，必须立即更新您的主密码。继续操作将使您退出当前会话，并要求您重新登录。其他设备上的活动会话可能会继续保持活动状态长达一小时。"
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "自动注册"
   },
@@ -1863,7 +1893,7 @@
     "message": "分钟"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "您的组织策略正在影响您的密码库超时时间。最大允许的密码库超时时间是 $HOURS$ 小时 $MINUTES$ 分钟。",
+    "message": "您的组织策略已将您最大允许的密码库超时时间设置为 $HOURS$ 小时 $MINUTES$ 分钟。",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "您的组织策略正在影响您的密码库超时时间。最大允许的密码库超时时间是 $HOURS$ 小时 $MINUTES$ 分钟。您的密码库超时动作被设置为 $ACTION$。",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "您的组织策略已将您的密码库超时动作设置为 $ACTION$。",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "区域"
+  },
+  "opensInANewWindow": {
+    "message": "在新窗口中打开"
+  },
+  "eu": {
+    "message": "欧盟",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "美国",
+    "description": "United States"
   }
 }

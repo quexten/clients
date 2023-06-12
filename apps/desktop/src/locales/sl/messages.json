@@ -12,7 +12,7 @@
     "message": "Priljubljene"
   },
   "types": {
-    "message": "Tipi"
+    "message": "Vrste"
   },
   "typeLogin": {
     "message": "Prijava"
@@ -36,7 +36,7 @@
     "message": "Išči v trezorju"
   },
   "addItem": {
-    "message": "Dodaj vnos"
+    "message": "Dodaj element"
   },
   "shared": {
     "message": "Deljeno"
@@ -67,7 +67,7 @@
     "message": "Priloge"
   },
   "viewItem": {
-    "message": "Ogled vnosa"
+    "message": "Prikaži element"
   },
   "name": {
     "message": "Naziv"
@@ -98,7 +98,7 @@
     "message": "Večbesedno geslo"
   },
   "editItem": {
-    "message": "Uredi vnos"
+    "message": "Uredi element"
   },
   "emailAddress": {
     "message": "E-poštni naslov"
@@ -349,13 +349,13 @@
     "message": "Ime je obvezen podatek."
   },
   "addedItem": {
-    "message": "Vnos dodan"
+    "message": "Element dodan"
   },
   "editedItem": {
-    "message": "Vnos urejen"
+    "message": "Element urejen"
   },
   "deleteItem": {
-    "message": "Vnos odstranjen"
+    "message": "Element odstranjen"
   },
   "deleteFolder": {
     "message": "Izbriši mapo"
@@ -367,7 +367,7 @@
     "message": "Ali res želite poslati v koš?"
   },
   "deletedItem": {
-    "message": "Pošlji vnos v smeti"
+    "message": "Pošlji element v smeti"
   },
   "overwritePasswordConfirmation": {
     "message": "Ali ste prepričani, da želite prepisati vaše trenutno geslo?"
@@ -564,10 +564,10 @@
     "message": "An unexpected error has occurred."
   },
   "itemInformation": {
-    "message": "Informacije o vnosu"
+    "message": "Informacije o elementu"
   },
   "noItemsInList": {
-    "message": "Ni vnosov za prikaz."
+    "message": "Ni elementov za prikaz."
   },
   "sendVerificationCode": {
     "message": "Pošlji verifikacijsko kodo po e-pošti"
@@ -1353,7 +1353,7 @@
     "message": "Lastništvo"
   },
   "whoOwnsThisItem": {
-    "message": "Kdo je lastnik tega vnosa?"
+    "message": "Kdo je lastnik tega elementa?"
   },
   "strong": {
     "message": "Močno",
@@ -1392,20 +1392,32 @@
   "unlockWithWindowsHello": {
     "message": "Odkleni z WindowsHello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "Additional Windows Hello settings"
+  },
   "windowsHelloConsentMessage": {
     "message": "Preverite za Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "Unlock with Touch ID"
   },
+  "additionalTouchIdSettings": {
+    "message": "Additional Touch ID settings"
+  },
   "touchIdConsentMessage": {
     "message": "odklenite vaš trezor"
   },
   "autoPromptWindowsHello": {
-    "message": "Ask for Windows Hello on launch"
+    "message": "Ask for Windows Hello on app start"
   },
   "autoPromptTouchId": {
-    "message": "Ask for Touch ID on launch"
+    "message": "Ask for Touch ID on app start"
+  },
+  "requirePasswordOnStart": {
+    "message": "Require password or PIN on app start"
+  },
+  "recommendedForSecurity": {
+    "message": "Recommended for security."
   },
   "lockWithMasterPassOnRestart": {
     "message": "Zakleni z glavnim geslom ob ponovnem zagonu"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "In order to complete logging in with SSO, please set a master password to access and protect your vault."
+  },
+  "currentMasterPass": {
+    "message": "Current master password"
   },
   "newMasterPass": {
     "message": "New master password"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "Your master password was recently changed by an administrator in your organization. In order to access the vault, you must update it now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "hours": {
     "message": "Ure"
   },
@@ -1850,7 +1868,7 @@
     "message": "Minute"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s)",
+    "message": "Your organization policies have set your maximum allowed vault timeout to $HOURS$ hour(s) and $MINUTES$ minute(s).",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -1878,7 +1922,7 @@
     "message": "One or more organization policies prevents you from exporting your personal vault."
   },
   "addAccount": {
-    "message": "Add account"
+    "message": "Dodaj račun"
   },
   "removeMasterPassword": {
     "message": "Odstranite glavno geslo"
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden recommends updating your biometric settings to require your master password (or PIN) on the first unlock. Would you like to update your settings now?"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "Recommended Settings Update"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Self-hosted"
   }
 }

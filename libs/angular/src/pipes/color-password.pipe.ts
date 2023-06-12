@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import { Utils } from "@bitwarden/common/misc/utils";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 
 /*
  An updated pipe that sanitizes HTML, highlights numbers and special characters (in different colors each)
@@ -17,7 +17,7 @@ export class ColorPasswordPipe implements PipeTransform {
 
   protected generateTemplate(
     password: string,
-    templateGenerator: (chararacter: string, type: string, index?: number) => string
+    templateGenerator: (character: string, type: string, index?: number) => string
   ) {
     // Convert to an array to handle cases that stings have special characters, ie: emoji.
     const passwordArray = Array.from(password);

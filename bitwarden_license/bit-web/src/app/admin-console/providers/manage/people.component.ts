@@ -4,23 +4,23 @@ import { first } from "rxjs/operators";
 
 import { SearchPipe } from "@bitwarden/angular/pipes/search.pipe";
 import { UserNamePipe } from "@bitwarden/angular/pipes/user-name.pipe";
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { ValidationService } from "@bitwarden/common/abstractions/validation.service";
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
-import { ProviderUserStatusType } from "@bitwarden/common/admin-console/enums/provider-user-status-type";
-import { ProviderUserType } from "@bitwarden/common/admin-console/enums/provider-user-type";
+import { ProviderUserStatusType, ProviderUserType } from "@bitwarden/common/admin-console/enums";
 import { ProviderUserBulkRequest } from "@bitwarden/common/admin-console/models/request/provider/provider-user-bulk.request";
 import { ProviderUserConfirmRequest } from "@bitwarden/common/admin-console/models/request/provider/provider-user-confirm.request";
 import { ProviderUserBulkResponse } from "@bitwarden/common/admin-console/models/response/provider/provider-user-bulk.response";
 import { ProviderUserUserDetailsResponse } from "@bitwarden/common/admin-console/models/response/provider/provider-user.response";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { EntityEventsComponent } from "@bitwarden/web-vault/app/admin-console/organizations/manage/entity-events.component";
 import { BulkStatusComponent } from "@bitwarden/web-vault/app/admin-console/organizations/members/components/bulk/bulk-status.component";
 import { BasePeopleComponent } from "@bitwarden/web-vault/app/common/base.people.component";
@@ -69,7 +69,8 @@ export class PeopleComponent
     searchPipe: SearchPipe,
     userNamePipe: UserNamePipe,
     stateService: StateService,
-    private providerService: ProviderService
+    private providerService: ProviderService,
+    dialogService: DialogServiceAbstraction
   ) {
     super(
       apiService,
@@ -82,7 +83,8 @@ export class PeopleComponent
       logService,
       searchPipe,
       userNamePipe,
-      stateService
+      stateService,
+      dialogService
     );
   }
 

@@ -2,12 +2,12 @@ import { Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { PasswordGeneratorPolicyOptions } from "@bitwarden/common/admin-console/models/domain/password-generator-policy-options";
 import { EmailForwarderOptions } from "@bitwarden/common/models/domain/email-forwarder-options";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 import { UsernameGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/username";
 
@@ -211,7 +211,7 @@ export class GeneratorComponent implements OnInit {
   }
 
   private normalizePasswordOptions() {
-    // Application level normalize options depedent on class variables
+    // Application level normalize options dependent on class variables
     this.passwordOptions.ambiguous = !this.avoidAmbiguous;
 
     if (
@@ -242,6 +242,7 @@ export class GeneratorComponent implements OnInit {
       { name: "Fastmail", value: "fastmail", validForSelfHosted: true },
       { name: "Firefox Relay", value: "firefoxrelay", validForSelfHosted: false },
       { name: "SimpleLogin", value: "simplelogin", validForSelfHosted: true },
+      { name: "Forward Email", value: "forwardemail", validForSelfHosted: true },
     ];
 
     this.usernameOptions = await this.usernameGenerationService.getOptions();

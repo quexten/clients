@@ -3,14 +3,15 @@ import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { combineLatest, of, shareReplay, Subject, switchMap, takeUntil } from "rxjs";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
 import { OrganizationUserUserDetailsResponse } from "@bitwarden/common/abstractions/organization-user/responses";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { CollectionView } from "@bitwarden/common/admin-console/models/view/collection.view";
-import { BitValidators, DialogService } from "@bitwarden/components";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { BitValidators } from "@bitwarden/components";
 
 import {
   CollectionAdminService,
@@ -46,7 +47,6 @@ export enum CollectionDialogResult {
 }
 
 @Component({
-  selector: "app-collection-dialog",
   templateUrl: "collection-dialog.component.html",
 })
 export class CollectionDialogComponent implements OnInit, OnDestroy {
@@ -76,7 +76,8 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
     private collectionService: CollectionAdminService,
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
-    private organizationUserService: OrganizationUserService
+    private organizationUserService: OrganizationUserService,
+    private dialogService: DialogServiceAbstraction
   ) {
     this.tabIndex = params.initialTab ?? CollectionDialogTabType.Info;
   }
@@ -201,13 +202,11 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
   };
 
   protected delete = async () => {
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("deleteCollectionConfirmation"),
-      this.collection?.name,
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: this.collection?.name,
+      content: { key: "deleteCollectionConfirmation" },
+      type: SimpleDialogType.WARNING,
+    });
 
     if (!confirmed && this.params.collectionId) {
       return false;
@@ -292,7 +291,7 @@ function mapToAccessSelections(collectionDetails: CollectionAdminView): AccessIt
  * @param config Configuration for the dialog
  */
 export function openCollectionDialog(
-  dialogService: DialogService,
+  dialogService: DialogServiceAbstraction,
   config: DialogConfig<CollectionDialogParams>
 ) {
   return dialogService.open<CollectionDialogResult, CollectionDialogParams>(

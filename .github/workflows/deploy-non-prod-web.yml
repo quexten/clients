@@ -13,6 +13,7 @@ on:
         options:
           - QA
           - POC2
+          - eudevtest
 
 
 jobs:
@@ -50,7 +51,7 @@ jobs:
       _ENVIRONMENT_ARTIFACT: ${{ needs.setup.outputs.environment-artifact }}
     steps:
       - name: Create GitHub deployment
-        uses: chrnorm/deployment-action@1b599fe41a0ef1f95191e7f2eec4743f2d7dfc48
+        uses: chrnorm/deployment-action@d42cde7132fcec920de534fffc3be83794335c00 # v2.0.5
         id: deployment
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
@@ -60,10 +61,10 @@ jobs:
           description: 'Deployment from branch ${{ github.ref_name }}'
 
       - name: Checkout Repo
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # v3.0.2
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
       - name: Download latest cloud asset
-        uses: bitwarden/gh-actions/download-artifacts@850faad0cf6c02a8c0dc46eddde2363fbd6c373a
+        uses: bitwarden/gh-actions/download-artifacts@72594be690a4e7bfa87b1402b2aedc75acdbff12
         with:
           workflow: build-web.yml
           path: apps/web
@@ -76,7 +77,7 @@ jobs:
         run: unzip ${{ env._ENVIRONMENT_ARTIFACT }}
 
       - name: Checkout Repo
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # v3.0.2
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           ref: ${{ env._ENVIRONMENT_BRANCH }}
           path: deployment
@@ -107,7 +108,7 @@ jobs:
 
       - name: Update deployment status to Success
         if: ${{ success() }}
-        uses: chrnorm/deployment-status@07b3930847f65e71c9c6802ff5a402f6dfb46b86
+        uses: chrnorm/deployment-status@2afb7d27101260f4a764219439564d954d10b5b0 # v2.0.1
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
           environment-url: ${{ env._ENVIRONMENT_URL }}
@@ -116,7 +117,7 @@ jobs:
 
       - name: Update deployment status to Failure
         if: ${{ failure() }}
-        uses: chrnorm/deployment-status@07b3930847f65e71c9c6802ff5a402f6dfb46b86
+        uses: chrnorm/deployment-status@2afb7d27101260f4a764219439564d954d10b5b0 # v2.0.1
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
           environment-url: ${{ env._ENVIRONMENT_URL }}

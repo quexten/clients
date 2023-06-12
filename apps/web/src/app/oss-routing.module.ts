@@ -6,32 +6,31 @@ import { LockGuard } from "@bitwarden/angular/auth/guards/lock.guard";
 import { UnauthGuard } from "@bitwarden/angular/auth/guards/unauth.guard";
 
 import { SubscriptionRoutingModule } from "../app/billing/settings/subscription-routing.module";
-import { AcceptEmergencyComponent } from "../auth/accept-emergency.component";
-import { AcceptOrganizationComponent } from "../auth/accept-organization.component";
-import { HintComponent } from "../auth/hint.component";
-import { LockComponent } from "../auth/lock.component";
-import { LoginWithDeviceComponent } from "../auth/login/login-with-device.component";
-import { LoginComponent } from "../auth/login/login.component";
-import { RecoverDeleteComponent } from "../auth/recover-delete.component";
-import { RecoverTwoFactorComponent } from "../auth/recover-two-factor.component";
-import { RemovePasswordComponent } from "../auth/remove-password.component";
-import { SetPasswordComponent } from "../auth/set-password.component";
-import { EmergencyAccessViewComponent } from "../auth/settings/emergency-access/emergency-access-view.component";
-import { EmergencyAccessComponent } from "../auth/settings/emergency-access/emergency-access.component";
-import { SsoComponent } from "../auth/sso.component";
-import { TwoFactorComponent } from "../auth/two-factor.component";
-import { UpdatePasswordComponent } from "../auth/update-password.component";
-import { UpdateTempPasswordComponent } from "../auth/update-temp-password.component";
-import { VerifyEmailTokenComponent } from "../auth/verify-email-token.component";
-import { VerifyRecoverDeleteComponent } from "../auth/verify-recover-delete.component";
 import { flagEnabled, Flags } from "../utils/flags";
 
 import { TrialInitiationComponent } from "./accounts/trial-initiation/trial-initiation.component";
-import { OrganizationModule } from "./admin-console/organizations/organization.module";
 import { AcceptFamilySponsorshipComponent } from "./admin-console/organizations/sponsorships/accept-family-sponsorship.component";
 import { FamiliesForEnterpriseSetupComponent } from "./admin-console/organizations/sponsorships/families-for-enterprise-setup.component";
 import { CreateOrganizationComponent } from "./admin-console/settings/create-organization.component";
 import { SponsoredFamiliesComponent } from "./admin-console/settings/sponsored-families.component";
+import { AcceptEmergencyComponent } from "./auth/accept-emergency.component";
+import { AcceptOrganizationComponent } from "./auth/accept-organization.component";
+import { HintComponent } from "./auth/hint.component";
+import { LockComponent } from "./auth/lock.component";
+import { LoginWithDeviceComponent } from "./auth/login/login-with-device.component";
+import { LoginComponent } from "./auth/login/login.component";
+import { RecoverDeleteComponent } from "./auth/recover-delete.component";
+import { RecoverTwoFactorComponent } from "./auth/recover-two-factor.component";
+import { RemovePasswordComponent } from "./auth/remove-password.component";
+import { SetPasswordComponent } from "./auth/set-password.component";
+import { EmergencyAccessViewComponent } from "./auth/settings/emergency-access/emergency-access-view.component";
+import { EmergencyAccessComponent } from "./auth/settings/emergency-access/emergency-access.component";
+import { SsoComponent } from "./auth/sso.component";
+import { TwoFactorComponent } from "./auth/two-factor.component";
+import { UpdatePasswordComponent } from "./auth/update-password.component";
+import { UpdateTempPasswordComponent } from "./auth/update-temp-password.component";
+import { VerifyEmailTokenComponent } from "./auth/verify-email-token.component";
+import { VerifyRecoverDeleteComponent } from "./auth/verify-recover-delete.component";
 import { HomeGuard } from "./guards/home.guard";
 import { FrontendLayoutComponent } from "./layouts/frontend-layout.component";
 import { UserLayoutComponent } from "./layouts/user-layout.component";
@@ -249,7 +248,8 @@ const routes: Routes = [
   },
   {
     path: "organizations",
-    loadChildren: () => OrganizationModule,
+    loadChildren: () =>
+      import("./admin-console/organizations/organization.module").then((m) => m.OrganizationModule),
   },
 ];
 

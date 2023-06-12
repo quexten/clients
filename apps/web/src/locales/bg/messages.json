@@ -697,7 +697,7 @@
     "message": "Повторното въвеждане на главната парола е задължително."
   },
   "masterPasswordMinlength": {
-    "message": "Master password must be at least $VALUE$ characters long.",
+    "message": "Главната парола трябва да е дълга поне $VALUE$ знака.",
     "description": "The Master Password must be at least a specific number of characters long.",
     "placeholders": {
       "value": {
@@ -1254,6 +1254,15 @@
   },
   "importSuccess": {
     "message": "Данните са внесени успешно в трезора ви."
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Общо внесени елементи: $AMOUNT$.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
   },
   "dataExportSuccess": {
     "message": "Данните са изнесени успешно"
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Преглед на колекция – $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Редактиране на елемент – $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Паролата на запис № $ID$ е копирана.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Ще имате достъп до организацията, след като администраторът ѝ потвърди членството ви. Ще ви изпратим електронно писмо, когато това се случи."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Вече имате достъп до тази организация."
   },
   "inviteAcceptFailed": {
     "message": "Поканата не може да бъде приета. Помолете администратора на организацията да ви прати нова."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Подсказването за паролата не може да съвпада с нея."
   },
-  "enrollPasswordReset": {
-    "message": "Включване на помощта при смяната на паролата"
+  "enrollAccountRecovery": {
+    "message": "Включване във възстановяването на профили"
   },
-  "enrolledPasswordReset": {
-    "message": "Помощта при смяната на паролата е включена"
+  "enrolledAccountRecovery": {
+    "message": "Включен във възстановяването на профили"
   },
-  "withdrawPasswordReset": {
-    "message": "Изключване на помощта при смяната на паролата"
+  "withdrawAccountRecovery": {
+    "message": "Оттегляне от възстановяването на профили"
   },
   "enrollPasswordResetSuccess": {
     "message": "Успешно включване!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Успешно изключване!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Потребителят $ID$ включи помощта при смяна на паролата.",
+  "eventEnrollAccountRecovery": {
+    "message": "Потребителят $ID$ се включи във възстановяването на профили.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Потребителят $ID$ изключи помощта при смяна на паролата.",
+  "eventWithdrawAccountRecovery": {
+    "message": "Потребителят $ID$ се оттегли от възстановяването на профили.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Включването ще позволи на администраторите на организацията да променят главната Ви парола. Наистина ли искате да се включите?"
   },
-  "resetPasswordPolicy": {
-    "message": "Смяна на главната парола"
+  "accountRecoveryPolicy": {
+    "message": "Управление на възстановяването на профили"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Позволяване на администраторите на организацията да сменят главните пароли на участващите потребители."
+  "accountRecoveryPolicyDescription": {
+    "message": "Можете да възстановявате профилите на потребителите, когато загубят или забравят своята главна парола или доверено устройство. Процесът по възстановяване се основава на метод на шифроване на профила."
   },
   "resetPasswordPolicyWarning": {
     "message": "Потребителите в организацията ще трябва да се включат сами или да бъдат включени автоматично, преди администраторите да могат да сменят главните им пароли."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Вашата главна парола не отговарян на изискванията в политиката на тази организацията. За да се присъедините към организацията, трябва да промените главната си парола сега. Това означава, че ще бъдете отписан(а) от текущата си сесия и ще трябва да се впишете отново. Активните сесии на други устройства може да продължат да бъдат активни още един час."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Вашата главна парола не отговаря на една или повече политики на организацията Ви. За да получите достъп до трезора, трябва да промените главната си парола сега. Това означава, че ще бъдете отписан(а) от текущата си сесия и ще трябва да се впишете отново. Активните сесии на други устройства може да продължат да бъдат активни още един час."
+  },
   "maximumVaultTimeout": {
     "message": "Време за достъп"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Настройките на организацията Ви влияят върху времето за достъп до трезора Ви. Максималното разрешено време за достъп е $HOURS$ час(а) и $MINUTES$ минута/и. Зададеното действие при изтичане на това време е $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Настройките на организацията Ви задават следното действие при изтичане на времето за достъп до трезора: $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "Персонализирано време за достъп до трезора"
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "Включване на автоматичното попълване"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "Включване на автоматичното попълване при зареждане на страница в браузърното разширение на всички текущи и бъдещи членове."
   },
   "experimentalFeature": {
@@ -5158,9 +5217,6 @@
     "message": "за да задължите всички членове да се вписват чрез еднократно удостоверяване.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "The require SSO authentication and single organization policies are required to set up Key Connector decryption."
-  },
   "memberDecryptionOption": {
     "message": "Member decryption options"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Конектор за ключове"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Свържете вписването чрез еднократно удостоверяване със своя собствен сървър за ключове за дешифриране. Така няма да има нужда членовете да използват главната си парола, за да дешифрират данните от трезора си."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Свържете вписването чрез еднократно удостоверяване със своя собствен сървър за ключове за дешифриране. Така няма да има нужда членовете да използват главната си парола, за да дешифрират данните от трезора си.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "Политиките за еднократно удостоверяване и една организация",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "са необходими, за да бъде настроено шифроването чрез конектор за ключове. Свържете се с поддръжката на Битуорден, ако имате нужда от помощ с настройката.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "\"Login with SSO and Key Connector Decryption\" is activated. This policy will only apply to owners and admins."
@@ -5387,6 +5452,15 @@
     "message": "Текуща организация",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Account: Logged in as $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Настройки на регистрацията"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Последно синхронизиране",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Спонсорствата на собствения сървър са синхронизирани."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Въведената стойност трябва да бъде поне $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Въведената стойност не трябва да бъде по-голяма от $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Идентификаторите за достъп са анулирани",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "Няма избран идентификатор за премахване на достъпа",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Подменю"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Помощ относно синхронизирането на лицензи"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Помощ относно платените функционалности в лиценза"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "След като изтече абонаментът Ви, имате 60 дни да приложите актуализиран лицензионен файл към организацията си. Този период приключва на $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Качване на лиценз"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Малко повторения за KDF"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Увеличете настройките си за шифроване чрез KDF, за да защитите по-добре регистрацията си."
-  },
-  "changeKdfSettings": {
-    "message": "Промяна на настройките за KDF"
+  "updateLowKdfIterationsDesc": {
+    "message": "Променете настройките си за шифроване, така че да отговарят на новите препоръки за сигурността и да подобрите защитата на регистрацията си."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Proceeding will log you out of all active sessions. You will need to log back in and complete two-step login setup. We recommend exporting your vault before changing your encryption settings to prevent data loss."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Въведеното не може да съдържа само интервали.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Dismiss"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "Тази функционалност не е налична за организациите използващи безплатния план. Свържете се със собственика на организацията си, за да преминете към платен абонамент."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Свържете се с администратора на организацията си, който може да управлява тайните за този проект.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Задължаване на текущите членове да сменят паролите си"
+  },
+  "region": {
+    "message": "Регион"
+  },
+  "eu": {
+    "message": "ЕС",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "САЩ",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "Нямате право за изтриване на този проект",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "Следните проекти не могат да бъдат изтрити. Искате ли да продължите?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "Промяна на настройките за KDF"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Шифроване чрез доверено устройство"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "След вписване, членовете ще дешифрират данните от трезорите си чрез ключ, който се съхранява на устройство.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "Политиката за управление на възстановяването на профили",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "с автоматично включване ще бъде активирана при използването на тази настройка.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "Няма намерен $RESOURCE$",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Възстановяване на профила"
+  },
+  "updatedTempPassword": {
+    "message": "Потребителят промени парола издадена чрез възстановяването на профили."
   }
 }

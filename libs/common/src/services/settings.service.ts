@@ -1,14 +1,16 @@
 import { BehaviorSubject, concatMap } from "rxjs";
 
 import { SettingsService as SettingsServiceAbstraction } from "../abstractions/settings.service";
-import { StateService } from "../abstractions/state.service";
-import { Utils } from "../misc/utils";
-import { AccountSettingsSettings } from "../models/domain/account";
+import { StateService } from "../platform/abstractions/state.service";
+import { Utils } from "../platform/misc/utils";
+import { AccountSettingsSettings } from "../platform/models/domain/account";
 
 export class SettingsService implements SettingsServiceAbstraction {
   protected _settings: BehaviorSubject<AccountSettingsSettings> = new BehaviorSubject({});
+  protected _disableFavicon = new BehaviorSubject<boolean>(null);
 
   settings$ = this._settings.asObservable();
+  disableFavicon$ = this._disableFavicon.asObservable();
 
   constructor(private stateService: StateService) {
     this.stateService.activeAccountUnlocked$
@@ -24,8 +26,10 @@ export class SettingsService implements SettingsServiceAbstraction {
           }
 
           const data = await this.stateService.getSettings();
+          const disableFavicon = await this.stateService.getDisableFavicon();
 
           this._settings.next(data);
+          this._disableFavicon.next(disableFavicon);
         })
       )
       .subscribe();
@@ -40,10 +44,10 @@ export class SettingsService implements SettingsServiceAbstraction {
     await this.stateService.setSettings(settings);
   }
 
-  getEquivalentDomains(url: string): string[] {
+  getEquivalentDomains(url: string): Set<string> {
     const domain = Utils.getDomain(url);
     if (domain == null) {
-      return null;
+      return new Set();
     }
 
     const settings = this._settings.getValue();
@@ -58,7 +62,16 @@ export class SettingsService implements SettingsServiceAbstraction {
         });
     }
 
-    return result;
+    return new Set(result);
+  }
+
+  async setDisableFavicon(value: boolean) {
+    this._disableFavicon.next(value);
+    await this.stateService.setDisableFavicon(value);
+  }
+
+  getDisableFavicon(): boolean {
+    return this._disableFavicon.getValue();
   }
 
   async clear(userId?: string): Promise<void> {

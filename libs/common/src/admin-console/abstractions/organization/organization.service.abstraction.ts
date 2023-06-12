@@ -1,7 +1,7 @@
 import { map, Observable } from "rxjs";
 
-import { I18nService } from "../../../abstractions/i18n.service";
-import { Utils } from "../../../misc/utils";
+import { I18nService } from "../../../platform/abstractions/i18n.service";
+import { Utils } from "../../../platform/misc/utils";
 import { OrganizationData } from "../../models/data/organization.data";
 import { Organization } from "../../models/domain/organization";
 
@@ -56,12 +56,21 @@ export function canAccessAdmin(i18nService: I18nService) {
   );
 }
 
-export function isNotProviderUser(org: Organization): boolean {
-  return !org.isProviderUser;
+/**
+ * Returns `true` if a user is a member of an organization (rather than only being a ProviderUser)
+ * @deprecated Use organizationService.memberOrganizations$ instead
+ */
+export function isMember(org: Organization): boolean {
+  return org.isMember;
 }
 
 export abstract class OrganizationService {
   organizations$: Observable<Organization[]>;
+
+  /**
+   * Organizations that the user is a member of (excludes organizations that they only have access to via a provider)
+   */
+  memberOrganizations$: Observable<Organization[]>;
 
   get$: (id: string) => Observable<Organization | undefined>;
   get: (id: string) => Organization;

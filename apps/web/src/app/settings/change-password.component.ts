@@ -3,15 +3,11 @@ import { Router } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
 import { ChangePasswordComponent as BaseChangePasswordComponent } from "@bitwarden/angular/auth/components/change-password.component";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
 import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
 import { OrganizationUserResetPasswordEnrollmentRequest } from "@bitwarden/common/abstractions/organization-user/requests";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
@@ -19,10 +15,15 @@ import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-con
 import { EmergencyAccessStatusType } from "@bitwarden/common/auth/enums/emergency-access-status-type";
 import { EmergencyAccessUpdateRequest } from "@bitwarden/common/auth/models/request/emergency-access-update.request";
 import { PasswordRequest } from "@bitwarden/common/auth/models/request/password.request";
-import { Utils } from "@bitwarden/common/misc/utils";
-import { EncString } from "@bitwarden/common/models/domain/enc-string";
-import { SymmetricCryptoKey } from "@bitwarden/common/models/domain/symmetric-crypto-key";
 import { UpdateKeyRequest } from "@bitwarden/common/models/request/update-key.request";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
+import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 import { SendWithIdRequest } from "@bitwarden/common/tools/send/models/request/send-with-id.request";
 import { SendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
@@ -61,7 +62,8 @@ export class ChangePasswordComponent extends BaseChangePasswordComponent {
     private keyConnectorService: KeyConnectorService,
     private router: Router,
     private organizationApiService: OrganizationApiServiceAbstraction,
-    private organizationUserService: OrganizationUserService
+    private organizationUserService: OrganizationUserService,
+    dialogService: DialogServiceAbstraction
   ) {
     super(
       i18nService,
@@ -70,7 +72,8 @@ export class ChangePasswordComponent extends BaseChangePasswordComponent {
       passwordGenerationService,
       platformUtilsService,
       policyService,
-      stateService
+      stateService,
+      dialogService
     );
   }
 
@@ -99,13 +102,14 @@ export class ChangePasswordComponent extends BaseChangePasswordComponent {
       }
 
       if (hasOldAttachments) {
-        const learnMore = await this.platformUtilsService.showDialog(
-          this.i18nService.t("oldAttachmentsNeedFixDesc"),
-          null,
-          this.i18nService.t("learnMore"),
-          this.i18nService.t("close"),
-          "warning"
-        );
+        const learnMore = await this.dialogService.openSimpleDialog({
+          title: { key: "warning" },
+          content: { key: "oldAttachmentsNeedFixDesc" },
+          acceptButtonText: { key: "learnMore" },
+          cancelButtonText: { key: "close" },
+          type: SimpleDialogType.WARNING,
+        });
+
         if (learnMore) {
           this.platformUtilsService.launchUri(
             "https://bitwarden.com/help/attachments/#add-storage-space"
@@ -115,17 +119,17 @@ export class ChangePasswordComponent extends BaseChangePasswordComponent {
         return;
       }
 
-      const result = await this.platformUtilsService.showDialog(
-        this.i18nService.t("updateEncryptionKeyWarning") +
+      const result = await this.dialogService.openSimpleDialog({
+        title: { key: "rotateEncKeyTitle" },
+        content:
+          this.i18nService.t("updateEncryptionKeyWarning") +
           " " +
           this.i18nService.t("updateEncryptionKeyExportWarning") +
           " " +
           this.i18nService.t("rotateEncKeyConfirmation"),
-        this.i18nService.t("rotateEncKeyTitle"),
-        this.i18nService.t("yes"),
-        this.i18nService.t("no"),
-        "warning"
-      );
+        type: SimpleDialogType.WARNING,
+      });
+
       if (!result) {
         this.rotateEncKey = false;
       }
@@ -294,7 +298,7 @@ export class ChangePasswordComponent extends BaseChangePasswordComponent {
       const response = await this.organizationApiService.getKeys(org.id);
       const publicKey = Utils.fromB64ToArray(response?.publicKey);
 
-      // Re-enroll - encrpyt user's encKey.key with organization public key
+      // Re-enroll - encrypt user's encKey.key with organization public key
       const encryptedKey = await this.cryptoService.rsaEncrypt(encKey.key, publicKey.buffer);
 
       // Create/Execute request

@@ -289,11 +289,11 @@
     "description": "Search Card type"
   },
   "searchIdentity": {
-    "message": "Search identities",
+    "message": "搜尋身分",
     "description": "Search Identity type"
   },
   "searchSecureNote": {
-    "message": "Search secure notes",
+    "message": "搜尋安全筆記",
     "description": "Search Secure Note type"
   },
   "searchVault": {
@@ -480,13 +480,13 @@
     "message": "篩選"
   },
   "moveSelectedToOrg": {
-    "message": "移動所選至組織"
+    "message": "移動選取的項目至組織"
   },
   "deleteSelected": {
-    "message": "刪除所選"
+    "message": "刪除選取的項目"
   },
   "moveSelected": {
-    "message": "移動所選"
+    "message": "移動選取的項目"
   },
   "selectAll": {
     "message": "全選"
@@ -697,7 +697,7 @@
     "message": "必須再次輸入主密碼。"
   },
   "masterPasswordMinlength": {
-    "message": "Master password must be at least $VALUE$ characters long.",
+    "message": "主密碼至少需 $VALUE$ 個字元。",
     "description": "The Master Password must be at least a specific number of characters long.",
     "placeholders": {
       "value": {
@@ -756,7 +756,7 @@
     "message": "沒有可列出的項目。"
   },
   "noPermissionToViewAllCollectionItems": {
-    "message": "You do not have permission to view all items in this collection."
+    "message": "您沒有檢視此集合中所有項目的權限。"
   },
   "noCollectionsInList": {
     "message": "沒有可列出的集合。"
@@ -768,7 +768,7 @@
     "message": "沒有可列出的使用者。"
   },
   "noMembersInList": {
-    "message": "There are no members to list."
+    "message": "沒有可列出的成員。"
   },
   "noEventsInList": {
     "message": "沒有可列出的事件。"
@@ -915,7 +915,7 @@
     }
   },
   "deleteSelectedCollectionsDesc": {
-    "message": "$COUNT$ collection(s) will be permanently deleted.",
+    "message": "$COUNT$ 個集合將被永久刪除。",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -1001,7 +1001,7 @@
     "message": "確認檔案密碼"
   },
   "accountRestrictedOptionDescription": {
-    "message": "Use your account encryption key, derived from your account's username and Master Password, to encrypt the export and restrict import to only the current Bitwarden account."
+    "message": "使用衍生自您帳號的使用者名稱與主密碼的加密密鑰，加密此匯出檔案，並限制只能匯入到目前的 Bitwarden 帳號。"
   },
   "passwordProtectedOptionDescription": {
     "message": "設定一組密碼來加密匯出的資料，並使用此密碼解密以匯入至任意 Bitwarden 帳戶。"
@@ -1096,7 +1096,7 @@
     "message": "繼續操作將變更您的帳戶電子郵件位址。這不會變更用兩步驟登入的電子郵件地址。您可以在兩步驟登入設定中變更它。"
   },
   "newEmail": {
-    "message": "新的電子郵件"
+    "message": "新的電子郵件地址"
   },
   "code": {
     "message": "代碼"
@@ -1114,7 +1114,7 @@
     "message": "接下來會登出目前工作階段，並要求您重新登入帳戶。其他裝置上的工作階段最多會保持一個小時。"
   },
   "emailChanged": {
-    "message": "電子郵件已儲存"
+    "message": "已變更電子郵件地址"
   },
   "logBackIn": {
     "message": "請重新登入。"
@@ -1156,7 +1156,7 @@
     }
   },
   "kdfIterationsWarning": {
-    "message": "若將 KDF 迭代次數設定太高會導致在 CPU 較慢的裝置上登入（與解鎖）Bitwarden 時降低效能。我們建議您以 $INCREMENT$ 的增量值遞增並在所有的裝置上測試。",
+    "message": "若將 KDF 迭代次數設太高會導致在 CPU 較慢的裝置上登入 ( 與解鎖) Bitwarden 時降低效能。我們建議您增加 $INCREMENT$ 的值並且在所有的裝置上測試。",
     "placeholders": {
       "increment": {
         "content": "$1",
@@ -1169,13 +1169,13 @@
     "description": "Memory refers to computer memory (RAM). MB is short for megabytes."
   },
   "argon2Warning": {
-    "message": "Setting your KDF iterations, memory, and parallelism too high could result in poor performance when logging into (and unlocking) Bitwarden on slower or older devices. We recommend changing these individually in small increments and then test all of your devices."
+    "message": "若將 KDF 疊代次數、記憶體占用與平行數量設定太高，可能導致在老舊裝置上登入（以及解鎖）時的效能不佳。我們建議分別並小量更動這些設定並在您所有的裝置上測試。"
   },
   "kdfParallelism": {
     "message": "KDF 平行數量"
   },
   "argon2Desc": {
-    "message": "Higher KDF iterations, memory, and parallelism can help protect your master password from being brute forced by an attacker."
+    "message": "更高的 KDF 疊代次數、記憶體占用與平行數量可以避免您的主密碼遭到攻擊者的暴力破解。"
   },
   "changeKdf": {
     "message": "變更 KDF"
@@ -1255,8 +1255,17 @@
   "importSuccess": {
     "message": "資料匯入成功"
   },
+  "importSuccessNumberOfItems": {
+    "message": "一共匯入了 $AMOUNT$ 個項目。",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
-    "message": "Data successfully exported"
+    "message": "資料匯出成功"
   },
   "importWarning": {
     "message": "即將匯入資料至 $ORGANIZATION$。您的資料可能會與該組織中的成員共用，確定要繼續嗎？",
@@ -1910,7 +1919,7 @@
     }
   },
   "premiumPriceWithFamilyPlan": {
-    "message": "Go premium for just $PRICE$ /year, or get premium accounts for $FAMILYPLANUSERCOUNT$ users and unlimited family sharing with a ",
+    "message": "升級到進階會員只需 $PRICE$/年，或是可為 $FAMILYPLANUSERCOUNT$ 個使用者取得進階會員與無限制的家庭共享只需： ",
     "placeholders": {
       "price": {
         "content": "$1",
@@ -2020,7 +2029,7 @@
     "message": "取消訂閱"
   },
   "subscriptionExpiration": {
-    "message": "Subscription expiration"
+    "message": "訂閱到期時間"
   },
   "subscriptionCanceled": {
     "message": "已取消訂閱"
@@ -2068,7 +2077,7 @@
     "message": "管理訂閱"
   },
   "launchCloudSubscription": {
-    "message": "Launch Cloud Subscription"
+    "message": "啟動雲端訂閱"
   },
   "storage": {
     "message": "儲存空間"
@@ -2463,7 +2472,7 @@
     "message": "您確定要刪除這個群組？"
   },
   "deleteMultipleGroupsConfirmation": {
-    "message": "Are you sure you want to delete the following $QUANTITY$ group(s)?",
+    "message": "您確定要刪除如下 $QUANTITY$ 個群組嗎?",
     "placeholders": {
       "quantity": {
         "content": "$1",
@@ -2490,7 +2499,7 @@
     "message": "外部 ID 可用於參考，或將此資源與使用者目錄等外部系統連結起來。"
   },
   "nestCollectionUnder": {
-    "message": "Nest collection under"
+    "message": "將集合嵌套在"
   },
   "accessControl": {
     "message": "存取控制"
@@ -2523,7 +2532,7 @@
     "message": "編輯成員"
   },
   "fieldOnTabRequiresAttention": {
-    "message": "A field on the '$TAB$' tab requires your attention.",
+    "message": "「$TAB$」分頁的欄位需要您的注意。",
     "placeholders": {
       "tab": {
         "content": "$1",
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "View collection - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Edit item - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "複製了項目 $ID$ 的密碼。",
     "placeholders": {
@@ -2796,7 +2823,7 @@
     }
   },
   "deletedCollections": {
-    "message": "Deleted collections"
+    "message": "已刪除的集合"
   },
   "deletedCollectionId": {
     "message": "已刪除集合 $ID$。",
@@ -2844,7 +2871,7 @@
     }
   },
   "deletedManyGroups": {
-    "message": "Deleted $QUANTITY$ group(s).",
+    "message": "已刪除 $QUANTITY$ 個群組。",
     "placeholders": {
       "quantity": {
         "content": "$1",
@@ -3063,7 +3090,7 @@
     }
   },
   "confirmUsers": {
-    "message": "確認使用者"
+    "message": "確認成員"
   },
   "usersNeedConfirmed": {
     "message": "有使用者已接受邀請，但仍然需要確認。在確認之前，使用者將無法存取組織。"
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "管理員確認您的成員身分後，您便可以存取此組織。到時我們會向您傳送電子郵件通知。"
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "您現在可以存取此組織。"
   },
   "inviteAcceptFailed": {
     "message": "無法接受邀請。請要求組織管理員傳送新的邀請。"
@@ -3390,7 +3420,7 @@
     }
   },
   "keyUpdated": {
-    "message": "已更新金鑰"
+    "message": "金鑰已更新"
   },
   "updateKeyTitle": {
     "message": "更新金鑰"
@@ -3735,7 +3765,7 @@
     "message": "您確定要永久刪除此項目嗎？"
   },
   "permanentlyDeletedItem": {
-    "message": "已永久刪除項目"
+    "message": "項目已永久刪除"
   },
   "permanentlyDeletedItems": {
     "message": "已永久刪除項目"
@@ -3768,10 +3798,10 @@
     "message": "還原項目"
   },
   "restoredItem": {
-    "message": "已還原項目"
+    "message": "項目已還原"
   },
   "restoredItems": {
-    "message": "已還原項目"
+    "message": "項目已還原"
   },
   "restoreItemConfirmation": {
     "message": "您確定要還原此項目嗎？"
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "密碼提示不能與您的密碼相同。"
   },
-  "enrollPasswordReset": {
-    "message": "註冊密碼重設"
+  "enrollAccountRecovery": {
+    "message": "Enroll in account recovery"
   },
-  "enrolledPasswordReset": {
-    "message": "已註冊密碼重設"
+  "enrolledAccountRecovery": {
+    "message": "Enrolled in account recovery"
   },
-  "withdrawPasswordReset": {
-    "message": "放棄密碼重設"
+  "withdrawAccountRecovery": {
+    "message": "Withdraw from account recovery"
   },
   "enrollPasswordResetSuccess": {
     "message": "註冊成功！"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "撤銷成功！"
   },
-  "eventEnrollPasswordReset": {
-    "message": "使用者 $ID$ 註冊了密碼重設協助。",
+  "eventEnrollAccountRecovery": {
+    "message": "User $ID$ enrolled in account recovery.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "使用者 $ID$ 撤銷了密碼重設協助。",
+  "eventWithdrawAccountRecovery": {
+    "message": "User $ID$ withdrew from account recovery.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "註冊後將允許組織管理者變更您的主密碼"
   },
-  "resetPasswordPolicy": {
-    "message": "主密碼重設"
+  "accountRecoveryPolicy": {
+    "message": "Account recovery administration"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "允許管理者重設成員的主密碼。"
+  "accountRecoveryPolicyDescription": {
+    "message": "Recover member accounts when master password or trusted devices are forgotten or lost. The recovery processes is based on the account encryption method."
   },
   "resetPasswordPolicyWarning": {
     "message": "組織成員需要先自行註冊或被自動註冊後，管理者才能重設他們的主密碼。"
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "您的主密碼不符合此組織原則的要求。您必須現在更新主密碼才可以加入此組織。繼續操作會登出您目前的工作階段，並要求您重新登入帳戶。其他裝置上的活動工作階段最多會保持一個小時。"
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "maximumVaultTimeout": {
     "message": "密碼庫逾時時間"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "自訂密碼庫逾時時間"
   },
@@ -4858,8 +4917,8 @@
   "activateAutofill": {
     "message": "Activate auto-fill"
   },
-  "activateAutofillDesc": {
-    "message": "Activate the auto-fill with page load settings on the browser extension for all existing and new members."
+  "activateAutofillPolicyDesc": {
+    "message": "Activate the auto-fill on page load setting on the browser extension for all existing and new members."
   },
   "experimentalFeature": {
     "message": "Compromised or untrusted websites can exploit auto-fill on page load."
@@ -5158,9 +5217,6 @@
     "message": "將要求所有成員皆使用 SSO 登入。",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "設定 Key Connector 解密之前，需要先設定 SSO 驗證和單一組織原則。"
-  },
   "memberDecryptionOption": {
     "message": "成員解密選項"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Key Connector"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "連結 SSO 登入至您的自我裝載解密金鑰伺服器。使用此選項後，成員便無需使用它們的主密碼來解密密碼庫資料。聯絡 Bitwarden 客戶支援以取得設定協助。"
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "require SSO authentication and single organization policies",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "已啟用「SSO 登入和 Key Connector 解密」。此原則僅適用於擁有者和管理員。"
@@ -5387,6 +5452,15 @@
     "message": "目前組織",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Account: Logged in as $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "帳戶設定"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "上次同步",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "已同步自我裝載贊助。"
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Input value must be at least $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Input value must not exceed $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -5758,11 +5850,11 @@
     "description": "A prompt explaining how secrets can be associated with projects."
   },
   "selectProjects": {
-    "message": "Select projects",
+    "message": "選取專案",
     "description": "A label for a type-to-filter input field to choose projects."
   },
   "searchProjects": {
-    "message": "搜尋項目",
+    "message": "搜尋專案",
     "description": "Label for the search bar used to search projects."
   },
   "project": {
@@ -6040,7 +6132,7 @@
     "description": "Title for the section displaying access tokens."
   },
   "newAccessToken": {
-    "message": "New access token",
+    "message": "新增存取權杖",
     "description": "Button label for creating a new access token."
   },
   "expires": {
@@ -6104,6 +6196,10 @@
   "accessTokenRevoked": {
     "message": "Access tokens revoked",
     "description": "Toast message after deleting one or multiple access tokens."
+  },
+  "noAccessTokenSelected": {
+    "message": "No access token selected to revoke",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
   },
   "submenu": {
     "message": "子選單"
@@ -6199,7 +6295,7 @@
     "message": "New domain"
   },
   "noDomains": {
-    "message": "No domains"
+    "message": "沒有網域"
   },
   "noDomainsSubText": {
     "message": "Connecting a domain allows members to skip the SSO identifier field during Login with SSO."
@@ -6274,16 +6370,16 @@
     "message": "未驗證"
   },
   "domainNameTh": {
-    "message": "Name"
+    "message": "名稱"
   },
   "domainStatusTh": {
     "message": "狀態"
   },
   "lastChecked": {
-    "message": "Last checked"
+    "message": "上次確認"
   },
   "editDomain": {
-    "message": "Edit domain"
+    "message": "編輯網域名稱"
   },
   "domainFormInvalid": {
     "message": "There are form errors that need your attention"
@@ -6456,8 +6552,20 @@
   "billingSyncHelp": {
     "message": "Billing Sync help"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "License paid features help"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "After your subscription expires, you have 60 days to apply an updated license file to your organization. Grace period ends $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
-    "message": "Upload license"
+    "message": "上傳授權證"
   },
   "projectPeopleDescription": {
     "message": "Grant groups or people access to this project."
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Low KDF Iterations"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Increase your KDF encryption settings to improve the security of your account."
-  },
-  "changeKdfSettings": {
-    "message": "變更 KDF 設定"
+  "updateLowKdfIterationsDesc": {
+    "message": "Update your encryption settings to meet new security recommendations and improve account protection."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Proceeding will log you out of all active sessions. You will need to log back in and complete two-step login setup. We recommend exporting your vault before changing your encryption settings to prevent data loss."
@@ -6517,7 +6622,7 @@
     "message": "Important:"
   },
   "viewAll": {
-    "message": "View all"
+    "message": "檢視全部"
   },
   "showingPortionOfTotal": {
     "message": "Showing $PORTION$ of $TOTAL$",
@@ -6574,7 +6679,7 @@
     "message": "Import secrets"
   },
   "getStarted": {
-    "message": "Get started"
+    "message": "開始使用"
   },
   "complete": {
     "message": "$COMPLETED$/$TOTAL$ Complete",
@@ -6590,10 +6695,10 @@
     }
   },
   "restoreSecret": {
-    "message": "Restore secret"
+    "message": "還原機密"
   },
   "restoreSecrets": {
-    "message": "Restore secrets"
+    "message": "還原機密"
   },
   "restoreSecretPrompt": {
     "message": "Are you sure you want to restore this secret?"
@@ -6602,10 +6707,10 @@
     "message": "Are you sure you want to restore these secrets?"
   },
   "secretRestoredSuccessToast": {
-    "message": "Secret restored"
+    "message": "機密已還原"
   },
   "secretsRestoredSuccessToast": {
-    "message": "Secrets restored"
+    "message": "機密已還原"
   },
   "selectionIsRequired": {
     "message": "Selection is required."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Input must not contain only whitespace.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Dismiss"
   },
   "notAvailableForFreeOrganization": {
     "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Contact your organization's admin to manage secrets for this project.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Require existing members to change their passwords"
+  },
+  "region": {
+    "message": "區域"
+  },
+  "eu": {
+    "message": "歐盟",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "美國",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "You don't have permissions to delete this project",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "The following projects can not be deleted. Would you like to continue?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "更新 KDF 設定"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Trusted device encryption"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Once authenticated, members will decrypt vault data using a key stored on their device. The",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "account recovery administration policy",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "with automatic enrollment will turn on when this option is used.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ not found",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Recover account"
+  },
+  "updatedTempPassword": {
+    "message": "User updated a password issued through account recovery."
   }
 }

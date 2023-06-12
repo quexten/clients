@@ -4,12 +4,12 @@ import { ConfirmCommand } from "./admin-console/commands/confirm.command";
 import { ShareCommand } from "./admin-console/commands/share.command";
 import { Main } from "./bw";
 import { EditCommand } from "./commands/edit.command";
-import { ExportCommand } from "./commands/export.command";
 import { GetCommand } from "./commands/get.command";
 import { ListCommand } from "./commands/list.command";
 import { RestoreCommand } from "./commands/restore.command";
 import { Response } from "./models/response";
 import { Program } from "./program";
+import { ExportCommand } from "./tools/export.command";
 import { ImportCommand } from "./tools/import.command";
 import { CliUtils } from "./utils";
 import { CreateCommand } from "./vault/create.command";
@@ -442,7 +442,11 @@ export class VaultProgram extends Program {
       })
       .action(async (format, filepath, options) => {
         await this.exitIfLocked();
-        const command = new ImportCommand(this.main.importService, this.main.organizationService);
+        const command = new ImportCommand(
+          this.main.importService,
+          this.main.organizationService,
+          this.main.syncService
+        );
         const response = await command.run(format, filepath, options);
         this.processResponse(response);
       });

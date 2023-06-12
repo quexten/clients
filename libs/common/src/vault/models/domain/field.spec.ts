@@ -1,6 +1,6 @@
-import { mockEnc, mockFromJson } from "../../../../spec/utils";
-import { FieldType } from "../../../enums/fieldType";
-import { EncString } from "../../../models/domain/enc-string";
+import { mockEnc, mockFromJson } from "../../../../spec";
+import { FieldType } from "../../../enums";
+import { EncString } from "../../../platform/models/domain/enc-string";
 import { FieldData } from "../../models/data/field.data";
 import { Field } from "../../models/domain/field";
 

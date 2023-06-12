@@ -1,9 +1,8 @@
-import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
-import { StateFactory } from "@bitwarden/common/factories/stateFactory";
-import { Utils } from "@bitwarden/common/misc/utils";
-import { GlobalState } from "@bitwarden/common/models/domain/global-state";
+import { StateFactory } from "@bitwarden/common/platform/factories/state-factory";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { GlobalState } from "@bitwarden/common/platform/models/domain/global-state";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
@@ -13,10 +12,9 @@ import {
   authServiceFactory,
   AuthServiceInitOptions,
 } from "../../auth/background/service-factories/auth-service.factory";
-import { CachedServices } from "../../background/service_factories/factory-options";
-import { searchServiceFactory } from "../../background/service_factories/search-service.factory";
-import { BrowserApi } from "../../browser/browserApi";
 import { Account } from "../../models/account";
+import { CachedServices } from "../../platform/background/service-factories/factory-options";
+import { BrowserApi } from "../../platform/browser/browser-api";
 import {
   cipherServiceFactory,
   CipherServiceInitOptions,
@@ -45,13 +43,9 @@ export class CipherContextMenuHandler {
 
   static async create(cachedServices: CachedServices) {
     const stateFactory = new StateFactory(GlobalState, Account);
-    let searchService: SearchService | null = null;
     const serviceOptions: AuthServiceInitOptions & CipherServiceInitOptions = {
       apiServiceOptions: {
         logoutCallback: NOT_IMPLEMENTED,
-      },
-      cipherServiceOptions: {
-        searchServiceFactory: () => searchService,
       },
       cryptoFunctionServiceOptions: {
         win: self,
@@ -80,7 +74,6 @@ export class CipherContextMenuHandler {
         stateFactory: stateFactory,
       },
     };
-    searchService = await searchServiceFactory(cachedServices, serviceOptions);
     return new CipherContextMenuHandler(
       await MainContextMenuHandler.mv3Create(cachedServices),
       await authServiceFactory(cachedServices, serviceOptions),
@@ -153,7 +146,7 @@ export class CipherContextMenuHandler {
     const authStatus = await this.authService.getAuthStatus();
     await MainContextMenuHandler.removeAll();
     if (authStatus !== AuthenticationStatus.Unlocked) {
-      // Should I pass in the auth status or even have two seperate methods for this
+      // Should I pass in the auth status or even have two separate methods for this
       // on MainContextMenuHandler
       await this.mainContextMenuHandler.noAccess();
       return;

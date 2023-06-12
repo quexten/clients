@@ -1,15 +1,15 @@
 import { Directive } from "@angular/core";
 
-import { ExportService } from "@bitwarden/common/abstractions/export.service";
-import { FileDownloadService } from "@bitwarden/common/abstractions/fileDownload/fileDownload.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { EventResponse } from "@bitwarden/common/models/response/event.response";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
 import { EventView } from "@bitwarden/common/models/view/event.view";
+import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 import { EventService } from "../core";
+import { EventExportService } from "../tools/event-export";
 
 @Directive()
 export abstract class BaseEventsComponent {
@@ -29,7 +29,7 @@ export abstract class BaseEventsComponent {
   constructor(
     protected eventService: EventService,
     protected i18nService: I18nService,
-    protected exportService: ExportService,
+    protected exportService: EventExportService,
     protected platformUtilsService: PlatformUtilsService,
     protected logService: LogService,
     protected fileDownloadService: FileDownloadService

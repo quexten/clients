@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Az adatok sikeresen importálásra kerültek a széfbe."
   },
+  "importSuccessNumberOfItems": {
+    "message": "Összesen $AMOUNT$ elem lett importálva.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Az adatok sikeresen exportálásra kerültek."
   },
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Gyűjtemény megtekintése - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Elem szerkesztése - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "$ID$ azonosítójú elem jelszava másolásra került.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "A szervezet elérhető, amikor az adminisztrátor jóváhagyja a tagságot.  Amint ez megtörténik, értesítő email érkezik."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Mostantól elérhető ez a szervezet."
   },
   "inviteAcceptFailed": {
     "message": "A meghívás nem fogadható el. Kérjük fel a szervezet adminisztrátorát új meghívó küldésére."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "A jelszavas tipp nem lehet azonos a jelszóval."
   },
-  "enrollPasswordReset": {
-    "message": "Bejelentkezés a Jelszó alaphelyzetbe állításba"
+  "enrollAccountRecovery": {
+    "message": "Regisztráció fiók helyreállításra"
   },
-  "enrolledPasswordReset": {
-    "message": "A bejelentkezés megtörtént a Jelszó alaphelyzetbe állításba"
+  "enrolledAccountRecovery": {
+    "message": "Megtörtént a regisztráció fiók helyreállításra."
   },
-  "withdrawPasswordReset": {
-    "message": "Kijelentkezés a Jelszó alaphelyzetbe állításból"
+  "withdrawAccountRecovery": {
+    "message": "Kilépés a fiók helyreállításból"
   },
   "enrollPasswordResetSuccess": {
     "message": "A bejelentkezés sikeres."
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "A kijelentkezés sikeres."
   },
-  "eventEnrollPasswordReset": {
-    "message": "$ID$ felhasználó bejelentkezett a jelszó alaphelyzetbe állítás támogatáshoz.",
+  "eventEnrollAccountRecovery": {
+    "message": "$ID$ felhasználó regisztrált a fiók helyreállításra.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "$ID$ felhasználó kijelentkezett a jelszó alaphelyzetbe állítás támogatásból.",
+  "eventWithdrawAccountRecovery": {
+    "message": "$ID$ felhasználó kilépett a fiók helyreállításból.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "A regisztráció lehetővé teszi a szervezet adminisztrátorainak a saját mesterjelszó megváltoztatását. Biztosan feliratkozunk?"
   },
-  "resetPasswordPolicy": {
-    "message": "Mesterjelszó alaphelyzetbe állítás"
+  "accountRecoveryPolicy": {
+    "message": "Fiók-helyreállítási adminisztráció"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "A szervezet adminisztrátorai alaphelyzetbe állíthatják a szervezet mesterjelszavát."
+  "accountRecoveryPolicyDescription": {
+    "message": "Tagsági fiókok helyreállítása, ha a mesterjelszó vagy a megbízható eszközök elfelejtésére vagy elvesztésére. A helyreállítási folyamatok a fióktitkosítási módszeren alapulnak."
   },
   "resetPasswordPolicyWarning": {
     "message": "A szervezet felhasználóinak regisztrálniuk kell magukat vagy automatikus regisztrálás szükséges mielőtt az adminisztrátorok alaphelyzetbe állíthatják a mesterjelszavukat."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "A mesterjelszó nem felel meg a szervezet rendszabályainak. A szervezet eléréséhez most frissíteni kell a mesterjelszót. Továbblépéskor kijelentkezés történik a jelenlegi munkamenetből és újra be kell jelentkezni. Ha van aktív munkamenet más eszközön, az még legfeljebb egy óráig aktív maradhat."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "A mesterjelszó nem felel meg egy vagy több szervezeti szabályzatnak. A széf eléréséhez frissíteni kell a meszerjelszót. A továbblépés kijelentkeztet az aktuális munkamenetből és újra be kell jelentkezni. A többi eszközön lévő aktív munkamenetek akár egy óráig is aktívak maradhatnak."
+  },
   "maximumVaultTimeout": {
     "message": "Széf időkifutás"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "A szervezeti házirendek hatással vannak a széf időkorlátjára. A széf időkorlátja legfeljebb $HOURS$ óra és $MINUTES$ perc lehet. A széf időkifutási művelete $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "A szervezeti házirendek által jelenleg beállított időkifutási művelet $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "Egyedi széf időkifutás"
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "Automatikus kitöltés bekapcsolása"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "Bekapcsolja az automatikus kitöltést az oldalbetöltési beállításokkal a böngésző bővítményben minden meglévő és új tag esetében."
   },
   "experimentalFeature": {
@@ -5158,9 +5217,6 @@
     "message": "szolgáltatást az összes tag bejelentkezéséhez SSO szolgáltatással.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "A kulcscsatlakozó visszafejtésének beállításához SSO hitelesítés és egy önálló szervezeti szabályzat szükséges."
-  },
   "memberDecryptionOption": {
     "message": "Tagi visszafejtési opciók"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Kulcskapcsoló"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "SSO bejelentkezés bekapcsolása a saját üzemeltetésű kulcskiszolgálón. Ezzel az opcióval a tagoknak nem kell használniuk a mesterjelszavukat az adatok visszafejtéséhez. Segítségért keressük a Bitwarden ügyfélszolgálatot."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Kapcsoljuk az egyszeri bejelentkezést a saját üzemeltetésű visszafejtési kulcsszerveréhez. Ezzel a lehetőséggel a tagoknak nem kell használniuk fő jelszavaikat a tárolóadatok visszafejtéséhez.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "SSO-hitelesítést és önálló szervezeti szabályzatot igényelnek",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "szükségesek a Key Connector visszafejtésének beállításához. Beállítási segítségért forduljunk a Bitwarden ügyfélszolgálatához.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "A „Bejelentkezés SSO szolgáltatással és a kulcskapcsoló visszafejtésével” engedélyezve van. Ez a szabály csak a tulajdonosokra és a rendszergazdákra vonatkozik."
@@ -5387,6 +5452,15 @@
     "message": "Jelenlegi szervezet",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Fiók: Bejelentkezve mint $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Fiókbeállítások"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Utolsó szinkronizálás",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "A saját üzemeltetésű szponzorálások szinkronizálásra kerültek."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "A beviteli érték legyen legalább $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "A beviteli érték ne haladja meg $MAX$ értéket.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -5878,7 +5970,7 @@
     }
   },
   "deleteServiceAccountToast": {
-    "message": "Service account deleted"
+    "message": "A szolgáltatás fiók törlésre került"
   },
   "deleteServiceAccountsToast": {
     "message": "A szolgáltatás fiókok törlésre kerültek."
@@ -6104,6 +6196,10 @@
   "accessTokenRevoked": {
     "message": "Az elérési vezérjel visszavonásra került.",
     "description": "Toast message after deleting one or multiple access tokens."
+  },
+  "noAccessTokenSelected": {
+    "message": "Nincs kiválasztva elérési vezérjel a visszavonáshoz.",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
   },
   "submenu": {
     "message": "Almenü"
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Számlázási szinkronizálás súgó"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Licensz fizetős funkciók súgó"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "Az előfizetés lejárta után 60 nap áll rendelkezésére a frissített licenszfájl alkalmazásához a szervezetben. A türelmi időszak lejárata: $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Licensz letöltése"
   },
@@ -6495,14 +6603,11 @@
   "lowKdfIterations": {
     "message": "Alacsony KDF iterációk"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Növeljük meg a KDF titkosítási beállításait a fiók biztonságának javítása érdekében."
-  },
-  "changeKdfSettings": {
-    "message": "KDF beállítások megváltoztatása"
+  "updateLowKdfIterationsDesc": {
+    "message": "Frissítsük a titkosítási beállításokat, hogy megfeleljünk az új biztonsági ajánlásoknak és javítsuk a fiókvédelmet."
   },
   "changeKdfLoggedOutWarning": {
-    "message": "Proceeding will log you out of all active sessions. You will need to log back in and complete two-step login setup. We recommend exporting your vault before changing your encryption settings to prevent data loss."
+    "message": "A folytatással minden aktív munkamenetből kijelentkezik. Újra be kell jelentkeznie, és ki kell töltenie a kétlépcsős bejelentkezési beállításokat. Az adatvesztés elkerülése érdekében javasoljuk, hogy a titkosítási beállítások módosítása előtt exportálja a széfet."
   },
   "secretsManagerBeta": {
     "message": "Titkos kód kezelő béta"
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "A bevitel nem tartalmazhat csak fehérszóköz karaktert.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Elvetés"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "Ez a funkció nem érhető el ingyenes szervezetek számára. Az áttéréshez a szervezet tulajdonosához kell fordulni."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Lépjünk kapcsolatba a szervezet adminisztrátorával a projekt titkos kódjainak kezeléséhez.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "A meglévő tagoknak meg kell változtatniuk jelszavaikat."
+  },
+  "region": {
+    "message": "Régió"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "Nincs jogosulltság ezen projekt törléséhez.",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "A következő projektek nem törölhetők. Szeretnénk folytatni?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "KDF beállítások frissítése"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Megbízható eszköztitkosítás"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "A hitelesítés után a tagok az eszközükön tárolt kulccsal visszafejtik a tároló adatait. A",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "fiók helyreállítási adminisztrációs szabályzat",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "automatikus regisztrációval bekapcsol, ha ez az opció van használatban.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ nem található.",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Fiók helyreállítás"
+  },
+  "updatedTempPassword": {
+    "message": "A felhasználó frissítette a fiók helyreállítás során kiadott jelszót."
   }
 }

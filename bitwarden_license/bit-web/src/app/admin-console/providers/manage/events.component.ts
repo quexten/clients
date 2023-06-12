@@ -3,15 +3,15 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { UserNamePipe } from "@bitwarden/angular/pipes/user-name.pipe";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { ExportService } from "@bitwarden/common/abstractions/export.service";
-import { FileDownloadService } from "@bitwarden/common/abstractions/fileDownload/fileDownload.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
 import { EventResponse } from "@bitwarden/common/models/response/event.response";
+import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { BaseEventsComponent } from "@bitwarden/web-vault/app/common/base.events.component";
 import { EventService } from "@bitwarden/web-vault/app/core";
+import { EventExportService } from "@bitwarden/web-vault/app/tools/event-export";
 
 @Component({
   selector: "provider-events",
@@ -31,7 +31,7 @@ export class EventsComponent extends BaseEventsComponent implements OnInit {
     eventService: EventService,
     i18nService: I18nService,
     private providerService: ProviderService,
-    exportService: ExportService,
+    exportService: EventExportService,
     platformUtilsService: PlatformUtilsService,
     private router: Router,
     logService: LogService,

@@ -1,26 +1,19 @@
-import { DialogModule, DialogRef } from "@angular/cdk/dialog";
 import { Component } from "@angular/core";
-import { Meta, moduleMetadata, Story } from "@storybook/angular";
-import { firstValueFrom } from "rxjs";
+import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
+import {
+  SimpleDialogType,
+  SimpleDialogOptions,
+  DialogServiceAbstraction,
+} from "@bitwarden/angular/services/dialog";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 
 import { ButtonModule } from "../../button";
 import { CalloutModule } from "../../callout";
-import { IconButtonModule } from "../../icon-button";
-import { SharedModule } from "../../shared/shared.module";
 import { I18nMockService } from "../../utils/i18n-mock.service";
-import { DialogService } from "../dialog.service";
-import { DialogCloseDirective } from "../directives/dialog-close.directive";
-import { DialogTitleContainerDirective } from "../directives/dialog-title-container.directive";
-import { SimpleDialogComponent } from "../simple-dialog/simple-dialog.component";
-
-import { SimpleDialogCloseType } from "./models/simple-dialog-close-type.enum";
-import { SimpleDialogOptions } from "./models/simple-dialog-options";
-import { SimpleDialogType } from "./models/simple-dialog-type.enum";
+import { DialogModule } from "../dialog.module";
 
 @Component({
-  selector: "app-story-dialog",
   template: `
     <h2 class="tw-text-main">Dialog Type Examples:</h2>
     <div class="tw-mb-4 tw-flex tw-flex-row tw-gap-2">
@@ -115,8 +108,7 @@ import { SimpleDialogType } from "./models/simple-dialog-type.enum";
     </div>
 
     <bit-callout *ngIf="showCallout" [type]="calloutType" title="Dialog Close Result">
-      <span *ngIf="dialogCloseResult">{{ dialogCloseResult }}</span>
-      <span *ngIf="!dialogCloseResult">undefined</span>
+      {{ dialogCloseResult }}
     </bit-callout>
   `,
 })
@@ -190,22 +182,19 @@ class StoryDialogComponent {
 
   showCallout = false;
   calloutType = "info";
-  dialogCloseResult: undefined | SimpleDialogCloseType;
+  dialogCloseResult: boolean;
 
-  constructor(public dialogService: DialogService, private i18nService: I18nService) {}
+  constructor(public dialogService: DialogServiceAbstraction, private i18nService: I18nService) {}
 
-  openSimpleConfigurableDialog(opts: SimpleDialogOptions) {
-    const dialogReference: DialogRef = this.dialogService.openSimpleDialog(opts);
+  async openSimpleConfigurableDialog(opts: SimpleDialogOptions) {
+    this.dialogCloseResult = await this.dialogService.openSimpleDialog(opts);
 
-    firstValueFrom(dialogReference.closed).then((result: SimpleDialogCloseType | undefined) => {
-      this.showCallout = true;
-      this.dialogCloseResult = result;
-      if (result && result === SimpleDialogCloseType.ACCEPT) {
-        this.calloutType = "success";
-      } else {
-        this.calloutType = "info";
-      }
-    });
+    this.showCallout = true;
+    if (this.dialogCloseResult) {
+      this.calloutType = "success";
+    } else {
+      this.calloutType = "info";
+    }
   }
 }
 
@@ -214,10 +203,10 @@ export default {
   component: StoryDialogComponent,
   decorators: [
     moduleMetadata({
-      declarations: [DialogCloseDirective, DialogTitleContainerDirective, SimpleDialogComponent],
-      imports: [SharedModule, IconButtonModule, ButtonModule, DialogModule, CalloutModule],
+      imports: [ButtonModule, DialogModule, CalloutModule],
+    }),
+    applicationConfig({
       providers: [
-        DialogService,
         {
           provide: I18nService,
           useFactory: () => {
@@ -248,8 +237,6 @@ export default {
   },
 } as Meta;
 
-const Template: Story<StoryDialogComponent> = (args: StoryDialogComponent) => ({
-  props: args,
-});
+type Story = StoryObj<StoryDialogComponent>;
 
-export const Default = Template.bind({});
+export const Default: Story = {};

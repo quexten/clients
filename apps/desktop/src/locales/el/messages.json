@@ -542,7 +542,7 @@
     "message": "Απαιτείται επιβεβαίωση του κύριου κωδικού."
   },
   "masterPasswordMinlength": {
-    "message": "Master password must be at least $VALUE$ characters long.",
+    "message": "Ο κύριος κωδικός πρέπει να έχει τουλάχιστον $VALUE$ χαρακτήρες μήκος.",
     "description": "The Master Password must be at least a specific number of characters long.",
     "placeholders": {
       "value": {
@@ -771,7 +771,7 @@
     "message": "Επικοινωνία"
   },
   "helpAndFeedback": {
-    "message": "Help and feedback"
+    "message": "Βοήθεια και σχόλια"
   },
   "getHelp": {
     "message": "Ζητήστε Βοήθεια"
@@ -1392,11 +1392,17 @@
   "unlockWithWindowsHello": {
     "message": "Ξεκλειδώστε με το Windows Hello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "Additional Windows Hello settings"
+  },
   "windowsHelloConsentMessage": {
     "message": "Επαληθεύστε για το Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "Ξεκλείδωμα με Touch ID"
+  },
+  "additionalTouchIdSettings": {
+    "message": "Additional Touch ID settings"
   },
   "touchIdConsentMessage": {
     "message": "Ξεκλειδώστε το vault σας"
@@ -1406,6 +1412,12 @@
   },
   "autoPromptTouchId": {
     "message": "Ερώτηση για το Touch ID κατά την εκκίνηση"
+  },
+  "requirePasswordOnStart": {
+    "message": "Require password or PIN on app start"
+  },
+  "recommendedForSecurity": {
+    "message": "Συνίσταται για ασφάλεια."
   },
   "lockWithMasterPassOnRestart": {
     "message": "Κλείδωμα με τον κύριο κωδικό πρόσβασης κατά την επανεκκίνηση"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "Για να ολοκληρώσετε τη σύνδεση με SSO, ορίστε έναν κύριο κωδικό πρόσβασης για πρόσβαση και προστασία του vault σας."
+  },
+  "currentMasterPass": {
+    "message": "Τρέχων κύριος κωδικός"
   },
   "newMasterPass": {
     "message": "Νέος Κύριος Κωδικός"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "Ο Κύριος Κωδικός Πρόσβασής σας άλλαξε πρόσφατα από διαχειριστή στον οργανισμό σας. Για να αποκτήσετε πρόσβαση στο vault, πρέπει να τον ενημερώσετε τώρα. Η διαδικασία θα σας αποσυνδέσει από την τρέχουσα συνεδρία σας, απαιτώντας από εσάς να συνδεθείτε ξανά. Οι ενεργές συνεδρίες σε άλλες συσκευές ενδέχεται να συνεχίσουν να είναι ενεργές για μία ώρα."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "hours": {
     "message": "Ώρες"
   },
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden recommends updating your biometric settings to require your master password (or PIN) on the first unlock. Would you like to update your settings now?"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "Ενημέρωση Προτεινόμενων Ρυθμίσεων"
+  },
+  "region": {
+    "message": "Περιοχή"
+  },
+  "eu": {
+    "message": "ΕΕ",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "ΗΠΑ",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Self-hosted"
   }
 }

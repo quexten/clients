@@ -1,14 +1,13 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { map, Observable } from "rxjs";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
 import {
   canAccessAdmin,
-  isNotProviderUser,
   OrganizationService,
 } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 
 @Component({
   selector: "app-organization-switcher",
@@ -23,8 +22,7 @@ export class OrganizationSwitcherComponent implements OnInit {
   loaded = false;
 
   async ngOnInit() {
-    this.organizations$ = this.organizationService.organizations$.pipe(
-      map((orgs) => orgs.filter(isNotProviderUser)),
+    this.organizations$ = this.organizationService.memberOrganizations$.pipe(
       canAccessAdmin(this.i18nService),
       map((orgs) => orgs.sort(Utils.getSortFunction(this.i18nService, "name")))
     );

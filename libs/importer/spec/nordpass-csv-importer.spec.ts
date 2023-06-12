@@ -1,4 +1,4 @@
-import { SecureNoteType } from "@bitwarden/common/enums/secureNoteType";
+import { SecureNoteType } from "@bitwarden/common/enums";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { IdentityView } from "@bitwarden/common/vault/models/view/identity.view";
@@ -77,7 +77,7 @@ function expectCreditCard(cipher: CipherView) {
   expect(cipher.card.number).toBe("4024007103939509");
   expect(cipher.card.code).toBe("123");
   expect(cipher.card.expMonth).toBe("1");
-  expect(cipher.card.expYear).toBe("22");
+  expect(cipher.card.expYear).toBe("2022");
 }
 
 function expectIdentity(cipher: CipherView) {

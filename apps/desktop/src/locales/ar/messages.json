@@ -771,7 +771,7 @@
     "message": "اتصل بنا"
   },
   "helpAndFeedback": {
-    "message": "Help and feedback"
+    "message": "المساعدة والملاحظات"
   },
   "getHelp": {
     "message": "الحصول على المساعدة"
@@ -1392,11 +1392,17 @@
   "unlockWithWindowsHello": {
     "message": "فتح مع Windows Hello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "إعدادات Windows Hello إضافية"
+  },
   "windowsHelloConsentMessage": {
     "message": "تحقق من Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "فتح بواسطة معرف اللمس"
+  },
+  "additionalTouchIdSettings": {
+    "message": "إعدادات معرف اللمس الإضافية"
   },
   "touchIdConsentMessage": {
     "message": "فتح خزنتك"
@@ -1406,6 +1412,12 @@
   },
   "autoPromptTouchId": {
     "message": "اطلب معرف اللمس عند التشغيل"
+  },
+  "requirePasswordOnStart": {
+    "message": "يتطلب كلمة مرور أو رقم التعريف الشخصي عند بدء التطبيق"
+  },
+  "recommendedForSecurity": {
+    "message": "موصى به للأمان."
   },
   "lockWithMasterPassOnRestart": {
     "message": "قفل مع كلمة المرور الرئيسية عند إعادة تشغيل"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "من أجل إكمال تسجيل الدخول باستخدام SSO، يرجى تعيين كلمة مرور رئيسية للوصول وحماية خزنتك."
+  },
+  "currentMasterPass": {
+    "message": "كلمة المرور الرئيسية الحالية"
   },
   "newMasterPass": {
     "message": "كلمة المرور الرئيسية الجديدة"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "تم تغيير كلمة المرور الرئيسية الخاصة بك مؤخرًا من قبل مسؤول في مؤسستك. من أجل الوصول إلى الخزانة، يجب عليك تحديثها الآن. سيتم تسجيل خروجك من الجلسة الحالية، مما يتطلب منك تسجيل الدخول مرة أخرى. وقد تظل الجلسات النشطة على أجهزة أخرى نشطة لمدة تصل إلى ساعة واحدة."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "كلمة المرور الرئيسية الخاصة بك لا تفي بواحدة أو أكثر من سياسات مؤسستك. من أجل الوصول إلى الخزنة، يجب عليك تحديث كلمة المرور الرئيسية الآن. سيتم تسجيل خروجك من الجلسة الحالية، مما يتطلب منك تسجيل الدخول مرة أخرى. وقد تظل الجلسات النشطة على أجهزة أخرى نشطة لمدة تصل إلى ساعة واحدة."
+  },
   "hours": {
     "message": "ساعات"
   },
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "سياسات مؤسستك تؤثر على مهلة خزنتك. الحد الأقصى المسموح به لمهلة الخزنة هو $HOURS$ ساعة(ساعات) و $MINUTES$ دقيقة(دقائق). يتم تعيين إجراء مهلة المخزن الخاص بك إلى $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "لقد حددت سياسات مؤسستك إجراء مهلة الخزنة الخاصة بك إلى $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "يوصي Bitwarden بتحديث إعدادات القياسات الحيوية الخاصة بك لطلب كلمة المرور الرئيسية (أو PIN) عند فتح القفل الأول. هل ترغب في تحديث إعداداتك الآن؟"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "تحديث الإعدادات الموصى بها"
+  },
+  "region": {
+    "message": "المنطقة"
+  },
+  "eu": {
+    "message": "الاتحاد الأوروبي",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "الولايات المتحدة",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "استضافة ذاتية"
   }
 }

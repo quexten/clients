@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Uvoz podataka u trezor je uspio"
   },
+  "importSuccessNumberOfItems": {
+    "message": "A total of $AMOUNT$ items were imported.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Izvoz podataka uspješan"
   },
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "View collection - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Edit item - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Kopirana lozinka za stavku $ID$.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Pristup organizaciji biti će ti omogućen čim administrator potvrdi tvoje članstvo, o čemu ćemo te obavijestiti e-poštom."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "You can now access this organization."
   },
   "inviteAcceptFailed": {
     "message": "Nije moguće prihvatiti poziv. Zamoli administratora organizacije da ti pošalje novi poziv."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Podsjetnik za lozinku ne može biti isti kao lozinka."
   },
-  "enrollPasswordReset": {
-    "message": "Uključi mogućnost ponovnog postavljanja lozinke"
+  "enrollAccountRecovery": {
+    "message": "Enroll in account recovery"
   },
-  "enrolledPasswordReset": {
-    "message": "Mogućnost ponovnog postavljanja lozinke je uključena"
+  "enrolledAccountRecovery": {
+    "message": "Enrolled in account recovery"
   },
-  "withdrawPasswordReset": {
-    "message": "Isključi mogućnost ponovnog postavljanja lozinke"
+  "withdrawAccountRecovery": {
+    "message": "Withdraw from account recovery"
   },
   "enrollPasswordResetSuccess": {
     "message": "Prijava uspješna!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Odjava uspješna!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Korisnik $ID$ učlanjen u ponovno postavljanje lozinke.",
+  "eventEnrollAccountRecovery": {
+    "message": "User $ID$ enrolled in account recovery.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Korisnik $ID$ se povukao iz ponovnog postavljanja lozinke.",
+  "eventWithdrawAccountRecovery": {
+    "message": "User $ID$ withdrew from account recovery.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Učlanjenje će administratorima organizacije omogućiti promjenu tvoje glavne lozinke. Sigurno se želiš učlaniti?"
   },
-  "resetPasswordPolicy": {
-    "message": "Ponovno postavljanje glavne lozinke"
+  "accountRecoveryPolicy": {
+    "message": "Account recovery administration"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Dozvoli organizacijskim administratorima ponovno postavljanje glavnih lozniki korisnika."
+  "accountRecoveryPolicyDescription": {
+    "message": "Recover member accounts when master password or trusted devices are forgotten or lost. The recovery processes is based on the account encryption method."
   },
   "resetPasswordPolicyWarning": {
     "message": "Korisnici u organizaciji se trebaju ili sami učlaniti ili biti automatski učlanjeni da bi administratori mogli ponovno postavljati njihove lozinke."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Tvoja glavna lozinka ne zadovoljava pravila ove organizacije. Kako bi se pridružio organizaciji, moraš odmah ažurirati svoju glavnu lozinku. Ako nastaviš, odjavit ćeš se iz trenutne sesije te ćeš se morati ponovno prijaviti. Aktivne sesije na drugim uređajima mogu ostati aktivne do jedan sat."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "maximumVaultTimeout": {
     "message": "Istek trezora"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "Osobni istek trezora"
   },
@@ -4858,8 +4917,8 @@
   "activateAutofill": {
     "message": "Aktiviraj auto-ispunu"
   },
-  "activateAutofillDesc": {
-    "message": "Aktivira auto-ispunu kod učitavanja stranice u dodatku za preglednik za sve postojeće i nove korisnike."
+  "activateAutofillPolicyDesc": {
+    "message": "Activate the auto-fill on page load setting on the browser extension for all existing and new members."
   },
   "experimentalFeature": {
     "message": "Ugrožene ili nepouzdane web stranice mogu iskoristiti auto-ispunu prilikom učitavanja stranice."
@@ -5158,9 +5217,6 @@
     "message": "kako bi se svi članovi mogli prijaviti sa SSO.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "Potrebna je SSO provjera autentičnosti i pravila jedne organizacije potrebna su za postavljanje dešifriranja koristeći Key Connector."
-  },
   "memberDecryptionOption": {
     "message": "Opcije dešifriranja za članove"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Konektor za ključ"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Poveži prijavu sa SSO-om na svoj vlastiti poslužitelj za ključ za dešifriranje. Koristeći ovu opciju, članovi neće morati koristiti svoje glavne lozinke za dešifriranje podataka trezora. Kontaktiraj Bitwarden podršku za pomoć pri postavljanju."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "require SSO authentication and single organization policies",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "Aktivirana je ”Prijava uz SSO i dešifriranje Key Connectorom„ Ovo će se pravilo primjenjivati samo na vlasnike i administratore."
@@ -5387,6 +5452,15 @@
     "message": "Trenutna organizacija",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Account: Logged in as $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Postavke računa"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Zadnja sinkronizacija",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Sinkronizirana sponzorstva na vlastitom poslužitelju."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Input value must be at least $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Input value must not exceed $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Pristupni tokeni opozvani",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "No access token selected to revoke",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Podizbornik"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Pomoć za sinkronizaciju naplate"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "License paid features help"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "After your subscription expires, you have 60 days to apply an updated license file to your organization. Grace period ends $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Prenesi licencu"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Niske KDF iteracije"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Povećaj KDF iteracije za bolju sigurnost tvog računa."
-  },
-  "changeKdfSettings": {
-    "message": "Promijeni KDF postavke"
+  "updateLowKdfIterationsDesc": {
+    "message": "Update your encryption settings to meet new security recommendations and improve account protection."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Nastavkom ćeš se odjaviti iz svih aktivnih sesija. Morat ćeš se ponovno prijaviti i dovršiti postavljanje prijave dvostrukom autentifikacijom. Preporučujemo izvoz trezora prije promjene postavki enkripcije kako bi se spriječio gubitak podataka."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Input must not contain only whitespace.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Odbaci"
   },
   "notAvailableForFreeOrganization": {
     "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Contact your organization's admin to manage secrets for this project.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Require existing members to change their passwords"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "You don't have permissions to delete this project",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "The following projects can not be deleted. Would you like to continue?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "Update KDF settings"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Trusted device encryption"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Once authenticated, members will decrypt vault data using a key stored on their device. The",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "account recovery administration policy",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "with automatic enrollment will turn on when this option is used.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ not found",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Recover account"
+  },
+  "updatedTempPassword": {
+    "message": "User updated a password issued through account recovery."
   }
 }

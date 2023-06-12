@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { StateService } from "@bitwarden/common/abstractions/state.service";
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { KdfConfig } from "@bitwarden/common/auth/models/domain/kdf-config";
 import {
   DEFAULT_KDF_CONFIG,
@@ -9,8 +9,8 @@ import {
   DEFAULT_ARGON2_MEMORY,
   DEFAULT_ARGON2_PARALLELISM,
   KdfType,
-} from "@bitwarden/common/enums/kdfType";
-import { DialogService } from "@bitwarden/components";
+} from "@bitwarden/common/enums";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 
 import { ChangeKdfConfirmationComponent } from "./change-kdf-confirmation.component";
 
@@ -25,7 +25,7 @@ export class ChangeKdfComponent implements OnInit {
   kdfOptions: any[] = [];
   recommendedPbkdf2Iterations = DEFAULT_PBKDF2_ITERATIONS;
 
-  constructor(private stateService: StateService, private dialogService: DialogService) {
+  constructor(private stateService: StateService, private dialogService: DialogServiceAbstraction) {
     this.kdfOptions = [
       { name: "PBKDF2 SHA-256", value: KdfType.PBKDF2_SHA256 },
       { name: "Argon2id", value: KdfType.Argon2id },

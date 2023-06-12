@@ -771,7 +771,7 @@
     "message": "تماس با ما"
   },
   "helpAndFeedback": {
-    "message": "Help and feedback"
+    "message": "کمک و باز خورد"
   },
   "getHelp": {
     "message": "کمک گرفتن"
@@ -1392,11 +1392,17 @@
   "unlockWithWindowsHello": {
     "message": "باز کردن با Windows Hello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "تنظیمات اضافی Windows Hello"
+  },
   "windowsHelloConsentMessage": {
     "message": "تأیید برای Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "باز کردن با Touch ID"
+  },
+  "additionalTouchIdSettings": {
+    "message": "تنظیمات اضافی Touch ID"
   },
   "touchIdConsentMessage": {
     "message": "قفل گاوصندوق خود را باز کنید"
@@ -1406,6 +1412,12 @@
   },
   "autoPromptTouchId": {
     "message": "درخواست Touch ID در هنگام راه اندازی"
+  },
+  "requirePasswordOnStart": {
+    "message": "هنگام شروع برنامه، رمز عبور یا پین مورد نیاز است"
+  },
+  "recommendedForSecurity": {
+    "message": "برای امنیت توصیه می‌شود."
   },
   "lockWithMasterPassOnRestart": {
     "message": "در زمان شروع مجدد، با کلمه عبور اصلی قفل کن"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "برای پر کردن ورود به سیستم با SSO، لطفاً یک کلمه عبور اصلی برای دسترسی و محافظت از گاوصندوق خود تنظیم کنید."
+  },
+  "currentMasterPass": {
+    "message": "کلمه عبور اصلی فعلی"
   },
   "newMasterPass": {
     "message": "کلمه عبور اصلی جدید"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "کلمه عبور اصلی شما اخیراً توسط سرپرست سازمان‌تان تغییر کرده است. برای دسترسی به گاوصندوق، باید همین حالا کلمه عبور اصلی خود را به‌روز کنید. در صورت ادامه، شما از نشست فعلی خود خارج می‌شوید و باید دوباره وارد سیستم شوید. نشست فعال در دستگاه های دیگر ممکن است تا یک ساعت همچنان فعال باقی بمانند."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "کلمه عبور اصلی شما با یک یا چند سیاست سازمان‌تان مطابقت ندارد. برای دسترسی به گاوصندوق، باید همین حالا کلمه عبور اصلی خود را به‌روز کنید. در صورت ادامه، شما از نشست فعلی خود خارج می‌شوید و باید دوباره وارد سیستم شوید. نشست فعال در دستگاه های دیگر ممکن است تا یک ساعت همچنان فعال باقی بمانند."
+  },
   "hours": {
     "message": "ساعت"
   },
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "سیاست‌های سازمانتان بر مهلت زمانی گاوصندوق شما تأثیر می‌گذارد. حداکثر زمان مجاز گاوصندوق $HOURS$ ساعت و $MINUTES$ دقیقه است. عملگر مهلت زمانی گاوصندوق شما روی $ACTION$ تنظیم شده است.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "سباست‌های سازمان شما، عملگر زمان‌بندی گاوصندوق شما را روی $ACTION$ تنظیم کرده است.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden توصیه می‌کند که تنظیمات بیومتریک خود را به‌روزرسانی کنید تا در اولین باز کردن قفل، به رمز عبور اصلی (یا پین) نیاز داشته باشید. آیا می‌خواهید تنظیمات خود را اکنون به‌روز کنید؟"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "به‌روز رسانی تنظیمات توصیه شده"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Self-hosted"
   }
 }

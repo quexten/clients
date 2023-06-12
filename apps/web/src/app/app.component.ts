@@ -7,25 +7,28 @@ import { IndividualConfig, ToastrService } from "ngx-toastr";
 import { Subject, takeUntil } from "rxjs";
 import Swal from "sweetalert2";
 
-import { BroadcasterService } from "@bitwarden/common/abstractions/broadcaster.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { EventUploadService } from "@bitwarden/common/abstractions/event/event-upload.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
 import { NotificationsService } from "@bitwarden/common/abstractions/notifications.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { VaultTimeoutService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeout.service";
 import { CollectionService } from "@bitwarden/common/admin-console/abstractions/collection.service";
 import { InternalPolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-connector.service";
+import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { InternalFolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 
+import { PolicyListService } from "./admin-console/core/policy-list.service";
 import {
   DisableSendPolicy,
   MasterPasswordPolicy,
@@ -37,7 +40,7 @@ import {
   SingleOrgPolicy,
   TwoFactorAuthenticationPolicy,
 } from "./admin-console/organizations/policies";
-import { PolicyListService, RouterService } from "./core";
+import { RouterService } from "./core";
 
 const BroadcasterSubscriptionId = "AppComponent";
 const IdleTimeout = 60000 * 10; // 10 minutes
@@ -77,7 +80,9 @@ export class AppComponent implements OnDestroy, OnInit {
     private eventUploadService: EventUploadService,
     private policyService: InternalPolicyService,
     protected policyListService: PolicyListService,
-    private keyConnectorService: KeyConnectorService
+    private keyConnectorService: KeyConnectorService,
+    private configService: ConfigServiceAbstraction,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   ngOnInit() {
@@ -94,6 +99,12 @@ export class AppComponent implements OnDestroy, OnInit {
       window.onkeypress = () => this.recordActivity();
     });
 
+    /// ############ DEPRECATED ############
+    /// Please do not use the AppComponent to send events between services.
+    ///
+    /// Services that depends on other services, should do so through Dependency Injection
+    /// and subscribe to events through that service observable.
+    ///
     this.broadcasterService.subscribe(BroadcasterSubscriptionId, async (message: any) => {
       this.ngZone.run(async () => {
         switch (message.command) {
@@ -127,14 +138,15 @@ export class AppComponent implements OnDestroy, OnInit {
           case "syncStarted":
             break;
           case "syncCompleted":
+            await this.configService.fetchServerConfig();
             break;
           case "upgradeOrganization": {
-            const upgradeConfirmed = await this.platformUtilsService.showDialog(
-              this.i18nService.t("upgradeOrganizationDesc"),
-              this.i18nService.t("upgradeOrganization"),
-              this.i18nService.t("upgradeOrganization"),
-              this.i18nService.t("cancel")
-            );
+            const upgradeConfirmed = await this.dialogService.openSimpleDialog({
+              title: { key: "upgradeOrganization" },
+              content: { key: "upgradeOrganizationDesc" },
+              acceptButtonText: { key: "upgradeOrganization" },
+              type: SimpleDialogType.INFO,
+            });
             if (upgradeConfirmed) {
               this.router.navigate([
                 "organizations",
@@ -146,24 +158,24 @@ export class AppComponent implements OnDestroy, OnInit {
             break;
           }
           case "premiumRequired": {
-            const premiumConfirmed = await this.platformUtilsService.showDialog(
-              this.i18nService.t("premiumRequiredDesc"),
-              this.i18nService.t("premiumRequired"),
-              this.i18nService.t("upgrade"),
-              this.i18nService.t("cancel")
-            );
+            const premiumConfirmed = await this.dialogService.openSimpleDialog({
+              title: { key: "premiumRequired" },
+              content: { key: "premiumRequiredDesc" },
+              acceptButtonText: { key: "upgrade" },
+              type: SimpleDialogType.SUCCESS,
+            });
             if (premiumConfirmed) {
               this.router.navigate(["settings/subscription/premium"]);
             }
             break;
           }
           case "emailVerificationRequired": {
-            const emailVerificationConfirmed = await this.platformUtilsService.showDialog(
-              this.i18nService.t("emailVerificationRequiredDesc"),
-              this.i18nService.t("emailVerificationRequired"),
-              this.i18nService.t("learnMore"),
-              this.i18nService.t("cancel")
-            );
+            const emailVerificationConfirmed = await this.dialogService.openSimpleDialog({
+              title: { key: "emailVerificationRequired" },
+              content: { key: "emailVerificationRequiredDesc" },
+              acceptButtonText: { key: "learnMore" },
+              type: SimpleDialogType.INFO,
+            });
             if (emailVerificationConfirmed) {
               this.platformUtilsService.launchUri(
                 "https://bitwarden.com/help/create-bitwarden-account/"

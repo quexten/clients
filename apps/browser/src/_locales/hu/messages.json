@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Automatikusan kitöltött elem"
   },
+  "insecurePageWarning": {
+    "message": "Figyelmeztetés: Ez egy nem biztonságos HTTP oldal és az elküldött információkat mások láthatják és módosíthatják. Ezt a bejelentkezést eredetileg egy biztonságos (HTTPS) oldalra mentették."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Még mindig ki szeretnénk tölteni ezt a bejelentkezést?"
+  },
+  "autofillIframeWarning": {
+    "message": "Az űrlapot egy másik domain tárolja, mint a mentett bejelentkezés URI-ja. Az automatikus kitöltéshez válasszuk az OK gombot, a leállításhoz pedig a Mégsem lehetőséget."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Ennek a figyelmeztetésnek a jövőbeni elkerülése érdekében mentsük el ezt az URI-t - $HOSTNAME$ - a Bitwarden bejelentkezési elemébe ennél a webhelynél.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Mesterjelszó beállítása"
+  },
+  "currentMasterPass": {
+    "message": "Jelenlegi mesterjelszó"
+  },
+  "newMasterPass": {
+    "message": "Új mesterjelszó"
+  },
+  "confirmNewMasterPass": {
+    "message": "Új mesterjelszó megerősítése"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Egy vagy több szervezeti rendszabályhoz mesterjelszó szükséges a következő követelmények megfeleléséhez:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "A szervezet egyik adminisztrátora nemrég megváltoztatta a mesterjelszót. A széf eléréséhez most frissíteni kell a mesterjelszót. Továbblépéskor kijelentkezés történik a jelenlegi munkamenetből és újra be kell jelentkezni. Ha van aktív munkamenet más eszközön, az még legfeljebb egy óráig aktív maradhat."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "A mesterjelszó nem felel meg egy vagy több szervezeti szabályzatnak. A széf eléréséhez frissíteni kell a meszerjelszót. A továbblépés kijelentkeztet az aktuális munkamenetből és újra be kell jelentkezni. A többi eszközön lévő aktív munkamenetek akár egy óráig is aktívak maradhatnak."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatikus regisztráció"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "A szervezeti házirendek hatással vannak a széf időkorlátjára. A széf időkorlátja legfeljebb $HOURS$ óra és $MINUTES$ perc lehet. A széf időkifutási művelete $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "A szervezeti házirendek által jelenleg beállított időkifutási művelet $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Régió"
+  },
+  "opensInANewWindow": {
+    "message": "Megnyitás új ablakban"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

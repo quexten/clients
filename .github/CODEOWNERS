@@ -20,12 +20,14 @@ libs/angular/src/auth @bitwarden/team-auth-dev
 libs/common/src/auth @bitwarden/team-auth-dev
 
 ## Tools team files ##
-apps/browser/src/app/tools @bitwarden/team-tools-dev
-apps/cli/src/app/tools @bitwarden/team-tools-dev
+apps/browser/src/tools @bitwarden/team-tools-dev
+apps/cli/src/tools @bitwarden/team-tools-dev
 apps/desktop/src/app/tools @bitwarden/team-tools-dev
 apps/web/src/app/tools @bitwarden/team-tools-dev
 libs/angular/src/tools @bitwarden/team-tools-dev
+libs/common/src/models/export @bitwarden/team-tools-dev
 libs/common/src/tools @bitwarden/team-tools-dev
+libs/exporter @bitwarden/team-tools-dev
 libs/importer @bitwarden/team-tools-dev
 
 ## Vault team files ##
@@ -50,3 +52,25 @@ libs/common/src/admin-console @bitwarden/team-admin-console-dev
 apps/web/src/app/billing @bitwarden/team-billing-dev
 libs/angular/src/billing @bitwarden/team-billing-dev
 libs/common/src/billing @bitwarden/team-billing-dev
+
+## Platform team files ##
+apps/browser/src/platform @bitwarden/team-platform-dev
+apps/cli/src/platform @bitwarden/team-platform-dev
+apps/desktop/src/platform @bitwarden/team-platform-dev
+apps/web/src/app/platform @bitwarden/team-platform-dev
+libs/angular/src/platform @bitwarden/team-platform-dev
+libs/common/src/platform @bitwarden/team-platform-dev
+# Node-specifc platform files
+libs/node @bitwarden/team-platform-dev
+# Web utils used across app and connectors
+apps/web/src/utils/ @bitwarden/team-platform-dev
+# Web core and shared files
+apps/web/src/app/core @bitwarden/team-platform-dev
+apps/web/src/app/shared @bitwarden/team-platform-dev
+apps/web/src/translation-constants.ts @bitwarden/team-platform-dev
+
+## Component Library ##
+libs/components @bitwarden/team-platform-dev
+
+## Desktop native module ##
+apps/desktop/desktop_native @bitwarden/team-platform-dev

@@ -1,13 +1,14 @@
 import { Component } from "@angular/core";
 
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { FileDownloadService } from "@bitwarden/common/abstractions/fileDownload/fileDownload.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherData } from "@bitwarden/common/vault/models/data/cipher.data";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
@@ -31,7 +32,8 @@ export class AttachmentsComponent extends BaseAttachmentsComponent {
     platformUtilsService: PlatformUtilsService,
     apiService: ApiService,
     logService: LogService,
-    fileDownloadService: FileDownloadService
+    fileDownloadService: FileDownloadService,
+    dialogService: DialogServiceAbstraction
   ) {
     super(
       cipherService,
@@ -41,7 +43,8 @@ export class AttachmentsComponent extends BaseAttachmentsComponent {
       platformUtilsService,
       apiService,
       logService,
-      fileDownloadService
+      fileDownloadService,
+      dialogService
     );
   }
 

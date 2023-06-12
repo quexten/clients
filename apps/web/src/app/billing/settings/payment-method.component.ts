@@ -2,15 +2,16 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationResponse } from "@bitwarden/common/admin-console/models/response/organization.response";
-import { PaymentMethodType } from "@bitwarden/common/billing/enums/payment-method-type";
+import { PaymentMethodType } from "@bitwarden/common/billing/enums";
 import { BillingPaymentResponse } from "@bitwarden/common/billing/models/response/billing-payment.response";
 import { VerifyBankRequest } from "@bitwarden/common/models/request/verify-bank.request";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 import { TaxInfoComponent } from "./tax-info.component";
 
@@ -55,7 +56,8 @@ export class PaymentMethodComponent implements OnInit {
     private router: Router,
     private logService: LogService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -93,13 +95,14 @@ export class PaymentMethodComponent implements OnInit {
 
   addCredit() {
     if (this.paymentSourceInApp) {
-      this.platformUtilsService.showDialog(
-        this.i18nService.t("cannotPerformInAppPurchase"),
-        this.i18nService.t("addCredit"),
-        null,
-        null,
-        "warning"
-      );
+      this.dialogService.openSimpleDialog({
+        title: { key: "addCredit" },
+        content: { key: "cannotPerformInAppPurchase" },
+        acceptButtonText: { key: "ok" },
+        cancelButtonText: null,
+        type: SimpleDialogType.WARNING,
+      });
+
       return;
     }
     this.showAddCredit = true;
@@ -114,13 +117,14 @@ export class PaymentMethodComponent implements OnInit {
 
   changePayment() {
     if (this.paymentSourceInApp) {
-      this.platformUtilsService.showDialog(
-        this.i18nService.t("cannotPerformInAppPurchase"),
-        this.i18nService.t("changePaymentMethod"),
-        null,
-        null,
-        "warning"
-      );
+      this.dialogService.openSimpleDialog({
+        title: { key: "changePaymentMethod" },
+        content: { key: "cannotPerformInAppPurchase" },
+        acceptButtonText: { key: "ok" },
+        cancelButtonText: null,
+        type: SimpleDialogType.WARNING,
+      });
+
       return;
     }
     this.showAdjustPayment = true;

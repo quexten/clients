@@ -1,4 +1,4 @@
-import { SecureNoteType } from "@bitwarden/common/enums/secureNoteType";
+import { SecureNoteType } from "@bitwarden/common/enums";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.view";
@@ -90,7 +90,7 @@ export class EnpassCsvImporter extends BaseImporter implements Importer {
               continue;
             } else if (fieldNameLower === "number" && this.isNullOrWhitespace(cipher.card.number)) {
               cipher.card.number = fieldValue;
-              cipher.card.brand = this.getCardBrand(fieldValue);
+              cipher.card.brand = CardView.getCardBrandByPatterns(cipher.card.number);
               continue;
             } else if (fieldNameLower === "cvc" && this.isNullOrWhitespace(cipher.card.code)) {
               cipher.card.code = fieldValue;

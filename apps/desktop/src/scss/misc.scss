@@ -331,6 +331,10 @@ form,
     }
   }
 
+  .form-group-child {
+    margin-left: 20px;
+  }
+
   .checkbox {
     position: relative;
     display: block;
@@ -415,6 +419,10 @@ app-root > #loading,
   @include themify($themes) {
     color: themed("mutedColor");
   }
+}
+
+.page-top-padding {
+  padding-top: 50px;
 }
 
 .logo-image {

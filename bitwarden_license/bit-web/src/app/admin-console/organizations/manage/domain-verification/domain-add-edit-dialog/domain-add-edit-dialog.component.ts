@@ -3,16 +3,17 @@ import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { Subject, takeUntil } from "rxjs";
 
-import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/abstractions/cryptoFunction.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { OrgDomainApiServiceAbstraction } from "@bitwarden/common/abstractions/organization-domain/org-domain-api.service.abstraction";
 import { OrgDomainServiceAbstraction } from "@bitwarden/common/abstractions/organization-domain/org-domain.service.abstraction";
 import { OrganizationDomainResponse } from "@bitwarden/common/abstractions/organization-domain/responses/organization-domain.response";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { ValidationService } from "@bitwarden/common/abstractions/validation.service";
-import { HttpStatusCode } from "@bitwarden/common/enums/http-status-code.enum";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { HttpStatusCode } from "@bitwarden/common/enums";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
+import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/platform/abstractions/crypto-function.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { OrganizationDomainRequest } from "@bitwarden/common/services/organization-domain/requests/organization-domain.request";
 
 import { domainNameValidator } from "./validators/domain-name.validator";
@@ -24,7 +25,6 @@ export interface DomainAddEditDialogData {
 }
 
 @Component({
-  selector: "app-domain-add-edit-dialog",
   templateUrl: "domain-add-edit-dialog.component.html",
 })
 export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
@@ -65,10 +65,11 @@ export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
     private i18nService: I18nService,
     private orgDomainApiService: OrgDomainApiServiceAbstraction,
     private orgDomainService: OrgDomainServiceAbstraction,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
-  //#region Angular Method Implementations
+  // Angular Method Implementations
 
   async ngOnInit(): Promise<void> {
     // If we have data.orgDomain, then editing, otherwise creating new domain
@@ -80,9 +81,9 @@ export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  //#endregion
+  // End Angular Method Implementations
 
-  //#region Form methods
+  // Form methods
 
   async populateForm(): Promise<void> {
     if (this.data.orgDomain) {
@@ -117,9 +118,9 @@ export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
     this.orgDomainService.copyDnsTxt(this.txtCtrl.value);
   }
 
-  //#endregion
+  // End Form methods
 
-  //#region Async Form Actions
+  // Async Form Actions
   saveDomain = async (): Promise<void> => {
     if (this.domainForm.invalid) {
       this.platformUtilsService.showToast("error", null, this.i18nService.t("domainFormInvalid"));
@@ -249,13 +250,12 @@ export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
   }
 
   deleteDomain = async (): Promise<void> => {
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("removeDomainWarning"),
-      this.i18nService.t("removeDomain"),
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "removeDomain" },
+      content: { key: "removeDomainWarning" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (!confirmed) {
       return;
     }
@@ -266,5 +266,5 @@ export class DomainAddEditDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   };
 
-  //#endregion
+  // End Async Form Actions
 }

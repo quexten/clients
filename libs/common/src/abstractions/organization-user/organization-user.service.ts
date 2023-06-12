@@ -1,6 +1,7 @@
 import { ListResponse } from "../../models/response/list.response";
 
 import {
+  OrganizationUserAcceptInitRequest,
   OrganizationUserAcceptRequest,
   OrganizationUserBulkConfirmRequest,
   OrganizationUserConfirmRequest,
@@ -14,7 +15,7 @@ import {
   OrganizationUserBulkPublicKeyResponse,
   OrganizationUserBulkResponse,
   OrganizationUserDetailsResponse,
-  OrganizationUserResetPasswordDetailsReponse,
+  OrganizationUserResetPasswordDetailsResponse,
   OrganizationUserUserDetailsResponse,
 } from "./responses";
 
@@ -64,7 +65,7 @@ export abstract class OrganizationUserService {
   abstract getOrganizationUserResetPasswordDetails(
     organizationId: string,
     id: string
-  ): Promise<OrganizationUserResetPasswordDetailsReponse>;
+  ): Promise<OrganizationUserResetPasswordDetailsResponse>;
 
   /**
    * Create new organization user invite(s) for the specified organization
@@ -93,6 +94,20 @@ export abstract class OrganizationUserService {
     organizationId: string,
     ids: string[]
   ): Promise<ListResponse<OrganizationUserBulkResponse>>;
+
+  /**
+   * Accept an invitation to initialize and join an organization created via the Admin Portal **only**.
+   * This is only used once for the initial Owner, because it also creates the organization's encryption keys.
+   * This should not be used for organizations created via the Web client.
+   * @param organizationId - Identifier for the organization to accept
+   * @param id - Organization user identifier
+   * @param request - Request details for accepting the invitation
+   */
+  abstract postOrganizationUserAcceptInit(
+    organizationId: string,
+    id: string,
+    request: OrganizationUserAcceptInitRequest
+  ): Promise<void>;
 
   /**
    * Accept an organization user invitation

@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 
-import { SymmetricCryptoKey } from "../../models/domain/symmetric-crypto-key";
 import { AuthRequestPushNotification } from "../../models/response/notification.response";
+import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
 import { AuthenticationStatus } from "../enums/authentication-status";
 import { AuthResult } from "../models/domain/auth-result";
 import {
@@ -18,6 +18,7 @@ export abstract class AuthService {
   email: string;
   accessCode: string;
   authRequestId: string;
+  ssoEmail2FaSessionToken: string;
 
   logIn: (
     credentials:
@@ -37,11 +38,11 @@ export abstract class AuthService {
   authingWithPassword: () => boolean;
   authingWithPasswordless: () => boolean;
   getAuthStatus: (userId?: string) => Promise<AuthenticationStatus>;
-  authResponsePushNotifiction: (notification: AuthRequestPushNotification) => Promise<any>;
+  authResponsePushNotification: (notification: AuthRequestPushNotification) => Promise<any>;
   passwordlessLogin: (
     id: string,
     key: string,
     requestApproved: boolean
   ) => Promise<AuthRequestResponse>;
-  getPushNotifcationObs$: () => Observable<any>;
+  getPushNotificationObs$: () => Observable<any>;
 }

@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from "@angular/core";
 
-import { Utils } from "@bitwarden/common/misc/utils";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 
 enum CharacterType {
   Letter,
@@ -23,7 +23,7 @@ enum CharacterType {
   preserveWhitespaces: false,
 })
 export class ColorPasswordComponent {
-  @Input() private password: string = null;
+  @Input() password: string = null;
   @Input() showCount = false;
 
   characterStyles: Record<CharacterType, string[]> = {

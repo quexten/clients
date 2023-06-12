@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { ValidationService } from "@bitwarden/common/abstractions/validation.service";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { Provider } from "@bitwarden/common/models/domain/provider";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 
 import { WebProviderService } from "../services/web-provider.service";
 
@@ -27,7 +28,8 @@ export class AddOrganizationComponent implements OnInit {
     private webProviderService: WebProviderService,
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -49,13 +51,14 @@ export class AddOrganizationComponent implements OnInit {
       return;
     }
 
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("addOrganizationConfirmation", organization.name, this.provider.name),
-      organization.name,
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: organization.name,
+      content: {
+        key: "addOrganizationConfirmation",
+        placeholders: [organization.name, this.provider.name],
+      },
+      type: SimpleDialogType.WARNING,
+    });
 
     if (!confirmed) {
       return false;

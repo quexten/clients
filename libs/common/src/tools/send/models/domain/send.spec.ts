@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { Substitute, Arg, SubstituteOf } from "@fluffy-spoon/substitute";
 
-import { makeStaticByteArray, mockEnc } from "../../../../../spec/utils";
-import { CryptoService } from "../../../../abstractions/crypto.service";
-import { EncryptService } from "../../../../abstractions/encrypt.service";
-import { EncString } from "../../../../models/domain/enc-string";
-import { ContainerService } from "../../../../services/container.service";
+import { makeStaticByteArray, mockEnc } from "../../../../../spec";
+import { CryptoService } from "../../../../platform/abstractions/crypto.service";
+import { EncryptService } from "../../../../platform/abstractions/encrypt.service";
+import { EncString } from "../../../../platform/models/domain/enc-string";
+import { ContainerService } from "../../../../platform/services/container.service";
 import { SendType } from "../../enums/send-type";
 import { SendData } from "../data/send.data";
 

@@ -1,10 +1,22 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { combineLatest, filter, Observable, startWith, Subject, switchMap, takeUntil } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  takeUntil,
+} from "rxjs";
 
-import { DialogService } from "@bitwarden/components";
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
-import { ProjectPermissionDetailsView } from "../../models/view/project.view";
+import { ProjectView } from "../../models/view/project.view";
 import {
   OperationType,
   ProjectDialogComponent,
@@ -17,7 +29,7 @@ import { ProjectService } from "../project.service";
   templateUrl: "./project.component.html",
 })
 export class ProjectComponent implements OnInit, OnDestroy {
-  protected project$: Observable<ProjectPermissionDetailsView>;
+  protected project$: Observable<ProjectView>;
 
   private organizationId: string;
   private projectId: string;
@@ -27,7 +39,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private dialogService: DialogService
+    private router: Router,
+    private dialogService: DialogServiceAbstraction,
+    private platformUtilsService: PlatformUtilsService,
+    private i18nService: I18nService
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +53,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
     );
 
     this.project$ = combineLatest([this.route.params, currentProjectEdited]).pipe(
-      switchMap(([params, _]) => {
-        return this.projectService.getByProjectId(params.projectId);
+      switchMap(([params, _]) => this.projectService.getByProjectId(params.projectId)),
+      catchError(() => {
+        this.router.navigate(["/sm", this.organizationId, "projects"]).then(() => {
+          this.platformUtilsService.showToast(
+            "error",
+            null,
+            this.i18nService.t("notFound", this.i18nService.t("project"))
+          );
+        });
+        return EMPTY;
       })
     );
 

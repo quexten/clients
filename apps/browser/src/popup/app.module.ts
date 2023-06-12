@@ -1,19 +1,16 @@
 import { A11yModule } from "@angular/cdk/a11y";
+import { DialogModule } from "@angular/cdk/dialog";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { LayoutModule } from "@angular/cdk/layout";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { ScrollingModule } from "@angular/cdk/scrolling";
-// eslint-disable-next-line import/order
 import { CurrencyPipe, DatePipe } from "@angular/common";
-
-// Register the locales for the application
-import "./locales";
-
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
+import { EnvironmentSelectorComponent } from "@bitwarden/angular/auth/components/environment-selector.component";
 import { BitwardenToastModule } from "@bitwarden/angular/components/toastr.component";
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { ColorPasswordCountPipe } from "@bitwarden/angular/pipes/color-password-count.pipe";
@@ -39,6 +36,7 @@ import { EffluxDatesComponent as SendEffluxDatesComponent } from "../tools/popup
 import { SendAddEditComponent } from "../tools/popup/send/send-add-edit.component";
 import { SendGroupingsComponent } from "../tools/popup/send/send-groupings.component";
 import { SendTypeComponent } from "../tools/popup/send/send-type.component";
+import { ExportComponent } from "../tools/popup/settings/export.component";
 import { ActionButtonsComponent } from "../vault/popup/components/action-buttons.component";
 import { CipherRowComponent } from "../vault/popup/components/cipher-row.component";
 import { PasswordRepromptComponent } from "../vault/popup/components/password-reprompt.component";
@@ -65,7 +63,6 @@ import { ServicesModule } from "./services/services.module";
 import { AboutComponent } from "./settings/about.component";
 import { AutofillComponent } from "./settings/autofill.component";
 import { ExcludedDomainsComponent } from "./settings/excluded-domains.component";
-import { ExportComponent } from "./settings/export.component";
 import { FolderAddEditComponent } from "./settings/folder-add-edit.component";
 import { FoldersComponent } from "./settings/folders.component";
 import { HelpAndFeedbackComponent } from "./settings/help-and-feedback.component";
@@ -75,6 +72,9 @@ import { SettingsComponent } from "./settings/settings.component";
 import { SyncComponent } from "./settings/sync.component";
 import { VaultTimeoutInputComponent } from "./settings/vault-timeout-input.component";
 import { TabsComponent } from "./tabs.component";
+
+// Register the locales for the application
+import "../platform/popup/locales";
 
 @NgModule({
   imports: [
@@ -96,6 +96,7 @@ import { TabsComponent } from "./tabs.component";
     ReactiveFormsModule,
     ScrollingModule,
     ServicesModule,
+    DialogModule,
   ],
   declarations: [
     ActionButtonsComponent,
@@ -153,6 +154,7 @@ import { TabsComponent } from "./tabs.component";
     AboutComponent,
     HelpAndFeedbackComponent,
     AutofillComponent,
+    EnvironmentSelectorComponent,
   ],
   providers: [CurrencyPipe, DatePipe],
   bootstrap: [AppComponent],

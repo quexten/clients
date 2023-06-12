@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Automatisch gevuld item"
   },
+  "insecurePageWarning": {
+    "message": "Waarschuwing: Dit is een onbeveiligde HTTP-pagina waardoor anderen alle informatie die je verstuurt kunnen zien en wijzigen. Deze login is oorspronkelijk opgeslagen op een beveiligde (HTTPS) pagina."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Wil je je inloggegevens nog steeds invullen?"
+  },
+  "autofillIframeWarning": {
+    "message": "Dit formulier wordt door een ander domein gehost dan de URI van jouw opgeslagen login. Kies OK voor toch automatisch invullen, of Annuleren om te stoppen."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Om deze waarschuwing in de toekomst te voorkomen, bewaar je deze URI, $HOSTNAME$, bij je Bitwarden-login voor deze site.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Hoofdwachtwoord instellen"
+  },
+  "currentMasterPass": {
+    "message": "Huidig hoofdwachtwoord"
+  },
+  "newMasterPass": {
+    "message": "Nieuw hoofdwachtwoord"
+  },
+  "confirmNewMasterPass": {
+    "message": "Nieuw hoofdwachtwoord bevestigen"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Een of meer organisatiebeleidseisen verlangen dat je hoofdwachtwoord voldoet aan:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Je hoofdwachtwoord is onlangs veranderd door een beheerder in jouw organisatie. Om toegang te krijgen tot de kluis, moet je deze nu bijwerken. Doorgaan zal je huidige sessie uitloggen, waarna je opnieuw moet inloggen. Actieve sessies op andere apparaten blijven mogelijk nog een uur actief."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Je hoofdwachtwoord voldoet niet aan en of meerdere oganisatiebeleidsonderdelen. Om toegang te krijgen tot de kluis, moet je je hoofdwachtwoord nu bijwerken. Doorgaan zal je huidige sessie uitloggen, waarna je opnieuw moet inloggen. Actieve sessies op andere apparaten blijven mogelijk nog een uur actief."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatische inschrijving"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "De beleidsinstellingen van je organisatie hebben invloed op de time-out van je kluis. De maximale toegestane kluis time-out is $HOURS$ uur en $MINUTES$ minuten. Jouw time-out is ingesteld op $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "De beleidsinstellingen van je organisatie hebben je kluis time-out ingesteld op $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Regio"
+  },
+  "opensInANewWindow": {
+    "message": "Opent in een nieuw venster"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

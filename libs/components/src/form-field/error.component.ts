@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from "@angular/core";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 
 // Increments for each instance of this component
 let nextId = 0;
@@ -30,10 +30,16 @@ export class BitErrorComponent {
         return this.i18nService.t("inputMinLength", this.error[1]?.requiredLength);
       case "maxlength":
         return this.i18nService.t("inputMaxLength", this.error[1]?.requiredLength);
+      case "min":
+        return this.i18nService.t("inputMinValue", this.error[1]?.min);
+      case "max":
+        return this.i18nService.t("inputMaxValue", this.error[1]?.max);
       case "forbiddenCharacters":
         return this.i18nService.t("inputForbiddenCharacters", this.error[1]?.characters.join(", "));
       case "multipleEmails":
         return this.i18nService.t("multipleInputEmails");
+      case "trim":
+        return this.i18nService.t("inputTrimValidator");
       default:
         // Attempt to show a custom error message.
         if (this.error[1]?.message) {

@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 
 @Injectable({
   providedIn: "root",
@@ -13,9 +12,8 @@ export class IsPaidOrgGuard implements CanActivate {
   constructor(
     private router: Router,
     private organizationService: OrganizationService,
-    private platformUtilsService: PlatformUtilsService,
     private messagingService: MessagingService,
-    private i18nService: I18nService
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -27,12 +25,14 @@ export class IsPaidOrgGuard implements CanActivate {
 
     if (org.isFreeOrg) {
       // Users without billing permission can't access billing
-      if (!org.canManageBilling) {
-        await this.platformUtilsService.showDialog(
-          this.i18nService.t("notAvailableForFreeOrganization"),
-          this.i18nService.t("upgradeOrganization"),
-          this.i18nService.t("ok")
-        );
+      if (!org.canEditSubscription) {
+        await this.dialogService.openSimpleDialog({
+          title: { key: "upgradeOrganization" },
+          content: { key: "notAvailableForFreeOrganization" },
+          acceptButtonText: { key: "ok" },
+          cancelButtonText: null,
+          type: SimpleDialogType.INFO,
+        });
         return false;
       } else {
         this.messagingService.send("upgradeOrganization", { organizationId: org.id });

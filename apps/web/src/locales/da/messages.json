@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Data er nu importeret"
   },
+  "importSuccessNumberOfItems": {
+    "message": "I alt $AMOUNT$ emner blev importeret.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Data hermed eksporteret"
   },
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Vis samling - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Redigér emne - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Kopierede adgangskode til element $ID$.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Du kan få adgang til denne organisation, når en administrator bekræfter dit medlemskab. Vi sender dig en e-mail, når dette sker."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Denne organisation kan nu tilgås."
   },
   "inviteAcceptFailed": {
     "message": "Kan ikke acceptere invitationen. Bed en organisations-administrator om at sende en ny invitation."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Adgangskodetip og adgangskode må ikke være identiske."
   },
-  "enrollPasswordReset": {
-    "message": "Tilmeld Adgangskodenulstilling"
+  "enrollAccountRecovery": {
+    "message": "Indrullér i kontogendannelse"
   },
-  "enrolledPasswordReset": {
-    "message": "Tilmeldt Adgangskodenulstilling"
+  "enrolledAccountRecovery": {
+    "message": "Indrulleret i kontogendannelse"
   },
-  "withdrawPasswordReset": {
-    "message": "Afmeld fra Adgangskodenulstilling"
+  "withdrawAccountRecovery": {
+    "message": "Afmeld fra kontogendannelse"
   },
   "enrollPasswordResetSuccess": {
     "message": "Tilmelding lykkedes!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Afmelding lykkedes!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Bruger $ID$ tilmeldt adgangskodenulstilling.",
+  "eventEnrollAccountRecovery": {
+    "message": "Bruger $ID$ indrulleret i kontogendannelse.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Bruger $ID$ afmeldt adgangskodenulstilling.",
+  "eventWithdrawAccountRecovery": {
+    "message": "Bruger $ID$ afmeldt fra kontogendannelse.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Indrullering vil tillade organisationsadministratorer at ændre din hovedadgangskode"
   },
-  "resetPasswordPolicy": {
-    "message": "Nulstilling af hovedadgangskode"
+  "accountRecoveryPolicy": {
+    "message": "Kontogendannelseshåndtering"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Tillad admins at nulstille hovedadgangskoder for medlemmer."
+  "accountRecoveryPolicyDescription": {
+    "message": "Gendan medlemskonti, når hovedadgangskode eller betroede enheder er glemt eller tabt. Gendannelsesprocesser er baseret på kontokrypteringsmetoden."
   },
   "resetPasswordPolicyWarning": {
     "message": "Organisationsmedlemmer skal selvindrullere eller være auto-indrulleret, før admins kan nulstille deres hovedadgangskode."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Din hovedadgangskode opfylder ikke organisationspolitikkens krav. For at kunne blive organisationsmedlem, skal din hovedadgangskode derfor opdateres nu. Fortsættes, logges der ud af den nuværende session, og du vil skulle logge ind igen. Aktive sessioner på andre enheder kan forblive aktive i op til én time."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Din hovedadgangskode opfylder ikke et eller flere organisationspolitikkrav. For at kunne tilgå boksen skal hovedadgangskode derfor opdateres nu. Fortsættes, logges du ud af den nuværende session og vil skulle logge ind igen. Aktive sessioner på andre enheder kan forblive aktive i op til én time."
+  },
   "maximumVaultTimeout": {
     "message": "Boks-timeout"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Organisationspolitikkerne påvirker boks-timeout. Maks. tilladt boks-timeout er $HOURS$ time(r) og $MINUTES$ minut(ter). Boks-timeouthandlingen er pt. sat til $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Organisationspolitikker har sat boks-timeouthandlingen til $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "Tilpasset boks-timeout"
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "Aktivér autoudfyldning"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "Aktivér indstillingen Autoudfyldning ved sideindlæsning i browserudvidelsen for alle eksisterende og nye medlemmer."
   },
   "experimentalFeature": {
@@ -5158,9 +5217,6 @@
     "message": "for at kræve, at alle medlemmer logger ind med SSO.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "\"Kræv SSO-godkendelse\" samt enkeltorganisationspolitikker kræves for opsætning af Key Connector-dekryptering."
-  },
   "memberDecryptionOption": {
     "message": "Medlemsdekrypteringsindstillinger"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Key Connector"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Forbind login med SSO til din selv-hostet dekrypteringsnøgleserver. Muligheden overflødiggør medlemmers brug af hovedadgangskode ifm. boks-datadekryptering. Kontakt Bitwarden Support for hjælp til opsætningen."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Forbind login med SSO til selv-hostet dekrypteringsnøgleserver. Ved brug af denne mulighed behøver et medlem ikke at bruge hovedadgangskoden til at dekryptere boksdata",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "require SSO authentication and single organization policies",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "kræves for at opsætte Key Connector-decryptering. Kontakt Bitwarden Support for hjælp til opsætning.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "\"Login med SSO og Key Connector-dekryptering\" er aktiveret. Denne politik omfatter kun ejere og admins."
@@ -5387,6 +5452,15 @@
     "message": "Nuværende organisation",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Konto: Logget ind som $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Kontoindstillinger"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Seneste synk",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Selv-hostet sponsorater synket."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Inputværdi skal være mindst $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Inputværdi må ikke overstige $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Access tokens revoked",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "Ingen adgangstoken valgt til tilbagekaldelse",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Undermenu"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Hjælp til faktureringssynk"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Hjælp til licensbetalte funktioner"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "Ved abonnementsudløb kan der indenfor 60 dage føjes en opdateret licensfil til organisationen. Henstandsperioden udløber pr. $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Upload licens"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Få KDF-iterationer"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Forøg KDF-krypteringsindstillinger for at forbedre kontosikkerheden."
-  },
-  "changeKdfSettings": {
-    "message": "Skift KDF-indstillinger"
+  "updateLowKdfIterationsDesc": {
+    "message": "Opdatér krypteringsindstillingerne for at opfylde nye sikkerhedsanbefalinger og forbedre kontobeskyttelsen."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Proceeding will log you out of all active sessions. You will need to log back in and complete two-step login setup. We recommend exporting your vault before changing your encryption settings to prevent data loss."
@@ -6542,7 +6647,7 @@
     "message": "En fejl opstod under forsøget på at læse importfilen"
   },
   "accessedSecret": {
-    "message": "Accessed secret $SECRET_ID$.",
+    "message": "Tilgået hemmelighed $SECRET_ID$.",
     "placeholders": {
       "secret_id": {
         "content": "$1",
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Input må ikke indeholde mellemrum.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
-    "message": "Afvis"
+    "message": "Luk"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "Denne funktion er ikke tilgængelig for gratis organisationer. Kontakt organisationsejeren for at opgradere."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Kontakt organisationsadmin for at håndtere hemmeligheder for dette projekt.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Kræv, at eksisterende medlemmer ændrer deres adgangskoder"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "Ingen tilladelse til at slette dette objekt",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "Flg. projekter kan ikke slettes. Fortsæt?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "Opdatér KDF-indstillinger"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Betroet enhed-kryptering"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Når godkendt, dekrypterer medlemmet boksdata vha. en nøgle gemt på enheden.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "Kontogendannelseshåndteringspolitikken",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "med automatisk indrullering aktiveres ved brug af denne indstilling.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ ikke fundet",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Gendan konto"
+  },
+  "updatedTempPassword": {
+    "message": "Bruger har opdateret en adgangskode udstedt via kontogendannelse."
   }
 }

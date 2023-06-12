@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Fyllde i objektet automatiskt"
   },
+  "insecurePageWarning": {
+    "message": "Varning: Detta är en icke säkrad HTTP-sida, och all information du skickar kan potentiellt ses och ändras av andra. Denna inloggning sparades ursprungligen på en säker (HTTPS) sida."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Vill du fortfarande fylla i denna inloggning?"
+  },
+  "autofillIframeWarning": {
+    "message": "The form is hosted by a different domain than the URI of your saved login. Choose OK to auto-fill anyway, or Cancel to stop."
+  },
+  "autofillIframeWarningTip": {
+    "message": "För att förhindra denna varning i framtiden, spara denna URI, $HOSTNAME$, till ditt Bitwarden inloggningsobjekt för denna webbplats.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Ange huvudlösenord"
+  },
+  "currentMasterPass": {
+    "message": "Nuvarande huvudlösenord"
+  },
+  "newMasterPass": {
+    "message": "Nytt huvudlösenord"
+  },
+  "confirmNewMasterPass": {
+    "message": "Bekräfta nytt huvudlösenord"
   },
   "masterPasswordPolicyInEffect": {
     "message": "En eller flera organisationspolicyer kräver att ditt huvudlösenord uppfyller följande krav:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Ditt huvudlösenord ändrades nyligen av en administratör i din organisation. För att få tillgång till valvet måste du uppdatera det nu. Om du fortsätter kommer du att loggas ut från din nuvarande session, vilket kräver att du loggar in igen. Aktiva sessioner på andra enheter kan komma att vara aktiva i upp till en timme."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatiskt deltagande"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "Öppnas i ett nytt fönster"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

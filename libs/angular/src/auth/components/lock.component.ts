@@ -1,25 +1,32 @@
 import { Directive, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subject } from "rxjs";
+import { firstValueFrom, Subject } from "rxjs";
 import { concatMap, take, takeUntil } from "rxjs/operators";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { VaultTimeoutService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeout.service";
 import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeoutSettings.service";
+import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
+import { InternalPolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
+import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/master-password-policy-options";
 import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-connector.service";
+import { ForceResetPasswordReason } from "@bitwarden/common/auth/models/domain/force-reset-password-reason";
 import { SecretVerificationRequest } from "@bitwarden/common/auth/models/request/secret-verification.request";
-import { HashPurpose } from "@bitwarden/common/enums/hashPurpose";
-import { KeySuffixOptions } from "@bitwarden/common/enums/keySuffixOptions";
-import { Utils } from "@bitwarden/common/misc/utils";
-import { EncString } from "@bitwarden/common/models/domain/enc-string";
-import { SymmetricCryptoKey } from "@bitwarden/common/models/domain/symmetric-crypto-key";
+import { MasterPasswordPolicyResponse } from "@bitwarden/common/auth/models/response/master-password-policy.response";
+import { HashPurpose, KeySuffixOptions } from "@bitwarden/common/enums";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
+import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
+import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
+
+import { DialogServiceAbstraction, SimpleDialogType } from "../../services/dialog";
 
 @Directive()
 export class LockComponent implements OnInit, OnDestroy {
@@ -29,17 +36,20 @@ export class LockComponent implements OnInit, OnDestroy {
   email: string;
   pinLock = false;
   webVaultHostname = "";
-  formPromise: Promise<any>;
+  formPromise: Promise<MasterPasswordPolicyResponse>;
   supportsBiometric: boolean;
   biometricLock: boolean;
   biometricText: string;
   hideInput: boolean;
 
   protected successRoute = "vault";
+  protected forcePasswordResetRoute = "update-temp-password";
   protected onSuccessfulSubmit: () => Promise<void>;
 
   private invalidPinAttempts = 0;
   private pinSet: [boolean, boolean];
+
+  private enforcedMasterPasswordOptions: MasterPasswordPolicyOptions = undefined;
 
   private destroy$ = new Subject<void>();
 
@@ -56,7 +66,11 @@ export class LockComponent implements OnInit, OnDestroy {
     protected apiService: ApiService,
     protected logService: LogService,
     private keyConnectorService: KeyConnectorService,
-    protected ngZone: NgZone
+    protected ngZone: NgZone,
+    protected policyApiService: PolicyApiServiceAbstraction,
+    protected policyService: InternalPolicyService,
+    protected passwordGenerationService: PasswordGenerationServiceAbstraction,
+    protected dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -84,12 +98,13 @@ export class LockComponent implements OnInit, OnDestroy {
   }
 
   async logOut() {
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("logOutConfirmation"),
-      this.i18nService.t("logOut"),
-      this.i18nService.t("logOut"),
-      this.i18nService.t("cancel")
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "logOut" },
+      content: { key: "logOutConfirmation" },
+      acceptButtonText: { key: "logOut" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (confirmed) {
       this.messagingService.send("logout");
     }
@@ -103,7 +118,7 @@ export class LockComponent implements OnInit, OnDestroy {
     const success = (await this.cryptoService.getKey(KeySuffixOptions.Biometric)) != null;
 
     if (success) {
-      await this.doContinue();
+      await this.doContinue(false);
     }
 
     return success;
@@ -208,7 +223,8 @@ export class LockComponent implements OnInit, OnDestroy {
       request.masterPasswordHash = serverKeyHash;
       try {
         this.formPromise = this.apiService.postAccountVerifyPassword(request);
-        await this.formPromise;
+        const response = await this.formPromise;
+        this.enforcedMasterPasswordOptions = MasterPasswordPolicyOptions.fromResponse(response);
         passwordValid = true;
         const localKeyHash = await this.cryptoService.hashPassword(
           this.masterPassword,
@@ -239,18 +255,39 @@ export class LockComponent implements OnInit, OnDestroy {
         await this.cryptoService.encrypt(key.key, pinKey)
       );
     }
-    await this.setKeyAndContinue(key);
+    await this.setKeyAndContinue(key, true);
   }
-  private async setKeyAndContinue(key: SymmetricCryptoKey) {
+  private async setKeyAndContinue(key: SymmetricCryptoKey, evaluatePasswordAfterUnlock = false) {
     await this.cryptoService.setKey(key);
-    await this.doContinue();
+    await this.doContinue(evaluatePasswordAfterUnlock);
   }
 
-  private async doContinue() {
+  private async doContinue(evaluatePasswordAfterUnlock: boolean) {
     await this.stateService.setEverBeenUnlocked(true);
-    const disableFavicon = await this.stateService.getDisableFavicon();
-    await this.stateService.setDisableFavicon(!!disableFavicon);
     this.messagingService.send("unlocked");
+
+    if (evaluatePasswordAfterUnlock) {
+      try {
+        // If we do not have any saved policies, attempt to load them from the service
+        if (this.enforcedMasterPasswordOptions == undefined) {
+          this.enforcedMasterPasswordOptions = await firstValueFrom(
+            this.policyService.masterPasswordPolicyOptions$()
+          );
+        }
+
+        if (this.requirePasswordChange()) {
+          await this.stateService.setForcePasswordResetReason(
+            ForceResetPasswordReason.WeakMasterPassword
+          );
+          this.router.navigate([this.forcePasswordResetRoute]);
+          return;
+        }
+      } catch (e) {
+        // Do not prevent unlock if there is an error evaluating policies
+        this.logService.error(e);
+      }
+    }
+
     if (this.onSuccessfulSubmit != null) {
       await this.onSuccessfulSubmit();
     } else if (this.router != null) {
@@ -282,5 +319,29 @@ export class LockComponent implements OnInit, OnDestroy {
     const vaultUrl =
       webVaultUrl === "https://vault.bitwarden.com" ? "https://bitwarden.com" : webVaultUrl;
     this.webVaultHostname = Utils.getHostname(vaultUrl);
+  }
+
+  /**
+   * Checks if the master password meets the enforced policy requirements
+   * If not, returns false
+   */
+  private requirePasswordChange(): boolean {
+    if (
+      this.enforcedMasterPasswordOptions == undefined ||
+      !this.enforcedMasterPasswordOptions.enforceOnLogin
+    ) {
+      return false;
+    }
+
+    const passwordStrength = this.passwordGenerationService.passwordStrength(
+      this.masterPassword,
+      this.email
+    )?.score;
+
+    return !this.policyService.evaluateMasterPassword(
+      passwordStrength,
+      this.masterPassword,
+      this.enforcedMasterPasswordOptions
+    );
   }
 }

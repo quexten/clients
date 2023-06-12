@@ -2,21 +2,21 @@ import * as signalR from "@microsoft/signalr";
 import * as signalRMsgPack from "@microsoft/signalr-protocol-msgpack";
 
 import { ApiService } from "../abstractions/api.service";
-import { AppIdService } from "../abstractions/appId.service";
-import { EnvironmentService } from "../abstractions/environment.service";
-import { LogService } from "../abstractions/log.service";
-import { MessagingService } from "../abstractions/messaging.service";
 import { NotificationsService as NotificationsServiceAbstraction } from "../abstractions/notifications.service";
-import { StateService } from "../abstractions/state.service";
 import { AuthService } from "../auth/abstractions/auth.service";
 import { AuthenticationStatus } from "../auth/enums/authentication-status";
-import { NotificationType } from "../enums/notificationType";
+import { NotificationType } from "../enums";
 import {
   NotificationResponse,
   SyncCipherNotification,
   SyncFolderNotification,
   SyncSendNotification,
 } from "../models/response/notification.response";
+import { AppIdService } from "../platform/abstractions/app-id.service";
+import { EnvironmentService } from "../platform/abstractions/environment.service";
+import { LogService } from "../platform/abstractions/log.service";
+import { MessagingService } from "../platform/abstractions/messaging.service";
+import { StateService } from "../platform/abstractions/state.service";
 import { SyncService } from "../vault/abstractions/sync/sync.service.abstraction";
 
 export class NotificationsService implements NotificationsServiceAbstraction {

@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 
 import { AbstractThemingService } from "@bitwarden/angular/services/theming/theming.service.abstraction";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
+import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
 import { TotpService } from "@bitwarden/common/abstractions/totp.service";
-import { ThemeType } from "@bitwarden/common/enums/themeType";
-import { UriMatchType } from "@bitwarden/common/enums/uriMatchType";
+import { ThemeType, UriMatchType } from "@bitwarden/common/enums";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 
 @Component({
   selector: "app-options",
@@ -40,7 +40,8 @@ export class OptionsComponent implements OnInit {
     private stateService: StateService,
     private totpService: TotpService,
     i18nService: I18nService,
-    private themingService: AbstractThemingService
+    private themingService: AbstractThemingService,
+    private settingsService: SettingsService
   ) {
     this.themeOptions = [
       { name: i18nService.t("default"), value: ThemeType.System },
@@ -90,7 +91,7 @@ export class OptionsComponent implements OnInit {
 
     this.enableAutoTotpCopy = !(await this.stateService.getDisableAutoTotpCopy());
 
-    this.enableFavicon = !(await this.stateService.getDisableFavicon());
+    this.enableFavicon = !this.settingsService.getDisableFavicon();
 
     this.enableBadgeCounter = !(await this.stateService.getDisableBadgeCounter());
 
@@ -130,7 +131,7 @@ export class OptionsComponent implements OnInit {
   }
 
   async updateFavicon() {
-    await this.stateService.setDisableFavicon(!this.enableFavicon);
+    await this.settingsService.setDisableFavicon(!this.enableFavicon);
   }
 
   async updateBadgeCounter() {

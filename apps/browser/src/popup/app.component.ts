@@ -9,17 +9,18 @@ import {
 import { DomSanitizer } from "@angular/platform-browser";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { IndividualConfig, ToastrService } from "ngx-toastr";
-import { Subject, takeUntil } from "rxjs";
-import Swal, { SweetAlertIcon } from "sweetalert2";
+import { filter, concatMap, Subject, takeUntil } from "rxjs";
+import Swal from "sweetalert2";
 
-import { BroadcasterService } from "@bitwarden/common/abstractions/broadcaster.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
+import { DialogServiceAbstraction, SimpleDialogOptions } from "@bitwarden/angular/services/dialog";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
+import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
-import { BrowserApi } from "../browser/browserApi";
-import { BrowserStateService } from "../services/abstractions/browser-state.service";
+import { BrowserApi } from "../platform/browser/browser-api";
+import { BrowserStateService } from "../platform/services/abstractions/browser-state.service";
 
 import { routerTransition } from "./app-routing.animations";
 
@@ -48,7 +49,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
-    private platformUtilsService: PlatformUtilsService
+    private platformUtilsService: PlatformUtilsService,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -59,6 +61,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.stateService.activeAccount$.pipe(takeUntil(this.destroy$)).subscribe((userId) => {
       this.activeUserId = userId;
     });
+
+    this.stateService.activeAccountUnlocked$
+      .pipe(
+        filter((unlocked) => unlocked),
+        concatMap(async () => {
+          await this.recordActivity();
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
 
     this.ngZone.runOutsideAngular(() => {
       window.onmousedown = () => this.recordActivity();
@@ -102,6 +114,9 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       } else if (msg.command === "showDialog") {
         await this.showDialog(msg);
+      } else if (msg.command === "showNativeMessagingFinterprintDialog") {
+        // TODO: Should be refactored to live in another service.
+        await this.showNativeMessagingFingerprintDialog(msg);
       } else if (msg.command === "showToast") {
         this.ngZone.run(() => {
           this.showToast(msg);
@@ -222,50 +237,23 @@ export class AppComponent implements OnInit, OnDestroy {
     this.toastrService.show(message, msg.title, options, "toast-" + msg.type);
   }
 
-  private async showDialog(msg: any) {
-    let iconClasses: string = null;
-    const type = msg.type;
-    if (type != null) {
-      // If you add custom types to this part, the type to SweetAlertIcon cast below needs to be changed.
-      switch (type) {
-        case "success":
-          iconClasses = "bwi-check text-success";
-          break;
-        case "warning":
-          iconClasses = "bwi-exclamation-triangle text-warning";
-          break;
-        case "error":
-          iconClasses = "bwi-error text-danger";
-          break;
-        case "info":
-          iconClasses = "bwi-info-circle text-info";
-          break;
-        default:
-          break;
-      }
-    }
+  private async showDialog(msg: SimpleDialogOptions) {
+    await this.dialogService.openSimpleDialog(msg);
+  }
 
-    const cancelText = msg.cancelText;
-    const confirmText = msg.confirmText;
-    const confirmed = await Swal.fire({
+  private async showNativeMessagingFingerprintDialog(msg: any) {
+    await Swal.fire({
       heightAuto: false,
       buttonsStyling: false,
-      icon: type as SweetAlertIcon, // required to be any of the SweetAlertIcons to output the iconHtml.
-      iconHtml:
-        iconClasses != null ? `<i class="swal-custom-icon bwi ${iconClasses}"></i>` : undefined,
-      text: msg.text,
-      html: msg.html,
-      titleText: msg.title,
-      showCancelButton: cancelText != null,
-      cancelButtonText: cancelText,
+      icon: "warning",
+      iconHtml: '<i class="swal-custom-icon bwi bwi-exclamation-triangle text-warning"></i>',
+      html: `${this.i18nService.t("desktopIntegrationVerificationText")}<br><br><strong>${
+        msg.fingerprint
+      }</strong>`,
+      titleText: this.i18nService.t("desktopSyncVerificationTitle"),
       showConfirmButton: true,
-      confirmButtonText: confirmText == null ? this.i18nService.t("ok") : confirmText,
+      confirmButtonText: this.i18nService.t("ok"),
       timer: 300000,
-    });
-
-    this.messagingService.send("showDialogResolve", {
-      dialogId: msg.dialogId,
-      confirmed: confirmed.value,
     });
   }
 

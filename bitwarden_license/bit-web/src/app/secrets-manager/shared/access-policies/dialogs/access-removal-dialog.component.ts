@@ -15,7 +15,6 @@ export interface AccessRemovalDetails {
 }
 
 @Component({
-  selector: "sm-access-removal-dialog",
   templateUrl: "./access-removal-dialog.component.html",
 })
 export class AccessRemovalDialogComponent implements OnInit {
@@ -50,16 +49,21 @@ export class AccessRemovalDialogComponent implements OnInit {
       await this.accessPolicyService.updateAccessPolicy(
         AccessSelectorComponent.getBaseAccessPolicyView(this.data.policy)
       );
+      this.refreshPolicyChanges();
     }
     this.dialogRef.close();
   };
 
   cancel = () => {
+    this.refreshPolicyChanges();
+    this.dialogRef.close();
+  };
+
+  private refreshPolicyChanges() {
     if (this.data.type == "project") {
       this.accessPolicyService.refreshProjectAccessPolicyChanges();
     } else if (this.data.type == "service-account") {
       this.accessPolicyService.refreshServiceAccountAccessPolicyChanges();
     }
-    this.dialogRef.close();
-  };
+  }
 }

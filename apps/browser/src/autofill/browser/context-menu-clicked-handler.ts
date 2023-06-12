@@ -1,11 +1,10 @@
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
-import { EventType } from "@bitwarden/common/enums/eventType";
-import { StateFactory } from "@bitwarden/common/factories/stateFactory";
-import { GlobalState } from "@bitwarden/common/models/domain/global-state";
+import { EventType } from "@bitwarden/common/enums";
+import { StateFactory } from "@bitwarden/common/platform/factories/state-factory";
+import { GlobalState } from "@bitwarden/common/platform/models/domain/global-state";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -16,13 +15,12 @@ import {
 } from "../../auth/background/service-factories/auth-service.factory";
 import { totpServiceFactory } from "../../auth/background/service-factories/totp-service.factory";
 import LockedVaultPendingNotificationsItem from "../../background/models/lockedVaultPendingNotificationsItem";
-import { eventCollectionServiceFactory } from "../../background/service_factories/event-collection-service.factory";
-import { CachedServices } from "../../background/service_factories/factory-options";
-import { passwordGenerationServiceFactory } from "../../background/service_factories/password-generation-service.factory";
-import { searchServiceFactory } from "../../background/service_factories/search-service.factory";
-import { stateServiceFactory } from "../../background/service_factories/state-service.factory";
-import { BrowserApi } from "../../browser/browserApi";
+import { eventCollectionServiceFactory } from "../../background/service-factories/event-collection-service.factory";
+import { passwordGenerationServiceFactory } from "../../background/service-factories/password-generation-service.factory";
 import { Account } from "../../models/account";
+import { CachedServices } from "../../platform/background/service-factories/factory-options";
+import { stateServiceFactory } from "../../platform/background/service-factories/state-service.factory";
+import { BrowserApi } from "../../platform/browser/browser-api";
 import {
   cipherServiceFactory,
   CipherServiceInitOptions,
@@ -63,13 +61,9 @@ export class ContextMenuClickedHandler {
 
   static async mv3Create(cachedServices: CachedServices) {
     const stateFactory = new StateFactory(GlobalState, Account);
-    let searchService: SearchService | null = null;
     const serviceOptions: AuthServiceInitOptions & CipherServiceInitOptions = {
       apiServiceOptions: {
         logoutCallback: NOT_IMPLEMENTED,
-      },
-      cipherServiceOptions: {
-        searchServiceFactory: () => searchService,
       },
       cryptoFunctionServiceOptions: {
         win: self,
@@ -98,7 +92,6 @@ export class ContextMenuClickedHandler {
         stateFactory: stateFactory,
       },
     };
-    searchService = await searchServiceFactory(cachedServices, serviceOptions);
 
     const generatePasswordToClipboardCommand = new GeneratePasswordToClipboardCommand(
       await passwordGenerationServiceFactory(cachedServices, serviceOptions),

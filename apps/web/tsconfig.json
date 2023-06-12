@@ -9,7 +9,8 @@
       "@bitwarden/common/*": ["../../libs/common/src/*"],
       "@bitwarden/angular/*": ["../../libs/angular/src/*"],
       "@bitwarden/components": ["../../libs/components/src"],
-      "@bitwarden/importer": ["../../libs/importer/src"]
+      "@bitwarden/importer": ["../../libs/importer/src"],
+      "@bitwarden/exporter/*": ["../../libs/exporter/src/*"]
     }
   },
   "angularCompilerOptions": {
@@ -21,6 +22,6 @@
     "src/connectors/*.ts",
     "src/**/*.stories.ts",
     "src/**/*.spec.ts",
-    "../../libs/common/src/services/**/*.worker.ts"
+    "../../libs/common/src/platform/services/**/*.worker.ts"
   ]
 }

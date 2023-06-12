@@ -1,20 +1,16 @@
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
 import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
 import { TotpService } from "@bitwarden/common/abstractions/totp.service";
-import { EventType } from "@bitwarden/common/enums/eventType";
-import { FieldType } from "@bitwarden/common/enums/fieldType";
-import { UriMatchType } from "@bitwarden/common/enums/uriMatchType";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { EventType, FieldType, UriMatchType } from "@bitwarden/common/enums";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FieldView } from "@bitwarden/common/vault/models/view/field.view";
-import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
 
-import { BrowserApi } from "../../browser/browserApi";
-import { BrowserStateService } from "../../services/abstractions/browser-state.service";
+import { BrowserApi } from "../../platform/browser/browser-api";
+import { BrowserStateService } from "../../platform/services/abstractions/browser-state.service";
 import AutofillField from "../models/autofill-field";
 import AutofillPageDetails from "../models/autofill-page-details";
 import AutofillScript from "../models/autofill-script";
@@ -54,15 +50,39 @@ export default class AutofillService implements AutofillServiceInterface {
   getFormsWithPasswordFields(pageDetails: AutofillPageDetails): FormData[] {
     const formData: FormData[] = [];
 
-    const passwordFields = AutofillService.loadPasswordFields(
-      pageDetails,
-      true,
-      true,
-      false,
-      false
-    );
+    const passwordFields = AutofillService.loadPasswordFields(pageDetails, true, true, false, true);
+
+    // TODO: this logic prevents multi-step account creation forms (that just start with email)
+    // from being passed on to the notification bar content script - even if autofill.js found the form and email field.
+    // ex: https://signup.live.com/
     if (passwordFields.length === 0) {
       return formData;
+    }
+
+    // Back up check for cases where there are several password fields detected,
+    // but they are not all part of the form b/c of bad HTML
+
+    // gather password fields that don't have an enclosing form
+    const passwordFieldsWithoutForm = passwordFields.filter((pf) => pf.form === undefined);
+    const formKeys = Object.keys(pageDetails.forms);
+    const formCount = formKeys.length;
+
+    // if we have 3 password fields and only 1 form, and there are password fields that are not within a form
+    // but there is at least one password field within the form, then most likely this is a poorly built password change form
+    if (passwordFields.length === 3 && formCount == 1 && passwordFieldsWithoutForm.length > 0) {
+      // Only one form so get the singular form key
+      const soloFormKey = formKeys[0];
+
+      const atLeastOnePasswordFieldWithinSoloForm =
+        passwordFields.filter((pf) => pf.form !== null && pf.form === soloFormKey).length > 0;
+
+      if (atLeastOnePasswordFieldWithinSoloForm) {
+        // We have a form with at least one password field,
+        // so let's make an assumption that the password fields without a form are actually part of this form
+        passwordFieldsWithoutForm.forEach((pf) => {
+          pf.form = soloFormKey;
+        });
+      }
     }
 
     for (const formKey in pageDetails.forms) {
@@ -351,15 +371,7 @@ export default class AutofillService implements AutofillServiceInterface {
     fillScript.savedUrls =
       login?.uris?.filter((u) => u.match != UriMatchType.Never).map((u) => u.uri) ?? [];
 
-    const inIframe = pageDetails.url !== options.tabUrl;
-    fillScript.untrustedIframe =
-      inIframe && !this.iframeUrlMatches(pageDetails.url, options.cipher, options.defaultUriMatch);
-
-    if (!login.password || login.password === "") {
-      // No password for this login. Maybe they just wanted to auto-fill some custom fields?
-      fillScript = AutofillService.setFillScriptForFocus(filledFields, fillScript);
-      return fillScript;
-    }
+    fillScript.untrustedIframe = this.inUntrustedIframe(pageDetails.url, options);
 
     let passwordFields = AutofillService.loadPasswordFields(
       pageDetails,
@@ -789,81 +801,28 @@ export default class AutofillService implements AutofillServiceInterface {
   }
 
   /**
-   * Determines whether to warn the user about filling an iframe
+   * Determines whether an iframe is potentially dangerous ("untrusted") to autofill
    * @param pageUrl The url of the page/iframe, usually from AutofillPageDetails
-   * @param tabUrl The url of the tab, usually from the message sender (should not come from a content script because
-   *  that is likely to be incorrect in the case of iframes)
-   * @param loginItem The cipher to be filled
-   * @returns `true` if the iframe is untrusted and the warning should be shown, `false` otherwise
+   * @param options The GenerateFillScript options
+   * @returns `true` if the iframe is untrusted and a warning should be shown, `false` otherwise
    */
-  iframeUrlMatches(pageUrl: string, loginItem: CipherView, defaultUriMatch: UriMatchType): boolean {
+  private inUntrustedIframe(pageUrl: string, options: GenerateFillScriptOptions): boolean {
+    // If the pageUrl (from the content script) matches the tabUrl (from the sender tab), we are not in an iframe
+    // This also avoids a false positive if no URI is saved and the user triggers auto-fill anyway
+    if (pageUrl === options.tabUrl) {
+      return false;
+    }
+
     // Check the pageUrl against cipher URIs using the configured match detection.
-    // If we are in this function at all, it is assumed that the tabUrl already matches a URL for `loginItem`,
-    // need to verify the pageUrl also matches one of the saved URIs using the match detection selected.
-    const uriMatched = loginItem.login.uris?.some((uri) =>
-      this.uriMatches(uri, pageUrl, defaultUriMatch)
+    // Remember: if we are in this function, the tabUrl already matches a saved URI for the login.
+    // We need to verify the pageUrl also matches.
+    const equivalentDomains = this.settingsService.getEquivalentDomains(pageUrl);
+    const matchesUri = options.cipher.login.matchesUri(
+      pageUrl,
+      equivalentDomains,
+      options.defaultUriMatch
     );
-
-    return uriMatched;
-  }
-
-  // TODO should this be put in a common place (Utils maybe?) to be used both here and by CipherService?
-  private uriMatches(uri: LoginUriView, url: string, defaultUriMatch: UriMatchType): boolean {
-    const matchType = uri.match ?? defaultUriMatch;
-
-    const matchDomains = [Utils.getDomain(url)];
-    const equivalentDomains = this.settingsService.getEquivalentDomains(url);
-    if (equivalentDomains != null) {
-      matchDomains.push(...equivalentDomains);
-    }
-
-    switch (matchType) {
-      case UriMatchType.Domain:
-        if (url != null && uri.domain != null && matchDomains.includes(uri.domain)) {
-          if (Utils.DomainMatchBlacklist.has(uri.domain)) {
-            const domainUrlHost = Utils.getHost(url);
-            if (!Utils.DomainMatchBlacklist.get(uri.domain).has(domainUrlHost)) {
-              return true;
-            }
-          } else {
-            return true;
-          }
-        }
-        break;
-      case UriMatchType.Host: {
-        const urlHost = Utils.getHost(url);
-        if (urlHost != null && urlHost === Utils.getHost(uri.uri)) {
-          return true;
-        }
-        break;
-      }
-      case UriMatchType.Exact:
-        if (url === uri.uri) {
-          return true;
-        }
-        break;
-      case UriMatchType.StartsWith:
-        if (url.startsWith(uri.uri)) {
-          return true;
-        }
-        break;
-      case UriMatchType.RegularExpression:
-        try {
-          const regex = new RegExp(uri.uri, "i");
-          if (regex.test(url)) {
-            return true;
-          }
-        } catch (e) {
-          this.logService.error(e);
-          return false;
-        }
-        break;
-      case UriMatchType.Never:
-      default:
-        break;
-    }
-
-    return false;
+    return !matchesUri;
   }
 
   private fieldAttrsContain(field: AutofillField, containsVal: string) {

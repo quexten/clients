@@ -2,20 +2,21 @@ import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
 
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
-import { ValidationService } from "@bitwarden/common/abstractions/validation.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
-import { ProviderUserType } from "@bitwarden/common/admin-console/enums/provider-user-type";
+import { ProviderUserType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { ProviderOrganizationOrganizationDetailsResponse } from "@bitwarden/common/admin-console/models/response/provider/provider-organization.response";
-import { PlanType } from "@bitwarden/common/billing/enums/plan-type";
+import { PlanType } from "@bitwarden/common/billing/enums";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 
 import { WebProviderService } from "../services/web-provider.service";
 
@@ -61,7 +62,8 @@ export class ClientsComponent implements OnInit {
     private logService: LogService,
     private modalService: ModalService,
     private organizationService: OrganizationService,
-    private organizationApiService: OrganizationApiServiceAbstraction
+    private organizationApiService: OrganizationApiServiceAbstraction,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -153,19 +155,17 @@ export class ClientsComponent implements OnInit {
   }
 
   async remove(organization: ProviderOrganizationOrganizationDetailsResponse) {
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("detachOrganizationConfirmation"),
-      organization.organizationName,
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: organization.organizationName,
+      content: { key: "detachOrganizationConfirmation" },
+      type: SimpleDialogType.WARNING,
+    });
 
     if (!confirmed) {
       return false;
     }
 
-    this.actionPromise = this.webProviderService.detachOrganizastion(
+    this.actionPromise = this.webProviderService.detachOrganization(
       this.providerId,
       organization.id
     );

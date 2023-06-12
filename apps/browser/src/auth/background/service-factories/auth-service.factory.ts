@@ -2,54 +2,62 @@ import { AuthService as AbstractAuthService } from "@bitwarden/common/auth/abstr
 import { AuthService } from "@bitwarden/common/auth/services/auth.service";
 
 import {
+  policyServiceFactory,
+  PolicyServiceInitOptions,
+} from "../../../admin-console/background/service-factories/policy-service.factory";
+import {
+  passwordGenerationServiceFactory,
+  PasswordGenerationServiceInitOptions,
+} from "../../../background/service-factories/password-generation-service.factory";
+import {
   apiServiceFactory,
   ApiServiceInitOptions,
-} from "../../../background/service_factories/api-service.factory";
-import { appIdServiceFactory } from "../../../background/service_factories/app-id-service.factory";
+} from "../../../platform/background/service-factories/api-service.factory";
+import { appIdServiceFactory } from "../../../platform/background/service-factories/app-id-service.factory";
 import {
-  cryptoServiceFactory,
   CryptoServiceInitOptions,
-} from "../../../background/service_factories/crypto-service.factory";
+  cryptoServiceFactory,
+} from "../../../platform/background/service-factories/crypto-service.factory";
 import {
   EncryptServiceInitOptions,
   encryptServiceFactory,
-} from "../../../background/service_factories/encrypt-service.factory";
+} from "../../../platform/background/service-factories/encrypt-service.factory";
 import {
   environmentServiceFactory,
   EnvironmentServiceInitOptions,
-} from "../../../background/service_factories/environment-service.factory";
+} from "../../../platform/background/service-factories/environment-service.factory";
 import {
   CachedServices,
   factory,
   FactoryOptions,
-} from "../../../background/service_factories/factory-options";
+} from "../../../platform/background/service-factories/factory-options";
 import {
-  I18nServiceInitOptions,
   i18nServiceFactory,
-} from "../../../background/service_factories/i18n-service.factory";
+  I18nServiceInitOptions,
+} from "../../../platform/background/service-factories/i18n-service.factory";
 import {
   logServiceFactory,
   LogServiceInitOptions,
-} from "../../../background/service_factories/log-service.factory";
+} from "../../../platform/background/service-factories/log-service.factory";
 import {
-  MessagingServiceInitOptions,
   messagingServiceFactory,
-} from "../../../background/service_factories/messaging-service.factory";
+  MessagingServiceInitOptions,
+} from "../../../platform/background/service-factories/messaging-service.factory";
 import {
-  PlatformUtilsServiceInitOptions,
   platformUtilsServiceFactory,
-} from "../../../background/service_factories/platform-utils-service.factory";
+  PlatformUtilsServiceInitOptions,
+} from "../../../platform/background/service-factories/platform-utils-service.factory";
 import {
   stateServiceFactory,
   StateServiceInitOptions,
-} from "../../../background/service_factories/state-service.factory";
+} from "../../../platform/background/service-factories/state-service.factory";
 
 import {
-  KeyConnectorServiceInitOptions,
   keyConnectorServiceFactory,
+  KeyConnectorServiceInitOptions,
 } from "./key-connector-service.factory";
-import { TokenServiceInitOptions, tokenServiceFactory } from "./token-service.factory";
-import { TwoFactorServiceInitOptions, twoFactorServiceFactory } from "./two-factor-service.factory";
+import { tokenServiceFactory, TokenServiceInitOptions } from "./token-service.factory";
+import { twoFactorServiceFactory, TwoFactorServiceInitOptions } from "./two-factor-service.factory";
 
 type AuthServiceFactoyOptions = FactoryOptions;
 
@@ -65,7 +73,9 @@ export type AuthServiceInitOptions = AuthServiceFactoyOptions &
   StateServiceInitOptions &
   TwoFactorServiceInitOptions &
   I18nServiceInitOptions &
-  EncryptServiceInitOptions;
+  EncryptServiceInitOptions &
+  PolicyServiceInitOptions &
+  PasswordGenerationServiceInitOptions;
 
 export function authServiceFactory(
   cache: { authService?: AbstractAuthService } & CachedServices,
@@ -89,7 +99,9 @@ export function authServiceFactory(
         await stateServiceFactory(cache, opts),
         await twoFactorServiceFactory(cache, opts),
         await i18nServiceFactory(cache, opts),
-        await encryptServiceFactory(cache, opts)
+        await encryptServiceFactory(cache, opts),
+        await passwordGenerationServiceFactory(cache, opts),
+        await policyServiceFactory(cache, opts)
       )
   );
 }

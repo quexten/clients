@@ -1,5 +1,5 @@
-import { UriMatchType } from "../../enums/uriMatchType";
-import { SymmetricCryptoKey } from "../../models/domain/symmetric-crypto-key";
+import { UriMatchType } from "../../enums";
+import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
 import { CipherType } from "../enums/cipher-type";
 import { CipherData } from "../models/data/cipher.data";
 import { Cipher } from "../models/domain/cipher";
@@ -62,19 +62,19 @@ export abstract class CipherService {
   clear: (userId: string) => Promise<any>;
   moveManyWithServer: (ids: string[], folderId: string) => Promise<any>;
   delete: (id: string | string[]) => Promise<any>;
-  deleteWithServer: (id: string) => Promise<any>;
-  deleteManyWithServer: (ids: string[]) => Promise<any>;
+  deleteWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
+  deleteManyWithServer: (ids: string[], asAdmin?: boolean) => Promise<any>;
   deleteAttachment: (id: string, attachmentId: string) => Promise<void>;
   deleteAttachmentWithServer: (id: string, attachmentId: string) => Promise<void>;
   sortCiphersByLastUsed: (a: CipherView, b: CipherView) => number;
   sortCiphersByLastUsedThenName: (a: CipherView, b: CipherView) => number;
   getLocaleSortingFunction: () => (a: CipherView, b: CipherView) => number;
   softDelete: (id: string | string[]) => Promise<any>;
-  softDeleteWithServer: (id: string) => Promise<any>;
-  softDeleteManyWithServer: (ids: string[]) => Promise<any>;
+  softDeleteWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
+  softDeleteManyWithServer: (ids: string[], asAdmin?: boolean) => Promise<any>;
   restore: (
     cipher: { id: string; revisionDate: string } | { id: string; revisionDate: string }[]
   ) => Promise<any>;
-  restoreWithServer: (id: string) => Promise<any>;
+  restoreWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
   restoreManyWithServer: (ids: string[]) => Promise<any>;
 }

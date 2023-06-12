@@ -196,10 +196,10 @@
     "message": "Ajuda & Feedback"
   },
   "helpCenter": {
-    "message": "Bitwarden Help center"
+    "message": "Central de Ajuda"
   },
   "communityForums": {
-    "message": "Explore Bitwarden community forums"
+    "message": "Explore os fóruns da comunidade"
   },
   "contactSupport": {
     "message": "Contact Bitwarden support"
@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Item Auto-Preenchido"
   },
+  "insecurePageWarning": {
+    "message": "Aviso: Esta é uma página HTTP não segura, e qualquer informação que você enviar poderá ser interceptada e modificada por outras pessoas. Este login foi originalmente salvo em uma página segura (HTTPS)."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Você ainda deseja preencher esse login?"
+  },
+  "autofillIframeWarning": {
+    "message": "O formulário está hospedado em um domínio diferente do URI do seu login salvo. Escolha OK para preencher automaticamente mesmo assim ou Cancelar para parar."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Para evitar este aviso no futuro, salve este URI, $HOSTNAME$, no seu item de login no Bitwarden para este site.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Definir Senha Mestra"
+  },
+  "currentMasterPass": {
+    "message": "Current master password"
+  },
+  "newMasterPass": {
+    "message": "New master password"
+  },
+  "confirmNewMasterPass": {
+    "message": "Confirm new master password"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Uma ou mais políticas da organização exigem que a sua senha mestra cumpra aos seguintes requisitos:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Sua Senha Mestra foi alterada recentemente por um administrador de sua organização. Para acessar o cofre, você precisa atualizá-la agora. O processo desconectará você da sessão atual, exigindo que você inicie a sessão novamente. Sessões ativas em outros dispositivos podem continuar ativas por até uma hora."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Inscrição Automática"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "Opens in a new window"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

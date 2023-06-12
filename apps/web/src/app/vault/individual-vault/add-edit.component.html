@@ -233,7 +233,7 @@
                   </svg>
                 </span>
                 <span
-                  class="totp-code tw-mr-3 tw-ml-2 tw-text-muted"
+                  class="totp-code tw-ml-2 tw-mr-3 tw-text-muted"
                   title="{{ 'verificationCodeTotp' | i18n }}"
                   >--- ---</span
                 >
@@ -440,6 +440,7 @@
                   class="form-control text-monospace"
                   type="{{ showCardNumber ? 'text' : 'password' }}"
                   name="Card.Number"
+                  (input)="onCardNumberChange()"
                   [(ngModel)]="cipher.card.number"
                   appInputVerbatim
                   autocomplete="new-password"

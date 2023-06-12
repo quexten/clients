@@ -266,7 +266,7 @@
     "message": "お気に入り"
   },
   "unfavorite": {
-    "message": "お気に入り解除"
+    "message": "お気に入りから削除"
   },
   "edit": {
     "message": "編集"
@@ -330,7 +330,7 @@
     "message": "ID"
   },
   "typeSecureNote": {
-    "message": "メモ"
+    "message": "セキュアメモ"
   },
   "typeLoginPlural": {
     "message": "ログイン"
@@ -516,7 +516,7 @@
     "message": "ファイルを選択してください。"
   },
   "maxFileSize": {
-    "message": "最大ファイルサイズ: 500 MB"
+    "message": "最大ファイルサイズは500MBです。"
   },
   "updateKey": {
     "message": "暗号キーを更新するまでこの機能は使用できません。"
@@ -525,7 +525,7 @@
     "message": "追加されたアイテム"
   },
   "editedItem": {
-    "message": "編集されたアイテム"
+    "message": "保存されたアイテム"
   },
   "movedItemToOrg": {
     "message": "$ITEMNAME$ を $ORGNAME$ に移動しました",
@@ -559,13 +559,13 @@
     "message": "添付ファイルの削除"
   },
   "deleteItemConfirmation": {
-    "message": "このアイテムを削除してもよろしいですか?"
+    "message": "本当にごみ箱に入れますか？"
   },
   "deletedItem": {
-    "message": "削除されたアイテム"
+    "message": "ゴミ箱に送られたアイテム"
   },
   "deletedItems": {
-    "message": "削除されたアイテム"
+    "message": "ゴミ箱に送られたアイテム"
   },
   "movedItems": {
     "message": "移動されたアイテム"
@@ -574,7 +574,7 @@
     "message": "現在のパスワードを上書きしてもよろしいですか?"
   },
   "editedFolder": {
-    "message": "フォルダーを編集しました"
+    "message": "フォルダが保存されました"
   },
   "addedFolder": {
     "message": "フォルダーを追加しました"
@@ -1254,6 +1254,15 @@
   },
   "importSuccess": {
     "message": "データを保管庫にインポートしました。"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "合計 $AMOUNT$ 件のアイテムをインポートしました。",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
   },
   "dataExportSuccess": {
     "message": "データをエクスポートしました"
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "コレクションを表示 - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "アイテムを編集 - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "アイテム $ID$ のパスワードをコピーしました。",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "組織の管理者が承認すると組織へアクセスできるようになります。アクセスできるようになったらメールでお知らせします。"
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "この組織にアクセスできるようになりました。"
   },
   "inviteAcceptFailed": {
     "message": "招待を承諾出来ませんでした。組織の管理者に招待を再送信するように依頼してください。"
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "パスワードのヒントをパスワードと同じにすることはできません。"
   },
-  "enrollPasswordReset": {
-    "message": "パスワードリセットに登録"
+  "enrollAccountRecovery": {
+    "message": "アカウント回復に登録する"
   },
-  "enrolledPasswordReset": {
-    "message": "パスワードリセットに登録済み"
+  "enrolledAccountRecovery": {
+    "message": "アカウント回復に登録しました"
   },
-  "withdrawPasswordReset": {
-    "message": "パスワードリセットから退出"
+  "withdrawAccountRecovery": {
+    "message": "アカウント回復から登録解除する"
   },
   "enrollPasswordResetSuccess": {
     "message": "登録に成功しました！"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "正常に退出しました！"
   },
-  "eventEnrollPasswordReset": {
-    "message": "ユーザー $ID$ がパスワードリセットの案内に登録しました。",
+  "eventEnrollAccountRecovery": {
+    "message": "ユーザー $ID$ をアカウント回復に登録しました。",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "ユーザー $ID$ がパスワードリセットの案内から退出しました。",
+  "eventWithdrawAccountRecovery": {
+    "message": "ユーザー $ID$ をアカウント回復から登録解除しました。",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "登録すると、組織管理者はマスターパスワードを変更できます。登録してもよろしいですか？"
   },
-  "resetPasswordPolicy": {
-    "message": "マスターパスワードのリセット"
+  "accountRecoveryPolicy": {
+    "message": "アカウント回復の管理"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "組織内の管理者に組織ユーザーのマスターパスワードのリセットを許可します。"
+  "accountRecoveryPolicyDescription": {
+    "message": "マスターパスワードまたは信頼できるデバイスを忘れた、または紛失した場合にメンバーアカウントを回復できます。回復プロセスはアカウントの暗号化方式に基づきます。"
   },
   "resetPasswordPolicyWarning": {
     "message": "管理者がマスターパスワードをリセットするには、組織内のユーザーは自己登録または自動登録する必要があります。"
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "お客様のマスターパスワードは、当組織のポリシー要件を満たしていません。保管庫にアクセスするためには、今すぐマスターパスワードを更新する必要があります。この操作を行うと、現在のセッションからログアウトし、再度ログインする必要があります。他のデバイスのアクティブなセッションは、最大1時間までアクティブな状態を維持します。"
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "マスターパスワードが組織のポリシーに適合していません。保管庫にアクセスするには、今すぐマスターパスワードを更新しなければなりません。続行すると現在のセッションからログアウトし、再度ログインする必要があります。 他のデバイス上のアクティブなセッションは、最大1時間アクティブであり続けることがあります。"
+  },
   "maximumVaultTimeout": {
     "message": "保管庫のタイムアウト"
   },
@@ -4831,6 +4864,32 @@
       }
     }
   },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "組織のポリシーがデータ保管庫のタイムアウトに影響しています。保管庫のタイムアウトの最大許容値は、$HOURS$時間$MINUTES$分です。保管庫タイムアウト時のアクションは、$ACTION$に設定されています。",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "組織のポリシーで保管庫のタイムアウトアクションが$ACTION$に設定されています。",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
+      }
+    }
+  },
   "customVaultTimeout": {
     "message": "個別の保管庫のタイムアウト"
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "自動入力を有効にする"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "すべての既存および新規メンバーのブラウザ拡張機能のページ読み込み設定で、自動入力を有効にします。"
   },
   "experimentalFeature": {
@@ -4997,7 +5056,7 @@
     "message": "最大 6 人のプレミアム機能へのアクセス"
   },
   "sponsoredFamiliesSharedCollections": {
-    "message": "家族の秘密のための共有されたコレクション"
+    "message": "家族のシークレットのために共有されたコレクション"
   },
   "badToken": {
     "message": "リンクは無効になりました。スポンサーにオファーを再送信してもらってください。"
@@ -5158,9 +5217,6 @@
     "message": "を有効にしてください。",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "キー コネクタの復号を設定するには、SSO 認証と単一の組織ポリシーが必要です。"
-  },
   "memberDecryptionOption": {
     "message": "メンバー復号オプション"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "キーコネクター"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "SSO でログインして自己ホスト型の復号キーサーバーに接続します。このオプションを使用すると、メンバーは保管庫のデータを復号するためにマスターパスワードを使用する必要はありません。"
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "SSO でログインして自己ホスト型の復号キーサーバーに接続します。このオプションを使用すると、メンバーは保管庫のデータを復号するためにマスターパスワードを使用する必要はありません。",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "SSO 認証と単一の組織ポリシーが必要です",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "キーコネクターの復号のセットアップに必要です。Bitwarden サポートにお問い合わせください。",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "「SSO とキーコネクター複合でのログイン」が有効になっています。このポリシーは、オーナーと管理者にのみ適用されます。"
@@ -5387,6 +5452,15 @@
     "message": "現在の組織",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "アカウント: $NAME$ としてログインしました",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "アカウント設定"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "前回の同期",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "セルフホストのスポンサーシップが同期されました。"
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "入力値は少なくとも$MIN$桁でなければなりません。",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "入力値は$MAX$桁を超えてはいけません。",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -5878,7 +5970,7 @@
     }
   },
   "deleteServiceAccountToast": {
-    "message": "Service account deleted"
+    "message": "サービスアカウントは削除されました"
   },
   "deleteServiceAccountsToast": {
     "message": "サービスアカウントを削除しました"
@@ -6017,7 +6109,7 @@
     "description": "Empty state to be displayed when there are no projects to display in the list."
   },
   "projectsNoItemsMessage": {
-    "message": "秘密を始めるために新しいプロジェクトを追加する。",
+    "message": "シークレットの管理を始めるには新しいプロジェクトを追加してください。",
     "description": "Message to be displayed when there are no projects to display in the list."
   },
   "smConfirmationRequired": {
@@ -6104,6 +6196,10 @@
   "accessTokenRevoked": {
     "message": "アクセストークンを取り消しました",
     "description": "Toast message after deleting one or multiple access tokens."
+  },
+  "noAccessTokenSelected": {
+    "message": "取り消すアクセストークンが選択されていません",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
   },
   "submenu": {
     "message": "サブメニュー"
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "請求同期のヘルプ"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "有料機能ライセンスのヘルプ"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "サブスクリプションの有効期限が切れた後、60日以内なら期限を更新したライセンスファイルを組織に適用できます。猶予期間は $GRACE_PERIOD_END_DATE$ までです。",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "ライセンスをアップロード"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "低 KDF イテレーション"
   },
-  "lowKdfIterationsDesc": {
-    "message": "KDF 暗号化設定を増やし、アカウントのセキュリティを向上してください。"
-  },
-  "changeKdfSettings": {
-    "message": "KDF 設定の変更"
+  "updateLowKdfIterationsDesc": {
+    "message": "新しいセキュリティの推奨事項に対応し、アカウントの保護を向上させるために、暗号化設定を更新してください。"
   },
   "changeKdfLoggedOutWarning": {
     "message": "続行すると、すべてのアクティブなセッションからログアウトします。再度ログインし、2段階認証を完了する必要があります。 暗号化設定を変更する前に、保管庫をエクスポートしてデータの損失を防ぐことをおすすめします。"
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "値を空白のみにしないでください。",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "表示しない"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "この機能は無料の組織では利用できません。アップグレードするには組織の所有者に連絡してください。"
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "このプロジェクトのシークレットを管理するには、組織の管理者に連絡してください。",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "パスワードを変更するには、メンバーが存在しないといけません"
+  },
+  "region": {
+    "message": "リージョン"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "米国",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "このプロジェクトを削除する権限がありません",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "次のプロジェクトは削除できません。続行しますか？",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "KDF の設定を更新する"
+  },
+  "trustedDeviceEncryption": {
+    "message": "信頼できるデバイスの暗号化"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "認証が完了すると、メンバーはデバイスに保存されているキーを使用して保管庫のデータを復号します。",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "アカウント回復管理ポリシー",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "このオプションを使用すると、自動登録が有効になります。",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ が見つかりません",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "アカウント回復"
+  },
+  "updatedTempPassword": {
+    "message": "ユーザーはアカウント回復で発行されたパスワードを更新しました。"
   }
 }

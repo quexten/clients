@@ -2,7 +2,7 @@
   <i class="bwi bwi-spinner bwi-spin bwi-3x"></i>
 </div>
 
-<sm-no-items *ngIf="projects?.length == 0">
+<bit-no-items *ngIf="projects?.length == 0">
   <ng-container slot="title">{{ "projectsNoItemsTitle" | i18n }}</ng-container>
   <ng-container slot="description">{{ "projectsNoItemsMessage" | i18n }}</ng-container>
   <button
@@ -15,7 +15,7 @@
     <i class="bwi bwi-plus" aria-hidden="true"></i>
     {{ "newProject" | i18n }}
   </button>
-</sm-no-items>
+</bit-no-items>
 
 <bit-table *ngIf="projects?.length >= 1" [dataSource]="dataSource">
   <ng-container header>
@@ -33,7 +33,11 @@
       </th>
       <th bitCell bitSortable="name" default>{{ "name" | i18n }}</th>
       <th bitCell bitSortable="revisionDate">{{ "lastEdited" | i18n }}</th>
-      <th bitCell class="tw-w-0">
+      <th
+        bitCell
+        class="tw-w-0"
+        [ngClass]="{ 'tw-invisible': !(hasWriteAccessOnSelected$ | async) }"
+      >
         <button
           type="button"
           bitIconButton="bwi-ellipsis-v"
@@ -74,7 +78,12 @@
         ></button>
       </td>
       <bit-menu #projectMenu>
-        <button type="button" bitMenuItem (click)="editProjectEvent.emit(project.id)">
+        <button
+          *ngIf="project.write"
+          type="button"
+          bitMenuItem
+          (click)="editProjectEvent.emit(project.id)"
+        >
           <i class="bwi bwi-fw bwi-pencil" aria-hidden="true"></i>
           {{ "editProject" | i18n }}
         </button>
@@ -82,7 +91,7 @@
           <i class="bwi bwi-fw bwi-eye" aria-hidden="true"></i>
           {{ "viewProject" | i18n }}
         </a>
-        <button type="button" bitMenuItem (click)="deleteProject(project.id)">
+        <button *ngIf="project.write" type="button" bitMenuItem (click)="deleteProject(project.id)">
           <i class="bwi bwi-fw bwi-trash tw-text-danger" aria-hidden="true"></i>
           <span class="tw-text-danger">{{ "deleteProject" | i18n }}</span>
         </button>

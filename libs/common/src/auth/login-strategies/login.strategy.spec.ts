@@ -1,26 +1,30 @@
 import { mock, MockProxy } from "jest-mock-extended";
 
 import { ApiService } from "../../abstractions/api.service";
-import { AppIdService } from "../../abstractions/appId.service";
-import { CryptoService } from "../../abstractions/crypto.service";
-import { LogService } from "../../abstractions/log.service";
-import { MessagingService } from "../../abstractions/messaging.service";
-import { PlatformUtilsService } from "../../abstractions/platformUtils.service";
-import { StateService } from "../../abstractions/state.service";
-import { Utils } from "../../misc/utils";
-import { Account, AccountProfile, AccountTokens } from "../../models/domain/account";
-import { EncString } from "../../models/domain/enc-string";
+import { PolicyService } from "../../admin-console/abstractions/policy/policy.service.abstraction";
+import { AppIdService } from "../../platform/abstractions/app-id.service";
+import { CryptoService } from "../../platform/abstractions/crypto.service";
+import { LogService } from "../../platform/abstractions/log.service";
+import { MessagingService } from "../../platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
+import { StateService } from "../../platform/abstractions/state.service";
+import { Utils } from "../../platform/misc/utils";
+import { Account, AccountProfile, AccountTokens } from "../../platform/models/domain/account";
+import { EncString } from "../../platform/models/domain/enc-string";
+import { PasswordGenerationService } from "../../tools/generator/password";
 import { AuthService } from "../abstractions/auth.service";
 import { TokenService } from "../abstractions/token.service";
 import { TwoFactorService } from "../abstractions/two-factor.service";
 import { TwoFactorProviderType } from "../enums/two-factor-provider-type";
 import { AuthResult } from "../models/domain/auth-result";
+import { ForceResetPasswordReason } from "../models/domain/force-reset-password-reason";
 import { PasswordLogInCredentials } from "../models/domain/log-in-credentials";
 import { PasswordTokenRequest } from "../models/request/identity-token/password-token.request";
 import { TokenTwoFactorRequest } from "../models/request/identity-token/token-two-factor.request";
 import { IdentityCaptchaResponse } from "../models/response/identity-captcha.response";
 import { IdentityTokenResponse } from "../models/response/identity-token.response";
 import { IdentityTwoFactorResponse } from "../models/response/identity-two-factor.response";
+import { MasterPasswordPolicyResponse } from "../models/response/master-password-policy.response";
 
 import { PasswordLogInStrategy } from "./password-login.strategy";
 
@@ -50,7 +54,9 @@ const twoFactorProviderType = TwoFactorProviderType.Authenticator;
 const twoFactorToken = "TWO_FACTOR_TOKEN";
 const twoFactorRemember = true;
 
-export function identityTokenResponseFactory() {
+export function identityTokenResponseFactory(
+  masterPasswordPolicyResponse: MasterPasswordPolicyResponse = null
+) {
   return new IdentityTokenResponse({
     ForcePasswordReset: false,
     Kdf: kdf,
@@ -63,6 +69,7 @@ export function identityTokenResponseFactory() {
     refresh_token: refreshToken,
     scope: "api offline_access",
     token_type: "Bearer",
+    MasterPasswordPolicy: masterPasswordPolicyResponse,
   });
 }
 
@@ -77,6 +84,8 @@ describe("LogInStrategy", () => {
   let stateService: MockProxy<StateService>;
   let twoFactorService: MockProxy<TwoFactorService>;
   let authService: MockProxy<AuthService>;
+  let policyService: MockProxy<PolicyService>;
+  let passwordGenerationService: MockProxy<PasswordGenerationService>;
 
   let passwordLogInStrategy: PasswordLogInStrategy;
   let credentials: PasswordLogInCredentials;
@@ -92,6 +101,8 @@ describe("LogInStrategy", () => {
     stateService = mock<StateService>();
     twoFactorService = mock<TwoFactorService>();
     authService = mock<AuthService>();
+    policyService = mock<PolicyService>();
+    passwordGenerationService = mock<PasswordGenerationService>();
 
     appIdService.getAppId.mockResolvedValue(deviceId);
     tokenService.decodeToken.calledWith(accessToken).mockResolvedValue(decodedToken);
@@ -107,6 +118,8 @@ describe("LogInStrategy", () => {
       logService,
       stateService,
       twoFactorService,
+      passwordGenerationService,
+      policyService,
       authService
     );
     credentials = new PasswordLogInCredentials(email, masterPassword);
@@ -155,7 +168,7 @@ describe("LogInStrategy", () => {
       const result = await passwordLogInStrategy.logIn(credentials);
 
       expect(result).toEqual({
-        forcePasswordReset: true,
+        forcePasswordReset: ForceResetPasswordReason.AdminForcePasswordReset,
         resetMasterPassword: true,
         twoFactorProviders: null,
         captchaSiteKey: "",
@@ -210,6 +223,9 @@ describe("LogInStrategy", () => {
         TwoFactorProviders2: { 0: null },
         error: "invalid_grant",
         error_description: "Two factor required.",
+        // only sent for emailed 2FA
+        email: undefined,
+        ssoEmail2faSessionToken: undefined,
       });
 
       apiService.postIdentityToken.mockResolvedValue(tokenResponse);
@@ -222,6 +238,39 @@ describe("LogInStrategy", () => {
       const expected = new AuthResult();
       expected.twoFactorProviders = new Map<TwoFactorProviderType, { [key: string]: string }>();
       expected.twoFactorProviders.set(0, null);
+      expect(result).toEqual(expected);
+    });
+
+    it("rejects login if 2FA via email is required + maps required information", async () => {
+      // Sample response where Email 2FA required
+
+      const userEmail = "kyle@bitwarden.com";
+      const ssoEmail2FaSessionToken =
+        "BwSsoEmail2FaSessionToken_CfDJ8AMrVzKqBFpKqzzsahUx8ubIi9AhHm6aLHDLpCUYc3QV3qC14iuSVkNg57Q7-kGQUn1z87bGY1WP58jFMNJ6ndaurIgQWNfPNN4DG-dBhvzarOAZ0RKY5oKT5futWm6_k9NMMGd8PcGGHg5Pq1_koOIwRtiXO3IpD-bemB7m8oEvbj__JTQP3Mcz-UediFlCbYBKU3wyIiBL_tF8hW5D4RAUa5ZzXIuauJiiCdDS7QOzBcqcusVAPGFfKjfIdAwFfKSOYd5KmYrhK7Y7ymjweP_igPYKB5aMfcVaYr5ux-fdffeJTGqtJorwNjLUYNv7KA";
+
+      const tokenResponse = new IdentityTwoFactorResponse({
+        TwoFactorProviders: ["1"],
+        TwoFactorProviders2: { "1": { Email: "k***@bitwarden.com" } },
+        error: "invalid_grant",
+        error_description: "Two factor required.",
+        // only sent for emailed 2FA
+        email: userEmail,
+        ssoEmail2faSessionToken: ssoEmail2FaSessionToken,
+      });
+
+      apiService.postIdentityToken.mockResolvedValue(tokenResponse);
+
+      const result = await passwordLogInStrategy.logIn(credentials);
+
+      expect(stateService.addAccount).not.toHaveBeenCalled();
+      expect(messagingService.send).not.toHaveBeenCalled();
+
+      const expected = new AuthResult();
+      expected.twoFactorProviders = new Map<TwoFactorProviderType, { [key: string]: string }>();
+      expected.twoFactorProviders.set(1, { Email: "k***@bitwarden.com" });
+      expected.email = userEmail;
+      expected.ssoEmail2FaSessionToken = ssoEmail2FaSessionToken;
+
       expect(result).toEqual(expected);
     });
 

@@ -1,21 +1,23 @@
 import { Component, ViewChild, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { lastValueFrom } from "rxjs";
 
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
 import { OrganizationUpdateRequest } from "@bitwarden/common/admin-console/models/request/organization-update.request";
 import { OrganizationResponse } from "@bitwarden/common/admin-console/models/response/organization.response";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 import { ApiKeyComponent } from "../../../settings/api-key.component";
 import { PurgeVaultComponent } from "../../../settings/purge-vault.component";
 
-import { DeleteOrganizationComponent } from "./delete-organization.component";
+import { DeleteOrganizationDialogResult, openDeleteOrganizationDialog } from "./components";
 
 @Component({
   selector: "app-org-account",
@@ -23,8 +25,6 @@ import { DeleteOrganizationComponent } from "./delete-organization.component";
 })
 // eslint-disable-next-line rxjs-angular/prefer-takeuntil
 export class AccountComponent {
-  @ViewChild("deleteOrganizationTemplate", { read: ViewContainerRef, static: true })
-  deleteModalRef: ViewContainerRef;
   @ViewChild("purgeOrganizationTemplate", { read: ViewContainerRef, static: true })
   purgeModalRef: ViewContainerRef;
   @ViewChild("apiKeyTemplate", { read: ViewContainerRef, static: true })
@@ -33,7 +33,7 @@ export class AccountComponent {
   rotateApiKeyModalRef: ViewContainerRef;
 
   selfHosted = false;
-  canManageBilling = true;
+  canEditSubscription = true;
   loading = true;
   canUseApi = false;
   org: OrganizationResponse;
@@ -51,7 +51,8 @@ export class AccountComponent {
     private logService: LogService,
     private router: Router,
     private organizationService: OrganizationService,
-    private organizationApiService: OrganizationApiServiceAbstraction
+    private organizationApiService: OrganizationApiServiceAbstraction,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -60,7 +61,9 @@ export class AccountComponent {
     // eslint-disable-next-line rxjs-angular/prefer-takeuntil, rxjs/no-async-subscribe
     this.route.parent.parent.params.subscribe(async (params) => {
       this.organizationId = params.organizationId;
-      this.canManageBilling = this.organizationService.get(this.organizationId).canManageBilling;
+      this.canEditSubscription = this.organizationService.get(
+        this.organizationId
+      ).canEditSubscription;
       try {
         this.org = await this.organizationApiService.get(this.organizationId);
         this.canUseApi = this.org.useApi;
@@ -98,17 +101,18 @@ export class AccountComponent {
   }
 
   async deleteOrganization() {
-    await this.modalService.openViewRef(
-      DeleteOrganizationComponent,
-      this.deleteModalRef,
-      (comp) => {
-        comp.organizationId = this.organizationId;
-        // eslint-disable-next-line rxjs-angular/prefer-takeuntil
-        comp.onSuccess.subscribe(() => {
-          this.router.navigate(["/"]);
-        });
-      }
-    );
+    const dialog = openDeleteOrganizationDialog(this.dialogService, {
+      data: {
+        organizationId: this.organizationId,
+        requestType: "RegularDelete",
+      },
+    });
+
+    const result = await lastValueFrom(dialog.closed);
+
+    if (result === DeleteOrganizationDialogResult.Deleted) {
+      this.router.navigate(["/"]);
+    }
   }
 
   async purgeVault() {

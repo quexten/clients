@@ -1,10 +1,11 @@
+import { importProvidersFrom } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { Meta, Story, moduleMetadata } from "@storybook/angular";
+import { Meta, Story, applicationConfig, moduleMetadata } from "@storybook/angular";
 import { delay, of, startWith } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { LinkModule, IconModule, ProgressModule } from "@bitwarden/components";
-import { PreloadedEnglishI18nModule } from "@bitwarden/web-vault/app/tests/preloaded-english-i18n.module";
+import { PreloadedEnglishI18nModule } from "@bitwarden/web-vault/app/core/tests";
 
 import { OnboardingTaskComponent } from "./onboarding-task.component";
 import { OnboardingComponent } from "./onboarding.component";
@@ -14,23 +15,14 @@ export default {
   component: OnboardingComponent,
   decorators: [
     moduleMetadata({
-      imports: [
-        JslibModule,
-        RouterModule.forRoot(
-          [
-            {
-              path: "",
-              component: OnboardingComponent,
-            },
-          ],
-          { useHash: true }
-        ),
-        LinkModule,
-        IconModule,
-        ProgressModule,
-        PreloadedEnglishI18nModule,
-      ],
+      imports: [JslibModule, RouterModule, LinkModule, IconModule, ProgressModule],
       declarations: [OnboardingTaskComponent],
+    }),
+    applicationConfig({
+      providers: [
+        importProvidersFrom(RouterModule.forRoot([], { useHash: true })),
+        importProvidersFrom(PreloadedEnglishI18nModule),
+      ],
     }),
   ],
 } as Meta;

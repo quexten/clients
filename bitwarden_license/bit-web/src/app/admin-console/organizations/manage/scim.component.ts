@@ -2,19 +2,22 @@ import { Component, OnInit } from "@angular/core";
 import { UntypedFormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationApiKeyType } from "@bitwarden/common/admin-console/enums/organization-api-key-type";
-import { OrganizationConnectionType } from "@bitwarden/common/admin-console/enums/organization-connection-type";
+import {
+  OrganizationApiKeyType,
+  OrganizationConnectionType,
+} from "@bitwarden/common/admin-console/enums";
 import { ScimConfigApi } from "@bitwarden/common/admin-console/models/api/scim-config.api";
 import { OrganizationApiKeyRequest } from "@bitwarden/common/admin-console/models/request/organization-api-key.request";
 import { OrganizationConnectionRequest } from "@bitwarden/common/admin-console/models/request/organization-connection.request";
 import { ScimConfigRequest } from "@bitwarden/common/admin-console/models/request/scim-config.request";
 import { OrganizationConnectionResponse } from "@bitwarden/common/admin-console/models/response/organization-connection.response";
 import { ApiKeyResponse } from "@bitwarden/common/auth/models/response/api-key.response";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 @Component({
   selector: "app-org-manage-scim",
@@ -43,7 +46,8 @@ export class ScimComponent implements OnInit {
     private platformUtilsService: PlatformUtilsService,
     private i18nService: I18nService,
     private environmentService: EnvironmentService,
-    private organizationApiService: OrganizationApiServiceAbstraction
+    private organizationApiService: OrganizationApiServiceAbstraction,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -82,13 +86,13 @@ export class ScimComponent implements OnInit {
   }
 
   async rotateScimKey() {
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("rotateScimKeyWarning"),
-      this.i18nService.t("rotateScimKey"),
-      this.i18nService.t("rotateKey"),
-      this.i18nService.t("cancel"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "rotateScimKey" },
+      content: { key: "rotateScimKeyWarning" },
+      acceptButtonText: { key: "rotateKey" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (!confirmed) {
       return false;
     }

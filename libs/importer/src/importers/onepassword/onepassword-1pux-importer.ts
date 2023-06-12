@@ -1,5 +1,4 @@
-import { FieldType } from "@bitwarden/common/enums/fieldType";
-import { SecureNoteType } from "@bitwarden/common/enums/secureNoteType";
+import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
@@ -408,7 +407,7 @@ export class OnePassword1PuxImporter extends BaseImporter implements Importer {
   private fillCreditCard(field: FieldsEntity, fieldValue: string, cipher: CipherView): boolean {
     if (this.isNullOrWhitespace(cipher.card.number) && field.id === "ccnum") {
       cipher.card.number = fieldValue;
-      cipher.card.brand = this.getCardBrand(fieldValue);
+      cipher.card.brand = CardView.getCardBrandByPatterns(cipher.card.number);
       return true;
     }
 

@@ -1392,11 +1392,17 @@
   "unlockWithWindowsHello": {
     "message": "Windows Hello ilə kilidi aç"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "Əlavə Windows Hello tənzimləmələri"
+  },
   "windowsHelloConsentMessage": {
     "message": "Bitwarden üçün təsdiqlə."
   },
   "unlockWithTouchId": {
     "message": "Touch ID kilidini aç"
+  },
+  "additionalTouchIdSettings": {
+    "message": "Əlavə Touch ID tənzimləmələri"
   },
   "touchIdConsentMessage": {
     "message": "anbarınızın kilidini açın"
@@ -1406,6 +1412,12 @@
   },
   "autoPromptTouchId": {
     "message": "Açılışda Touch ID-ni soruşun"
+  },
+  "requirePasswordOnStart": {
+    "message": "Tətbiq başladılanda parolu və ya PIN-i tələb et"
+  },
+  "recommendedForSecurity": {
+    "message": "Güvənlik üçün tövsiyə olunur."
   },
   "lockWithMasterPassOnRestart": {
     "message": "Yenidən başladılanda ana parol ilə kilidlə"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "SSO ilə giriş prosesini tamamlamaq üçün zəhmət olmasa anbarınıza müraciət etmək və onu qorumaq üçün bir ana parol tənzimləyin."
+  },
+  "currentMasterPass": {
+    "message": "Hazırkı ana parol"
   },
   "newMasterPass": {
     "message": "Yeni ana parol"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "Ana parolunuz təzəlikcə təşkilatınızdakı bir administrator tərəfindən dəyişdirildi. Anbara müraciət üçün indi güncəlləməlisiniz. Davam etsəniz, hazırkı seansdan çıxış etmiş və təkrar giriş etməli olacaqsınız. Digər cihazlardakı aktiv seanslar bir saata qədər aktiv qalmağa davam edə bilər."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Ana parolunuz təşkilatınızdakı siyasətlərdən birinə və ya bir neçəsinə uyğun gəlmir. Anbara müraciət üçün ana parolunuzu indi güncəlləməlisiniz. Davam etsəniz, hazırkı seansdan çıxış etmiş və təkrar giriş etməli olacaqsınız. Digər cihazlardakı aktiv seanslar bir saata qədər aktiv qalmağa davam edə bilər."
+  },
   "hours": {
     "message": "Saat"
   },
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Təşkilatınızın siyasətləri, anbarınızın vaxt bitişinə təsir edir. Anbar vaxt bitişi üçün icazə verilən maksimum vaxt $HOURS$ saat $MINUTES$ dəqiqədir. Anbar vaxt bitişi əməliyyatı $ACTION$ olaraq tənzimləndi.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Təşkilatınızın siyasətləri, anbar vaxt bitişi əməliyyatınızı $ACTION$ olaraq tənzimlədi.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden, kilidi ilk açanda ana parolunuzu (və ya PIN-inizi) tələb edəcək biometrik tənzimləmələri güncəlləməyi tövsiyə edir. Tənzimləmələrinizi indi güncəlləmək istəyirsiniz?"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "Tövsiyə edilən Tənzimləmələr Güncəlləməsi"
+  },
+  "region": {
+    "message": "Bölgə"
+  },
+  "eu": {
+    "message": "AB",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "ABŞ",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Öz-özünə sahiblik edən"
   }
 }

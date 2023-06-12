@@ -257,7 +257,7 @@
     "message": "Ander"
   },
   "generatePassword": {
-    "message": "Genereer Wagwoord"
+    "message": "Wek 'n Wagwoord op"
   },
   "type": {
     "message": "Tipe"
@@ -389,7 +389,7 @@
     "message": "Wysig Vouer"
   },
   "regeneratePassword": {
-    "message": "Hergenereer Wagwoord"
+    "message": "Wek 'n wagwoord weer op"
   },
   "copyPassword": {
     "message": "Kopieer Wagwoord"
@@ -464,13 +464,13 @@
     "message": "Is u seker u wil hierdie aanhegsel skrap?"
   },
   "attachmentSaved": {
-    "message": "Die aanhegsel is bewaar."
+    "message": "Aanhegsel is bewaar"
   },
   "file": {
     "message": "Lêer"
   },
   "selectFile": {
-    "message": "Kies ’n lêer."
+    "message": "Kies ’n lêer"
   },
   "maxFileSize": {
     "message": "Maksimumlêergrootte is 500 MB."
@@ -639,7 +639,7 @@
     "message": "Waarmerktoep"
   },
   "authenticatorAppDesc": {
-    "message": "Gebruik ’n waarmerktoep (soos Authy of Google Authenticator) om tydgebaseerde bevestigingskodes te genereer.",
+    "message": "Gebruik ’n waarmerktoep (soos Authy of Google Authenticator) om tydgebaseerde bevestigingskodes optewek.",
     "description": "'Authy' and 'Google Authenticator' are product names and should not be translated."
   },
   "yubiKeyTitle": {
@@ -711,7 +711,7 @@
     "message": "Ikoonbedienerbronadres"
   },
   "environmentSaved": {
-    "message": "Die omgewingbronadresse is bewaar."
+    "message": "Die omgewingbronadresse is bewaar"
   },
   "ok": {
     "message": "Goed"
@@ -765,13 +765,13 @@
     "message": "Vergrendel kluis"
   },
   "passwordGenerator": {
-    "message": "Wagwoordgenereerder"
+    "message": "Wagwoordopwekker"
   },
   "contactUs": {
     "message": "Kontak ons"
   },
   "helpAndFeedback": {
-    "message": "Help and feedback"
+    "message": "Hulp en terugvoer"
   },
   "getHelp": {
     "message": "Kry hulp"
@@ -1001,7 +1001,7 @@
     "description": "Copy to clipboard"
   },
   "checkForUpdates": {
-    "message": "Gaan na vir bywerkings"
+    "message": "Gaan na vir bywerkings…"
   },
   "version": {
     "message": "Weergawe $VERSION_NUM$",
@@ -1084,7 +1084,7 @@
     "message": "Wagwoordhigiëne, rekeningwelstand en databreukverslae om u kluis veilig te hou."
   },
   "premiumSignUpTotp": {
-    "message": "TOTP-bevestigingskodegenereerder (2FA) vir aantekenings in u kluis."
+    "message": "TOTP-bevestigingskode-opwekker (2FA) vir aantekenings in u kluis."
   },
   "premiumSignUpSupport": {
     "message": "Klantediens met hoë prioriteit."
@@ -1392,11 +1392,17 @@
   "unlockWithWindowsHello": {
     "message": "Ontgrendel met Windows Hello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "Bykomende Windows Hello-instellings"
+  },
   "windowsHelloConsentMessage": {
     "message": "Bevestig vir Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "Ontgrendel met Touch ID"
+  },
+  "additionalTouchIdSettings": {
+    "message": "Bykomende Touch ID-instellings"
   },
   "touchIdConsentMessage": {
     "message": "ontgrendel u kluis"
@@ -1406,6 +1412,12 @@
   },
   "autoPromptTouchId": {
     "message": "Vra vir Touch ID by lansering"
+  },
+  "requirePasswordOnStart": {
+    "message": "Vereis wagwoord of PIN wanneer toep geopen word"
+  },
+  "recommendedForSecurity": {
+    "message": "Aanbeveel vir veiligheid."
   },
   "lockWithMasterPassOnRestart": {
     "message": "Vergrendel by herbegin met hoofwagwoord"
@@ -1469,7 +1481,7 @@
     "message": "Kloon"
   },
   "passwordGeneratorPolicyInEffect": {
-    "message": "Een of meer organisasiebeleide beïnvloed u genereerderinstellings."
+    "message": "Een of meer organisasiebeleide beïnvloed u opwekkerinstellings."
   },
   "vaultTimeoutAction": {
     "message": "Kluis-uittelaksie"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "Om aantekening met SSO te voltooi moet u ’n hoofwagwoord instel vir toegang tot en beskerming van u kluis."
+  },
+  "currentMasterPass": {
+    "message": "Huidige hoofwagwoord"
   },
   "newMasterPass": {
     "message": "Nuwe hoofwagwoord"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "U hoofwagwoord is onlangs deur ’n administrateur in u organisasie verander. Om toegang tot u kluis te verkry moet u dit nóú bywerk. Deur voort te gaan word u uit u huidige sessie geteken, waarna u weer sal moet aanteken. Aktiewe sessies op ander toestelle kan vir tot ’n uur steeds aktief bly."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "U hoofwagwoord voldoen nie aan een of meer van die organisasiebeleide nie. Om toegang tot die kluis te kry, moet u nou u hoofwagwoord bywerk. Deur voort te gaan sal u van u huidige sessie afgeteken word, en u sal weer moet aanteken. Aktiewe sessies op ander toestelle kan vir tot een uur aktief bly."
+  },
   "hours": {
     "message": "Uur"
   },
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Jou organisasie se beleid affekteer jou kluis-uittel tyd. Die maksimum toelaatbare kluis-uittel tyd is $HOURS$ uur(ure) en $MINUTES$ minuut(minute). Jou kluis-uittelaksie is gestel na $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Jou organisasie se beleid het jou kluis-uittel aksie na $ACTION$ gestel.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -1884,7 +1928,7 @@
     "message": "Verwyder hoofwagwoord"
   },
   "removedMasterPassword": {
-    "message": "Hoofwagwoord is verwyder."
+    "message": "Hoofwagwoord is verwyder"
   },
   "convertOrganizationEncryptionDesc": {
     "message": "$ORGANIZATION$ gebruik SSO met ’n sleutelbediener op ’n eie gasheer. ’n Hoofwagwoord word nie meer vereis vir aantekening vir lede van hierdie organisasie nie.",
@@ -1959,19 +2003,19 @@
     "message": "Ontgrendel"
   },
   "generator": {
-    "message": "Genereerder"
+    "message": "Opwekker"
   },
   "whatWouldYouLikeToGenerate": {
-    "message": "Wat wil u genereer?"
+    "message": "Wat wil u opwek?"
   },
   "passwordType": {
     "message": "Wagwoordtipe"
   },
   "regenerateUsername": {
-    "message": "Hergenereer gebruikersnaam"
+    "message": "Wek 'n gebruikersnaam weer op"
   },
   "generateUsername": {
-    "message": "Genereer gebruikersnaam"
+    "message": "Wek 'n gebruikersnaam op"
   },
   "usernameType": {
     "message": "Gebruikersnaamtipe"
@@ -2014,7 +2058,7 @@
     "message": "E-posalias vir aanstuur"
   },
   "forwardedEmailDesc": {
-    "message": "Genereer ’n e-posalias met ’n eksterne aanstuurdiens."
+    "message": "Wek ’n e-posalias op met ’n eksterne aanstuurdiens."
   },
   "hostname": {
     "message": "Gasheernaam",
@@ -2030,7 +2074,7 @@
     "message": "Premie-intekening word vereis"
   },
   "organizationIsDisabled": {
-    "message": "Organisasie is gedeaktiveer."
+    "message": "Organisasie is gedeaktiveer"
   },
   "disabledOrganizationFilterError": {
     "message": "Items in gedeaktiveerde organisasies is ontoeganklik. Kontak u organisasie-eienaar vir bystand."
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden beveel aan dat u u biometriese instellings bywerk om u hoofwagwoord (of PIN) by eerste ontgrendeling te vereis. Wil u nou u instellings bywerk?"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "Aanbevole bywerking van instellings"
+  },
+  "region": {
+    "message": "Streek"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "VS",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Selghehuisves"
   }
 }

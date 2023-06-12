@@ -121,7 +121,7 @@
     <value>Bitwarden – Bezplatný správce hesel</value>
   </data>
   <data name="Summary" xml:space="preserve">
-    <value>Bezpečný a bezplatný správce hesel pro všechna vaše zařízení</value>
+    <value>Bezpečný a bezplatný správce hesel pro všechna Vaše zařízení</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Bitwarden, Inc. je mateřskou společností 8bit Solutions LLC.
@@ -132,14 +132,14 @@ Spravujte, ukládejte, zabezpečujte a sdílejte neomezený počet hesel na neom
 
 Generujte silná, jedinečná a náhodná hesla na základě bezpečnostních požadavků pro každou webovou stránku, kterou navštěvujete.
 
-Bitwarden Send rychle přenáší šifrované informace --- soubory a prostý text -- přímo komukoliv.
+Bitwarden Send rychle přenáší šifrované informace --- soubory a prostý text -- přímo a komukoli.
 
 Bitwarden nabízí plány Teams a Enterprise pro firmy, takže můžete bezpečně sdílet hesla s kolegy.
 
 Proč si vybrat Bitwarden:
 
 Šifrování na světové úrovni
-Hesla jsou chráněna pokročilým koncovým šifrováním (AES-256 bit, salted hashování a PBKDF2 SHA-256), takže vaše data zůstanou bezpečná a soukromá.
+Hesla jsou chráněna pokročilým koncovým šifrováním (AES-256 bit, salted hashování a PBKDF2 SHA-256), takže Vaše data zůstanou bezpečná a soukromá.
 
 Vestavěný generátor hesel
 Generujte silná, jedinečná a náhodná hesla na základě bezpečnostních požadavků pro každou webovou stránku, kterou navštěvujete.
@@ -148,11 +148,11 @@ Globální překlady
 Překlady Bitwarden existují ve 40 jazycích a díky naší globální komunitě se stále rozšiřují.
 
 Aplikace pro více platforem
-Zabezpečte a sdílejte citlivá data v rámci svého trezoru Bitwarden z jakéhokoliv prohlížeče, mobilního zařízení nebo desktopového operačního systému a dalších.
+Zabezpečte a sdílejte citlivá data v rámci svého trezoru Bitwarden z jakéhokoli prohlížeče, mobilního zařízení nebo operačního systému pro počítač.
 </value>
   </data>
   <data name="AssetTitle" xml:space="preserve">
-    <value>Bezpečný a bezplatný správce hesel pro všechna vaše zařízení</value>
+    <value>Bezpečný a bezplatný správce hesel pro všechna Vaše zařízení</value>
   </data>
   <data name="ScreenshotSync" xml:space="preserve">
     <value>Synchronizujte a přistupujte ke svému trezoru z různých zařízení</value>
@@ -170,6 +170,6 @@ Zabezpečte a sdílejte citlivá data v rámci svého trezoru Bitwarden z jakéh
     <value>Vygenerujte si silná, jedinečná a bezpečná hesla</value>
   </data>
   <data name="ScreenshotEdit" xml:space="preserve">
-    <value>Vaše informace jsou bezpečně zašifrovány pomocí AES-256 šifrování</value>
+    <value>Vaše informace jsou bezpečně zašifrovány pomocí šifrování AES-256</value>
   </data>
 </root>

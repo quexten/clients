@@ -1392,20 +1392,32 @@
   "unlockWithWindowsHello": {
     "message": "使用 Windows Hello 解锁"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "额外的 Windows Hello 设置"
+  },
   "windowsHelloConsentMessage": {
     "message": "验证 Bitwarden。"
   },
   "unlockWithTouchId": {
     "message": "使用触控 ID 解锁"
   },
+  "additionalTouchIdSettings": {
+    "message": "额外的触控 ID 设置"
+  },
   "touchIdConsentMessage": {
     "message": "解锁您的密码库"
   },
   "autoPromptWindowsHello": {
-    "message": "启动时要求 Windows Hello"
+    "message": "应用程序启动时要求使用 Windows Hello"
   },
   "autoPromptTouchId": {
-    "message": "启动时要求触控 ID"
+    "message": "应用程序启动时要求使用触控 ID"
+  },
+  "requirePasswordOnStart": {
+    "message": "应用程序启动时要求输入密码或 PIN"
+  },
+  "recommendedForSecurity": {
+    "message": "安全起见，推荐设置。"
   },
   "lockWithMasterPassOnRestart": {
     "message": "重启后使用主密码锁定"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "要完成 SSO 登陆配置，请设置一个主密码以访问和保护您的密码库。"
+  },
+  "currentMasterPass": {
+    "message": "当前主密码"
   },
   "newMasterPass": {
     "message": "新主密码"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "您的主密码最近被您组织的管理员更改过。要访问密码库，您必须立即更新它。继续操作将使您退出当前会话并要求您重新登录。其他设备上的活动会话可能会继续保持活动状态长达一小时。"
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "您的主密码不符合某一项或多项组织策略要求。要访问密码库，必须立即更新您的主密码。继续操作将使您退出当前会话，并要求您重新登录。其他设备上的活动会话可能会继续保持活动状态长达一小时。"
+  },
   "hours": {
     "message": "小时"
   },
@@ -1850,7 +1868,7 @@
     "message": "分钟"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "您的组织策略正在影响您的密码库超时时间。最大允许的密码库超时时间是 $HOURS$ 小时 $MINUTES$ 分钟。",
+    "message": "您的组织策略已将您最大允许的密码库超时时间设置为 $HOURS$ 小时 $MINUTES$ 分钟。",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "您的组织策略正在影响您的密码库超时时间。最大允许的密码库超时时间是 $HOURS$ 小时 $MINUTES$ 分钟。您的密码库超时动作被设置为 $ACTION$。",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "您的组织策略已将您的密码库超时动作设置为 $ACTION$。",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden 建议更新您的生物识别设置，以在首次解锁时要求输入您的主密码（或 PIN）。现在要更新您的设置吗？"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "推荐的设置更新"
+  },
+  "region": {
+    "message": "区域"
+  },
+  "eu": {
+    "message": "欧盟",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "美国",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "自托管"
   }
 }

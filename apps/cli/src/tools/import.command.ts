@@ -2,7 +2,8 @@ import * as program from "commander";
 import * as inquirer from "inquirer";
 
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { ImportServiceAbstraction, Importer, ImportType } from "@bitwarden/importer";
+import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
+import { ImportServiceAbstraction, ImportType } from "@bitwarden/importer";
 
 import { Response } from "../models/response";
 import { MessageResponse } from "../models/response/message.response";
@@ -11,7 +12,8 @@ import { CliUtils } from "../utils";
 export class ImportCommand {
   constructor(
     private importService: ImportServiceAbstraction,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private syncService: SyncService
   ) {}
 
   async run(
@@ -50,8 +52,14 @@ export class ImportCommand {
     if (filepath == null || filepath === "") {
       return Response.badRequest("`filepath` was not provided.");
     }
-
-    const importer = await this.importService.getImporter(format, organizationId);
+    const promptForPassword_callback = async () => {
+      return await this.promptPassword();
+    };
+    const importer = await this.importService.getImporter(
+      format,
+      promptForPassword_callback,
+      organizationId
+    );
     if (importer === null) {
       return Response.badRequest("Proper importer type required.");
     }
@@ -68,12 +76,15 @@ export class ImportCommand {
         return Response.badRequest("Import file was empty.");
       }
 
-      const response = await this.doImport(importer, contents, organizationId);
+      const response = await this.importService.import(importer, contents, organizationId);
       if (response.success) {
-        response.data = new MessageResponse("Imported " + filepath, null);
+        this.syncService.fullSync(true);
+        return Response.success(new MessageResponse("Imported " + filepath, null));
       }
-      return response;
     } catch (err) {
+      if (err.message) {
+        return Response.badRequest(err.message);
+      }
       return Response.badRequest(err);
     }
   }
@@ -89,27 +100,6 @@ export class ImportCommand {
     const res = new MessageResponse("Supported input formats:", options);
     res.raw = options;
     return Response.success(res);
-  }
-
-  private async doImport(
-    importer: Importer,
-    contents: string,
-    organizationId?: string
-  ): Promise<Response> {
-    const err = await this.importService.import(importer, contents, organizationId);
-    if (err != null) {
-      if (err.passwordRequired) {
-        importer = this.importService.getImporter(
-          "bitwardenpasswordprotected",
-          organizationId,
-          await this.promptPassword()
-        );
-        return this.doImport(importer, contents, organizationId);
-      }
-      return Response.badRequest(err.message);
-    }
-
-    return Response.success();
   }
 
   private async promptPassword() {

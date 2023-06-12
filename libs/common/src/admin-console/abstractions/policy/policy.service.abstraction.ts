@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 
 import { ListResponse } from "../../../models/response/list.response";
-import { PolicyType } from "../../enums/policy-type";
+import { PolicyType } from "../../enums";
 import { PolicyData } from "../../models/data/policy.data";
 import { MasterPasswordPolicyOptions } from "../../models/domain/master-password-policy-options";
 import { Policy } from "../../models/domain/policy";
@@ -10,6 +10,7 @@ import { PolicyResponse } from "../../models/response/policy.response";
 
 export abstract class PolicyService {
   policies$: Observable<Policy[]>;
+  get$: (policyType: PolicyType, policyFilter?: (policy: Policy) => boolean) => Observable<Policy>;
   masterPasswordPolicyOptions$: (policies?: Policy[]) => Observable<MasterPasswordPolicyOptions>;
   policyAppliesToActiveUser$: (
     policyType: PolicyType,

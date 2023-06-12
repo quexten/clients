@@ -1,7 +1,8 @@
 import { NotificationsService } from "@bitwarden/common/abstractions/notifications.service";
 import { VaultTimeoutService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeout.service";
+import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
 
-import { BrowserStateService } from "../services/abstractions/browser-state.service";
+import { BrowserStateService } from "../platform/services/abstractions/browser-state.service";
 
 const IdleInterval = 60 * 5; // 5 minutes
 
@@ -45,7 +46,7 @@ export default class IdleBackground {
           if (timeout === -2) {
             // On System Lock vault timeout option
             const action = await this.stateService.getVaultTimeoutAction();
-            if (action === "logOut") {
+            if (action === VaultTimeoutAction.LogOut) {
               await this.vaultTimeoutService.logOut();
             } else {
               await this.vaultTimeoutService.lock();

@@ -1,5 +1,4 @@
-import { FieldType } from "@bitwarden/common/enums/fieldType";
-import { SecureNoteType } from "@bitwarden/common/enums/secureNoteType";
+import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -199,7 +198,7 @@ export class OnePassword1PifImporter extends BaseImporter implements Importer {
       } else if (cipher.type === CipherType.Card) {
         if (this.isNullOrWhitespace(cipher.card.number) && fieldDesignation === "ccnum") {
           cipher.card.number = fieldValue;
-          cipher.card.brand = this.getCardBrand(fieldValue);
+          cipher.card.brand = CardView.getCardBrandByPatterns(cipher.card.number);
           return;
         } else if (this.isNullOrWhitespace(cipher.card.code) && fieldDesignation === "cvv") {
           cipher.card.code = fieldValue;

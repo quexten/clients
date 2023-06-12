@@ -196,13 +196,13 @@
     "message": "المساعدة والتعليقات"
   },
   "helpCenter": {
-    "message": "Bitwarden Help center"
+    "message": "مركز المساعدة Bitwarden"
   },
   "communityForums": {
-    "message": "Explore Bitwarden community forums"
+    "message": "استكشاف منتديات مجتمع Bitwarden"
   },
   "contactSupport": {
-    "message": "Contact Bitwarden support"
+    "message": "اتصل بالدعم Bitwarden"
   },
   "sync": {
     "message": "المزامنة"
@@ -1342,83 +1342,83 @@
     "description": "ex. Date this password was updated"
   },
   "neverLockWarning": {
-    "message": "Are you sure you want to use the \"Never\" option? Setting your lock options to \"Never\" stores your vault's encryption key on your device. If you use this option you should ensure that you keep your device properly protected."
+    "message": "هل أنت متأكد من أنك تريد استخدام خيار \"مطلقا\"؟ إعداد خيارات القفل إلى \"مطلقا\" يخزن مفتاح تشفير المستودع الخاص بك على جهازك. إذا كنت تستخدم هذا الخيار، يجب أن تتأكد من الحفاظ على حماية جهازك بشكل صحيح."
   },
   "noOrganizationsList": {
-    "message": "You do not belong to any organizations. Organizations allow you to securely share items with other users."
+    "message": "أنت لا تنتمي إلى أي مؤسسة. تسمح لك المؤسسات بمشاركة العناصر بأمان مع مستخدمين آخرين."
   },
   "noCollectionsInList": {
-    "message": "There are no collections to list."
+    "message": "لا توجد مجموعات لعرضها."
   },
   "ownership": {
-    "message": "Ownership"
+    "message": "المالك"
   },
   "whoOwnsThisItem": {
-    "message": "Who owns this item?"
+    "message": "من يملك هذا العنصر؟"
   },
   "strong": {
-    "message": "Strong",
+    "message": "قوية",
     "description": "ex. A strong password. Scale: Weak -> Good -> Strong"
   },
   "good": {
-    "message": "Good",
+    "message": "جيدة",
     "description": "ex. A good password. Scale: Weak -> Good -> Strong"
   },
   "weak": {
-    "message": "Weak",
+    "message": "ضعيفة",
     "description": "ex. A weak password. Scale: Weak -> Good -> Strong"
   },
   "weakMasterPassword": {
-    "message": "Weak master password"
+    "message": "كلمة المرور الرئيسية ضعيفة"
   },
   "weakMasterPasswordDesc": {
-    "message": "The master password you have chosen is weak. You should use a strong master password (or a passphrase) to properly protect your Bitwarden account. Are you sure you want to use this master password?"
+    "message": "كلمة المرور الرئيسية التي اخترتها ضعيفة. يجب عليك استخدام كلمة مرور رئيسية قوية (أو عبارة مرور) لحماية حساب Bitwarden الخاص بك بشكل صحيح. هل أنت متأكد من أنك تريد استخدام كلمة المرور الرئيسية هذه؟"
   },
   "pin": {
-    "message": "PIN",
+    "message": "رقم التعريف الشخصي",
     "description": "PIN code. Ex. The short code (often numeric) that you use to unlock a device."
   },
   "unlockWithPin": {
-    "message": "Unlock with PIN"
+    "message": "فتح باستخدام رمز PIN"
   },
   "setYourPinCode": {
-    "message": "Set your PIN code for unlocking Bitwarden. Your PIN settings will be reset if you ever fully log out of the application."
+    "message": "تعيين رمز PIN الخاص بك لإلغاء قفل Bitwarden. سيتم إعادة تعيين إعدادات PIN الخاصة بك إذا قمت بتسجيل الخروج بالكامل من التطبيق."
   },
   "pinRequired": {
-    "message": "PIN code is required."
+    "message": "رمز PIN مطلوب."
   },
   "invalidPin": {
-    "message": "Invalid PIN code."
+    "message": "رمز PIN غير صالح."
   },
   "unlockWithBiometrics": {
-    "message": "Unlock with biometrics"
+    "message": "فتح باستخدام القياسات الحيوية"
   },
   "awaitDesktop": {
-    "message": "Awaiting confirmation from desktop"
+    "message": "في انتظار التأكيد من سطح المكتب"
   },
   "awaitDesktopDesc": {
-    "message": "Please confirm using biometrics in the Bitwarden desktop application to set up biometrics for browser."
+    "message": "يرجى التأكد من استخدام القياسات الحيوية في تطبيق سطح المكتب Bitwarden لإعداد القياسات الحيوية للمتصفح."
   },
   "lockWithMasterPassOnRestart": {
-    "message": "Lock with master password on browser restart"
+    "message": "قفل مع كلمة المرور الرئيسية عند إعادة تشغيل المتصفح"
   },
   "selectOneCollection": {
-    "message": "You must select at least one collection."
+    "message": "يجب عليك تحديد مجموعة واحدة على الأقل."
   },
   "cloneItem": {
-    "message": "Clone item"
+    "message": "استنساخ العنصر"
   },
   "clone": {
-    "message": "Clone"
+    "message": "استنساخ"
   },
   "passwordGeneratorPolicyInEffect": {
-    "message": "One or more organization policies are affecting your generator settings."
+    "message": "واحدة أو أكثر من سياسات المؤسسة تؤثر على إعدادات المولدات الخاصة بك."
   },
   "vaultTimeoutAction": {
-    "message": "Vault timeout action"
+    "message": "إجراء مهلة المخزن"
   },
   "lock": {
-    "message": "Lock",
+    "message": "قفل",
     "description": "Verb form: to make secure or inaccesible by"
   },
   "trash": {
@@ -1426,7 +1426,7 @@
     "description": "Noun: a special folder to hold deleted items"
   },
   "searchTrash": {
-    "message": "Search trash"
+    "message": "البحث عن سلة المهملات"
   },
   "permanentlyDeleteItem": {
     "message": "حذف العنصر بشكل دائم"
@@ -1435,13 +1435,13 @@
     "message": "هل أنت متأكد من أنك تريد حذف هذا العنصر بشكل دائم؟"
   },
   "permanentlyDeletedItem": {
-    "message": "Item permanently deleted"
+    "message": "تم حذف العنصر بشكل دائم"
   },
   "restoreItem": {
     "message": "استعادة العنصر"
   },
   "restoreItemConfirmation": {
-    "message": "Are you sure you want to restore this item?"
+    "message": "هل أنت متأكد من أنك تريد استعادة هذا العنصر؟"
   },
   "restoredItem": {
     "message": "Item restored"
@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Item auto-filled "
   },
+  "insecurePageWarning": {
+    "message": "Warning: This is an unsecured HTTP page, and any information you submit can potentially be seen and changed by others. This Login was originally saved on a secure (HTTPS) page."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Do you still wish to fill this login?"
+  },
+  "autofillIframeWarning": {
+    "message": "The form is hosted by a different domain than the URI of your saved login. Choose OK to auto-fill anyway, or Cancel to stop."
+  },
+  "autofillIframeWarningTip": {
+    "message": "To prevent this warning in the future, save this URI, $HOSTNAME$, to your Bitwarden login item for this site.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Set master password"
+  },
+  "currentMasterPass": {
+    "message": "Current master password"
+  },
+  "newMasterPass": {
+    "message": "New master password"
+  },
+  "confirmNewMasterPass": {
+    "message": "Confirm new master password"
   },
   "masterPasswordPolicyInEffect": {
     "message": "One or more organization policies require your master password to meet the following requirements:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "تم تغيير كلمة المرور الرئيسية الخاصة بك مؤخرًا من قبل مسؤول في مؤسستك. من أجل الوصول إلى الخزنة، يجب عليك تحديثها الآن. سيتم تسجيل خروجك من الجلسة الحالية، مما يتطلب منك تسجيل الدخول مرة أخرى. قد تظل الجلسات النشطة على أجهزة أخرى نشطة لمدة تصل إلى ساعة واحدة."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "التسجيل التلقائي"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "Opens in a new window"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

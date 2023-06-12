@@ -1,14 +1,14 @@
 import { DialogConfig, DialogRef, DIALOG_DATA } from "@angular/cdk/dialog";
 import { Component, Inject } from "@angular/core";
 
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { CollectionBulkDeleteRequest } from "@bitwarden/common/models/request/collection-bulk-delete.request";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherBulkDeleteRequest } from "@bitwarden/common/vault/models/request/cipher-bulk-delete.request";
-import { DialogService } from "@bitwarden/components";
 
 export interface BulkDeleteDialogParams {
   cipherIds?: string[];
@@ -28,7 +28,7 @@ export enum BulkDeleteDialogResult {
  * @param config Configuration for the dialog
  */
 export const openBulkDeleteDialog = (
-  dialogService: DialogService,
+  dialogService: DialogServiceAbstraction,
   config: DialogConfig<BulkDeleteDialogParams>
 ) => {
   return dialogService.open<BulkDeleteDialogResult, BulkDeleteDialogParams>(
@@ -38,7 +38,6 @@ export const openBulkDeleteDialog = (
 };
 
 @Component({
-  selector: "vault-bulk-delete-dialog",
   templateUrl: "bulk-delete-dialog.component.html",
 })
 export class BulkDeleteDialogComponent {
@@ -99,10 +98,11 @@ export class BulkDeleteDialogComponent {
   };
 
   private async deleteCiphers(): Promise<any> {
+    const asAdmin = this.organization?.canEditAnyCollection;
     if (this.permanent) {
-      await this.cipherService.deleteManyWithServer(this.cipherIds);
+      await this.cipherService.deleteManyWithServer(this.cipherIds, asAdmin);
     } else {
-      await this.cipherService.softDeleteManyWithServer(this.cipherIds);
+      await this.cipherService.softDeleteManyWithServer(this.cipherIds, asAdmin);
     }
   }
 

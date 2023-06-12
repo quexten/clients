@@ -2,17 +2,18 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { concatMap, Subject, takeUntil } from "rxjs";
 
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ModalConfig, ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { OrganizationApiKeyType } from "@bitwarden/common/admin-console/enums/organization-api-key-type";
+import { OrganizationApiKeyType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { PlanType } from "@bitwarden/common/billing/enums/plan-type";
+import { PlanType } from "@bitwarden/common/billing/enums";
 import { OrganizationSubscriptionResponse } from "@bitwarden/common/billing/models/response/organization-subscription.response";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 import {
   BillingSyncApiKeyComponent,
@@ -46,7 +47,8 @@ export class OrganizationSubscriptionCloudComponent implements OnInit, OnDestroy
     private modalService: ModalService,
     private organizationService: OrganizationService,
     private organizationApiService: OrganizationApiServiceAbstraction,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -77,7 +79,7 @@ export class OrganizationSubscriptionCloudComponent implements OnInit, OnDestroy
     }
     this.loading = true;
     this.userOrg = this.organizationService.get(this.organizationId);
-    if (this.userOrg.canManageBilling) {
+    if (this.userOrg.canViewSubscription) {
       this.sub = await this.organizationApiService.getSubscription(this.organizationId);
     }
 
@@ -203,13 +205,12 @@ export class OrganizationSubscriptionCloudComponent implements OnInit, OnDestroy
       return;
     }
 
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("cancelConfirmation"),
-      this.i18nService.t("cancelSubscription"),
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "cancelSubscription" },
+      content: { key: "cancelConfirmation" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (!confirmed) {
       return;
     }
@@ -232,12 +233,12 @@ export class OrganizationSubscriptionCloudComponent implements OnInit, OnDestroy
       return;
     }
 
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("reinstateConfirmation"),
-      this.i18nService.t("reinstateSubscription"),
-      this.i18nService.t("yes"),
-      this.i18nService.t("cancel")
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "reinstateSubscription" },
+      content: { key: "reinstateConfirmation" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (!confirmed) {
       return;
     }
@@ -303,15 +304,14 @@ export class OrganizationSubscriptionCloudComponent implements OnInit, OnDestroy
   }
 
   removeSponsorship = async () => {
-    const isConfirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("removeSponsorshipConfirmation"),
-      this.i18nService.t("removeSponsorship"),
-      this.i18nService.t("remove"),
-      this.i18nService.t("cancel"),
-      "warning"
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "removeSponsorship" },
+      content: { key: "removeSponsorshipConfirmation" },
+      acceptButtonText: { key: "remove" },
+      type: SimpleDialogType.WARNING,
+    });
 
-    if (!isConfirmed) {
+    if (!confirmed) {
       return;
     }
 

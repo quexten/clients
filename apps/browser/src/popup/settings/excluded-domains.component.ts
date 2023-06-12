@@ -1,13 +1,13 @@
 import { Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { BroadcasterService } from "@bitwarden/common/abstractions/broadcaster.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 
-import { BrowserApi } from "../../browser/browserApi";
+import { BrowserApi } from "../../platform/browser/browser-api";
 
 interface ExcludedDomain {
   uri: string;
@@ -80,7 +80,7 @@ export class ExcludedDomainsComponent implements OnInit, OnDestroy {
 
   async submit() {
     const savedDomains: { [name: string]: null } = {};
-    const newExcludedDomains = this.getNewlyAddedDomians(this.excludedDomains);
+    const newExcludedDomains = this.getNewlyAddedDomains(this.excludedDomains);
     for (const domain of this.excludedDomains) {
       const resp = newExcludedDomains.filter((e) => e.uri === domain.uri);
       if (resp.length === 0) {
@@ -109,7 +109,7 @@ export class ExcludedDomainsComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  getNewlyAddedDomians(domain: ExcludedDomain[]): ExcludedDomain[] {
+  getNewlyAddedDomains(domain: ExcludedDomain[]): ExcludedDomain[] {
     const result = this.excludedDomains.filter(
       (newDomain) =>
         !this.existingExcludedDomains.some((oldDomain) => newDomain.uri === oldDomain.uri)

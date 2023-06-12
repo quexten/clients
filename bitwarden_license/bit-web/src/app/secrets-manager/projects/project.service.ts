@@ -2,22 +2,19 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { EncryptService } from "@bitwarden/common/abstractions/encrypt.service";
-import { EncString } from "@bitwarden/common/models/domain/enc-string";
-import { SymmetricCryptoKey } from "@bitwarden/common/models/domain/symmetric-crypto-key";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
+import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
+import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 
 import { ProjectListView } from "../models/view/project-list.view";
-import { ProjectPermissionDetailsView, ProjectView } from "../models/view/project.view";
+import { ProjectView } from "../models/view/project.view";
 import { BulkOperationStatus } from "../shared/dialogs/bulk-status-dialog.component";
 
 import { ProjectRequest } from "./models/requests/project.request";
 import { ProjectListItemResponse } from "./models/responses/project-list-item.response";
-import {
-  ProjectPermissionDetailsResponse,
-  ProjectResponse,
-} from "./models/responses/project.response";
+import { ProjectResponse } from "./models/responses/project.response";
 
 @Injectable({
   providedIn: "root",
@@ -32,10 +29,10 @@ export class ProjectService {
     private encryptService: EncryptService
   ) {}
 
-  async getByProjectId(projectId: string): Promise<ProjectPermissionDetailsView> {
+  async getByProjectId(projectId: string): Promise<ProjectView> {
     const r = await this.apiService.send("GET", "/projects/" + projectId, null, true, true);
-    const projectResponse = new ProjectPermissionDetailsResponse(r);
-    return await this.createProjectPermissionDetailsView(projectResponse);
+    const projectResponse = new ProjectResponse(r);
+    return await this.createProjectView(projectResponse);
   }
 
   async getProjects(organizationId: string): Promise<ProjectListView[]> {
@@ -99,9 +96,7 @@ export class ProjectService {
     return request;
   }
 
-  private async createProjectView(
-    projectResponse: ProjectResponse | ProjectPermissionDetailsResponse
-  ) {
+  private async createProjectView(projectResponse: ProjectResponse) {
     const orgKey = await this.getOrganizationKey(projectResponse.organizationId);
 
     const projectView = new ProjectView();
@@ -109,21 +104,13 @@ export class ProjectService {
     projectView.organizationId = projectResponse.organizationId;
     projectView.creationDate = projectResponse.creationDate;
     projectView.revisionDate = projectResponse.revisionDate;
+    projectView.read = projectResponse.read;
+    projectView.write = projectResponse.write;
     projectView.name = await this.encryptService.decryptToUtf8(
       new EncString(projectResponse.name),
       orgKey
     );
     return projectView;
-  }
-
-  private async createProjectPermissionDetailsView(
-    projectResponse: ProjectPermissionDetailsResponse
-  ): Promise<ProjectPermissionDetailsView> {
-    return {
-      ...(await this.createProjectView(projectResponse)),
-      read: projectResponse.read,
-      write: projectResponse.write,
-    };
   }
 
   private async createProjectsListView(
@@ -136,6 +123,8 @@ export class ProjectService {
         const projectListView = new ProjectListView();
         projectListView.id = s.id;
         projectListView.organizationId = s.organizationId;
+        projectListView.read = s.read;
+        projectListView.write = s.write;
         projectListView.name = await this.encryptService.decryptToUtf8(
           new EncString(s.name),
           orgKey

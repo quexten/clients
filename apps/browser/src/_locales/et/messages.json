@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Kirje täideti"
   },
+  "insecurePageWarning": {
+    "message": "Warning: This is an unsecured HTTP page, and any information you submit can potentially be seen and changed by others. This Login was originally saved on a secure (HTTPS) page."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Do you still wish to fill this login?"
+  },
+  "autofillIframeWarning": {
+    "message": "The form is hosted by a different domain than the URI of your saved login. Choose OK to auto-fill anyway, or Cancel to stop."
+  },
+  "autofillIframeWarningTip": {
+    "message": "To prevent this warning in the future, save this URI, $HOSTNAME$, to your Bitwarden login item for this site.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Määra ülemparool"
+  },
+  "currentMasterPass": {
+    "message": "Praegune ülemparool"
+  },
+  "newMasterPass": {
+    "message": "Uus ülemparool"
+  },
+  "confirmNewMasterPass": {
+    "message": "Kinnita uus ülemparool"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Üks või enam organisatsiooni eeskirja nõuavad, et ülemparool vastaks nendele nõudmistele:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Organisatsiooni administraator muutis hiljuti sinu ülemparooli. Hoidlale ligi pääsemiseks pead seda nüüd uuendama. Jätkates logitakse sind käimasolevast sessioonist välja, misjärel nõutakse uuesti sisselogimist. Teistes seadmetes olevad aktiivsed sessioonid jäävad aktiivseks kuni üheks tunniks."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Sinu ülemparool ei vasta ühele või rohkemale organisatsiooni poolt seatud poliitikale. Hoidlale ligipääsemiseks pead oma ülemaprooli uuendama. Jätkamisel logitakse sind praegusest sessioonist välja, mistõttu pead uuesti sisse logima. Teistes seadmetes olevad aktiivsed sessioonid aeguvad umbes ühe tunni jooksul."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automaatne liitumine"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Organisatsiooni poliitikad mõjutavad sinu hoidla ajalõppu. Maksimaalne lubatud hoidla ajalõpp on $HOURS$ tund(i) ja $MINUTES$ minut(it). Sinu hoidla ajalõpu tegevus on $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Organisatsiooni poliitika on sinu hoidla ajalõpu tegevuse seadistanud $ACTION$ peale.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Piirkond"
+  },
+  "opensInANewWindow": {
+    "message": "Avaneb uues aknas"
+  },
+  "eu": {
+    "message": "EL",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "USA",
+    "description": "United States"
   }
 }

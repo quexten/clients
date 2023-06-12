@@ -1,8 +1,8 @@
 import { DialogRef, DIALOG_DATA } from "@angular/cdk/dialog";
 import { Component, Inject } from "@angular/core";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
 import { SecretService } from "../../secrets/secret.service";
 
@@ -12,7 +12,6 @@ export interface SecretHardDeleteOperation {
 }
 
 @Component({
-  selector: "sm-secret-hard-delete-dialog",
   templateUrl: "./secret-hard-delete.component.html",
 })
 export class SecretHardDeleteDialogComponent {

@@ -4,27 +4,28 @@ import { Router } from "@angular/router";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import {
-  AllValidationErrors,
-  FormValidationErrorsService,
-} from "@bitwarden/common/abstractions/formValidationErrors.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { PasswordLogInCredentials } from "@bitwarden/common/auth/models/domain/log-in-credentials";
 import { RegisterResponse } from "@bitwarden/common/auth/models/response/register.response";
-import { DEFAULT_KDF_CONFIG, DEFAULT_KDF_TYPE } from "@bitwarden/common/enums/kdfType";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { DEFAULT_KDF_CONFIG, DEFAULT_KDF_TYPE } from "@bitwarden/common/enums";
 import { KeysRequest } from "@bitwarden/common/models/request/keys.request";
 import { ReferenceEventRequest } from "@bitwarden/common/models/request/reference-event.request";
 import { RegisterRequest } from "@bitwarden/common/models/request/register.request";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import {
+  AllValidationErrors,
+  FormValidationErrorsService,
+} from "@bitwarden/common/platform/abstractions/form-validation-errors.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 
 import { CaptchaProtectedComponent } from "../auth/components/captcha-protected.component";
+import { DialogServiceAbstraction, SimpleDialogType } from "../services/dialog";
 import { PasswordColorText } from "../shared/components/password-strength/password-strength.component";
 import { InputsFieldMatch } from "../validators/inputsFieldMatch.validator";
 
@@ -90,7 +91,8 @@ export class RegisterComponent extends CaptchaProtectedComponent implements OnIn
     protected passwordGenerationService: PasswordGenerationServiceAbstraction,
     environmentService: EnvironmentService,
     protected logService: LogService,
-    protected auditService: AuditService
+    protected auditService: AuditService,
+    protected dialogService: DialogServiceAbstraction
   ) {
     super(environmentService, i18nService, platformUtilsService);
     this.showTerms = !platformUtilsService.isSelfHost();
@@ -227,35 +229,32 @@ export class RegisterComponent extends CaptchaProtectedComponent implements OnIn
       (await this.auditService.passwordLeaked(this.formGroup.controls.masterPassword.value)) > 0;
 
     if (passwordWeak && passwordLeak) {
-      const result = await this.platformUtilsService.showDialog(
-        this.i18nService.t("weakAndBreachedMasterPasswordDesc"),
-        this.i18nService.t("weakAndExposedMasterPassword"),
-        this.i18nService.t("yes"),
-        this.i18nService.t("no"),
-        "warning"
-      );
+      const result = await this.dialogService.openSimpleDialog({
+        title: { key: "weakAndExposedMasterPassword" },
+        content: { key: "weakAndBreachedMasterPasswordDesc" },
+        type: SimpleDialogType.WARNING,
+      });
+
       if (!result) {
         return { isValid: false };
       }
     } else if (passwordWeak) {
-      const result = await this.platformUtilsService.showDialog(
-        this.i18nService.t("weakMasterPasswordDesc"),
-        this.i18nService.t("weakMasterPassword"),
-        this.i18nService.t("yes"),
-        this.i18nService.t("no"),
-        "warning"
-      );
+      const result = await this.dialogService.openSimpleDialog({
+        title: { key: "weakMasterPassword" },
+        content: { key: "weakMasterPasswordDesc" },
+        type: SimpleDialogType.WARNING,
+      });
+
       if (!result) {
         return { isValid: false };
       }
     } else if (passwordLeak) {
-      const result = await this.platformUtilsService.showDialog(
-        this.i18nService.t("exposedMasterPasswordDesc"),
-        this.i18nService.t("exposedMasterPassword"),
-        this.i18nService.t("yes"),
-        this.i18nService.t("no"),
-        "warning"
-      );
+      const result = await this.dialogService.openSimpleDialog({
+        title: { key: "exposedMasterPassword" },
+        content: { key: "exposedMasterPasswordDesc" },
+        type: SimpleDialogType.WARNING,
+      });
+
       if (!result) {
         return { isValid: false };
       }

@@ -1392,20 +1392,32 @@
   "unlockWithWindowsHello": {
     "message": "Розблокувати з Windows Hello"
   },
+  "additionalWindowsHelloSettings": {
+    "message": "Додаткові налаштування Windows Hello"
+  },
   "windowsHelloConsentMessage": {
     "message": "Перевірити на Bitwarden."
   },
   "unlockWithTouchId": {
     "message": "Розблокувати з Touch ID"
   },
+  "additionalTouchIdSettings": {
+    "message": "Додаткові налаштування Touch ID"
+  },
   "touchIdConsentMessage": {
     "message": "розблокувати сховище"
   },
   "autoPromptWindowsHello": {
-    "message": "Ініціювати Windows Hello під час запуску"
+    "message": "Запитувати Windows Hello під час запуску"
   },
   "autoPromptTouchId": {
-    "message": "Ініціювати Touch ID під час запуску"
+    "message": "Запитувати Touch ID під час запуску"
+  },
+  "requirePasswordOnStart": {
+    "message": "Вимагати пароль чи PIN під час запуску"
+  },
+  "recommendedForSecurity": {
+    "message": "Рекомендовано для безпеки."
   },
   "lockWithMasterPassOnRestart": {
     "message": "Блокувати головним паролем при перезапуску"
@@ -1526,6 +1538,9 @@
   },
   "ssoCompleteRegistration": {
     "message": "Щоб завершити налаштування входу з SSO, встановіть головний пароль для доступу і захисту сховища."
+  },
+  "currentMasterPass": {
+    "message": "Поточний головний пароль"
   },
   "newMasterPass": {
     "message": "Новий головний пароль"
@@ -1843,6 +1858,9 @@
   "updateMasterPasswordWarning": {
     "message": "Ваш головний пароль нещодавно був змінений адміністратором організації. Щоб отримати доступ до сховища, вам необхідно оновити його зараз. Продовживши, ви вийдете з поточного сеансу, після чого потрібно буде повторно виконати вхід. Сеанси на інших пристроях можуть залишатися активними протягом однієї години."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Ваш головний пароль не відповідає одній або більше політикам вашої організації. Щоб отримати доступ до сховища, вам необхідно оновити свій головний пароль зараз. Продовживши, ви вийдете з поточного сеансу, після чого потрібно буде повторно виконати вхід. Сеанси на інших пристроях можуть залишатися активними протягом однієї години."
+  },
   "hours": {
     "message": "Годин"
   },
@@ -1850,7 +1868,7 @@
     "message": "Хвилин"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Політики вашої організації впливають на час очікування сховища. Максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин",
+    "message": "Політикою вашої організації встановлено максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1859,6 +1877,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Політики вашої організації впливають на час очікування сховища. Максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин. Для часу очікування вашого сховища встановлена дія $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Політикою вашої організації встановлено дію для часу очікування сховища $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2201,5 +2245,25 @@
         "example": "14"
       }
     }
+  },
+  "windowsBiometricUpdateWarning": {
+    "message": "Bitwarden рекомендує оновити ваші біометричні налаштування, щоб вимагати головний пароль (або PIN) під час першого розблокування. Чи бажаєте оновити налаштування зараз?"
+  },
+  "windowsBiometricUpdateWarningTitle": {
+    "message": "Оновлення рекомендованих налаштувань"
+  },
+  "region": {
+    "message": "Регіон"
+  },
+  "eu": {
+    "message": "ЄС",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "США",
+    "description": "United States"
+  },
+  "selfHosted": {
+    "message": "Власне розміщення"
   }
 }

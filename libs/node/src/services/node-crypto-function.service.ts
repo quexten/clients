@@ -3,10 +3,11 @@ import * as crypto from "crypto";
 import * as argon2 from "argon2";
 import * as forge from "node-forge";
 
-import { CryptoFunctionService } from "@bitwarden/common/abstractions/cryptoFunction.service";
-import { Utils } from "@bitwarden/common/misc/utils";
-import { DecryptParameters } from "@bitwarden/common/models/domain/decrypt-parameters";
-import { SymmetricCryptoKey } from "@bitwarden/common/models/domain/symmetric-crypto-key";
+import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { DecryptParameters } from "@bitwarden/common/platform/models/domain/decrypt-parameters";
+import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
+import { CsprngArray } from "@bitwarden/common/types/csprng";
 
 export class NodeCryptoFunctionService implements CryptoFunctionService {
   pbkdf2(
@@ -270,13 +271,13 @@ export class NodeCryptoFunctionService implements CryptoFunctionService {
     });
   }
 
-  randomBytes(length: number): Promise<ArrayBuffer> {
-    return new Promise<ArrayBuffer>((resolve, reject) => {
+  randomBytes(length: number): Promise<CsprngArray> {
+    return new Promise<CsprngArray>((resolve, reject) => {
       crypto.randomBytes(length, (error, bytes) => {
         if (error != null) {
           reject(error);
         } else {
-          resolve(this.toArrayBuffer(bytes));
+          resolve(this.toArrayBuffer(bytes) as CsprngArray);
         }
       });
     });

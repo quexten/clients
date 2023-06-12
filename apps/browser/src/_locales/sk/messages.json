@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Automaticky vyplnené"
   },
+  "insecurePageWarning": {
+    "message": "Upozornenie: Toto je nezabezpečená HTTP stránka a akékoľvek informácie, ktoré odošlete, môžu potenciálne vidieť a zmeniť ostatní. Toto prihlásenie bolo pôvodne uložené na zabezpečenej stránke (HTTPS)."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Prajete si napriek tomu vyplniť prihlasovacie údaje?"
+  },
+  "autofillIframeWarning": {
+    "message": "Formulár je hosťovaný inou doménou ako má URI uložených prihlasovacích údajov. Zvoľte OK ak chcete aj tak automaticky vyplniť údaje, alebo Zrušiť pre zastavenie."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Ak chcete tomuto upozorneniu v budúcnosti zabrániť, uložte URI, $HOSTNAME$, do položky prihlásenia Bitwardenu pre túto stránku.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Nastaviť hlavné heslo"
+  },
+  "currentMasterPass": {
+    "message": "Súčasné hlavné heslo"
+  },
+  "newMasterPass": {
+    "message": "Nové hlavné heslo"
+  },
+  "confirmNewMasterPass": {
+    "message": "Potvrďte nové hlavné heslo"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Jedno alebo viac pravidiel organizácie požadujú aby vaše hlavné heslo spĺňalo nasledujúce požiadavky:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Vaše hlavné heslo nedávno zmenil správca vo vašej organizácii. Ak chcete získať prístup k trezoru, musíte ho teraz aktualizovať. Pokračovaním sa odhlásite z aktuálnej relácie a budete sa musieť znova prihlásiť. Aktívne relácie na iných zariadeniach môžu zostať aktívne až jednu hodinu."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Vaše hlavné heslo nespĺňa jednu alebo viacero podmienok vašej organizácie. Ak chcete získať prístup k trezoru, musíte teraz aktualizovať svoje hlavné heslo. Pokračovaním sa odhlásite z aktuálnej relácie a budete sa musieť znova prihlásiť. Aktívne relácie na iných zariadeniach môžu zostať aktívne až jednu hodinu."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatická registrácia"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Zásady vašej organizácie ovplyvňujú časový limit trezoru. Maximálny povolený časový limit trezoru je $HOURS$ h a $MINUTES$ min. Nastavenie akcie pri vypršaní časového limitu je $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Zásady vašej organizácie nastavili akciu pri vypršaní časového limitu trezora na $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Región"
+  },
+  "opensInANewWindow": {
+    "message": "Otvárať v novom okne"
+  },
+  "eu": {
+    "message": "EÚ",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "USA",
+    "description": "United States"
   }
 }

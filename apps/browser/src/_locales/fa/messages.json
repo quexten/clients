@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "مورد خودکار پر شد"
   },
+  "insecurePageWarning": {
+    "message": "هشدار: این یک صفحه HTTP ناامن است و هر اطلاعاتی که ارسال می‌کنید می‌تواند توسط دیگران دیده شود و تغییر کند. این ورود در ابتدا در یک صفحه امن (HTTPS) ذخیره شد."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "آیا هنوز می‌خواهید این ورود را پر کنید؟"
+  },
+  "autofillIframeWarning": {
+    "message": "فرم توسط دامنه ای متفاوت از نشانی اینترنتی ورود به سیستم ذخیره شده شما میزبانی می‌شود. به هر حال برای پر کردن خودکار، تأیید را انتخاب کنید یا برای توقف، لغو را انتخاب کنید."
+  },
+  "autofillIframeWarningTip": {
+    "message": "برای جلوگیری از این هشدار در آینده، این نشانی اینترنتی، $HOSTNAME$، را در مورد ورود Bitwarden خود برای این سایت ذخیره کنید.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "تنظیم کلمه عبور اصلی"
+  },
+  "currentMasterPass": {
+    "message": "کلمه عبور اصلی فعلی"
+  },
+  "newMasterPass": {
+    "message": "کلمه عبور اصلی جدید"
+  },
+  "confirmNewMasterPass": {
+    "message": "تأیید کلمه عبور اصلی جدید"
   },
   "masterPasswordPolicyInEffect": {
     "message": "یک یا چند سیاست سازمانی برای تأمین شرایط زیر به کلمه عبور اصلی شما احتیاج دارد:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "کلمه عبور اصلی شما اخیراً توسط سرپرست سازمان‌تان تغییر کرده است. برای دسترسی به گاوصندوق، باید همین حالا کلمه عبور اصلی خود را به‌روز کنید. در صورت ادامه، شما از نشست فعلی خود خارج می‌شوید و باید دوباره وارد سیستم شوید. نشست فعال در دستگاه های دیگر ممکن است تا یک ساعت همچنان فعال باقی بمانند."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "کلمه عبور اصلی شما با یک یا چند سیاست سازمان‌تان مطابقت ندارد. برای دسترسی به گاوصندوق، باید همین حالا کلمه عبور اصلی خود را به‌روز کنید. در صورت ادامه، شما از نشست فعلی خود خارج می‌شوید و باید دوباره وارد سیستم شوید. نشست فعال در دستگاه های دیگر ممکن است تا یک ساعت همچنان فعال باقی بمانند."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "ثبت نام خودکار"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "سیاست‌های سازمانتان بر مهلت زمانی گاوصندوق شما تأثیر می‌گذارد. حداکثر زمان مجاز گاوصندوق $HOURS$ ساعت و $MINUTES$ دقیقه است. عملگر مهلت زمانی گاوصندوق شما روی $ACTION$ تنظیم شده است.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "سباست‌های سازمان شما، عملگر زمان‌بندی گاوصندوق شما را روی $ACTION$ تنظیم کرده است.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "در پنجره جدید باز می‌شود"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

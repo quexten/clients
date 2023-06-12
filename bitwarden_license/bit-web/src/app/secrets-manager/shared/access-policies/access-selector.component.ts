@@ -12,7 +12,7 @@ import {
   tap,
 } from "rxjs";
 
-import { Utils } from "@bitwarden/common/misc/utils";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { SelectItemView } from "@bitwarden/components/src/multi-select/models/select-item-view";
 
 import { BaseAccessPolicyView } from "../../models/view/access-policy.view";
@@ -43,7 +43,7 @@ export class AccessSelectorComponent implements OnInit {
   static readonly projectIcon = "bwi-collection";
 
   /**
-   * Emits the selected itemss on submit.
+   * Emits the selected items on submit.
    */
   @Output() onCreateAccessPolicies = new EventEmitter<SelectItemView[]>();
   @Output() onDeleteAccessPolicy = new EventEmitter<AccessSelectorRowView>();

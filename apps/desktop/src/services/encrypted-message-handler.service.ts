@@ -1,10 +1,10 @@
 import { firstValueFrom } from "rxjs";
 
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
-import { PolicyType } from "@bitwarden/common/admin-console/enums/policy-type";
+import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
@@ -19,17 +19,16 @@ import { CredentialUpdatePayload } from "../models/native-messaging/encrypted-me
 import { PasswordGeneratePayload } from "../models/native-messaging/encrypted-message-payloads/password-generate-payload";
 import { AccountStatusResponse } from "../models/native-messaging/encrypted-message-responses/account-status-response";
 import { CipherResponse } from "../models/native-messaging/encrypted-message-responses/cipher-response";
-import { EncyptedMessageResponse } from "../models/native-messaging/encrypted-message-responses/encrypted-message-response";
 import { FailureStatusResponse } from "../models/native-messaging/encrypted-message-responses/failure-status-response";
 import { GenerateResponse } from "../models/native-messaging/encrypted-message-responses/generate-response";
+import { MessageResponseData } from "../models/native-messaging/encrypted-message-responses/message-response-data";
 import { SuccessStatusResponse } from "../models/native-messaging/encrypted-message-responses/success-status-response";
 import { UserStatusErrorResponse } from "../models/native-messaging/encrypted-message-responses/user-status-error-response";
-
-import { StateService } from "./state.service";
+import { ElectronStateService } from "../platform/services/electron-state.service";
 
 export class EncryptedMessageHandlerService {
   constructor(
-    private stateService: StateService,
+    private stateService: ElectronStateService,
     private authService: AuthService,
     private cipherService: CipherService,
     private policyService: PolicyService,
@@ -37,16 +36,14 @@ export class EncryptedMessageHandlerService {
     private passwordGenerationService: PasswordGenerationServiceAbstraction
   ) {}
 
-  async responseDataForCommand(
-    commandData: DecryptedCommandData
-  ): Promise<EncyptedMessageResponse> {
+  async responseDataForCommand(commandData: DecryptedCommandData): Promise<MessageResponseData> {
     const { command, payload } = commandData;
     switch (command) {
       case "bw-status": {
         return await this.statusCommandHandler();
       }
       case "bw-credential-retrieval": {
-        return await this.credentialretreivalCommandHandler(payload as CredentialRetrievePayload);
+        return await this.credentialRetrievalCommandHandler(payload as CredentialRetrievePayload);
       }
       case "bw-credential-create": {
         return await this.credentialCreateCommandHandler(payload as CredentialCreatePayload);
@@ -102,7 +99,7 @@ export class EncryptedMessageHandlerService {
     );
   }
 
-  private async credentialretreivalCommandHandler(
+  private async credentialRetrievalCommandHandler(
     payload: CredentialRetrievePayload
   ): Promise<CipherResponse[] | UserStatusErrorResponse> {
     if (payload.uri == null) {

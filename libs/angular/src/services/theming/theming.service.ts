@@ -2,8 +2,8 @@ import { DOCUMENT } from "@angular/common";
 import { Inject, Injectable } from "@angular/core";
 import { BehaviorSubject, filter, fromEvent, Observable } from "rxjs";
 
-import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { ThemeType } from "@bitwarden/common/enums/themeType";
+import { ThemeType } from "@bitwarden/common/enums";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 
 import { WINDOW } from "../injection-tokens";
 
@@ -63,7 +63,7 @@ export class ThemingService implements AbstractThemingService {
 
   protected monitorSystemThemeChanges(): void {
     fromEvent<MediaQueryListEvent>(
-      this.window.matchMedia("(prefers-color-scheme: dark)"),
+      window.matchMedia("(prefers-color-scheme: dark)"),
       "change"
     ).subscribe((event) => {
       this.updateSystemTheme(event.matches ? ThemeType.Dark : ThemeType.Light);

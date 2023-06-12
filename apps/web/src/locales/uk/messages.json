@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Дані успішно імпортовано"
   },
+  "importSuccessNumberOfItems": {
+    "message": "Всього імпортовано $AMOUNT$ елементів.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Дані успішно експортовано"
   },
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Переглянути збірку - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Редагувати елемент - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Скопійовано пароль запису $ID$.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Ви можете отримати доступ до цієї організації одразу після підтвердження адміністратором. Ми надішлемо вам електронне повідомлення, коли це станеться."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Тепер ви маєте доступ до цієї організації."
   },
   "inviteAcceptFailed": {
     "message": "Не вдалося прийняти запрошення. Попросіть адміністратора організації надіслати вам нове."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Підказка для пароля не може бути такою самою, як ваш пароль."
   },
-  "enrollPasswordReset": {
-    "message": "Подати запит на скидання пароля"
+  "enrollAccountRecovery": {
+    "message": "Розгорнути на відновлення облікового запису"
   },
-  "enrolledPasswordReset": {
-    "message": "Запит на скидання пароля подано"
+  "enrolledAccountRecovery": {
+    "message": "Розгорнуто на відновлення облікового запису"
   },
-  "withdrawPasswordReset": {
-    "message": "Відкликати запит на скидання пароля"
+  "withdrawAccountRecovery": {
+    "message": "Відкликати відновлення облікового запису"
   },
   "enrollPasswordResetSuccess": {
     "message": "Запит успішно подано!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Відмову успішно прийнято!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Користувач $ID$ подав запит на скидання пароля.",
+  "eventEnrollAccountRecovery": {
+    "message": "Користувача $ID$ розгорнуто на відновлення облікового запису.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Користувач $ID$ відмовився від скидання пароля.",
+  "eventWithdrawAccountRecovery": {
+    "message": "Для користувача $ID$ відкликано відновлення облікового запису.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Розгортання дозволить адміністраторам організації змінювати ваш головний пароль"
   },
-  "resetPasswordPolicy": {
-    "message": "Скидання головного пароля"
+  "accountRecoveryPolicy": {
+    "message": "Адміністрування відновлення облікового запису"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Дозволити адміністраторам скидати головний пароль учасників."
+  "accountRecoveryPolicyDescription": {
+    "message": "Відновлення облікових записів учасників у разі втрати головного пароля або довірених пристроїв. Процес відновлення базується на методі шифрування облікового запису."
   },
   "resetPasswordPolicyWarning": {
     "message": "Учасники організації мають подати запит самостійно, або отримати автоматичне подання запиту, перш ніж адміністратори зможуть скинути їхній пароль."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Ваш головний пароль не відповідає вимогам політики цієї організації. Щоб приєднатися до організації, необхідно оновити свій головний пароль зараз. Продовживши, ви вийдете з поточного сеансу, після чого потрібно буде повторно виконати вхід. Сеанси на інших пристроях можуть залишатися активними протягом однієї години."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Ваш головний пароль не відповідає одній або більше політикам вашої організації. Щоб отримати доступ до сховища, вам необхідно оновити свій головний пароль зараз. Продовживши, ви вийдете з поточного сеансу, після чого потрібно буде повторно виконати вхід. Сеанси на інших пристроях можуть залишатися активними протягом однієї години."
+  },
   "maximumVaultTimeout": {
     "message": "Час очікування сховища"
   },
@@ -4819,7 +4852,7 @@
     "message": "Хвилин"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Політики вашої організації впливають на час очікування сховища. Максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин",
+    "message": "Політикою вашої організації встановлено максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -4828,6 +4861,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Політики вашої організації впливають на час очікування сховища. Максимальний дозволений час очікування сховища $HOURS$ годин, $MINUTES$ хвилин. Для часу очікування вашого сховища встановлена дія $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Політикою вашої організації встановлено дію для часу очікування сховища $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "Активувати автозаповнення"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "Активувати автозаповнення під час завантаження сторінки в налаштуваннях розширення браузера для всіх наявних і нових учасників."
   },
   "experimentalFeature": {
@@ -5158,9 +5217,6 @@
     "message": "щоб вимагати в усіх учасників виконувати вхід з SSO.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "Для встановлення розшифрування Key Connector необхідні політики авторизації SSO та єдиної організації."
-  },
   "memberDecryptionOption": {
     "message": "Налаштування розшифрування учасників"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Key Connector"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Під'єднайте вхід із SSO до власного сервера ключів розшифрування. Скориставшись цією можливістю, учасникам не потрібен буде головний пароль для розшифрування даних сховища. Для отримання допомоги з налаштуванням зв'яжіться зі службою підтримки Bitwarden."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Під'єднайте вхід з SSO до свого власного сервера ключів розшифрування. Скориставшись цією можливістю, учасникам не потрібен буде головний пароль для розшифрування даних сховища.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "Вимога SSO автентифікації та політик єдиної організації",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "є обов'язковими для налаштування розшифрування за допомогою Key Connector. Зверніться до служби підтримки Bitwarden для отримання допомоги з налаштуванням.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "\"Вхід із SSO та розшифрування Key Connector\" увімкнено. Ця політика застосовується лише для власників та адміністраторів."
@@ -5387,6 +5452,15 @@
     "message": "Поточна організація",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Обліковий запис: Вхід виконано як $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Налаштування облікового запису"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Востаннє синхронізовано",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Власне розміщене спонсорування синхронізовано."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Значення має бути принаймні $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Значення не може перевищувати $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Токени доступу відкликано",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "Не вибрано токенів доступу для відкликання",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Підменю"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Допомога з платіжною синхронізацією"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Довідка щодо платних можливостей ліцензії"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "Після завершення передплати ви матимете 60 днів, щоб застосувати оновлений файл ліцензії для організації. Пільговий період завершується $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Вивантажити ліцензію"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Низький показник KDF-ітерацій"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Налаштуйте вищий рівень KDF-шифрування для вдосконалення безпеки облікового запису."
-  },
-  "changeKdfSettings": {
-    "message": "Змінити налаштування KDF"
+  "updateLowKdfIterationsDesc": {
+    "message": "Оновіть свої налаштування шифрування згідно з новими рекомендаціями щодо безпеки для вдосконалення захисту облікового запису."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Продовжуючи, ви вийдете з усіх активних сеансів. Необхідно буде повторно виконати вхід і пройти двоетапну перевірку. Перед зміною налаштувань шифрування ми рекомендуємо експортувати ваше сховище, щоб запобігти можливій втраті даних."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Введене значення не повинно містити лише пробіл.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Відхилити"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "Ця функція недоступна для безплатних організацій. Зверніться до власника своєї організації для оновлення."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Зверніться до адміністратора організації, щоб керувати секретами для цього проєкту.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Вимагати від наявних учасників змінювати паролі"
+  },
+  "region": {
+    "message": "Регіон"
+  },
+  "eu": {
+    "message": "ЄС",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "США",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "У вас немає дозволу на видалення цього проєкту",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "Неможливо видалити зазначені проєкти. Бажаєте продовжити?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "Оновити налаштування KDF"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Шифрування досвіреного пристрою"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Після авторизації учасники розшифровуватимуть дані сховища з використанням ключа, збереженого на їхньому пристрої.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "Політика адміністрування відновлення облікових записів",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "з автоматичним розгортанням активується, якщо використовується ця опція.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ not found",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Відновити обліковий запис"
+  },
+  "updatedTempPassword": {
+    "message": "Користувач оновив пароль під час відновлення облікового запису."
   }
 }

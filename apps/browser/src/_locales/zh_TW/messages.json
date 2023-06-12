@@ -976,7 +976,7 @@
     "message": "網頁載入時如果偵測到登入表單，則執行自動填入。"
   },
   "experimentalFeature": {
-    "message": "Compromised or untrusted websites can exploit auto-fill on page load."
+    "message": "被竊取或不可信任的網站可以利用自動填入功能在網頁載入時竊取資訊。"
   },
   "learnMoreAboutAutofill": {
     "message": "進一步瞭解「自動填入」功能"
@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "項目已自動填入"
   },
+  "insecurePageWarning": {
+    "message": "Warning: This is an unsecured HTTP page, and any information you submit can potentially be seen and changed by others. This Login was originally saved on a secure (HTTPS) page."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Do you still wish to fill this login?"
+  },
+  "autofillIframeWarning": {
+    "message": "The form is hosted by a different domain than the URI of your saved login. Choose OK to auto-fill anyway, or Cancel to stop."
+  },
+  "autofillIframeWarningTip": {
+    "message": "To prevent this warning in the future, save this URI, $HOSTNAME$, to your Bitwarden login item for this site.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "設定主密碼"
+  },
+  "currentMasterPass": {
+    "message": "Current master password"
+  },
+  "newMasterPass": {
+    "message": "New master password"
+  },
+  "confirmNewMasterPass": {
+    "message": "Confirm new master password"
   },
   "masterPasswordPolicyInEffect": {
     "message": "一個或多個組織原則要求您的主密碼須符合下列條件："
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "您的主密碼最近被您的組織管理者變更過。若要存取密碼庫，您必須立即更新主密碼。繼續操作會登出目前的登入階段，並要求您重新登入。其他裝置上的活動登入階段最多會保持一個小時。"
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Your master password does not meet one or more of your organization policies. In order to access the vault, you must update your master password now. Proceeding will log you out of your current session, requiring you to log back in. Active sessions on other devices may continue to remain active for up to one hour."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "自動註冊"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Your organization policies are affecting your vault timeout. Maximum allowed vault timeout is $HOURS$ hour(s) and $MINUTES$ minute(s). Your vault timeout action is set to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Your organization policies have set your vault timeout action to $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2067,13 +2123,13 @@
     "message": "使用裝置登入"
   },
   "loginWithDeviceEnabledInfo": {
-    "message": "Log in with device must be set up in the settings of the Bitwarden app. Need another option?"
+    "message": "裝置登入必須在 Bitwarden 應用程式的設定中啟用。需要其他選項嗎？"
   },
   "fingerprintPhraseHeader": {
     "message": "指紋短語"
   },
   "fingerprintMatchInfo": {
-    "message": "Please make sure your vault is unlocked and the Fingerprint phrase matches on the other device."
+    "message": "請確保您的密碼庫已解鎖，並且指紋短語與其他裝置的一致。"
   },
   "resendNotification": {
     "message": "重新傳送通知"
@@ -2091,13 +2147,13 @@
     "message": "已暴露的主密碼"
   },
   "exposedMasterPasswordDesc": {
-    "message": "Password found in a data breach. Use a unique password to protect your account. Are you sure you want to use an exposed password?"
+    "message": "在其他資料庫中找到您的密碼。我們建議您使用一個獨特的密碼來保護您的帳號，您確定要用這個密碼嗎？"
   },
   "weakAndExposedMasterPassword": {
     "message": "強度不足且已暴露的主密碼"
   },
   "weakAndBreachedMasterPasswordDesc": {
-    "message": "Weak password identified and found in a data breach. Use a strong and unique password to protect your account. Are you sure you want to use this password?"
+    "message": "密碼強度不足，且在其他資料庫中找到這個密碼。使用一個強度足夠和獨特的密碼來保護您的帳號。請問您確定要用這個密碼嗎？"
   },
   "checkForBreaches": {
     "message": "檢查外洩密碼資料庫中是否有此密碼"
@@ -2118,13 +2174,13 @@
     }
   },
   "autofillPageLoadPolicyActivated": {
-    "message": "Your organization policies have turned on auto-fill on page load."
+    "message": "您的組織政策已經開啟了自動填入功能。"
   },
   "howToAutofill": {
     "message": "如何自動填入"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Select an item from this page or use the shortcut: $COMMAND$",
+    "message": "從這個網頁選擇一個項目，或使用快速鍵：$COMMAND$",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2133,7 +2189,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Select an item from this page or set a shortcut in settings."
+    "message": "從這個網頁選擇一個項目，或在設定中設定一個快速鍵。"
   },
   "gotIt": {
     "message": "我知道了"
@@ -2145,10 +2201,10 @@
     "message": "自動填入鍵盤快速鍵"
   },
   "autofillShortcutNotSet": {
-    "message": "The auto-fill shortcut is not set. Change this in the browser's settings."
+    "message": "自動填入快速鍵尚未設定。請在瀏覽器的設定中變更。"
   },
   "autofillShortcutText": {
-    "message": "The auto-fill shortcut is: $COMMAND$. Change this in the browser's settings.",
+    "message": "自動填入快速鍵是：$COMMAND$。請在瀏覽器的設定中變更。",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "Opens in a new window"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

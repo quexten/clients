@@ -3,18 +3,19 @@ import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
 
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { AddEditComponent as BaseAddEditComponent } from "@bitwarden/angular/tools/send/add-edit.component";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
 import { SendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
 
+import { BrowserStateService } from "../../../platform/services/abstractions/browser-state.service";
 import { PopupUtilsService } from "../../../popup/services/popup-utils.service";
-import { BrowserStateService } from "../../../services/abstractions/browser-state.service";
 
 @Component({
   selector: "app-send-add-edit",
@@ -45,7 +46,8 @@ export class SendAddEditComponent extends BaseAddEditComponent {
     private location: Location,
     private popupUtilsService: PopupUtilsService,
     logService: LogService,
-    sendApiService: SendApiService
+    sendApiService: SendApiService,
+    dialogService: DialogServiceAbstraction
   ) {
     super(
       i18nService,
@@ -57,7 +59,8 @@ export class SendAddEditComponent extends BaseAddEditComponent {
       policyService,
       logService,
       stateService,
-      sendApiService
+      sendApiService,
+      dialogService
     );
   }
 
@@ -94,7 +97,7 @@ export class SendAddEditComponent extends BaseAddEditComponent {
   }
 
   async ngOnInit() {
-    // File visilibity
+    // File visibility
     this.isFirefox = this.platformUtilsService.isFirefox();
     this.inPopout = this.popupUtilsService.inPopout(window);
     this.inSidebar = this.popupUtilsService.inSidebar(window);

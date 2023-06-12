@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Element został automatycznie uzupełniony"
   },
+  "insecurePageWarning": {
+    "message": "Ostrzeżenie: Jest to niezabezpieczona strona HTTP i wszelkie przekazane informacje mogą być potencjalnie widoczne i zmienione przez innych. Ten login został pierwotnie zapisany na stronie bezpiecznej (HTTPS)."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Nadal chcesz uzupełnić ten login?"
+  },
+  "autofillIframeWarning": {
+    "message": "Formularz jest hostowany przez inną domenę niż zapisany adres URI dla tego loginu. Wybierz OK, aby i tak automatycznie wypełnić lub anuluj aby zatrzymać."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Aby zapobiec temu ostrzeżeniu w przyszłości, zapisz ten URI, $HOSTNAME$, dla tej witryny.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Ustaw hasło główne"
+  },
+  "currentMasterPass": {
+    "message": "Aktualne hasło główne"
+  },
+  "newMasterPass": {
+    "message": "Nowe hasło główne"
+  },
+  "confirmNewMasterPass": {
+    "message": "Potwierdź nowe hasło główne"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Co najmniej jedna zasada organizacji wymaga, aby hasło główne spełniało następujące wymagania:"
@@ -1844,6 +1871,9 @@
   "updateMasterPasswordWarning": {
     "message": "Hasło główne zostało zmienione przez administratora Twojej organizacji. Musisz je zaktualizować, aby uzyskać dostęp do sejfu. Ta czynność spowoduje wylogowanie z bieżącej sesji, przez co konieczne będzie ponowne zalogowanie się. Aktywne sesje na innych urządzeniach mogą pozostać aktywne przez maksymalnie godzinę."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Twoje hasło główne nie spełnia jednej lub kilku zasad organizacji. Aby uzyskać dostęp do sejfu, musisz teraz zaktualizować swoje hasło główne. Kontynuacja wyloguje Cię z bieżącej sesji, wymagając zalogowania się ponownie. Aktywne sesje na innych urządzeniach mogą pozostać aktywne przez maksymalnie jedną godzinę."
+  },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatyczne rejestrowanie użytkowników"
   },
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Zasady organizacji mają wpływ na czas blokowania sejfu. Maksymalny dozwolony czas wynosi $HOURS$ godz. i $MINUTES$ min. Twój czas blokowania sejfu to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Zasady organizacji ustawiły czas blokowania sejfu na $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Region"
+  },
+  "opensInANewWindow": {
+    "message": "Otwiera w nowym oknie"
+  },
+  "eu": {
+    "message": "UE",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

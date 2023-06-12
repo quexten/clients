@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Dane zostały zaimportowane"
   },
+  "importSuccessNumberOfItems": {
+    "message": "Zaimportowano elementów: $AMOUNT$.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Dane zostały pomyślnie wyeksportowane"
   },
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Zobacz kolekcję - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Edytuj element - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Hasło dla elementu $ID$ zostało skopiowane.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Dostęp do tej organizacji otrzymasz po potwierdzeniu członkostwa przez administratora. Dostaniesz wtedy wiadomość e-mail."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Możesz teraz uzyskać dostęp do tej organizacji."
   },
   "inviteAcceptFailed": {
     "message": "Nie można zaakceptować zaproszenia. Poproś administratora organizacji o wysłanie nowego zaproszenia."
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Podpowiedź do hasła nie może być taka sama jak hasło."
   },
-  "enrollPasswordReset": {
-    "message": "Zarejestruj do resetowania hasła"
+  "enrollAccountRecovery": {
+    "message": "Przystąp do odzyskiwania konta"
   },
-  "enrolledPasswordReset": {
-    "message": "Użytkownik został zarejestrowany do resetowania hasła"
+  "enrolledAccountRecovery": {
+    "message": "Dołączono do odzyskiwania konta"
   },
-  "withdrawPasswordReset": {
-    "message": "Wyrejestruj z resetowania hasła"
+  "withdrawAccountRecovery": {
+    "message": "Wycofaj z odzyskiwania konta"
   },
   "enrollPasswordResetSuccess": {
     "message": "Użytkownik został zarejestrowany!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Użytkownik został wyrejestrowany!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Użytkownik $ID$ został zarejestrowany do resetowania hasła.",
+  "eventEnrollAccountRecovery": {
+    "message": "Użytkownik $ID$ przystapił do odzyskiwania konta.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Użytkownik $ID$ został wyrejestrowany z resetowania hasła.",
+  "eventWithdrawAccountRecovery": {
+    "message": "Użytkownik $ID$ wycofał się z odzyskania konta.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Rejestracja zezwala administratorom organizacji na zmianę Twojego hasła głównego. Czy na pewno chcesz się zarejestrować?"
   },
-  "resetPasswordPolicy": {
-    "message": "Zresetowanie hasła głównego"
+  "accountRecoveryPolicy": {
+    "message": "Administracja odzyskiwaniem konta"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Zezwalaj administratorom organizacji na resetowanie hasła głównego użytkowników."
+  "accountRecoveryPolicyDescription": {
+    "message": "Odzyskaj konta użytkowików, gdy utracą hasło główne lub zaufane urządzenia. Procesy odzyskiwania opierają się na metodzie szyfrowania konta."
   },
   "resetPasswordPolicyWarning": {
     "message": "Użytkownicy w organizacji muszą samodzielnie zarejestrować się do resetowania hasła przez administratorów."
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Hasło główne nie spełnia wymagań zasad organizacji. Aby dołączyć do organizacji, musisz zaktualizować je. Ta czynność spowoduje wylogowanie z bieżącej sesji, przez co konieczne będzie ponowne zalogowanie się. Aktywne sesje na innych urządzeniach mogą pozostać aktywne przez maksymalnie godzinę."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Twoje hasło główne nie spełnia jednej lub kilku zasad organizacji. Aby uzyskać dostęp do sejfu, musisz teraz zaktualizować swoje hasło główne. Kontynuacja wyloguje Cię z bieżącej sesji, wymagając zalogowania się ponownie. Aktywne sesje na innych urządzeniach mogą pozostać aktywne przez maksymalnie jedną godzinę."
+  },
   "maximumVaultTimeout": {
     "message": "Blokowanie sejfu"
   },
@@ -4819,7 +4852,7 @@
     "message": "Minuty"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Zasady organizacji mają wpływ czas blokowania sejfu. Maksymalny dozwolony czas wynosi $HOURS$ godz. i $MINUTES$ min.",
+    "message": "Zasady organizacji mają wpływ na czas blokowania sejfu. Maksymalny dozwolony czas wynosi $HOURS$ godz. i $MINUTES$ min.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -4828,6 +4861,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Zasady organizacji mają wpływ na czas blokowania sejfu. Maksymalny dozwolony czas wynosi $HOURS$ godz. i $MINUTES$ min. Twój czas blokowania sejfu to $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Zasady organizacji ustawiły czas blokowania sejfu na $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -4858,7 +4917,7 @@
   "activateAutofill": {
     "message": "Włącz autouzupełnianie"
   },
-  "activateAutofillDesc": {
+  "activateAutofillPolicyDesc": {
     "message": "Aktywuj autouzupełnianie podczas wczytywania strony w rozszerzeniu przeglądarki dla wszystkich istniejących i nowych użytkowników."
   },
   "experimentalFeature": {
@@ -5158,9 +5217,6 @@
     "message": ", aby wymagać od wszystkich użytkowników logowania jednokrotnego SSO.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "Zasady logowania jednokrotnego SSO i pojedynczej organizacji muszą być włączone, aby skonfigurować serwer Key Connector."
-  },
   "memberDecryptionOption": {
     "message": "Opcje odszyfrowania użytkownika"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Key Connector"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Połącz logowanie jednokrotne SSO z odszyfrowaniem za pomocą własnego serwera kluczy. Użytkownicy nie będą musieli używać hasła głównego do odszyfrowania sejfu. Aby uzyskać pomoc, skontaktuj się z działem obsługi klienta Bitwarden."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Połącz logowanie za pomocą SSO z Twoim serwerem kluczy odszyfrowania. Używając tej opcji, użytkownicy nie będą musieli używać swoich haseł głównych, aby odszyfrować dane sejfu.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "require SSO authentication and single organization policies",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "są wymagane do skonfigurowania deszyfrowania Key Connector. Skontaktuj się z pomocą Bitwarden, aby uzyskać pomoc.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "Logowanie jednokrotne SSO z odszyfrowaniem za pomocą serwera Key Connector jest włączone. Ta zasada dotyczy tylko właścicieli i administratorów."
@@ -5387,6 +5452,15 @@
     "message": "Obecna organizacja",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Konto: zalogowano jako $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Ustawienia konta"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Ostatnia synchronizacja",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Zsynchronizowano sponsorowanie na własnym hostingu."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Wartość wejściowa musi wynosić co najmniej $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Wartość wejściowa nie może przekraczać $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Tokeny dostępu zostały odwołane",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "Nie wybrano tokenu dostępu do unieważnienia",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Podmenu"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Pomoc synchronizacji płatności"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Pomoc w zakresie płatnych funkcji licencyjnych"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "Po wygaśnięciu subskrypcji masz 60 dni na dodanie zaktualizowanego pliku licencji dla Twojej organizacji. Okres karencji kończy się $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Prześlij licencję"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Niska liczba iteracji KDF"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Zwiększ ustawienia szyfrowania KDF, aby poprawić bezpieczeństwo swojego konta."
-  },
-  "changeKdfSettings": {
-    "message": "Zmień ustawienia KDF"
+  "updateLowKdfIterationsDesc": {
+    "message": "Zaktualizuj ustawienia szyfrowania, aby spełnić nowe zalecenia bezpieczeństwa i poprawić ochronę konta."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Kontynuowanie spowoduje wylogowanie ze wszystkich aktywnych sesji. Będzie trzeba zalogować się ponownie i ukończyć konfigurację logowania dwuetapowego. Zalecamy wyeksportowanie sejfu przed zmianą ustawień szyfrowania, aby zapobiec utracie danych."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Tekst nie może zawierać tylko spacji.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Odrzuć"
   },
   "notAvailableForFreeOrganization": {
-    "message": "Ta funkcja nie jest dostępna dla darmowych organizacji. Skontaktuj się z właścicielem organizacji, aby ulepszyć."
+    "message": "Ta funkcja nie jest dostępna dla darmowych organizacji. Skontaktuj się z właścicielem organizacji, aby ją ulepszyć."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Skontaktuj się z administratorem organizacji, aby zarządzać sekretami dla tego projektu.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Wymagaj od istniejących członków zmiany haseł"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "UE",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "Nie masz uprawnień do usunięcia tego projektu",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "Następujące projekty nie mogą zostać usunięte. Czy chcesz kontynuować?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "Zaktualizuj ustawienia KDF"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Szyfrowanie zaufanego urządzenia"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Po uwierzytelnieniu użytkownicy odszyfrowają dane sejfu przy użyciu klucza zapisanego na ich urządzeniu.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "polityka zarządzania odzyskiwaniem konta",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "z automatycznym zapisem włączy się, gdy ta opcja jest używana.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ nie znaleziony",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Odzyskaj konto"
+  },
+  "updatedTempPassword": {
+    "message": "Użytkownik zaktualizował hasło wydane poprzez odzyskiwanie konta."
   }
 }

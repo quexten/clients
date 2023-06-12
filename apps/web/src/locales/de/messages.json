@@ -1255,6 +1255,15 @@
   "importSuccess": {
     "message": "Daten erfolgreich importiert"
   },
+  "importSuccessNumberOfItems": {
+    "message": "Insgesamt wurden $AMOUNT$ Einträge importiert.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "dataExportSuccess": {
     "message": "Daten erfolgreich exportiert"
   },
@@ -1857,7 +1866,7 @@
     "description": "Add more credit to your account's balance."
   },
   "amount": {
-    "message": "Anzahl",
+    "message": "Betrag",
     "description": "Dollar amount, or quantity."
   },
   "creditDelayed": {
@@ -2741,6 +2750,24 @@
       }
     }
   },
+  "viewCollectionWithName": {
+    "message": "Sammlung anzeigen - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Collection1"
+      }
+    }
+  },
+  "editItemWithName": {
+    "message": "Eintrag bearbeiten - $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Google Login"
+      }
+    }
+  },
   "copiedPasswordItemId": {
     "message": "Passwort für Eintrag $ID$ kopiert.",
     "placeholders": {
@@ -3115,6 +3142,9 @@
   },
   "inviteAcceptedDesc": {
     "message": "Du kannst der Organisation beitreten, sobald ein Administrator deine Mitgliedschaft bestätigt hat. Wir werden dich dann per E-Mail benachrichtigen."
+  },
+  "inviteInitAcceptedDesc": {
+    "message": "Du kannst nun auf diese Organisation zugreifen."
   },
   "inviteAcceptFailed": {
     "message": "Einladung kann nicht angenommen werden. Bitte einen Administrator der Organisation, eine neue Einladung zu senden."
@@ -3507,7 +3537,7 @@
     "message": "Ausgewählt"
   },
   "ownership": {
-    "message": "Besitzer"
+    "message": "Eigentümer"
   },
   "whoOwnsThisItem": {
     "message": "Wem gehört dieser Eintrag?"
@@ -4462,14 +4492,14 @@
   "hintEqualsPassword": {
     "message": "Dein Passwort-Hinweis darf nicht identisch mit deinem Passwort sein."
   },
-  "enrollPasswordReset": {
-    "message": "Für Passwortzurücksetzung registrieren"
+  "enrollAccountRecovery": {
+    "message": "Für Kontowiederherstellung registrieren"
   },
-  "enrolledPasswordReset": {
-    "message": "Für Passwortzurücksetzung registriert"
+  "enrolledAccountRecovery": {
+    "message": "Für Kontowiederherstellung registriert"
   },
-  "withdrawPasswordReset": {
-    "message": "Von Passwortzurücksetzung abmelden"
+  "withdrawAccountRecovery": {
+    "message": "Von Kontowiederherstellung abmelden"
   },
   "enrollPasswordResetSuccess": {
     "message": "Registrierung erfolgreich!"
@@ -4477,8 +4507,8 @@
   "withdrawPasswordResetSuccess": {
     "message": "Abmeldung erfolgreich!"
   },
-  "eventEnrollPasswordReset": {
-    "message": "Der Benutzer $ID$ hat sich für die Passwortzurücksetzung registriert.",
+  "eventEnrollAccountRecovery": {
+    "message": "Der Benutzer $ID$ hat sich für die Kontowiederherstellung registriert.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4486,8 +4516,8 @@
       }
     }
   },
-  "eventWithdrawPasswordReset": {
-    "message": "Der Benutzer $ID$ hat sich von der Passwortzurücksetzung abgemeldet.",
+  "eventWithdrawAccountRecovery": {
+    "message": "Der Benutzer $ID$ hat sich von der Kontowiederherstellung abgemeldet.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -4546,11 +4576,11 @@
   "resetPasswordEnrollmentWarning": {
     "message": "Die Registrierung erlaubt Administratoren der Organisation, dein Master-Passwort zu ändern. Bist du sicher, dass du dich registrieren möchtest?"
   },
-  "resetPasswordPolicy": {
-    "message": "Master-Passwort-Zurücksetzung"
+  "accountRecoveryPolicy": {
+    "message": "Kontowiederherstellungsverwaltung"
   },
-  "resetPasswordPolicyDescription": {
-    "message": "Administratoren in der Organisation erlauben, das Master-Passwort der Organisationsbenutzer zurückzusetzen."
+  "accountRecoveryPolicyDescription": {
+    "message": "Mitgliederkonten wiederherstellen, falls das Master-Passwort oder vertrauenswürdige Geräte vergessen werden oder verloren gehen. Der Wiederherstellungsprozess basiert auf der Verschlüsselungsmethode des Kontos."
   },
   "resetPasswordPolicyWarning": {
     "message": "Benutzer in der Organisation müssen sich selbst registrieren oder automatisch registriert sein, bevor Administratoren deren Master-Passwort zurücksetzen können."
@@ -4664,7 +4694,7 @@
     "message": "Fehler"
   },
   "resetPasswordManageUsers": {
-    "message": "Benutzer verwalten muss ebenfalls mit der Passwort zurücksetzen Berechtigung aktiviert werden"
+    "message": "\"Benutzer verwalten\" muss ebenfalls mit der \"Passwort zurücksetzen\"-Berechtigung aktiviert werden"
   },
   "setupProvider": {
     "message": "Anbieter-Einrichtung"
@@ -4800,6 +4830,9 @@
   "masterPasswordInvalidWarning": {
     "message": "Dein Master-Passwort entspricht nicht den Anforderungen der Richtlinie dieser Organisation. Um der Organisation beizutreten, musst du dein Master-Passwort jetzt aktualisieren. Ein Fortfahren wird deine aktuelle Sitzung abmelden. Danach musst du dich wieder anmelden. Aktive Sitzungen auf anderen Geräten können weiterhin bis zu einer Stunde aktiv bleiben."
   },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Dein Master-Passwort entspricht nicht einer oder mehreren Richtlinien deiner Organisation. Um auf den Tresor zugreifen zu können, musst du dein Master-Passwort jetzt aktualisieren. Wenn du fortfährst, wirst du von deiner aktuellen Sitzung abgemeldet und musst dich erneut anmelden. Aktive Sitzungen auf anderen Geräten können noch bis zu einer Stunde lang aktiv bleiben."
+  },
   "maximumVaultTimeout": {
     "message": "Tresor-Timeout"
   },
@@ -4819,7 +4852,7 @@
     "message": "Minuten"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Deine Unternehmensrichtlinien beeinflussen dein Tresor-Timeout. Das maximal zulässige Tresor-Timeout ist $HOURS$ Stunde(n) und $MINUTES$ Minute(n)",
+    "message": "Deine Unternehmensrichtlinien haben das maximal zulässige Tresor-Timeout auf $HOURS$ Stunde(n) und $MINUTES$ Minute(n) festgelegt.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -4828,6 +4861,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Deine Organisationsrichtlinien beeinflussen dein Tresor-Timeout. Das maximal zulässige Tresor-Timeout beträgt $HOURS$ Stunde(n) und $MINUTES$ Minute(n). Deine Tresor-Timeout-Aktion ist auf $ACTION$ gesetzt.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Deine Organisationsrichtlinien haben deine Tresor-Timeout-Aktion auf $ACTION$ gesetzt.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -4858,8 +4917,8 @@
   "activateAutofill": {
     "message": "Auto-Ausfüllen aktivieren"
   },
-  "activateAutofillDesc": {
-    "message": "Aktiviere Auto-Ausfüllen mit den Seitenladeeinstellungen der Browser-Erweiterung für alle bestehenden und neuen Mitglieder."
+  "activateAutofillPolicyDesc": {
+    "message": "Aktiviere die Einstellung \"Auto-Ausfüllen beim Laden einer Seite\" in der Browser-Erweiterung für alle bestehenden und neuen Mitglieder."
   },
   "experimentalFeature": {
     "message": "Kompromittierte oder nicht vertrauenswürdige Websites können Auto-Ausfüllen beim Laden der Seite ausnutzen."
@@ -4907,16 +4966,16 @@
     "message": "Ansprüche vom Benutzer Info-Endpunkt erhalten"
   },
   "additionalScopes": {
-    "message": "Zusätzliche/Benutzerdefinierte Bereiche (durch Komma getrennt)"
+    "message": "Benutzerdefinierte Bereiche"
   },
   "additionalUserIdClaimTypes": {
-    "message": "Zusätzliche/benutzerdefinierte Client-ID Anspruchstypen (durch Komma getrennt)"
+    "message": "Benutzerdefinierte Client-ID Anspruchstypen"
   },
   "additionalEmailClaimTypes": {
-    "message": "Zusätzliche/Benutzerdefinierte E-Mail Anspruchstypen (durch Komma getrennt)"
+    "message": "Benutzerdefinierte E-Mail Anspruchstypen"
   },
   "additionalNameClaimTypes": {
-    "message": "Zusätzliche/Benutzerdefinierte Namen Anspruchstypen (durch Komma getrennt)"
+    "message": "Benutzerdefinierte Namen Anspruchstypen"
   },
   "acrValues": {
     "message": "Angeforderte Authentifizierungskontextklassen Referenzwerte (acr_values)"
@@ -4946,7 +5005,7 @@
     "message": "Minimal eingehender Signaturalgorithmus"
   },
   "spWantAssertionsSigned": {
-    "message": "Möchte Zusicherungen signieren"
+    "message": "Signierte Assertions erwarten"
   },
   "spValidateCertificates": {
     "message": "Zertifikate validieren"
@@ -5158,9 +5217,6 @@
     "message": ", um zu erzwingen, dass sich alle Mitglieder mit SSO anmelden müssen.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpKeyConnector": {
-    "message": "SSO-Authentifizierung und Richtlinien für eine einzelne Organisation werden benötigt, um die Key Connector Entschlüsselung einzurichten."
-  },
   "memberDecryptionOption": {
     "message": "Entschlüsselungsoptionen für Mitglieder"
   },
@@ -5170,8 +5226,17 @@
   "keyConnector": {
     "message": "Key Connector"
   },
-  "memberDecryptionKeyConnectorDesc": {
-    "message": "Verbinde die Anmeldung über SSO mit deinem selbst gehosteten Entschlüsselungsschlüssel-Server. Mit dieser Option müssen Mitglieder ihre Master-Passwörter nicht verwenden, um Tresordaten zu entschlüsseln."
+  "memberDecryptionKeyConnectorDescStart": {
+    "message": "Verbinde die Anmeldung über SSO mit deinem selbst gehosteten Entschlüsselungsschlüssel-Server. Mit dieser Option müssen Mitglieder ihre Master-Passwörter nicht verwenden, um Tresordaten zu entschlüsseln. Die",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescLink": {
+    "message": "Richtlinien zum Verlangen einer SSO-Authentifizierung und für einzelne Organisationen",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
+  },
+  "memberDecryptionKeyConnectorDescEnd": {
+    "message": "werden benötigt, um die Key Connector Entschlüsselung einzurichten. Kontaktiere den Bitwarden Support für Hilfe beim Einrichten.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "keyConnectorPolicyRestriction": {
     "message": "\"Anmelden mit SSO und Key-Connector-Entschlüsselung\" ist aktiviert. Diese Richtlinie gilt nur für Eigentümer und Adminstratoren."
@@ -5387,6 +5452,15 @@
     "message": "Aktuelle Organisation",
     "description": "This is used by screen readers to indicate the organization that is currently being shown to the user."
   },
+  "accountLoggedInAsName": {
+    "message": "Konto: Angemeldet als $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
   "accountSettings": {
     "message": "Kontoeinstellungen"
   },
@@ -5466,7 +5540,7 @@
   },
   "lastSync": {
     "message": "Zuletzt synchronisiert:",
-    "Description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
+    "description": "Used as a prefix to indicate the last time a sync occured. Example \"Last sync 1968-11-16 00:00:00\""
   },
   "sponsorshipsSynced": {
     "message": "Selbst gehostetes Sponsoring synchronisiert."
@@ -5605,6 +5679,24 @@
       "characters": {
         "content": "$1",
         "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Der Eingabewert muss mindestens $MIN$ betragen.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Der Eingabewert darf $MAX$ nicht überschreiten.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
       }
     }
   },
@@ -6105,6 +6197,10 @@
     "message": "Zugriffstokens widerrufen",
     "description": "Toast message after deleting one or multiple access tokens."
   },
+  "noAccessTokenSelected": {
+    "message": "Kein Zugriffstoken zum Widerrufen ausgewählt",
+    "description": "Toast error message after trying to delete access tokens but not selecting any access tokens."
+  },
   "submenu": {
     "message": "Untermenü"
   },
@@ -6456,6 +6552,18 @@
   "billingSyncHelp": {
     "message": "Hilfe zur Rechnungssynchronisation"
   },
+  "licensePaidFeaturesHelp": {
+    "message": "Hilfe zur Lizenzierung von bezahlten Funktionen"
+  },
+  "selfHostGracePeriodHelp": {
+    "message": "Nachdem dein Abonnement abgelaufen ist, hast du 60 Tage Zeit, um eine aktualisierte Lizenzdatei für deine Organisation anzuwenden. Die Nachfrist endet am $GRACE_PERIOD_END_DATE$.",
+    "placeholders": {
+      "GRACE_PERIOD_END_DATE": {
+        "content": "$1",
+        "example": "May 12, 2024"
+      }
+    }
+  },
   "uploadLicense": {
     "message": "Lizenz hochladen"
   },
@@ -6495,11 +6603,8 @@
   "lowKdfIterations": {
     "message": "Geringe KDF-Iterationen"
   },
-  "lowKdfIterationsDesc": {
-    "message": "Erhöhe deine KDF-Verschlüsselungseinstellungen, um die Sicherheit deines Kontos zu verbessern."
-  },
-  "changeKdfSettings": {
-    "message": "KDF-Einstellungen ändern"
+  "updateLowKdfIterationsDesc": {
+    "message": "Aktualisiere deine Verschlüsselungseinstellungen, um neue Sicherheitsempfehlungen zu erfüllen und den Kontoschutz zu verbessern."
   },
   "changeKdfLoggedOutWarning": {
     "message": "Wenn du fortfährst, wirst du von allen aktiven Sitzungen abgemeldet. Du musst dich erneut anmelden und die Zwei-Faktor-Authentifizierung durchführen. Wir empfehlen, deinen Tresor zu exportieren, bevor du deine Verschlüsselungseinstellungen änderst, um Datenverluste zu vermeiden."
@@ -6670,10 +6775,73 @@
       }
     }
   },
+  "inputTrimValidator": {
+    "message": "Eingabe darf nicht nur Leerzeichen enthalten.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
   "dismiss": {
     "message": "Verwerfen"
   },
   "notAvailableForFreeOrganization": {
-    "message": "This feature is not available for free organizations. Contact your organization owner to upgrade."
+    "message": "Diese Funktion ist für kostenlose Organisationen nicht verfügbar. Kontaktiere deinen Organisationseigentümer zum Upgraden."
+  },
+  "smProjectSecretsNoItemsNoAccess": {
+    "message": "Kontaktiere den Administrator deiner Organisation, um Geheimnisse für dieses Projekt zu verwalten.",
+    "description": "The message shown to the user under a project's secrets tab when the user only has read access to the project."
+  },
+  "enforceOnLoginDesc": {
+    "message": "Bestehende Mitglieder auffordern, ihre Passwörter zu ändern"
+  },
+  "region": {
+    "message": "Region"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
+  },
+  "smProjectDeleteAccessRestricted": {
+    "message": "Dir fehlen die Berechtigungen, dieses Projekt zu löschen",
+    "description": "The individual description shown to the user when the user doesn't have access to delete a project."
+  },
+  "smProjectsDeleteBulkConfirmation": {
+    "message": "Die folgenden Projekte können nicht gelöscht werden. Möchtest du fortfahren?",
+    "description": "The message shown to the user when bulk deleting projects and the user doesn't have access to some projects."
+  },
+  "updateKdfSettings": {
+    "message": "KDF-Einstellungen aktualisieren"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Vertrauenswürdige Geräteverschlüsselung"
+  },
+  "memberDecryptionTdeDescriptionStart": {
+    "message": "Einmal authentifiziert, entschlüsseln Mitglieder Tresordaten mit einem Schlüssel auf ihrem Gerät. Die",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLink": {
+    "message": "Verwaltungsrichtlinie zur Kontowiederherstellung",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionEnd": {
+    "message": "mit automatischer Registrierung wird aktiviert, wenn diese Option verwendet wird.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "notFound": {
+    "message": "$RESOURCE$ nicht gefunden",
+    "placeholders": {
+      "resource": {
+        "content": "$1",
+        "example": "Service Account"
+      }
+    }
+  },
+  "recoverAccount": {
+    "message": "Konto wiederherstellen"
+  },
+  "updatedTempPassword": {
+    "message": "Der Benutzer hat ein Passwort aktualisiert, das durch die Kontowiederherstellung ausgestellt wurde."
   }
 }

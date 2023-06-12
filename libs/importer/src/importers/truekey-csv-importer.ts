@@ -1,4 +1,4 @@
-import { SecureNoteType } from "@bitwarden/common/enums/secureNoteType";
+import { SecureNoteType } from "@bitwarden/common/enums";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.view";
@@ -50,7 +50,7 @@ export class TrueKeyCsvImporter extends BaseImporter implements Importer {
         cipher.card = new CardView();
         cipher.card.cardholderName = this.getValueOrDefault(value.cardholder);
         cipher.card.number = this.getValueOrDefault(value.number);
-        cipher.card.brand = this.getCardBrand(cipher.card.number);
+        cipher.card.brand = CardView.getCardBrandByPatterns(cipher.card.number);
         if (!this.isNullOrWhitespace(value.expiryDate)) {
           try {
             const expDate = new Date(value.expiryDate);

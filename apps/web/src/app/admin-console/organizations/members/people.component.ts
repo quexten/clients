@@ -15,43 +15,45 @@ import {
 
 import { SearchPipe } from "@bitwarden/angular/pipes/search.pipe";
 import { UserNamePipe } from "@bitwarden/angular/pipes/user-name.pipe";
+import {
+  SimpleDialogType,
+  DialogServiceAbstraction,
+  SimpleDialogCloseType,
+  SimpleDialogOptions,
+} from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
 import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
 import { OrganizationUserConfirmRequest } from "@bitwarden/common/abstractions/organization-user/requests";
 import {
   OrganizationUserBulkResponse,
   OrganizationUserUserDetailsResponse,
 } from "@bitwarden/common/abstractions/organization-user/responses";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { ValidationService } from "@bitwarden/common/abstractions/validation.service";
 import { CollectionService } from "@bitwarden/common/admin-console/abstractions/collection.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { PolicyApiServiceAbstraction as PolicyApiService } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
-import { OrganizationUserStatusType } from "@bitwarden/common/admin-console/enums/organization-user-status-type";
-import { OrganizationUserType } from "@bitwarden/common/admin-console/enums/organization-user-type";
-import { PolicyType } from "@bitwarden/common/admin-console/enums/policy-type";
+import {
+  OrganizationUserStatusType,
+  OrganizationUserType,
+  PolicyType,
+} from "@bitwarden/common/admin-console/enums";
 import { CollectionData } from "@bitwarden/common/admin-console/models/data/collection.data";
 import { Collection } from "@bitwarden/common/admin-console/models/domain/collection";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
 import { CollectionDetailsResponse } from "@bitwarden/common/admin-console/models/response/collection.response";
-import { ProductType } from "@bitwarden/common/enums/productType";
+import { ProductType } from "@bitwarden/common/enums";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import {
-  DialogService,
-  SimpleDialogCloseType,
-  SimpleDialogOptions,
-  SimpleDialogType,
-} from "@bitwarden/components";
 
 import { EntityEventsComponent } from "../../../admin-console/organizations/manage/entity-events.component";
 import { BasePeopleComponent } from "../../../common/base.people.component";
@@ -121,7 +123,7 @@ export class PeopleComponent
     private organizationService: OrganizationService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private organizationUserService: OrganizationUserService,
-    private dialogService: DialogService,
+    dialogService: DialogServiceAbstraction,
     private router: Router,
     private groupService: GroupService,
     private collectionService: CollectionService
@@ -137,7 +139,8 @@ export class PeopleComponent
       logService,
       searchPipe,
       userNamePipe,
-      stateService
+      stateService,
+      dialogService
     );
   }
 
@@ -179,7 +182,7 @@ export class PeopleComponent
             if (response != null) {
               this.organization.hasPublicAndPrivateKeys =
                 response.publicKey != null && response.privateKey != null;
-              await this.syncService.fullSync(true); // Replace oganizations with new data
+              await this.syncService.fullSync(true); // Replace organizations with new data
             } else {
               throw new Error(this.i18nService.t("resetPasswordOrgKeysError"));
             }
@@ -345,7 +348,7 @@ export class PeopleComponent
     const orgUpgradeSimpleDialogOpts: SimpleDialogOptions = {
       title: this.i18nService.t("upgradeOrganization"),
       content: this.i18nService.t(
-        this.organization.canManageBilling
+        this.organization.canEditSubscription
           ? "freeOrgInvLimitReachedManageBilling"
           : "freeOrgInvLimitReachedNoManageBilling",
         this.organization.seats
@@ -353,21 +356,21 @@ export class PeopleComponent
       type: SimpleDialogType.PRIMARY,
     };
 
-    if (this.organization.canManageBilling) {
+    if (this.organization.canEditSubscription) {
       orgUpgradeSimpleDialogOpts.acceptButtonText = this.i18nService.t("upgrade");
     } else {
       orgUpgradeSimpleDialogOpts.acceptButtonText = this.i18nService.t("ok");
       orgUpgradeSimpleDialogOpts.cancelButtonText = null; // hide secondary btn
     }
 
-    const simpleDialog = this.dialogService.openSimpleDialog(orgUpgradeSimpleDialogOpts);
+    const simpleDialog = this.dialogService.openSimpleDialogRef(orgUpgradeSimpleDialogOpts);
 
     firstValueFrom(simpleDialog.closed).then((result: SimpleDialogCloseType | undefined) => {
       if (!result) {
         return;
       }
 
-      if (result == SimpleDialogCloseType.ACCEPT && this.organization.canManageBilling) {
+      if (result == SimpleDialogCloseType.ACCEPT && this.organization.canEditSubscription) {
         this.router.navigate(["/organizations", this.organization.id, "billing", "subscription"], {
           queryParams: { upgrade: true },
         });
@@ -539,17 +542,18 @@ export class PeopleComponent
   }
 
   protected async removeUserConfirmationDialog(user: OrganizationUserView) {
-    const warningMessage = user.usesKeyConnector
-      ? this.i18nService.t("removeUserConfirmationKeyConnector")
-      : this.i18nService.t("removeOrgUserConfirmation");
+    const content = user.usesKeyConnector
+      ? "removeUserConfirmationKeyConnector"
+      : "removeOrgUserConfirmation";
 
-    return this.platformUtilsService.showDialog(
-      warningMessage,
-      this.i18nService.t("removeUserIdAccess", this.userNamePipe.transform(user)),
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning"
-    );
+    return await this.dialogService.openSimpleDialog({
+      title: {
+        key: "removeUserIdAccess",
+        placeholders: [this.userNamePipe.transform(user)],
+      },
+      content: { key: content },
+      type: SimpleDialogType.WARNING,
+    });
   }
 
   private async showBulkStatus(

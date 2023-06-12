@@ -3,22 +3,23 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
 
 import { TwoFactorComponent as BaseTwoFactorComponent } from "@bitwarden/angular/auth/components/two-factor.component";
+import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { AppIdService } from "@bitwarden/common/abstractions/appId.service";
-import { BroadcasterService } from "@bitwarden/common/abstractions/broadcaster.service";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { MessagingService } from "@bitwarden/common/abstractions/messaging.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { LoginService } from "@bitwarden/common/auth/abstractions/login.service";
 import { TwoFactorService } from "@bitwarden/common/auth/abstractions/two-factor.service";
 import { TwoFactorProviderType } from "@bitwarden/common/auth/enums/two-factor-provider-type";
+import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
+import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 
-import { BrowserApi } from "../../browser/browserApi";
+import { BrowserApi } from "../../platform/browser/browser-api";
 import { PopupUtilsService } from "../../popup/services/popup-utils.service";
 
 const BroadcasterSubscriptionId = "TwoFactorComponent";
@@ -46,7 +47,8 @@ export class TwoFactorComponent extends BaseTwoFactorComponent {
     logService: LogService,
     twoFactorService: TwoFactorService,
     appIdService: AppIdService,
-    loginService: LoginService
+    loginService: LoginService,
+    private dialogService: DialogServiceAbstraction
   ) {
     super(
       authService,
@@ -102,12 +104,11 @@ export class TwoFactorComponent extends BaseTwoFactorComponent {
       this.selectedProviderType === TwoFactorProviderType.Email &&
       this.popupUtilsService.inPopup(window)
     ) {
-      const confirmed = await this.platformUtilsService.showDialog(
-        this.i18nService.t("popup2faCloseMessage"),
-        null,
-        this.i18nService.t("yes"),
-        this.i18nService.t("no")
-      );
+      const confirmed = await this.dialogService.openSimpleDialog({
+        title: { key: "warning" },
+        content: { key: "popup2faCloseMessage" },
+        type: SimpleDialogType.WARNING,
+      });
       if (confirmed) {
         this.popupUtilsService.popOut(window);
       }
@@ -117,10 +118,20 @@ export class TwoFactorComponent extends BaseTwoFactorComponent {
     this.route.queryParams.pipe(first()).subscribe(async (qParams) => {
       if (qParams.sso === "true") {
         super.onSuccessfulLogin = () => {
-          BrowserApi.reloadOpenWindows();
-          const thisWindow = window.open("", "_self");
-          thisWindow.close();
-          return this.syncService.fullSync(true);
+          // This is not awaited so we don't pause the application while the sync is happening.
+          // This call is executed by the service that lives in the background script so it will continue
+          // the sync even if this tab closes.
+          const syncPromise = this.syncService.fullSync(true);
+
+          // Force sidebars (FF && Opera) to reload while exempting current window
+          // because we are just going to close the current window.
+          BrowserApi.reloadOpenWindows(true);
+
+          // We don't need this window anymore because the intent is for the user to be left
+          // on the web vault screen which tells them to continue in the browser extension (sidebar or popup)
+          BrowserApi.closeBitwardenExtensionTab();
+
+          return syncPromise;
         };
       }
     });
@@ -136,7 +147,15 @@ export class TwoFactorComponent extends BaseTwoFactorComponent {
   }
 
   anotherMethod() {
-    this.router.navigate(["2fa-options"]);
+    const sso = this.route.snapshot.queryParamMap.get("sso") === "true";
+
+    if (sso) {
+      // We must persist this so when the user returns to the 2FA comp, the
+      // proper onSuccessfulLogin logic is executed.
+      this.router.navigate(["2fa-options"], { queryParams: { sso: true } });
+    } else {
+      this.router.navigate(["2fa-options"]);
+    }
   }
 
   async isLinux() {

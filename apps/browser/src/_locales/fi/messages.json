@@ -619,10 +619,10 @@
     "message": "Tallenna"
   },
   "enableChangedPasswordNotification": {
-    "message": "Kysy päivitetäänkö olemassa oleva kirjautimistieto"
+    "message": "Kysy päivitetäänkö olemassa oleva kirjautumistieto"
   },
   "changedPasswordNotificationDesc": {
-    "message": "Kysy päivitetäänkö kirjautumistiedon salasana, kun sivustolla havaitaan muutos."
+    "message": "Kysy päivitetäänkö kirjautumistiedon salasana sivustolla havaittua muutosta vastaavaksi."
   },
   "notificationChangeDesc": {
     "message": "Haluatko päivittää salasanan Bitwardeniin?"
@@ -1338,7 +1338,7 @@
     "description": "ex. Date this item was created"
   },
   "datePasswordUpdated": {
-    "message": "Salasana päivitettiin",
+    "message": "Salasana vaihdettiin",
     "description": "ex. Date this password was updated"
   },
   "neverLockWarning": {
@@ -1461,8 +1461,35 @@
   "autoFillSuccess": {
     "message": "Kohde täytettiin automaattisesti"
   },
+  "insecurePageWarning": {
+    "message": "Varoitus: Tämä on suojaamaton HTTP-sivu, eli ulkopuolisten tahojen voi olla mahdollista tarkastella ja muuttaa lähettämiäsi tietoja. Tämä kirjautumistieto on alun perin tallennettu suojatulle HTTPS-sivulle."
+  },
+  "insecurePageWarningFillPrompt": {
+    "message": "Haluatko silti täyttää kirjautumistiedot?"
+  },
+  "autofillIframeWarning": {
+    "message": "Lomakkeen URI-osoite poikkeaa kirjautumistietoon tallennetusta osoitteesta. Täytä se siitä huolimatta valitsemalla OK tai peru täyttö valitsemalla Peruuta."
+  },
+  "autofillIframeWarningTip": {
+    "message": "Välttyäksesi varoitukselta jatkossa, tallenna URI $HOSTNAME$ sivustolle tallennettuun Bitwarden-kirjautumistietoosi.",
+    "placeholders": {
+      "hostname": {
+        "content": "$1",
+        "example": "www.example.com"
+      }
+    }
+  },
   "setMasterPassword": {
     "message": "Aseta pääsalasana"
+  },
+  "currentMasterPass": {
+    "message": "Nykyinen pääsalasana"
+  },
+  "newMasterPass": {
+    "message": "Uusi pääsalasana"
+  },
+  "confirmNewMasterPass": {
+    "message": "Vahvista uusi pääsalasana"
   },
   "masterPasswordPolicyInEffect": {
     "message": "Yksi tai useampi organisaatiokäytäntö edellyttää, että pääsalasanasi täyttää seuraavat vaatimukset:"
@@ -1836,13 +1863,16 @@
     "message": "Sinun on vahvistettava sähköpostiosoitteesi käyttääksesi ominaisuutta. Voit vahvistaa osoitteesi verkkoholvissa."
   },
   "updatedMasterPassword": {
-    "message": "Pääsalasana päivitettiin"
+    "message": "Pääsalasanasi on vaihdettu"
   },
   "updateMasterPassword": {
-    "message": "Vaihda pääsalasana"
+    "message": "Päivitä pääsalasana"
   },
   "updateMasterPasswordWarning": {
-    "message": "Organisaatiosi ylläpito on hiljattain vaihtanut pääsalasanasi. Käyttääksesi holvia sinun on päivitettävä pääsalasanasi nyt. Tämä uloskirjaa kaikki nykyiset istunnot pakottaen uudelleenkirjautumisen. Muiden laitteiden aktiiviset istunnot saattavat toimia vielä tunnin ajan."
+    "message": "Organisaatiosi ylläpito on hiljattain vaihtanut pääsalasanasi ja käyttääksesi holvia sinun on päivitettävä se nyt. Tämä uloskirjaa kaikki nykyiset istunnot pakottaen uudelleenkirjautumisen. Muiden laitteiden aktiiviset istunnot saattavat toimia vielä tunnin ajan."
+  },
+  "updateWeakMasterPasswordWarning": {
+    "message": "Pääsalasanasi ei täytä yhden tai useamman organisaatiokäytännön vaatimuksia ja holvin käyttämiseksi sinun on vaihdettava se nyt. Tämä uloskirjaa kaikki nykyiset istunnot pakottaen uudelleenkirjautumisen. Muiden laitteiden aktiiviset istunnot saattavat toimia vielä tunnin ajan."
   },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automaattinen liitos"
@@ -1863,7 +1893,7 @@
     "message": "Minuuttia"
   },
   "vaultTimeoutPolicyInEffect": {
-    "message": "Organisaatiokäytännöt vaikuttavat holvisi aikakatkaisuun. Suurin sallittu aika on $HOURS$ tunti(a) ja $MINUTES$ minuutti(a).",
+    "message": "Organisaatiokäytännöt ovat määrittäneet holvisi aikakatkaisun enimmäisajaksi $HOURS$ tunti(a) $MINUTES$ minuutti(a).",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1872,6 +1902,32 @@
       "minutes": {
         "content": "$2",
         "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyWithActionInEffect": {
+    "message": "Organisaatiokäytännöt vaikuttavat holvisi aikakatkaisuun. Suurin sallittu aika on $HOURS$ tunti(a) $MINUTES$ minuutti(a). Holvillesi määritetty aikakatkaisutoiminto on $ACTION$.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      },
+      "action": {
+        "content": "$3",
+        "example": "Lock"
+      }
+    }
+  },
+  "vaultTimeoutActionPolicyInEffect": {
+    "message": "Organisaatiokäytännöt ovat määrittäneet holvillesi aikakatkaisutoiminnon $ACTION$.",
+    "placeholders": {
+      "action": {
+        "content": "$1",
+        "example": "Lock"
       }
     }
   },
@@ -2164,5 +2220,19 @@
         "example": "CTRL+Shift+L"
       }
     }
+  },
+  "region": {
+    "message": "Alue"
+  },
+  "opensInANewWindow": {
+    "message": "Avautuu uudessa ikkunassa"
+  },
+  "eu": {
+    "message": "EU",
+    "description": "European Union"
+  },
+  "us": {
+    "message": "US",
+    "description": "United States"
   }
 }

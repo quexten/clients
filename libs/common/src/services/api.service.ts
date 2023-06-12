@@ -1,12 +1,9 @@
 import { ApiService as ApiServiceAbstraction } from "../abstractions/api.service";
-import { AppIdService } from "../abstractions/appId.service";
-import { EnvironmentService } from "../abstractions/environment.service";
-import { PlatformUtilsService } from "../abstractions/platformUtils.service";
-import { OrganizationConnectionType } from "../admin-console/enums/organization-connection-type";
+import { OrganizationConnectionType } from "../admin-console/enums";
 import { CollectionRequest } from "../admin-console/models/request/collection.request";
-import { OrganizationConnectionRequest } from "../admin-console/models/request/organization-connection.request";
 import { OrganizationSponsorshipCreateRequest } from "../admin-console/models/request/organization/organization-sponsorship-create.request";
 import { OrganizationSponsorshipRedeemRequest } from "../admin-console/models/request/organization/organization-sponsorship-redeem.request";
+import { OrganizationConnectionRequest } from "../admin-console/models/request/organization-connection.request";
 import { ProviderAddOrganizationRequest } from "../admin-console/models/request/provider/provider-add-organization.request";
 import { ProviderOrganizationCreateRequest } from "../admin-console/models/request/provider/provider-organization-create.request";
 import { ProviderSetupRequest } from "../admin-console/models/request/provider/provider-setup.request";
@@ -87,6 +84,7 @@ import { IdentityCaptchaResponse } from "../auth/models/response/identity-captch
 import { IdentityTokenResponse } from "../auth/models/response/identity-token.response";
 import { IdentityTwoFactorResponse } from "../auth/models/response/identity-two-factor.response";
 import { KeyConnectorUserKeyResponse } from "../auth/models/response/key-connector-user-key.response";
+import { MasterPasswordPolicyResponse } from "../auth/models/response/master-password-policy.response";
 import { PreloginResponse } from "../auth/models/response/prelogin.response";
 import { RegisterResponse } from "../auth/models/response/register.response";
 import { SsoPreValidateResponse } from "../auth/models/response/sso-pre-validate.response";
@@ -110,8 +108,7 @@ import { PlanResponse } from "../billing/models/response/plan.response";
 import { SubscriptionResponse } from "../billing/models/response/subscription.response";
 import { TaxInfoResponse } from "../billing/models/response/tax-info.response";
 import { TaxRateResponse } from "../billing/models/response/tax-rate.response";
-import { DeviceType } from "../enums/deviceType";
-import { Utils } from "../misc/utils";
+import { DeviceType } from "../enums";
 import { CollectionBulkDeleteRequest } from "../models/request/collection-bulk-delete.request";
 import { DeleteRecoverRequest } from "../models/request/delete-recover.request";
 import { EventRequest } from "../models/request/event.request";
@@ -134,6 +131,10 @@ import { EventResponse } from "../models/response/event.response";
 import { ListResponse } from "../models/response/list.response";
 import { ProfileResponse } from "../models/response/profile.response";
 import { UserKeyResponse } from "../models/response/user-key.response";
+import { AppIdService } from "../platform/abstractions/app-id.service";
+import { EnvironmentService } from "../platform/abstractions/environment.service";
+import { PlatformUtilsService } from "../platform/abstractions/platform-utils.service";
+import { Utils } from "../platform/misc/utils";
 import { AttachmentRequest } from "../vault/models/request/attachment.request";
 import { CipherBulkDeleteRequest } from "../vault/models/request/cipher-bulk-delete.request";
 import { CipherBulkMoveRequest } from "../vault/models/request/cipher-bulk-move.request";
@@ -421,8 +422,10 @@ export class ApiService implements ApiServiceAbstraction {
     return this.send("POST", "/accounts/verify-email-token", request, false, false);
   }
 
-  postAccountVerifyPassword(request: SecretVerificationRequest): Promise<any> {
-    return this.send("POST", "/accounts/verify-password", request, true, false);
+  postAccountVerifyPassword(
+    request: SecretVerificationRequest
+  ): Promise<MasterPasswordPolicyResponse> {
+    return this.send("POST", "/accounts/verify-password", request, true, true);
   }
 
   postAccountRecoverDelete(request: DeleteRecoverRequest): Promise<any> {
@@ -1105,14 +1108,6 @@ export class ApiService implements ApiServiceAbstraction {
       true
     );
     return new DeviceVerificationResponse(r);
-  }
-
-  async getKnownDevice(email: string, deviceIdentifier: string): Promise<boolean> {
-    const r = await this.send("GET", "/devices/knowndevice", null, false, true, null, (headers) => {
-      headers.set("X-Device-Identifier", deviceIdentifier);
-      headers.set("X-Request-Email", Utils.fromUtf8ToUrlB64(email));
-    });
-    return r as boolean;
   }
 
   // Emergency Access APIs

@@ -3,17 +3,18 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoFunctionService } from "@bitwarden/common/abstractions/cryptoFunction.service";
-import { EnvironmentService } from "@bitwarden/common/abstractions/environment.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthResult } from "@bitwarden/common/auth/models/domain/auth-result";
+import { ForceResetPasswordReason } from "@bitwarden/common/auth/models/domain/force-reset-password-reason";
 import { SsoLogInCredentials } from "@bitwarden/common/auth/models/domain/log-in-credentials";
 import { SsoPreValidateResponse } from "@bitwarden/common/auth/models/response/sso-pre-validate.response";
-import { Utils } from "@bitwarden/common/misc/utils";
+import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
+import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
 
 @Directive()
@@ -185,7 +186,7 @@ export class SsoComponent {
       const response = await this.formPromise;
       if (response.requiresTwoFactor) {
         if (this.onSuccessfulLoginTwoFactorNavigate != null) {
-          this.onSuccessfulLoginTwoFactorNavigate();
+          await this.onSuccessfulLoginTwoFactorNavigate();
         } else {
           this.router.navigate([this.twoFactorRoute], {
             queryParams: {
@@ -196,7 +197,7 @@ export class SsoComponent {
         }
       } else if (response.resetMasterPassword) {
         if (this.onSuccessfulLoginChangePasswordNavigate != null) {
-          this.onSuccessfulLoginChangePasswordNavigate();
+          await this.onSuccessfulLoginChangePasswordNavigate();
         } else {
           this.router.navigate([this.changePasswordRoute], {
             queryParams: {
@@ -204,20 +205,18 @@ export class SsoComponent {
             },
           });
         }
-      } else if (response.forcePasswordReset) {
+      } else if (response.forcePasswordReset !== ForceResetPasswordReason.None) {
         if (this.onSuccessfulLoginForceResetNavigate != null) {
-          this.onSuccessfulLoginForceResetNavigate();
+          await this.onSuccessfulLoginForceResetNavigate();
         } else {
           this.router.navigate([this.forcePasswordResetRoute]);
         }
       } else {
-        const disableFavicon = await this.stateService.getDisableFavicon();
-        await this.stateService.setDisableFavicon(!!disableFavicon);
         if (this.onSuccessfulLogin != null) {
-          this.onSuccessfulLogin();
+          await this.onSuccessfulLogin();
         }
         if (this.onSuccessfulLoginNavigate != null) {
-          this.onSuccessfulLoginNavigate();
+          await this.onSuccessfulLoginNavigate();
         } else {
           this.router.navigate([this.successRoute]);
         }

@@ -1,6 +1,6 @@
-import { Meta, moduleMetadata, Story } from "@storybook/angular";
+import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
 
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 
 import { BadgeModule } from "../badge";
 import { SharedModule } from "../shared";
@@ -29,6 +29,7 @@ export default {
   ],
   args: {
     badgeType: "primary",
+    truncate: false,
   },
   parameters: {
     design: {
@@ -38,16 +39,30 @@ export default {
   },
 } as Meta;
 
-const ListTemplate: Story<BadgeListComponent> = (args: BadgeListComponent) => ({
-  props: args,
-  template: `
-    <bit-badge-list [badgeType]="badgeType" [maxItems]="maxItems" [items]="items"></bit-badge-list>
-  `,
-});
+type Story = StoryObj<BadgeListComponent>;
 
-export const Default = ListTemplate.bind({});
-Default.args = {
-  badgeType: "info",
-  maxItems: 3,
-  items: ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
+export const Default: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <bit-badge-list [badgeType]="badgeType" [maxItems]="maxItems" [items]="items" [truncate]="truncate"></bit-badge-list>
+    `,
+  }),
+
+  args: {
+    badgeType: "info",
+    maxItems: 3,
+    items: ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
+    truncate: false,
+  },
+};
+
+export const Truncated: Story = {
+  ...Default,
+  args: {
+    badgeType: "info",
+    maxItems: 3,
+    items: ["Badge 1", "Badge 2 containing lengthy text", "Badge 3", "Badge 4", "Badge 5"],
+    truncate: true,
+  },
 };

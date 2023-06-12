@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
-import { OrganizationUserStatusType } from "@bitwarden/common/admin-console/enums/organization-user-status-type";
-import { OrganizationUserType } from "@bitwarden/common/admin-console/enums/organization-user-type";
+import {
+  OrganizationUserStatusType,
+  OrganizationUserType,
+} from "@bitwarden/common/admin-console/enums";
 import {
   AvatarModule,
   BadgeModule,
@@ -15,7 +17,7 @@ import {
 } from "@bitwarden/components";
 import { SelectItemView } from "@bitwarden/components/src/multi-select/models/select-item-view";
 
-import { PreloadedEnglishI18nModule } from "../../../../../tests/preloaded-english-i18n.module";
+import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
 
 import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
 import { AccessItemType, CollectionPermission } from "./access-selector.models";

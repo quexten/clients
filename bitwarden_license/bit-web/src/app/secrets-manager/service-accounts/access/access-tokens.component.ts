@@ -2,10 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { combineLatestWith, Observable, startWith, switchMap } from "rxjs";
 
+import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { DialogService } from "@bitwarden/components";
-import { UserVerificationPromptComponent } from "@bitwarden/web-vault/app/components/user-verification-prompt.component";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { UserVerificationPromptComponent } from "@bitwarden/web-vault/app/shared/components/user-verification";
 
 import { AccessTokenView } from "../models/view/access-token.view";
 
@@ -25,9 +26,10 @@ export class AccessTokenComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private accessService: AccessService,
-    private dialogService: DialogService,
+    private dialogService: DialogServiceAbstraction,
     private modalService: ModalService,
-    private platformUtilsService: PlatformUtilsService
+    private platformUtilsService: PlatformUtilsService,
+    private i18nService: I18nService
   ) {}
 
   ngOnInit() {
@@ -43,6 +45,15 @@ export class AccessTokenComponent implements OnInit {
   }
 
   protected async revoke(tokens: AccessTokenView[]) {
+    if (!tokens?.length) {
+      this.platformUtilsService.showToast(
+        "error",
+        null,
+        this.i18nService.t("noAccessTokenSelected")
+      );
+      return;
+    }
+
     if (!(await this.verifyUser())) {
       return;
     }
@@ -52,7 +63,7 @@ export class AccessTokenComponent implements OnInit {
       tokens.map((t) => t.id)
     );
 
-    this.platformUtilsService.showToast("success", null, "Access tokens revoked.");
+    this.platformUtilsService.showToast("success", null, this.i18nService.t("accessTokenRevoked"));
   }
 
   protected openNewAccessTokenDialog() {

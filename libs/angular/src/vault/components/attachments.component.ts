@@ -1,18 +1,20 @@
 import { Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { CryptoService } from "@bitwarden/common/abstractions/crypto.service";
-import { FileDownloadService } from "@bitwarden/common/abstractions/fileDownload/fileDownload.service";
-import { I18nService } from "@bitwarden/common/abstractions/i18n.service";
-import { LogService } from "@bitwarden/common/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/abstractions/platformUtils.service";
-import { StateService } from "@bitwarden/common/abstractions/state.service";
-import { EncArrayBuffer } from "@bitwarden/common/models/domain/enc-array-buffer";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
+import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { EncArrayBuffer } from "@bitwarden/common/platform/models/domain/enc-array-buffer";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { AttachmentView } from "@bitwarden/common/vault/models/view/attachment.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
+
+import { DialogServiceAbstraction, SimpleDialogType } from "../../services/dialog";
 
 @Directive()
 export class AttachmentsComponent implements OnInit {
@@ -40,7 +42,8 @@ export class AttachmentsComponent implements OnInit {
     protected win: Window,
     protected logService: LogService,
     protected stateService: StateService,
-    protected fileDownloadService: FileDownloadService
+    protected fileDownloadService: FileDownloadService,
+    protected dialogService: DialogServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -100,15 +103,12 @@ export class AttachmentsComponent implements OnInit {
       return;
     }
 
-    const confirmed = await this.platformUtilsService.showDialog(
-      this.i18nService.t("deleteAttachmentConfirmation"),
-      this.i18nService.t("deleteAttachment"),
-      this.i18nService.t("yes"),
-      this.i18nService.t("no"),
-      "warning",
-      false,
-      this.componentName != "" ? this.componentName + " .modal-content" : null
-    );
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "deleteAttachment" },
+      content: { key: "deleteAttachmentConfirmation" },
+      type: SimpleDialogType.WARNING,
+    });
+
     if (!confirmed) {
       return;
     }
@@ -197,23 +197,24 @@ export class AttachmentsComponent implements OnInit {
     this.canAccessAttachments = canAccessPremium || this.cipher.organizationId != null;
 
     if (!this.canAccessAttachments) {
-      const confirmed = await this.platformUtilsService.showDialog(
-        this.i18nService.t("premiumRequiredDesc"),
-        this.i18nService.t("premiumRequired"),
-        this.i18nService.t("learnMore"),
-        this.i18nService.t("cancel")
-      );
+      const confirmed = await this.dialogService.openSimpleDialog({
+        title: { key: "premiumRequired" },
+        content: { key: "premiumRequiredDesc" },
+        acceptButtonText: { key: "learnMore" },
+        type: SimpleDialogType.SUCCESS,
+      });
+
       if (confirmed) {
         this.platformUtilsService.launchUri("https://vault.bitwarden.com/#/?premium=purchase");
       }
     } else if (!this.hasUpdatedKey) {
-      const confirmed = await this.platformUtilsService.showDialog(
-        this.i18nService.t("updateKey"),
-        this.i18nService.t("featureUnavailable"),
-        this.i18nService.t("learnMore"),
-        this.i18nService.t("cancel"),
-        "warning"
-      );
+      const confirmed = await this.dialogService.openSimpleDialog({
+        title: { key: "featureUnavailable" },
+        content: { key: "updateKey" },
+        acceptButtonText: { key: "learnMore" },
+        type: SimpleDialogType.WARNING,
+      });
+
       if (confirmed) {
         this.platformUtilsService.launchUri(
           "https://bitwarden.com/help/account-encryption-key/#rotate-your-encryption-key"

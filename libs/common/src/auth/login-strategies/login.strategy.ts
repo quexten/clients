@@ -1,21 +1,22 @@
 import { ApiService } from "../../abstractions/api.service";
-import { AppIdService } from "../../abstractions/appId.service";
-import { CryptoService } from "../../abstractions/crypto.service";
-import { LogService } from "../../abstractions/log.service";
-import { MessagingService } from "../../abstractions/messaging.service";
-import { PlatformUtilsService } from "../../abstractions/platformUtils.service";
-import { StateService } from "../../abstractions/state.service";
-import { Account, AccountProfile, AccountTokens } from "../../models/domain/account";
 import { KeysRequest } from "../../models/request/keys.request";
+import { AppIdService } from "../../platform/abstractions/app-id.service";
+import { CryptoService } from "../../platform/abstractions/crypto.service";
+import { LogService } from "../../platform/abstractions/log.service";
+import { MessagingService } from "../../platform/abstractions/messaging.service";
+import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
+import { StateService } from "../../platform/abstractions/state.service";
+import { Account, AccountProfile, AccountTokens } from "../../platform/models/domain/account";
 import { TokenService } from "../abstractions/token.service";
 import { TwoFactorService } from "../abstractions/two-factor.service";
 import { TwoFactorProviderType } from "../enums/two-factor-provider-type";
 import { AuthResult } from "../models/domain/auth-result";
+import { ForceResetPasswordReason } from "../models/domain/force-reset-password-reason";
 import {
-  UserApiLogInCredentials,
+  PasswordlessLogInCredentials,
   PasswordLogInCredentials,
   SsoLogInCredentials,
-  PasswordlessLogInCredentials,
+  UserApiLogInCredentials,
 } from "../models/domain/log-in-credentials";
 import { DeviceRequest } from "../models/request/identity-token/device.request";
 import { PasswordTokenRequest } from "../models/request/identity-token/password-token.request";
@@ -25,6 +26,8 @@ import { UserApiTokenRequest } from "../models/request/identity-token/user-api-t
 import { IdentityCaptchaResponse } from "../models/response/identity-captcha.response";
 import { IdentityTokenResponse } from "../models/response/identity-token.response";
 import { IdentityTwoFactorResponse } from "../models/response/identity-two-factor.response";
+
+type IdentityResponse = IdentityTokenResponse | IdentityTwoFactorResponse | IdentityCaptchaResponse;
 
 export abstract class LogInStrategy {
   protected abstract tokenRequest: UserApiTokenRequest | PasswordTokenRequest | SsoTokenRequest;
@@ -58,20 +61,21 @@ export abstract class LogInStrategy {
     captchaResponse: string = null
   ): Promise<AuthResult> {
     this.tokenRequest.setTwoFactor(twoFactor);
-    return this.startLogIn();
+    const [authResult] = await this.startLogIn();
+    return authResult;
   }
 
-  protected async startLogIn(): Promise<AuthResult> {
+  protected async startLogIn(): Promise<[AuthResult, IdentityResponse]> {
     this.twoFactorService.clearSelectedProvider();
 
     const response = await this.apiService.postIdentityToken(this.tokenRequest);
 
     if (response instanceof IdentityTwoFactorResponse) {
-      return this.processTwoFactorResponse(response);
+      return [await this.processTwoFactorResponse(response), response];
     } else if (response instanceof IdentityCaptchaResponse) {
-      return this.processCaptchaResponse(response);
+      return [await this.processCaptchaResponse(response), response];
     } else if (response instanceof IdentityTokenResponse) {
-      return this.processTokenResponse(response);
+      return [await this.processTokenResponse(response), response];
     }
 
     throw new Error("Invalid response object.");
@@ -126,7 +130,10 @@ export abstract class LogInStrategy {
   protected async processTokenResponse(response: IdentityTokenResponse): Promise<AuthResult> {
     const result = new AuthResult();
     result.resetMasterPassword = response.resetMasterPassword;
-    result.forcePasswordReset = response.forcePasswordReset;
+
+    if (response.forcePasswordReset) {
+      result.forcePasswordReset = ForceResetPasswordReason.AdminForcePasswordReset;
+    }
 
     await this.saveAccountInformation(response);
 
@@ -153,8 +160,11 @@ export abstract class LogInStrategy {
   private async processTwoFactorResponse(response: IdentityTwoFactorResponse): Promise<AuthResult> {
     const result = new AuthResult();
     result.twoFactorProviders = response.twoFactorProviders2;
+
     this.twoFactorService.setProviders(response);
     this.captchaBypassToken = response.captchaToken ?? null;
+    result.ssoEmail2FaSessionToken = response.ssoEmail2faSessionToken;
+    result.email = response.email;
     return result;
   }
 
