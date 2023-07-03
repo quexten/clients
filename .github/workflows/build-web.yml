@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Set up cloc
         run: |
@@ -56,7 +56,7 @@ jobs:
       version: ${{ steps.version.outputs.value }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Get GitHub sha as version
         id: version
@@ -80,16 +80,16 @@ jobs:
             npm_command: "dist:bit:selfhost"
           - name: "cloud-QA"
             npm_command: "build:bit:qa"
-          - name: "cloud-POC2"
-            npm_command: "build:bit:poc"
           - name: "ee"
             npm_command: "build:bit:ee"
-          - name: "cloud-eudevtest"
-            npm_command: "build:bit:eudevtest"
+          - name: "cloud-euprd"
+            npm_command: "build:bit:euprd"
+          - name: "cloud-euqa"
+            npm_command: "build:bit:euqa"
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Set up Node
         uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
@@ -158,7 +158,7 @@ jobs:
       _VERSION: ${{ needs.setup.outputs.version }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Check Branch to Publish
         env:
@@ -237,7 +237,7 @@ jobs:
 
       - name: Retrieve github PAT secrets
         id: retrieve-secret-pat
-        uses: bitwarden/gh-actions/get-keyvault-secrets@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/get-keyvault-secrets@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           keyvault: "bitwarden-ci"
           secrets: "github-pat-bitwarden-devops-bot-repo-scope"
@@ -245,13 +245,13 @@ jobs:
       - name: Setup DCT
         if: ${{ env.is_publish_branch == 'true' }}
         id: setup-dct
-        uses: bitwarden/gh-actions/setup-docker-trust@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/setup-docker-trust@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           azure-creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
           azure-keyvault-name: "bitwarden-ci"
 
       - name: Build Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
+        uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825 # v4.1.1
         with:
           context: apps/web
           file: apps/web/Dockerfile
@@ -284,7 +284,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Login to Azure
         uses: Azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
@@ -293,13 +293,13 @@ jobs:
 
       - name: Retrieve secrets
         id: retrieve-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/get-keyvault-secrets@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           keyvault: "bitwarden-ci"
           secrets: "crowdin-api-token"
 
       - name: Upload Sources
-        uses: crowdin/github-action@102b5aa21783a64027193ef802a616140a1ca102 # v1.8.1
+        uses: crowdin/github-action@ee4ab4ea2feadc0fdc3b200729c7b1c4cf4b38f3 # v1.11.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_API_TOKEN: ${{ steps.retrieve-secrets.outputs.crowdin-api-token }}
@@ -354,7 +354,7 @@ jobs:
       - name: Retrieve secrets
         id: retrieve-secrets
         if: failure()
-        uses: bitwarden/gh-actions/get-keyvault-secrets@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/get-keyvault-secrets@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           keyvault: "bitwarden-ci"
           secrets: "devops-alerts-slack-webhook-url"

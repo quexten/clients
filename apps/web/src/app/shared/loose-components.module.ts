@@ -43,6 +43,7 @@ import { TwoFactorVerifyComponent } from "../auth/settings/two-factor-verify.com
 import { TwoFactorWebAuthnComponent } from "../auth/settings/two-factor-webauthn.component";
 import { TwoFactorYubiKeyComponent } from "../auth/settings/two-factor-yubikey.component";
 import { VerifyEmailComponent } from "../auth/settings/verify-email.component";
+import { UserVerificationModule } from "../auth/shared/components/user-verification";
 import { SsoComponent } from "../auth/sso.component";
 import { TwoFactorOptionsComponent } from "../auth/two-factor-options.component";
 import { TwoFactorComponent } from "../auth/two-factor.component";
@@ -107,7 +108,8 @@ import { AddEditComponent as OrgAddEditComponent } from "../vault/org-vault/add-
 import { AttachmentsComponent as OrgAttachmentsComponent } from "../vault/org-vault/attachments.component";
 import { CollectionsComponent as OrgCollectionsComponent } from "../vault/org-vault/collections.component";
 
-import { UserVerificationModule } from "./components/user-verification";
+import { EnvironmentSelectorModule } from "./../components/environment-selector/environment-selector.module";
+import { AccountFingerprintComponent } from "./components/account-fingerprint/account-fingerprint.component";
 import { SharedModule } from "./shared.module";
 
 // Please do not add to this list of declarations - we should refactor these into modules when doing so makes sense until there are none left.
@@ -121,9 +123,10 @@ import { SharedModule } from "./shared.module";
     UserVerificationModule,
     ChangeKdfModule,
     DynamicAvatarComponent,
+    EnvironmentSelectorModule,
+    AccountFingerprintComponent,
   ],
   declarations: [
-    PremiumBadgeComponent,
     AcceptEmergencyComponent,
     AcceptFamilySponsorshipComponent,
     AcceptOrganizationComponent,
@@ -228,6 +231,7 @@ import { SharedModule } from "./shared.module";
     LowKdfComponent,
   ],
   exports: [
+    UserVerificationModule,
     PremiumBadgeComponent,
     AcceptEmergencyComponent,
     AcceptOrganizationComponent,

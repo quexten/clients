@@ -24,7 +24,7 @@ jobs:
       tag_version: ${{ steps.version.outputs.tag }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Branch check
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
@@ -38,7 +38,7 @@ jobs:
 
       - name: Check Release Version
         id: version
-        uses: bitwarden/gh-actions/release-version-check@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/release-version-check@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           release-type: ${{ github.event.inputs.release_type }}
           project-type: ts
@@ -65,12 +65,12 @@ jobs:
           echo "Github Release Option: $_RELEASE_OPTION"
 
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       ########## DockerHub ##########
       - name: Setup DCT
         id: setup-dct
-        uses: bitwarden/gh-actions/setup-docker-trust@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/setup-docker-trust@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           azure-creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
           azure-keyvault-name: "bitwarden-ci"
@@ -156,13 +156,13 @@ jobs:
 
       - name: Retrieve bot secrets
         id: retrieve-bot-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/get-keyvault-secrets@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           keyvault: bitwarden-ci
           secrets: "github-pat-bitwarden-devops-bot-repo-scope"
 
       - name: Checkout GH pages repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
         with:
           repository: bitwarden/web-vault-pages
           path: ghpages-deployment
@@ -170,7 +170,7 @@ jobs:
 
       - name: Download latest cloud asset
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/download-artifacts@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           workflow: build-web.yml
           path: assets
@@ -180,7 +180,7 @@ jobs:
 
       - name: Dry Run - Download latest cloud asset
         if: ${{ github.event.inputs.release_type == 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/download-artifacts@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           workflow: build-web.yml
           path: assets
@@ -253,7 +253,7 @@ jobs:
 
       - name: Download latest build artifacts
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/download-artifacts@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           workflow: build-web.yml
           path: apps/web/artifacts
@@ -264,7 +264,7 @@ jobs:
 
       - name: Dry Run - Download latest build artifacts
         if: ${{ github.event.inputs.release_type == 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@72594be690a4e7bfa87b1402b2aedc75acdbff12
+        uses: bitwarden/gh-actions/download-artifacts@37ffa14164a7308bc273829edfe75c97cd562375
         with:
           workflow: build-web.yml
           path: apps/web/artifacts

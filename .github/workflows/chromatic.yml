@@ -18,7 +18,7 @@ jobs:
           node-version: "16"
 
       - name: Checkout repo
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
         with:
           fetch-depth: 0
 
@@ -37,7 +37,7 @@ jobs:
         run: npm run build-storybook:ci
 
       - name: Publish to Chromatic
-        uses: chromaui/action@a2ed440e22f7d4e2c6b0710f7903aa2df70a1ecd
+        uses: chromaui/action@44caff7e88d584b04f79f04e31e819f9a95d4d8f
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

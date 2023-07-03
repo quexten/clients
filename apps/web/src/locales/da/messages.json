@@ -658,7 +658,7 @@
     "message": "Hovedadgangskoden er den adgangskode, du bruger, når du tilgår din boks. Det er meget vigtigt, at hovedadgangskoden ikke glemmes, da der ikke er nogen måde, hvorpå den kan genoprettes."
   },
   "masterPassImportant": {
-    "message": "Hovedadgangskoder kan ikke gendannes, hvis du glemmer dem!"
+    "message": "Hovedadgangskoden kan ikke gendannes, hvis den glemmes!"
   },
   "masterPassHintDesc": {
     "message": "Et hovedadgangskodetip kan bidrage til at komme i tanke om adgangskoden, hvis den glemmes."
@@ -964,8 +964,14 @@
   "confirmVaultExport": {
     "message": "Bekræft eksport af boks"
   },
+  "confirmSecretsExport": {
+    "message": "Bekræft eksport af hemmelighed"
+  },
   "exportWarningDesc": {
     "message": "Denne eksport indeholder boksdataene i ukrypteret form, og eksportfilen bør hverken gemmes eller sendes via usikre kanaler (såsom e-mail). Slet den straks efter du er færdig med at bruge den."
+  },
+  "exportSecretsWarningDesc": {
+    "message": "Denne eksport indeholder dine hemmelighedsdata i ukrypteret form. Den eksporterede fil bør ikke gemmes eller sendes via usikre kanaler (såsom e-mail). Slet den straks efter du er færdig med at bruge den."
   },
   "encExportKeyWarningDesc": {
     "message": "Denne eksport krypterer dataene vha. din kontokrypteringsnøgle. Roteres denne kontokrypteringsnøgle på et tidspunkt, skal der eksporteres igen, da du ikke vil kunne dekryptere denne eksportfil."
@@ -978,6 +984,9 @@
   },
   "exportVault": {
     "message": "Eksportér boks"
+  },
+  "exportSecrets": {
+    "message": "Eksportér hemmeligheder"
   },
   "fileFormat": {
     "message": "Filformat"
@@ -2656,6 +2665,12 @@
   },
   "failedLogin2fa": {
     "message": "Loginforsøg mislykkedes med forkert totrins-login."
+  },
+  "incorrectPassword": {
+    "message": "Forkert adgangskode"
+  },
+  "incorrectCode": {
+    "message": "Forkert kode"
   },
   "exportedVault": {
     "message": "Boks eksporteret"
@@ -5231,7 +5246,7 @@
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "memberDecryptionKeyConnectorDescLink": {
-    "message": "require SSO authentication and single organization policies",
+    "message": "kræver SSO-godkendelse samt enkeltorganisationspolitikker",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Connect login with SSO to your self-hosted decryption key server. Using this option, members won’t need to use their master passwords to decrypt vault data. The require SSO authentication and single organization policies are required to set up Key Connector decryption. Contact Bitwarden Support for set up assistance.'"
   },
   "memberDecryptionKeyConnectorDescEnd": {
@@ -6179,10 +6194,6 @@
     "message": "Adgangstoken oprettet og kopieret til udklipsholder",
     "description": "Notification to inform the user that the access token has been created and copied to the clipboard."
   },
-  "accessTokenPermissionsBetaNotification": {
-    "message": "Tilladelseshåndtering er utilgængelig i beta.",
-    "description": "Notification to inform the user that the feature for managing access token permissions is not available in the beta version."
-  },
   "revokeAccessToken": {
     "message": "Ophæv adgangstoken",
     "description": "Invalidates / cancels an access token and as such removes access to secrets for the client application."
@@ -6612,11 +6623,14 @@
   "secretsManagerBeta": {
     "message": "Secrets Manager Beta"
   },
-  "secretsManagerBetaDesc": {
-    "message": "Aktivér gratis brugeradgang til Secrets Manager under Beta-programmet."
+  "secretsManager": {
+    "message": "Secrets Manager"
   },
-  "userAccessSecretsManager": {
-    "message": "Denne bruger kan tilgå Secrets Manager Beta"
+  "secretsManagerAccessDesc": {
+    "message": "Enable user access to Secrets Manager."
+  },
+  "userAccessSecretsManagerGA": {
+    "message": "This user can access Secrets Manager"
   },
   "important": {
     "message": "Vigtigt:"
@@ -6843,5 +6857,77 @@
   },
   "updatedTempPassword": {
     "message": "Bruger har opdateret en adgangskode udstedt via kontogendannelse."
+  },
+  "enabledAccessToSecretsManager": {
+    "message": "Enabled access to Secrets Manager",
+    "description": "Confirmation message that one or more users gained access to Secrets Manager"
+  },
+  "enableAccess": {
+    "message": "Enable access"
+  },
+  "bulkEnableSecretsManagerDescription": {
+    "message": "Grant the following members access to Secrets Manager. The role granted in the Password Manager will apply to Secrets Manager.",
+    "description": "This description is shown to an admin when they are attempting to add more users to Secrets Manager."
+  },
+  "enableSecretsManager": {
+    "message": "Enable Secrets Manager"
+  },
+  "yourOrganizationsFingerprint": {
+    "message": "Din organisations fingeraftrykssætning",
+    "description": "A 'fingerprint phrase' is a unique word phrase (similar to a passphrase) that a user can use to authenticate their organization's public key with another user, for the purposes of sharing."
+  },
+  "deviceApprovals": {
+    "message": "Enhedsgodkendelser"
+  },
+  "deviceApprovalsDesc": {
+    "message": "Godkend login-anmodninger nedenfor, så anmodende medlemmer kan fuldføre login-processen. Ikke-godkendte anmodninger udløber efter 1 uge. Bekræft medlemmets oplysninger før godkendelse."
+  },
+  "deviceInfo": {
+    "message": "Enhedsinfo"
+  },
+  "time": {
+    "message": "Tid"
+  },
+  "denyAllRequests": {
+    "message": "Afvis alle anmodninger"
+  },
+  "denyRequest": {
+    "message": "Afvis anmodning"
+  },
+  "approveRequest": {
+    "message": "Godkend anmodning"
+  },
+  "noDeviceRequests": {
+    "message": "Ingen enhedsanmodninger"
+  },
+  "noDeviceRequestsDesc": {
+    "message": "Medlemmers enhedsgodkendelsesanmodninger vil fremgå her"
+  },
+  "loginRequestDenied": {
+    "message": "Login-anmodning afvist"
+  },
+  "allLoginRequestsDenied": {
+    "message": "Alle login-anmodninger afvist"
+  },
+  "loginRequestApproved": {
+    "message": "Login-anmodning godkendt"
+  },
+  "removeOrgUserNoMasterPasswordTitle": {
+    "message": "Konto har ikke hovedadgangskode"
+  },
+  "removeOrgUserNoMasterPasswordDesc": {
+    "message": "Fjernelse af $USER$ uden opsætning af en hovedadgangskode for brugeren kan begrænse den fulde kontoadgang. Fortsæt alligevel?",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
+  "noMasterPassword": {
+    "message": "Ingen hovedadgangskode"
+  },
+  "removeMembersWithoutMasterPasswordWarning": {
+    "message": "Fjernelse af medlemmer uden hovedadgangskoder uden at opsætte én for dem, kan begrænse den fulde kontoadgang."
   }
 }

@@ -35,6 +35,7 @@ import {
 } from "../../../shared/components/access-selector";
 
 import { commaSeparatedEmails } from "./validators/comma-separated-emails.validator";
+import { freeOrgSeatLimitReachedValidator } from "./validators/free-org-inv-limit-reached.validator";
 
 export enum MemberDialogTab {
   Role = 0,
@@ -46,6 +47,7 @@ export interface MemberDialogParams {
   name: string;
   organizationId: string;
   organizationUserId: string;
+  allOrganizationUserEmails: string[];
   usesKeyConnector: boolean;
   initialTab?: MemberDialogTab;
 }
@@ -72,13 +74,14 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
   canUseCustomPermissions: boolean;
   PermissionMode = PermissionMode;
   canUseSecretsManager: boolean;
+  showNoMasterPasswordWarning = false;
 
   protected organization: Organization;
   protected collectionAccessItems: AccessItemView[] = [];
   protected groupAccessItems: AccessItemView[] = [];
   protected tabIndex: MemberDialogTab;
   protected formGroup = this.formBuilder.group({
-    emails: ["", [Validators.required, commaSeparatedEmails]],
+    emails: ["", { updateOn: "blur" }],
     type: OrganizationUserType.User,
     externalId: this.formBuilder.control({ value: "", disabled: true }),
     accessAllCollections: false,
@@ -166,6 +169,20 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
         this.canUseCustomPermissions = organization.useCustomPermissions;
         this.canUseSecretsManager = organization.useSecretsManager && flagEnabled("secretsManager");
 
+        const emailsControlValidators = [
+          Validators.required,
+          commaSeparatedEmails,
+          freeOrgSeatLimitReachedValidator(
+            this.organization,
+            this.params.allOrganizationUserEmails,
+            this.i18nService.t("subscriptionFreePlan", organization.seats)
+          ),
+        ];
+
+        const emailsControl = this.formGroup.get("emails");
+        emailsControl.setValidators(emailsControlValidators);
+        emailsControl.updateValueAndValidity();
+
         this.collectionAccessItems = [].concat(
           collections.map((c) => mapCollectionToAccessItemView(c))
         );
@@ -179,6 +196,9 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
             throw new Error("Could not find user to edit.");
           }
           this.isRevoked = userDetails.status === OrganizationUserStatusType.Revoked;
+          this.showNoMasterPasswordWarning =
+            userDetails.status > OrganizationUserStatusType.Invited &&
+            userDetails.hasMasterPassword === false;
           const assignedCollectionsPermissions = {
             editAssignedCollections: userDetails.permissions.editAssignedCollections,
             deleteAssignedCollections: userDetails.permissions.deleteAssignedCollections,
@@ -366,7 +386,7 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
       ? "removeUserConfirmationKeyConnector"
       : "removeOrgUserConfirmation";
 
-    const confirmed = await this.dialogService.openSimpleDialog({
+    let confirmed = await this.dialogService.openSimpleDialog({
       title: { key: "removeUserIdAccess", placeholders: [this.params.name] },
       content: { key: message },
       type: SimpleDialogType.WARNING,
@@ -374,6 +394,14 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
 
     if (!confirmed) {
       return false;
+    }
+
+    if (this.showNoMasterPasswordWarning) {
+      confirmed = await this.noMasterPasswordConfirmationDialog();
+
+      if (!confirmed) {
+        return false;
+      }
     }
 
     await this.organizationUserService.deleteOrganizationUser(
@@ -394,7 +422,7 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const confirmed = await this.dialogService.openSimpleDialog({
+    let confirmed = await this.dialogService.openSimpleDialog({
       title: { key: "revokeUserId", placeholders: [this.params.name] },
       content: { key: "revokeUserConfirmation" },
       acceptButtonText: { key: "revokeAccess" },
@@ -403,6 +431,14 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
 
     if (!confirmed) {
       return false;
+    }
+
+    if (this.showNoMasterPasswordWarning) {
+      confirmed = await this.noMasterPasswordConfirmationDialog();
+
+      if (!confirmed) {
+        return false;
+      }
     }
 
     await this.organizationUserService.revokeOrganizationUser(
@@ -449,6 +485,19 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
 
   private close(result: MemberDialogResult) {
     this.dialogRef.close(result);
+  }
+
+  private noMasterPasswordConfirmationDialog() {
+    return this.dialogService.openSimpleDialog({
+      title: {
+        key: "removeOrgUserNoMasterPasswordTitle",
+      },
+      content: {
+        key: "removeOrgUserNoMasterPasswordDesc",
+        placeholders: [this.params.name],
+      },
+      type: SimpleDialogType.WARNING,
+    });
   }
 }
 

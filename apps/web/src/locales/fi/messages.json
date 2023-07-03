@@ -964,8 +964,14 @@
   "confirmVaultExport": {
     "message": "Vahvista holvin vienti"
   },
+  "confirmSecretsExport": {
+    "message": "Vahvista salaisuuksien vienti"
+  },
   "exportWarningDesc": {
     "message": "Vienti sisältää holvisi tiedot salaamattomassa muodossa. Sinun ei tulisi säilyttää tai lähettää vietyä tiedostoa suojaamattomien kanavien (kuten sähköpostin) välityksellä. Poista se välittömästi kun sille ei enää ole käyttöä."
+  },
+  "exportSecretsWarningDesc": {
+    "message": "Vienti sisältää sailaisuuksiesi tiedot salaamattomassa muodossa. Sinun ei tulisi säilyttää tai lähettää vietyä tiedostoa suojaamattomien kanavien (kuten sähköpostin) välityksellä. Poista se välittömästi kun sille ei enää ole käyttöä."
   },
   "encExportKeyWarningDesc": {
     "message": "Vienti salaa tietosi käyttäen tilisi salausavainta. Jos joskus uudistat tilisi salausavaimen, tulisi vienti suorittaa uudelleen, koska et voi enää purkaa nyt viedyn tiedoston salausta."
@@ -978,6 +984,9 @@
   },
   "exportVault": {
     "message": "Vie holvi"
+  },
+  "exportSecrets": {
+    "message": "Vie salaisuudet"
   },
   "fileFormat": {
     "message": "Tiedostomuoto"
@@ -2656,6 +2665,12 @@
   },
   "failedLogin2fa": {
     "message": "Kirjautuminen epäonnistui virheellisen kaksivaiheisen kirjautumisen todennuksen vuoksi."
+  },
+  "incorrectPassword": {
+    "message": "Virheellinen salasana"
+  },
+  "incorrectCode": {
+    "message": "Virheellinen koodi"
   },
   "exportedVault": {
     "message": "Holvi vietiin"
@@ -6179,10 +6194,6 @@
     "message": "Käyttötunniste luotiin ja kopioitiin leikepöydälle",
     "description": "Notification to inform the user that the access token has been created and copied to the clipboard."
   },
-  "accessTokenPermissionsBetaNotification": {
-    "message": "Käyttöoikeushallinta ei ole käytettävissä beta-vaiheessa.",
-    "description": "Notification to inform the user that the feature for managing access token permissions is not available in the beta version."
-  },
   "revokeAccessToken": {
     "message": "Mitätöi käyttötunniste",
     "description": "Invalidates / cancels an access token and as such removes access to secrets for the client application."
@@ -6553,7 +6564,7 @@
     "message": "Laskutuksen synkronoinnin ohje"
   },
   "licensePaidFeaturesHelp": {
-    "message": "Maksullisen lisenssin oiminaisuusopas"
+    "message": "Maksullisen lisenssin ominaisuusopas"
   },
   "selfHostGracePeriodHelp": {
     "message": "Kun tilauksesi päättyy, sinulla on 60 päivää aikaa päivittää organisaatiosi lisenssitiedosto ajan tasalle. Varoaika päättyy $GRACE_PERIOD_END_DATE$.",
@@ -6612,11 +6623,14 @@
   "secretsManagerBeta": {
     "message": "Salaisuushallinta Beta"
   },
-  "secretsManagerBetaDesc": {
-    "message": "Myönnä käyttäjille Salaisuushallinnan käyttöoikeudet veloituksetta sen beta-vaiheen ajan."
+  "secretsManager": {
+    "message": "Salaisuushallinta"
   },
-  "userAccessSecretsManager": {
-    "message": "Käyttäjä voi käyttää Salaisuushallinnan Beta-versiota"
+  "secretsManagerAccessDesc": {
+    "message": "Aktivoi Salaisuushallinnan käyttöoikeus."
+  },
+  "userAccessSecretsManagerGA": {
+    "message": "Käyttäjällä on Salaisuushallinnan käyttöoikeus"
   },
   "important": {
     "message": "Tärkeää:"
@@ -6826,11 +6840,11 @@
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
   "memberDecryptionTdeDescriptionEnd": {
-    "message": "automaattisella liitoksella otetaan tämän asetuksen yhteydessä käyttöön.",
+    "message": "automaattisella liitoksella otetaan tämän asetuksen käyttöönoton yhteydessä käyttöön.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
   },
   "notFound": {
-    "message": "$RESOURCE$ ei löytynyt",
+    "message": "Resurssia $RESOURCE$ ei löytynyt",
     "placeholders": {
       "resource": {
         "content": "$1",
@@ -6843,5 +6857,77 @@
   },
   "updatedTempPassword": {
     "message": "Käyttäjä vaihtoi tilin palautusavun määrittämän salasanan."
+  },
+  "enabledAccessToSecretsManager": {
+    "message": "Aktivoi Salaisuushallinnan käyttöoikeuden",
+    "description": "Confirmation message that one or more users gained access to Secrets Manager"
+  },
+  "enableAccess": {
+    "message": "Ota käyttöön"
+  },
+  "bulkEnableSecretsManagerDescription": {
+    "message": "Myönnä seuraaville jäsenille Salaisuushallinnan käyttöoikeus. Salasananhallinnassa myönnetty rooli pätee myös Salaisuushallinnassa.",
+    "description": "This description is shown to an admin when they are attempting to add more users to Secrets Manager."
+  },
+  "enableSecretsManager": {
+    "message": "Käytä Salaisuushallintaa"
+  },
+  "yourOrganizationsFingerprint": {
+    "message": "Organisaatiosi tunnistelauseke",
+    "description": "A 'fingerprint phrase' is a unique word phrase (similar to a passphrase) that a user can use to authenticate their organization's public key with another user, for the purposes of sharing."
+  },
+  "deviceApprovals": {
+    "message": "Laitteiden hyväksynnät"
+  },
+  "deviceApprovalsDesc": {
+    "message": "Salli jäsenien kirjautuminen hyväksymällä heidän kirjautumispyyntönsä alta. Hyväksymättömät pyynnöt erääntyvät viikon kuluttua. Vahvista jäsenen tiedot ennen hyväksymistä."
+  },
+  "deviceInfo": {
+    "message": "Laitteen tiedot"
+  },
+  "time": {
+    "message": "Aika"
+  },
+  "denyAllRequests": {
+    "message": "Hylkää kaikki pyynnöt"
+  },
+  "denyRequest": {
+    "message": "Hylkää pyyntö"
+  },
+  "approveRequest": {
+    "message": "Hyväksy pyyntö"
+  },
+  "noDeviceRequests": {
+    "message": "Laitepyyntöjä ei ole"
+  },
+  "noDeviceRequestsDesc": {
+    "message": "Jäsenien laitteiden hyväksyntäpyynnöt löytyvät täältä."
+  },
+  "loginRequestDenied": {
+    "message": "Kirjautumispyyntö hylättiin"
+  },
+  "allLoginRequestsDenied": {
+    "message": "Kaikki kirjautumispyynnöt hylättiin"
+  },
+  "loginRequestApproved": {
+    "message": "Kirjautumispyyntö hyväksyttiin"
+  },
+  "removeOrgUserNoMasterPasswordTitle": {
+    "message": "Tilille ei ole asetettu pääsalasanaa"
+  },
+  "removeOrgUserNoMasterPasswordDesc": {
+    "message": "Käyttäjän $USER$ poistaminen asettamatta hänen tililleen pääsalasanaa voi estää häntä kirjautumasta hänen omalle tililleen. Haluatko varmasti jatkaa?",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "John Smith"
+      }
+    }
+  },
+  "noMasterPassword": {
+    "message": "Ei pääsalasanaa"
+  },
+  "removeMembersWithoutMasterPasswordWarning": {
+    "message": "Jäsenien, joiden tileille ei ole asetettu pääsalasanoja, poistaminen voi estää heitä kirjautumasta heidän omille tileilleen."
   }
 }

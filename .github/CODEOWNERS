@@ -4,7 +4,7 @@
 
 # The following owners will be the default owners for everything in the repo.
 # Unless a later match takes precedence
-# @bitwarden/team-leads
+* @bitwarden/team-leads-eng
 
 ## Secrets Manager team files ##
 bitwarden_license/bit-web/src/app/secrets-manager @bitwarden/team-secrets-manager-dev
@@ -31,7 +31,6 @@ libs/exporter @bitwarden/team-tools-dev
 libs/importer @bitwarden/team-tools-dev
 
 ## Vault team files ##
-apps/browser/src/autofill @bitwarden/team-vault-dev
 apps/browser/src/vault @bitwarden/team-vault-dev
 apps/cli/src/vault @bitwarden/team-vault-dev
 apps/desktop/src/vault @bitwarden/team-vault-dev
@@ -69,8 +68,18 @@ apps/web/src/app/core @bitwarden/team-platform-dev
 apps/web/src/app/shared @bitwarden/team-platform-dev
 apps/web/src/translation-constants.ts @bitwarden/team-platform-dev
 
+## Client Integrations team files ##
+apps/browser/src/autofill @bitwarden/team-client-integrations-dev
+
 ## Component Library ##
 libs/components @bitwarden/team-platform-dev
 
 ## Desktop native module ##
 apps/desktop/desktop_native @bitwarden/team-platform-dev
+
+## Multiple file owners ##
+/apps/web/config
+/apps/web/package.json
+
+## DevOps team files ##
+/.github/workflows @bitwarden/dept-devops

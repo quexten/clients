@@ -2253,17 +2253,20 @@
     "message": "به‌روز رسانی تنظیمات توصیه شده"
   },
   "region": {
-    "message": "Region"
+    "message": "منطقه"
   },
   "eu": {
-    "message": "EU",
+    "message": "اروپا",
     "description": "European Union"
   },
   "us": {
-    "message": "US",
+    "message": "امریکا",
     "description": "United States"
   },
   "selfHosted": {
-    "message": "Self-hosted"
+    "message": "خود میزبان"
+  },
+  "accessDenied": {
+    "message": "دسترسی رد شد. شما اجازه مشاهده این صفحه را ندارید."
   }
 }

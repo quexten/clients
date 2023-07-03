@@ -7,6 +7,7 @@ import {
   from,
   lastValueFrom,
   map,
+  Observable,
   shareReplay,
   Subject,
   switchMap,
@@ -55,12 +56,14 @@ import { CollectionData } from "@bitwarden/common/vault/models/data/collection.d
 import { Collection } from "@bitwarden/common/vault/models/domain/collection";
 import { CollectionDetailsResponse } from "@bitwarden/common/vault/models/response/collection.response";
 
+import { flagEnabled } from "../../../../utils/flags";
 import { openEntityEventsDialog } from "../../../admin-console/organizations/manage/entity-events.component";
 import { BasePeopleComponent } from "../../../common/base.people.component";
 import { GroupService } from "../core";
 import { OrganizationUserView } from "../core/views/organization-user.view";
 
 import { BulkConfirmComponent } from "./components/bulk/bulk-confirm.component";
+import { BulkEnableSecretsManagerDialogComponent } from "./components/bulk/bulk-enable-sm-dialog.component";
 import { BulkRemoveComponent } from "./components/bulk/bulk-remove.component";
 import { BulkRestoreRevokeComponent } from "./components/bulk/bulk-restore-revoke.component";
 import { BulkStatusComponent } from "./components/bulk/bulk-status.component";
@@ -100,6 +103,7 @@ export class PeopleComponent
   status: OrganizationUserStatusType = null;
   orgResetPasswordPolicyEnabled = false;
 
+  protected canUseSecretsManager$: Observable<boolean>;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -146,6 +150,10 @@ export class PeopleComponent
     const organization$ = this.route.params.pipe(
       map((params) => this.organizationService.get(params.organizationId)),
       shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
+    this.canUseSecretsManager$ = organization$.pipe(
+      map((org) => org.useSecretsManager && flagEnabled("secretsManager"))
     );
 
     const policies$ = organization$.pipe(
@@ -396,6 +404,7 @@ export class PeopleComponent
         name: this.userNamePipe.transform(user),
         organizationId: this.organization.id,
         organizationUserId: user != null ? user.id : null,
+        allOrganizationUserEmails: this.allUsers?.map((user) => user.email) ?? [],
         usesKeyConnector: user?.usesKeyConnector,
         initialTab: initialTab,
       },
@@ -510,6 +519,26 @@ export class PeopleComponent
     await this.load();
   }
 
+  async bulkEnableSM() {
+    const users = this.getCheckedUsers();
+    if (users.length === 0) {
+      this.platformUtilsService.showToast(
+        "error",
+        this.i18nService.t("errorOccurred"),
+        this.i18nService.t("noSelectedUsersApplicable")
+      );
+      return;
+    }
+
+    const dialogRef = BulkEnableSecretsManagerDialogComponent.open(this.dialogService, {
+      orgId: this.organization.id,
+      users,
+    });
+
+    await lastValueFrom(dialogRef.closed);
+    this.selectAll(false);
+  }
+
   async events(user: OrganizationUserView) {
     await openEntityEventsDialog(this.dialogService, {
       data: {
@@ -546,7 +575,7 @@ export class PeopleComponent
       ? "removeUserConfirmationKeyConnector"
       : "removeOrgUserConfirmation";
 
-    return await this.dialogService.openSimpleDialog({
+    const confirmed = await this.dialogService.openSimpleDialog({
       title: {
         key: "removeUserIdAccess",
         placeholders: [this.userNamePipe.transform(user)],
@@ -554,6 +583,35 @@ export class PeopleComponent
       content: { key: content },
       type: SimpleDialogType.WARNING,
     });
+
+    if (!confirmed) {
+      return false;
+    }
+
+    if (user.status > OrganizationUserStatusType.Invited && user.hasMasterPassword === false) {
+      return await this.noMasterPasswordConfirmationDialog(user);
+    }
+
+    return true;
+  }
+
+  protected async revokeUserConfirmationDialog(user: OrganizationUserView) {
+    const confirmed = await this.dialogService.openSimpleDialog({
+      title: { key: "revokeAccess", placeholders: [this.userNamePipe.transform(user)] },
+      content: this.revokeWarningMessage(),
+      acceptButtonText: { key: "revokeAccess" },
+      type: SimpleDialogType.WARNING,
+    });
+
+    if (!confirmed) {
+      return false;
+    }
+
+    if (user.status > OrganizationUserStatusType.Invited && user.hasMasterPassword === false) {
+      return await this.noMasterPasswordConfirmationDialog(user);
+    }
+
+    return true;
   }
 
   private async showBulkStatus(
@@ -607,5 +665,18 @@ export class PeopleComponent
       close = true;
       modal.close();
     }
+  }
+
+  private async noMasterPasswordConfirmationDialog(user: OrganizationUserView) {
+    return this.dialogService.openSimpleDialog({
+      title: {
+        key: "removeOrgUserNoMasterPasswordTitle",
+      },
+      content: {
+        key: "removeOrgUserNoMasterPasswordDesc",
+        placeholders: [this.userNamePipe.transform(user)],
+      },
+      type: SimpleDialogType.WARNING,
+    });
   }
 }
