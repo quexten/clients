@@ -60,6 +60,7 @@ import {
   PasswordDragonXmlImporter,
   PasswordSafeXmlImporter,
   PasswordWalletTxtImporter,
+  ProtonPassJsonImporter,
   PsonoJsonImporter,
   RememBearCsvImporter,
   RoboFormCsvImporter,
@@ -296,6 +297,8 @@ export class ImportService implements ImportServiceAbstraction {
         return new PsonoJsonImporter();
       case "passkyjson":
         return new PasskyJsonImporter();
+      case "protonpassjson":
+        return new ProtonPassJsonImporter();
       default:
         return null;
     }

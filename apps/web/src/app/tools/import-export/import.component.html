@@ -292,6 +292,10 @@
       Log in to "https://vault.passky.org" &rarr; "Import & Export" &rarr; "Export" in the Passky
       section. ("Backup" is unsupported as it is encrypted).
     </ng-container>
+    <ng-container *ngIf="format === 'protonpassjson'">
+      In the ProtonPass browser extension, go to Settings > Export. Export without PGP encryption,
+      and extract the resulting zip file. Finally, select the JSON file from the extracted files.
+    </ng-container>
   </app-callout>
   <div class="row">
     <div class="col-6">

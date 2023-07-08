@@ -57,3 +57,4 @@ export { TrueKeyCsvImporter } from "./truekey-csv-importer";
 export { UpmCsvImporter } from "./upm-csv-importer";
 export { YotiCsvImporter } from "./yoti-csv-importer";
 export { ZohoVaultCsvImporter } from "./zohovault-csv-importer";
+export { ProtonPassJsonImporter } from "./protonpass-json-importer";
