@@ -1,21 +1,22 @@
 import { FieldType } from "@bitwarden/common/enums";
 
-import { ImportResult } from "../models/import-result";
+import { ImportResult } from "../../models/import-result";
+import { BaseImporter } from "../base-importer";
+import { Importer } from "../importer";
 
-import { BaseImporter } from "./base-importer";
-import { Importer } from "./importer";
+import { ProtonPassJsonFile } from "./types/protonpass-json-type";
 
 export class ProtonPassJsonImporter extends BaseImporter implements Importer {
   parse(data: string): Promise<ImportResult> {
     const result = new ImportResult();
-    const results = JSON.parse(data);
+    const results: ProtonPassJsonFile = JSON.parse(data);
     if (results == null || results.vaults == null || results.encrypted) {
       result.success = false;
       return Promise.resolve(result);
     }
 
-    for (const [, vault] of Object.entries(results.vaults)) {
-      for (const item of (vault as any).items) {
+    for (const vault of results.vaults.values()) {
+      for (const item of vault.items) {
         const cipher = this.initLoginCipher();
         cipher.name = item.data.metadata.name;
         cipher.notes = item.data.metadata.note;
