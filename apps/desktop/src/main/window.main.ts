@@ -127,6 +127,7 @@ export class WindowMain {
         nodeIntegration: true,
         backgroundThrottling: false,
         contextIsolation: false,
+        devTools: !app.isPackaged,
       },
     });
 
