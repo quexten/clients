@@ -298,7 +298,9 @@ export class ImportService implements ImportServiceAbstraction {
       case "passkyjson":
         return new PasskyJsonImporter();
       case "protonpassjson":
-        return new ProtonPassJsonImporter();
+        return new ProtonPassJsonImporter(this.i18nService);
+      case "protonpasszip":
+        return new ProtonPassJsonImporter(this.i18nService);
       default:
         return null;
     }

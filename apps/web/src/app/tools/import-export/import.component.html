@@ -296,6 +296,10 @@
       In the ProtonPass browser extension, go to Settings > Export. Export without PGP encryption,
       and extract the resulting zip file. Finally, select the JSON file from the extracted files.
     </ng-container>
+    <ng-container *ngIf="format === 'protonpasszip'">
+      In the ProtonPass browser extension, go to Settings > Export. Export without PGP encryption
+      and save the zip file. </ng-container
+    >"
   </app-callout>
   <div class="row">
     <div class="col-6">
