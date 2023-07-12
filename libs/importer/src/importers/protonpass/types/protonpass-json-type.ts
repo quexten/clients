@@ -46,12 +46,13 @@ export type ProtonPassItemExtraField = {
 };
 
 export type ProtonPassItemExtraFieldData = {
-  content: string;
+  content?: string;
+  totpUri?: string;
 };
 
 export type ProtonPassItemContent = {
-  username: string;
-  password: string;
-  urls: string[];
-  totpUri: string;
+  username?: string;
+  password?: string;
+  urls?: string[];
+  totpUri?: string;
 };
