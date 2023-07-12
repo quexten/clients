@@ -10,8 +10,14 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
   parse(data: string): Promise<ImportResult> {
     const result = new ImportResult();
     const results: ProtonPassJsonFile = JSON.parse(data);
-    if (results == null || results.vaults == null || results.encrypted) {
+    if (results == null || results.vaults == null) {
       result.success = false;
+      return Promise.resolve(result);
+    }
+
+    if (results.encrypted) {
+      result.success = false;
+      result.errorMessage = "Unable to import an encrypted protonpass export."; //todo i18n
       return Promise.resolve(result);
     }
 
