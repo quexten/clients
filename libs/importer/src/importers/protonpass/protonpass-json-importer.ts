@@ -1,4 +1,5 @@
 import { FieldType } from "@bitwarden/common/enums";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 
 import { ImportResult } from "../../models/import-result";
 import { BaseImporter } from "../base-importer";
@@ -7,6 +8,10 @@ import { Importer } from "../importer";
 import { ProtonPassJsonFile } from "./types/protonpass-json-type";
 
 export class ProtonPassJsonImporter extends BaseImporter implements Importer {
+  constructor(private i18nService: I18nService) {
+    super();
+  }
+
   parse(data: string): Promise<ImportResult> {
     const result = new ImportResult();
     const results: ProtonPassJsonFile = JSON.parse(data);
@@ -17,7 +22,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
 
     if (results.encrypted) {
       result.success = false;
-      result.errorMessage = "Unable to import an encrypted protonpass export."; //todo i18n
+      result.errorMessage = this.i18nService.t("unsupportedEncryptedImport");
       return Promise.resolve(result);
     }
 
