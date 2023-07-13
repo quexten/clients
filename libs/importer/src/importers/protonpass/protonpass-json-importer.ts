@@ -47,7 +47,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
           this.processKvp(
             cipher,
             extraField.fieldName,
-            extraField.data.content,
+            extraField.type == "totp" ? extraField.data.totpUri : extraField.data.content,
             extraField.type == "text" ? FieldType.Text : FieldType.Hidden
           );
         }
