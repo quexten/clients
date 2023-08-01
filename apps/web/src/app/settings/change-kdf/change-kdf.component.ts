@@ -4,7 +4,6 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { KdfConfig } from "@bitwarden/common/auth/models/domain/kdf-config";
 import {
-  DEFAULT_KDF_CONFIG,
   DEFAULT_PBKDF2_ITERATIONS,
   DEFAULT_ARGON2_ITERATIONS,
   DEFAULT_ARGON2_MEMORY,
@@ -28,8 +27,6 @@ import { ChangeKdfConfirmationComponent } from "./change-kdf-confirmation.compon
   templateUrl: "change-kdf.component.html",
 })
 export class ChangeKdfComponent implements OnInit {
-  kdf = KdfType.PBKDF2_SHA256;
-  kdfConfig: KdfConfig = DEFAULT_KDF_CONFIG;
   kdfType = KdfType;
   kdfOptions: any[] = [];
   recommendedPbkdf2Iterations = DEFAULT_PBKDF2_ITERATIONS;
@@ -56,7 +53,7 @@ export class ChangeKdfComponent implements OnInit {
     ];
 
     this.kdfForm = new FormGroup({
-      kdf: new FormControl(0, []),
+      kdf: new FormControl(KdfType.PBKDF2_SHA256, []),
       iterations: new FormControl(DEFAULT_PBKDF2_ITERATIONS, []),
       memory: new FormControl(0, []),
       parallelism: new FormControl(0, []),
