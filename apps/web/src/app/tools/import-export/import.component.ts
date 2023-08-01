@@ -228,7 +228,7 @@ export class ImportComponent implements OnInit, OnDestroy {
     if (this.format === "1password1pux") {
       return this.extractZipContent(file, "export.data");
     }
-    if (this.format === "protonpasszip") {
+    if (this.format === "protonpass" && file.type === "application/zip") {
       return this.extractZipContent(file, "Proton Pass/data.json");
     }
 

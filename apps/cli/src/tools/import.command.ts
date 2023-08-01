@@ -68,7 +68,7 @@ export class ImportCommand {
       let contents;
       if (format === "1password1pux") {
         contents = await CliUtils.extractZipContent(filepath, "export.data");
-      } else if (format === "protonpasszip") {
+      } else if (format === "protonpass" && filepath.endsWith(".zip")) {
         contents = await CliUtils.extractZipContent(filepath, "Proton Pass/data.json");
       } else {
         contents = await CliUtils.readFile(filepath);
