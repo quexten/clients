@@ -42,8 +42,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
 
         switch (item.data.type) {
           case "login": {
-            const loginContent: ProtonPassLoginItemContent = item.data
-              .content as ProtonPassLoginItemContent;
+            const loginContent = item.data.content as ProtonPassLoginItemContent;
             cipher.login.uris = this.makeUriArray(loginContent.urls);
             cipher.login.username = loginContent.username;
             cipher.login.password = loginContent.password;
@@ -66,8 +65,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
             cipher.secureNote.type = SecureNoteType.Generic;
             break;
           case "creditCard": {
-            const creditCardContent: ProtonPassCreditCardItemContent = item.data
-              .content as ProtonPassCreditCardItemContent;
+            const creditCardContent = item.data.content as ProtonPassCreditCardItemContent;
             cipher.type = CipherType.Card;
             cipher.card = new CardView();
             cipher.card.cardholderName = creditCardContent.cardholderName;
