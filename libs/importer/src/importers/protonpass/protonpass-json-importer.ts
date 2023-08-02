@@ -94,7 +94,9 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
         result.ciphers.push(cipher);
       }
     }
-
+    if (this.organization) {
+      this.moveFoldersToCollections(this.result);
+    }
     result.success = true;
     return Promise.resolve(result);
   }
