@@ -12,7 +12,6 @@ import {
   ProtonPassCreditCardItemContent,
   ProtonPassJsonFile,
   ProtonPassLoginItemContent,
-  ProtonPassVault,
 } from "./types/protonpass-json-type";
 
 export class ProtonPassJsonImporter extends BaseImporter implements Importer {
@@ -34,8 +33,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
       return Promise.resolve(result);
     }
 
-    for (const [, vaultEntry] of Object.entries(results.vaults)) {
-      const vault: ProtonPassVault = vaultEntry;
+    for (const [, vault] of Object.entries(results.vaults)) {
       this.processFolder(result, vault.name);
       for (const item of vault.items) {
         const cipher = this.initLoginCipher();
