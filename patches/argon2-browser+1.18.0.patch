@@ -1,8 +1,18 @@
 diff --git a/node_modules/argon2-browser/lib/argon2.js b/node_modules/argon2-browser/lib/argon2.js
-index ffa77a5..98b2f13 100644
+index ffa77a5..36b914d 100644
 --- a/node_modules/argon2-browser/lib/argon2.js
 +++ b/node_modules/argon2-browser/lib/argon2.js
-@@ -78,16 +78,27 @@
+@@ -29,7 +29,8 @@
+         if (
+             global.process &&
+             global.process.versions &&
+-            global.process.versions.node
++            global.process.versions.node &&
++            !process.versions['electron']
+         ) {
+             promise = loadWasmModule().then(
+                 (Module) =>
+@@ -78,16 +79,27 @@
          if (global.loadArgon2WasmBinary) {
              return global.loadArgon2WasmBinary();
          }
@@ -36,7 +46,7 @@ index ffa77a5..98b2f13 100644
          return fetch(wasmPath)
              .then((response) => response.arrayBuffer())
              .then((ab) => new Uint8Array(ab));
-@@ -351,7 +362,28 @@
+@@ -351,7 +363,28 @@
              loadModule._module.unloadRuntime();
              delete loadModule._promise;
              delete loadModule._module;

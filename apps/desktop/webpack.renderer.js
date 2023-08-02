@@ -40,11 +40,6 @@ const common = {
         },
         type: "asset/resource",
       },
-      {
-        test: /\.wasm$/,
-        loader: "base64-loader",
-        type: "javascript/auto",
-      },
     ],
   },
   plugins: [],
