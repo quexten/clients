@@ -2,6 +2,7 @@ import { MockProxy } from "jest-mock-extended";
 
 import { FieldType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 
 import { ProtonPassJsonImporter } from "../src/importers";
@@ -65,5 +66,27 @@ describe("Protonpass Json Importer", () => {
     expect(creditCardCipher.card.expMonth).toBe("01");
     expect(creditCardCipher.card.expYear).toBe("2025");
     expect(creditCardCipher.card.code).toBe("333");
+  });
+
+  it("should create folders if not part of an organization", async () => {
+    const testDataJson = JSON.stringify(testData);
+    const result = await importer.parse(testDataJson);
+
+    const folders = result.folders;
+    expect(folders.length).toBe(2);
+    expect(folders[0].name).toBe("Personal");
+    expect(folders[1].name).toBe("Test");
+  });
+
+  it("should create collections if part of an organization", async () => {
+    const testDataJson = JSON.stringify(testData);
+    importer.organizationId = Utils.newGuid();
+    const result = await importer.parse(testDataJson);
+    expect(result != null).toBe(true);
+
+    const collections = result.collections;
+    expect(collections.length).toBe(2);
+    expect(collections[0].name).toBe("Personal");
+    expect(collections[1].name).toBe("Test");
   });
 });
