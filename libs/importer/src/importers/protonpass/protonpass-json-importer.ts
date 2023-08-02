@@ -12,8 +12,8 @@ import {
   ProtonPassCreditCardItemContent,
   ProtonPassJsonFile,
   ProtonPassLoginItemContent,
+  ProtonPassVault,
 } from "./types/protonpass-json-type";
-
 
 export class ProtonPassJsonImporter extends BaseImporter implements Importer {
   constructor(private i18nService: I18nService) {
@@ -34,7 +34,8 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
       return Promise.resolve(result);
     }
 
-    for (const [, vault] of Object.entries(results.vaults)) {
+    for (const [, vaultEntry] of Object.entries(results.vaults)) {
+      const vault: ProtonPassVault = vaultEntry;
       for (const item of vault.items) {
         const cipher = this.initLoginCipher();
         cipher.name = item.data.metadata.name;
@@ -42,7 +43,8 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
 
         switch (item.data.type) {
           case "login": {
-            const loginContent: ProtonPassLoginItemContent = item.data.content;
+            const loginContent: ProtonPassLoginItemContent = item.data
+              .content as ProtonPassLoginItemContent;
             cipher.login.uris = this.makeUriArray(loginContent.urls);
             cipher.login.username = loginContent.username;
             cipher.login.password = loginContent.password;
@@ -65,7 +67,8 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
             cipher.secureNote.type = SecureNoteType.Generic;
             break;
           case "creditCard": {
-            const creditCardContent: ProtonPassCreditCardItemContent = item.data.content;
+            const creditCardContent: ProtonPassCreditCardItemContent = item.data
+              .content as ProtonPassCreditCardItemContent;
             cipher.type = CipherType.Card;
             cipher.card = new CardView();
             cipher.card.cardholderName = creditCardContent.cardholderName;
