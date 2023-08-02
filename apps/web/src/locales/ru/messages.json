@@ -1,14 +1,4 @@
 {
-  "pageTitle": {
-    "message": "Веб-хранилище $APP_NAME$",
-    "description": "The title of the website in the browser window.",
-    "placeholders": {
-      "app_name": {
-        "content": "$1",
-        "example": "Bitwarden"
-      }
-    }
-  },
   "whatTypeOfItem": {
     "message": "Какой это тип элемента?"
   },
@@ -618,7 +608,7 @@
   "loginWithDevice": {
     "message": "Войти с помощью устройства"
   },
-  "loginWithDeviceEnabledInfo": {
+  "loginWithDeviceEnabledNote": {
     "message": "Вход с устройства должен быть настроен в настройках мобильного приложения Bitwarden. Нужен другой вариант?"
   },
   "loginWithMasterPassword": {
@@ -2645,6 +2635,12 @@
   "webVault": {
     "message": "Веб-хранилище"
   },
+  "bitWebVault": {
+    "message": "Веб-хранилище Bitwarden"
+  },
+  "bitSecretsManager": {
+    "message": "Менеджер секретов Bitwarden"
+  },
   "loggedIn": {
     "message": "Выполнен вход"
   },
@@ -3322,6 +3318,9 @@
   },
   "limitSubscriptionDesc": {
     "message": "Установите лимит мест для вашей подписки. По достижении этого лимита вы не сможете приглашать новых членов."
+  },
+  "limitSmSubscriptionDesc": {
+    "message": "Set a seat limit for your Secrets Manger subscription. Once this limit is reached, you will not be able to invite new members."
   },
   "maxSeatLimit": {
     "message": "Предел мест (необязательно)",
@@ -4375,8 +4374,8 @@
   "manageUsers": {
     "message": "Управлять пользователями"
   },
-  "manageResetPassword": {
-    "message": "Управлять сбросом пароля"
+  "manageAccountRecovery": {
+    "message": "Управление восстановлением аккаунта"
   },
   "disableRequiredError": {
     "message": "Перед отключением этой политики необходимо вручную отключить политику $POLICYNAME$.",
@@ -4594,20 +4593,17 @@
   "accountRecoveryPolicy": {
     "message": "Управление восстановлением аккаунта"
   },
-  "accountRecoveryPolicyDescription": {
-    "message": "Восстановление аккаунтов пользователей при утере мастер-пароля или доверенных устройств. Восстановление осуществляется на основе метода шифрования аккаунта."
+  "accountRecoveryPolicyDesc": {
+    "message": "На основе метода шифрования вы можете восстановить учетные записи, если мастер-пароли или доверенные устройства будут забыты или утеряны."
   },
-  "resetPasswordPolicyWarning": {
-    "message": "Пользователи организации должны зарегистрироваться самостоятельно или быть зарегистрированными автоматически, чтобы администраторы могли сбросить их мастер-пароль."
+  "accountRecoveryPolicyWarning": {
+    "message": "Существующие аккаунты с мастер-паролями потребуют от участников самостоятельной регистрации, перед восстановлением администраторами их учетных записей. Автоматическая регистрация включит восстановление учетных записей для новых участников."
+  },
+  "accountRecoverySingleOrgRequirementDesc": {
+    "message": "Перед активацией этой политики необходимо включить политику Единого входа (SSO)."
   },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Автоматическое регистрация"
-  },
-  "resetPasswordPolicyAutoEnrollDescription": {
-    "message": "Все пользователи будут автоматически зарегистрированы на сброс пароля, после того как их приглашение будет принято, и им не будет разрешено отказаться от его выполнения."
-  },
-  "resetPasswordPolicyAutoEnrollWarning": {
-    "message": "Пользователи, уже входящие в организацию, не смогут зарегистрироваться на сброс пароля задним числом. Они должны будут зарегистрироваться самостоятельно, чтобы администраторы могли сбросить их мастер-пароль."
   },
   "resetPasswordPolicyAutoEnrollCheckbox": {
     "message": "Автоматически регистрировать новых пользователей"
@@ -5224,7 +5220,7 @@
     "message": "Использовать",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpLink": {
+  "ssoPolicyHelpAnchor": {
     "message": "требуемую политику аутентификации с единым входом",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
@@ -5263,10 +5259,10 @@
     "message": "SSO отключен"
   },
   "enabledKeyConnector": {
-    "message": "Соединитель ключей включен"
+    "message": "Соединитель ключей активирован"
   },
   "disabledKeyConnector": {
-    "message": "Соединитель ключей отключен"
+    "message": "Соединитель ключей деактивирован"
   },
   "keyConnectorWarning": {
     "message": "После того как участники начнут использовать соединитель ключей, ваша организация не сможет вернуться к расшифровке посредством мастер-пароля. Продолжайте только в том случае, если вам удобно развертывать и управлять сервером ключей."
@@ -5623,7 +5619,7 @@
     "description": "the text, 'SCIM', is an acronymn and should not be translated."
   },
   "scimEnabledCheckboxDescHelpText": {
-    "message": "Установите предпочтительного поставщика идентификационных данных, настроив URL и ключ API SCIM",
+    "message": "Установить предпочтительного поставщика идентификационных данных, настроив URL и ключ API SCIM",
     "description": "the text, 'SCIM', is an acronymn and should not be translated."
   },
   "scimApiKeyHelperText": {
@@ -6620,14 +6616,14 @@
   "changeKdfLoggedOutWarning": {
     "message": "При продолжении все активные сессии будут завершены. Вам потребуется авторизоваться повторно и выполнить настройку двухэтапной аутентификации. Мы рекомендуем экспортировать хранилище перед изменением настроек шифрования, чтобы предотвратить потерю данных."
   },
-  "secretsManagerBeta": {
-    "message": "Менеджер секретов Beta"
-  },
   "secretsManager": {
     "message": "Менеджер секретов"
   },
+  "secretsManagerBeta": {
+    "message": "Менеджер секретов Beta"
+  },
   "secretsManagerAccessDescription": {
-    "message": "Activate user access to Secrets Manager."
+    "message": "Активировать доступ пользователей к менеджеру секретов."
   },
   "userAccessSecretsManagerGA": {
     "message": "Этот пользователь может получить доступ к менеджеру секретов"
@@ -6831,17 +6827,25 @@
   "trustedDeviceEncryption": {
     "message": "Шифрование доверенного устройства"
   },
-  "memberDecryptionTdeDescriptionStart": {
+  "memberDecryptionTdeDescriptionPartOne": {
     "message": "После аутентификации участники расшифровывают данные хранилища с помощью ключа, хранящегося на их устройстве.",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionLink": {
-    "message": "Политика администрирования восстановления аккаунтов",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionLinkOne": {
+    "message": "Одна политика",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionEnd": {
+  "memberDecryptionTdeDescriptionPartTwo": {
+    "message": "организации и ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLinkTwo": {
+    "message": "управление восстановлением аккаунта",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionPartThree": {
     "message": "с автоматической регистрацией включается при использовании этой опции.",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
   "notFound": {
     "message": "$RESOURCE$ не найден",
@@ -6859,18 +6863,18 @@
     "message": "Пользователь обновил пароль, выданный через восстановление аккаунта."
   },
   "activatedAccessToSecretsManager": {
-    "message": "Activated access to Secrets Manager",
+    "message": "Активирован доступ к менеджеру секретов",
     "description": "Confirmation message that one or more users gained access to Secrets Manager"
   },
   "activateAccess": {
-    "message": "Activate access"
+    "message": "Активировать доступ"
   },
   "bulkEnableSecretsManagerDescription": {
     "message": "Предоставить следующим пользователям доступ к менеджеру секретов. Роль, предоставленная в менеджере паролей, будет применяться и к менеджеру секретов.",
     "description": "This description is shown to an admin when they are attempting to add more users to Secrets Manager."
   },
   "activateSecretsManager": {
-    "message": "Activate Secrets Manager"
+    "message": "Активировать менеджер секретов"
   },
   "yourOrganizationsFingerprint": {
     "message": "Фраза отпечатка вашей организации",
@@ -6950,5 +6954,102 @@
   },
   "selectedRegionFlag": {
     "message": "Флаг выбранного региона"
+  },
+  "inviteUsers": {
+    "message": "Пригласить пользователей"
+  },
+  "secretsManagerForPlan": {
+    "message": "Secrets Manager for $PLAN$",
+    "placeholders": {
+      "plan": {
+        "content": "$1",
+        "example": "Teams"
+      }
+    }
+  },
+  "secretsManagerForPlanDesc": {
+    "message": "For engineering and DevOps teams to manage secrets throughout the software development lifecycle."
+  },
+  "free2PersonOrganization": {
+    "message": "Free 2-person Organizations"
+  },
+  "unlimitedSecrets": {
+    "message": "Unlimited secrets"
+  },
+  "unlimitedProjects": {
+    "message": "Unlimited projects"
+  },
+  "projectsIncluded": {
+    "message": "$COUNT$ projects included",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "serviceAccountsIncluded": {
+    "message": "$COUNT$ service accounts included",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "additionalServiceAccountCost": {
+    "message": "$COST$ per month for additional service accounts",
+    "placeholders": {
+      "cost": {
+        "content": "$1",
+        "example": "$0.50"
+      }
+    }
+  },
+  "addSecretsManager": {
+    "message": "Добавить Менеджер секретов"
+  },
+  "addSecretsManagerUpgradeDesc": {
+    "message": "Add Secrets Manager to your upgraded plan to maintain access to any secrets created with your previous plan."
+  },
+  "additionalServiceAccounts": {
+    "message": "Additional service accounts"
+  },
+  "additionalServiceAccountsDesc": {
+    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "50"
+      },
+      "cost": {
+        "content": "$2",
+        "example": "$0.50"
+      }
+    }
+  },
+  "passwordManagerPlanPrice": {
+    "message": "Password Manager plan price"
+  },
+  "secretsManagerPlanPrice": {
+    "message": "Secrets Manager plan price"
+  },
+  "passwordManager": {
+    "message": "Менеджер паролей"
+  },
+  "freeOrganization": {
+    "message": "Бесплатная организация"
+  },
+  "limitServiceAccounts": {
+    "message": "Limit service accounts (optional)"
+  },
+  "limitServiceAccountsDesc": {
+    "message": "Set a limit for your service accounts. Once this limit is reached, you will not be able to create new service accounts."
+  },
+  "serviceAccountLimit": {
+    "message": "Service account limit (optional)"
+  },
+  "maxServiceAccountCost": {
+    "message": "Max potential service account cost"
   }
 }

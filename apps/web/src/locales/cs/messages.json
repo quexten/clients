@@ -1,14 +1,4 @@
 {
-  "pageTitle": {
-    "message": "Webový trezor $APP_NAME$",
-    "description": "The title of the website in the browser window.",
-    "placeholders": {
-      "app_name": {
-        "content": "$1",
-        "example": "Bitwarden"
-      }
-    }
-  },
   "whatTypeOfItem": {
     "message": "O jaký typ položky se jedná?"
   },
@@ -618,8 +608,8 @@
   "loginWithDevice": {
     "message": "Přihlásit se zařízením"
   },
-  "loginWithDeviceEnabledInfo": {
-    "message": "Přihlášení zařízením musí být nastaveno v mobilní aplikaci Bitwarden. Potřebujete další volby?"
+  "loginWithDeviceEnabledNote": {
+    "message": "Přihlášení zařízením musí být nastaveno v aplikaci Bitwarden. Potřebujete další volby?"
   },
   "loginWithMasterPassword": {
     "message": "Přihlásit se pomocí hlavního hesla"
@@ -2645,6 +2635,12 @@
   "webVault": {
     "message": "Webový trezor"
   },
+  "bitWebVault": {
+    "message": "Webový trezor Bitwardenu"
+  },
+  "bitSecretsManager": {
+    "message": "Správce tajných klíčů Bitwardenu"
+  },
   "loggedIn": {
     "message": "Přihlášen"
   },
@@ -3322,6 +3318,9 @@
   },
   "limitSubscriptionDesc": {
     "message": "Nastavte limit počtu uživatelů pro Vaše předplatné. Jakmile tohoto limitu dosáhnete, nebudete moci pozvat nové členy."
+  },
+  "limitSmSubscriptionDesc": {
+    "message": "Nastavte limit počtu uživatelů pro předplatné správce klíčů. Jakmile tohoto limitu dosáhnete, nebudete moci pozvat nové členy."
   },
   "maxSeatLimit": {
     "message": "Limit uživatelů (volitelné)",
@@ -4375,8 +4374,8 @@
   "manageUsers": {
     "message": "Správa uživatelů"
   },
-  "manageResetPassword": {
-    "message": "Správa resetování hesla"
+  "manageAccountRecovery": {
+    "message": "Spravovat obnovení účtu"
   },
   "disableRequiredError": {
     "message": "Před vypnutím této zásady musíte ručně změnit zásadu $POLICYNAME$.",
@@ -4594,20 +4593,17 @@
   "accountRecoveryPolicy": {
     "message": "Správa obnovení účtu"
   },
-  "accountRecoveryPolicyDescription": {
-    "message": "Obnovení členských účtů při zapomenutí hlavního hesla nebo ztrátě důvěryhodných zařízení. Procesy obnovení jsou založeny na metodě šifrování účtu."
+  "accountRecoveryPolicyDesc": {
+    "message": "Na základě metody šifrování můžete obnovit účty v případě zapomenutí nebo ztráty hlavních hesel nebo důvěryhodných zařízení."
   },
-  "resetPasswordPolicyWarning": {
-    "message": "Uživatelé v organizaci se budou muset sami zaregistrovat nebo být automaticky zaregistrovaní předtím, než budou moci administrátoři resetovat jejich hlavní heslo."
+  "accountRecoveryPolicyWarning": {
+    "message": "U stávajících účtů s hlavními hesly se budou muset členové sami přihlásit, aby mohli správci obnovit jejich účty. Automatická registrace zapne obnovení účtu pro nové členy."
+  },
+  "accountRecoverySingleOrgRequirementDesc": {
+    "message": "Před aktivací této zásady musí být povolena jednotná pravidla organizace."
   },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Automatická registrace"
-  },
-  "resetPasswordPolicyAutoEnrollDescription": {
-    "message": "Jakmile bude jejich pozvání přijato, všichni uživatelé budou automaticky zaregistrováni do resetování hesla."
-  },
-  "resetPasswordPolicyAutoEnrollWarning": {
-    "message": "Uživatelé, kteří jsou již v organizaci, nebudou zpětně zaregistrováni do obnovení hesla. Než budou moci správci obnovit hlavní heslo, budou se muset zaregistrovat sami."
   },
   "resetPasswordPolicyAutoEnrollCheckbox": {
     "message": "Automaticky zaregistrovat nové uživatele"
@@ -5224,7 +5220,7 @@
     "message": "Použít",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpLink": {
+  "ssoPolicyHelpAnchor": {
     "message": "vyžadování zásad ověření jednotným přihlášením",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
@@ -6620,14 +6616,14 @@
   "changeKdfLoggedOutWarning": {
     "message": "Pokračováním se odhlásíte ze všech aktivních relací. Budete se muset znovu přihlásit a dokončit nastavení dvoufázového přihlášení. Před změnou nastavení šifrování doporučujeme exportovat trezor, aby nedošlo ke ztrátě dat."
   },
-  "secretsManagerBeta": {
-    "message": "Správce tajných klíčů v programu Beta"
-  },
   "secretsManager": {
     "message": "Správce tajných klíčů"
   },
+  "secretsManagerBeta": {
+    "message": "Správce tajných klíčů v programu Beta"
+  },
   "secretsManagerAccessDescription": {
-    "message": "Activate user access to Secrets Manager."
+    "message": "Aktivuje přístup uživatele ke správci tajných klíčů."
   },
   "userAccessSecretsManagerGA": {
     "message": "Tento uživatel může přistupovat ke správci tajných klíčů"
@@ -6831,17 +6827,25 @@
   "trustedDeviceEncryption": {
     "message": "Šifrování důvěryhodného zařízení"
   },
-  "memberDecryptionTdeDescriptionStart": {
+  "memberDecryptionTdeDescriptionPartOne": {
     "message": "Po ověření budou členové dešifrovat data v trezoru pomocí klíče uloženého na jejich zařízení. ",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionLink": {
-    "message": "Pokud bude tato volba aktivována, ",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionLinkOne": {
+    "message": "Při použití této možnosti ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionEnd": {
-    "message": "budou použity zásady obnovení účtu s automatickým zápisem.",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionPartTwo": {
+    "message": "se zapne zásada jednotné organizace ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLinkTwo": {
+    "message": "a zásada správy obnovení účtu ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionPartThree": {
+    "message": "s automatickým zápisem.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
   "notFound": {
     "message": "$RESOURCE$ nebyl nalezen",
@@ -6859,18 +6863,18 @@
     "message": "Uživatel aktualizoval heslo vydané prostřednictvím obnovení účtu."
   },
   "activatedAccessToSecretsManager": {
-    "message": "Activated access to Secrets Manager",
+    "message": "Aktivován přístup uživatele ke správci tajných klíčů",
     "description": "Confirmation message that one or more users gained access to Secrets Manager"
   },
   "activateAccess": {
-    "message": "Activate access"
+    "message": "Aktivovat přístup"
   },
   "bulkEnableSecretsManagerDescription": {
     "message": "Udělte následujícím členům přístup ke správci tajných klíčů. Role udělená ve správci hesel se bude vztahovat na správce tajných klíčů.",
     "description": "This description is shown to an admin when they are attempting to add more users to Secrets Manager."
   },
   "activateSecretsManager": {
-    "message": "Activate Secrets Manager"
+    "message": "Aktivovat správce tajných klíčů"
   },
   "yourOrganizationsFingerprint": {
     "message": "Fráze otisku prstu Vaší organizace",
@@ -6950,5 +6954,102 @@
   },
   "selectedRegionFlag": {
     "message": "Vlajka zvoleného regionu"
+  },
+  "inviteUsers": {
+    "message": "Pozvat uživatele"
+  },
+  "secretsManagerForPlan": {
+    "message": "Správce klíčů pro $PLAN$",
+    "placeholders": {
+      "plan": {
+        "content": "$1",
+        "example": "Teams"
+      }
+    }
+  },
+  "secretsManagerForPlanDesc": {
+    "message": "Pro inženýrské týmy a týmy DevOps ke správě klíčů v celém životním cyklu vývoje softwaru."
+  },
+  "free2PersonOrganization": {
+    "message": "Zdarma organizace do 2 osob"
+  },
+  "unlimitedSecrets": {
+    "message": "Neomezené klíče"
+  },
+  "unlimitedProjects": {
+    "message": "Neomezené projekty"
+  },
+  "projectsIncluded": {
+    "message": "Do $COUNT$ projektů",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "serviceAccountsIncluded": {
+    "message": "Do $COUNT$ účtů služby",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "additionalServiceAccountCost": {
+    "message": "Pro další účty služby $COST$ měsíčně",
+    "placeholders": {
+      "cost": {
+        "content": "$1",
+        "example": "$0.50"
+      }
+    }
+  },
+  "addSecretsManager": {
+    "message": "Přidat správce tajných klíčů"
+  },
+  "addSecretsManagerUpgradeDesc": {
+    "message": "Přidáním správce klíčů k aktualizovanému plánu si zachováte přístup ke všem klíčům vytvořeným v předchozím plánu."
+  },
+  "additionalServiceAccounts": {
+    "message": "Další účty služby"
+  },
+  "additionalServiceAccountsDesc": {
+    "message": "Vaše předplatné obsahuje $COUNT$ účtů služby. Další účty služby můžete přidat za $COST$ měsíčně.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "50"
+      },
+      "cost": {
+        "content": "$2",
+        "example": "$0.50"
+      }
+    }
+  },
+  "passwordManagerPlanPrice": {
+    "message": "Cena předplatného správce hesel"
+  },
+  "secretsManagerPlanPrice": {
+    "message": "Cena předplatného správce klíčů"
+  },
+  "passwordManager": {
+    "message": "Správce hesel"
+  },
+  "freeOrganization": {
+    "message": "Organizace zdarma"
+  },
+  "limitServiceAccounts": {
+    "message": "Omezit účty služby (volitelné)"
+  },
+  "limitServiceAccountsDesc": {
+    "message": "Nastavte limit počtu uživatelů pro Vaše účty služby. Jakmile tohoto limitu dosáhnete, nebudete moci vytvářet nové účty služby."
+  },
+  "serviceAccountLimit": {
+    "message": "Limit účtů služby (volitelné)"
+  },
+  "maxServiceAccountCost": {
+    "message": "Max. potenciální náklady na účet služby"
   }
 }

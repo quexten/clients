@@ -51,6 +51,7 @@ import { UpdatePasswordComponent } from "../auth/update-password.component";
 import { UpdateTempPasswordComponent } from "../auth/update-temp-password.component";
 import { VerifyEmailTokenComponent } from "../auth/verify-email-token.component";
 import { VerifyRecoverDeleteComponent } from "../auth/verify-recover-delete.component";
+import { SecretsManagerBillingModule } from "../billing/organizations/secrets-manager/sm-billing.module";
 import { AddCreditComponent } from "../billing/settings/add-credit.component";
 import { AdjustPaymentComponent } from "../billing/settings/adjust-payment.component";
 import { BillingHistoryViewComponent } from "../billing/settings/billing-history-view.component";
@@ -94,7 +95,6 @@ import { PasswordGeneratorHistoryComponent } from "../tools/password-generator-h
 import { AccessComponent } from "../tools/send/access.component";
 import { AddEditComponent as SendAddEditComponent } from "../tools/send/add-edit.component";
 import { EffluxDatesComponent as SendEffluxDatesComponent } from "../tools/send/efflux-dates.component";
-import { SendComponent } from "../tools/send/send.component";
 import { ToolsComponent } from "../tools/tools.component";
 import { PasswordRepromptComponent } from "../vault/components/password-reprompt.component";
 import { PremiumBadgeComponent } from "../vault/components/premium-badge.component";
@@ -125,6 +125,9 @@ import { SharedModule } from "./shared.module";
     DynamicAvatarComponent,
     EnvironmentSelectorModule,
     AccountFingerprintComponent,
+
+    // To be removed when OrganizationPlansComponent is moved to its own module (see AC-1453)
+    SecretsManagerBillingModule,
   ],
   declarations: [
     AcceptEmergencyComponent,
@@ -195,7 +198,6 @@ import { SharedModule } from "./shared.module";
     SecurityKeysComponent,
     SelectableAvatarComponent,
     SendAddEditComponent,
-    SendComponent,
     SendEffluxDatesComponent,
     SetPasswordComponent,
     SettingsComponent,
@@ -300,7 +302,6 @@ import { SharedModule } from "./shared.module";
     SecurityKeysComponent,
     SelectableAvatarComponent,
     SendAddEditComponent,
-    SendComponent,
     SendEffluxDatesComponent,
     SetPasswordComponent,
     SettingsComponent,

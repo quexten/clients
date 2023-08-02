@@ -570,7 +570,8 @@ export default class MainBackground {
       this.authService,
       this.policyService,
       this.folderService,
-      this.stateService
+      this.stateService,
+      this.environmentService
     );
 
     this.tabsBackground = new TabsBackground(this, this.notificationBackground);
@@ -676,6 +677,9 @@ export default class MainBackground {
     return new Promise<void>((resolve) => {
       setTimeout(async () => {
         await this.environmentService.setUrlsFromStorage();
+        // Workaround to ignore stateService.activeAccount until URLs are set
+        // TODO: Remove this when implementing ticket PM-2637
+        this.environmentService.initialized = true;
         if (!this.isPrivateMode) {
           await this.refreshBadge();
         }

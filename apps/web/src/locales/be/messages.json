@@ -1,14 +1,4 @@
 {
-  "pageTitle": {
-    "message": "Вэб-сховішча $APP_NAME$",
-    "description": "The title of the website in the browser window.",
-    "placeholders": {
-      "app_name": {
-        "content": "$1",
-        "example": "Bitwarden"
-      }
-    }
-  },
   "whatTypeOfItem": {
     "message": "Які гэта элемент запісу?"
   },
@@ -618,8 +608,8 @@
   "loginWithDevice": {
     "message": "Увайсці з прыладай"
   },
-  "loginWithDeviceEnabledInfo": {
-    "message": "Неабходна ўключыць уваход з прыладай у наладах мабільнай праграмы Bitwarden. Неабходны іншы варыянт?"
+  "loginWithDeviceEnabledNote": {
+    "message": "Неабходна наладзіць уваход з прыладай у наладах мабільнай праграмы Bitwarden. Патрабуецца іншы варыянт?"
   },
   "loginWithMasterPassword": {
     "message": "Увайсці з асноўным паролем"
@@ -2645,6 +2635,12 @@
   "webVault": {
     "message": "Вэб-сховішча"
   },
+  "bitWebVault": {
+    "message": "Вэб-сховішча Bitwarden"
+  },
+  "bitSecretsManager": {
+    "message": "Менеджар сакрэтаў Bitwarden"
+  },
   "loggedIn": {
     "message": "Вы ўвайшлі."
   },
@@ -3322,6 +3318,9 @@
   },
   "limitSubscriptionDesc": {
     "message": "Прызначыць абмежаванне месцаў для вашай падпіскі. Пасля дасягнення гэтага абмежавання, вы не зможаце запрашаць новых карыстальнікаў."
+  },
+  "limitSmSubscriptionDesc": {
+    "message": "Прызначыць абмежаванне месцаў для вашай падпіскі менеджара сакрэтаў. Пасля дасягнення гэтага абмежавання, вы не зможаце запрашаць новых удзельнікаў."
   },
   "maxSeatLimit": {
     "message": "Максімальная колькасць месцаў (неабавязкова)",
@@ -4375,8 +4374,8 @@
   "manageUsers": {
     "message": "Кіраванне карыстальнікамі"
   },
-  "manageResetPassword": {
-    "message": "Кіраванне скіданнем пароля"
+  "manageAccountRecovery": {
+    "message": "Кіраванне аднаўленнем уліковага запісу"
   },
   "disableRequiredError": {
     "message": "Перад адключэннем гэтай палітыкі, вам спачатку неабходна ўручную адключыць палітыку $POLICYNAME$.",
@@ -4594,20 +4593,17 @@
   "accountRecoveryPolicy": {
     "message": "Адміністраванне аднаўлення ўліковага запісу"
   },
-  "accountRecoveryPolicyDescription": {
-    "message": "Аднаўленне ўліковага запісу ўдзельніка, калі асноўны пароль забыты або давераная прылада страчана. Працэс аднаўлення заснаваны на метадзе шыфравання ўліковага запісу."
+  "accountRecoveryPolicyDesc": {
+    "message": "На аснове метаду шыфравання вы можаце аднавіць уліковыя запісы, калі асноўныя паролі або давераныя прылады забыты або страчаны."
   },
-  "resetPasswordPolicyWarning": {
-    "message": "Карыстальнікі арганізацыі павінны зарэгістравацца самастойна або быць зарэгістраванымі аўтаматычна, каб адміністратары маглі скінуць іх асноўны пароль."
+  "accountRecoveryPolicyWarning": {
+    "message": "Існуючыя ўліковыя запісы з асноўнымі паролямі будуць патрабаваць ад дзельнікаў самастойнай рэгістрацыі перад тым, як адміністратары змогуць аднавіць іх уліковыя запісы. Аўтаматычная рэгістрацыя ўключыць аднаўленне ўліковых запісаў для новых удзельнікаў."
+  },
+  "accountRecoverySingleOrgRequirementDesc": {
+    "message": "Перад актывацыяй гэтай палітыкі неабходна ўключыць палітыку адзінага ўваходу (SSO) прадпрыемства."
   },
   "resetPasswordPolicyAutoEnroll": {
     "message": "Аўтаматычная рэгістрацыя"
-  },
-  "resetPasswordPolicyAutoEnrollDescription": {
-    "message": "Усе карыстальнікі будуць аўтаматычна зарэгістраваны на скіданне пароля, пасля таго як іх запрашэнне будзе прынята і ім не будзе дазволена адмовіцца ад яго выканання."
-  },
-  "resetPasswordPolicyAutoEnrollWarning": {
-    "message": "Карыстальнікі, якія ўжо ўваходзяць у арганізацыю не змогуць зарэгістравацца на скіданне пароля папярэднім чыслом. Яны павінны будуць самастойна зарэгістравацца, перад тым як адміністратары змогуць скінуць іх асноўны пароль."
   },
   "resetPasswordPolicyAutoEnrollCheckbox": {
     "message": "Аўтаматычна рэгістраваць новых карыстальнікаў"
@@ -5224,7 +5220,7 @@
     "message": "Выкарыстоўваць",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
-  "ssoPolicyHelpLink": {
+  "ssoPolicyHelpAnchor": {
     "message": "абавязковую палітыку аўтэнтыфікацыі адзінага ўваходу (SSO)",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Use the require single-sign-on authentication policy to require all members to log in with SSO.'"
   },
@@ -6620,14 +6616,14 @@
   "changeKdfLoggedOutWarning": {
     "message": "Калі вы працягніце, то гэта прывядзе да выхаду з усіх актыўных сеансаў. Вам неабходна будзе паўторна выканаць уваход і прайсці двухэтапную праверку. Перад зменай наладаў шыфравання мы рэкамендуем экспартаваць ваша сховішча, каб прадухіліць магчымую страту даных."
   },
-  "secretsManagerBeta": {
-    "message": "Менеджар сакрэтаў (бэта-версія)"
-  },
   "secretsManager": {
     "message": "Менеджар сакрэтаў"
   },
+  "secretsManagerBeta": {
+    "message": "Менеджар сакрэтаў (бэта-версія)"
+  },
   "secretsManagerAccessDescription": {
-    "message": "Activate user access to Secrets Manager."
+    "message": "Актываваць доступ карыстальнікаў да менеджара сакрэтаў."
   },
   "userAccessSecretsManagerGA": {
     "message": "Гэты карыстальнік можа атрымаць доступ да менеджара сакрэтаў"
@@ -6831,17 +6827,25 @@
   "trustedDeviceEncryption": {
     "message": "Шыфраванне даверанай прылады"
   },
-  "memberDecryptionTdeDescriptionStart": {
-    "message": "Пасля аўтэнтыфікацыі ўдзельнікі расшыфроўваюць даныя сховішча з выкарыстаннем ключа, якія захоўваецца на іх прыладах",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionPartOne": {
+    "message": "Пасля аўтэнтыфікацыі ўдзельнікі расшыфроўваюць даныя сховішча з выкарыстаннем ключа, які захоўваецца на іх прыладах",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionLink": {
-    "message": "Палітыка адміністравання аднаўлення ўліковых запісаў",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionLinkOne": {
+    "message": "адзіная арганізацыя",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionEnd": {
-    "message": "з аўтаматычнай рэгістрацыяй уключаецца пры выкарыстанні гэтага параметра.",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The master password reset policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionTdeDescriptionPartTwo": {
+    "message": "палітыка і ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionLinkTwo": {
+    "message": "адміністраванне аднаўлення ўліковага запісу",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionTdeDescriptionPartThree": {
+    "message": "палітыка з аўтаматычнай рэгістрацыяй уключаецца пры выкарыстанні гэтага параметра.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
   "notFound": {
     "message": "$RESOURCE$ не знойдзены",
@@ -6859,18 +6863,18 @@
     "message": "Карыстальнік абнавіў пароль пры аднаўленні ўліковага запісу."
   },
   "activatedAccessToSecretsManager": {
-    "message": "Activated access to Secrets Manager",
+    "message": "Доступ карыстальнікаў да менеджара сакрэтаў актываваны",
     "description": "Confirmation message that one or more users gained access to Secrets Manager"
   },
   "activateAccess": {
-    "message": "Activate access"
+    "message": "Актываваць доступ"
   },
   "bulkEnableSecretsManagerDescription": {
     "message": "Забяспечце доступ наступным удзельнікам да менеджара сакрэтаў. Роля, якая забяспечана ў менеджары пароляў будзе ўжывацца і да менеджара сакрэтаў.",
     "description": "This description is shown to an admin when they are attempting to add more users to Secrets Manager."
   },
   "activateSecretsManager": {
-    "message": "Activate Secrets Manager"
+    "message": "Актываваць менеджар сакрэтаў"
   },
   "yourOrganizationsFingerprint": {
     "message": "Фраза адбітку пальца вашай арганізацыі",
@@ -6950,5 +6954,102 @@
   },
   "selectedRegionFlag": {
     "message": "Сцяг выбранага рэгіёна"
+  },
+  "inviteUsers": {
+    "message": "Запрасіць карыстальнікаў"
+  },
+  "secretsManagerForPlan": {
+    "message": "Менеджар сакрэтаў для $PLAN$",
+    "placeholders": {
+      "plan": {
+        "content": "$1",
+        "example": "Teams"
+      }
+    }
+  },
+  "secretsManagerForPlanDesc": {
+    "message": "Для інжынераў і каманд DevOps, каб кіраваць сакрэтамі на працягу ўсяго цыкла распрацоўкі праграмнага забеспячэння."
+  },
+  "free2PersonOrganization": {
+    "message": "Бясплатна для арганізацый з двума асобамі"
+  },
+  "unlimitedSecrets": {
+    "message": "Неабмежаваная колькасць сакрэтаў"
+  },
+  "unlimitedProjects": {
+    "message": "Неабмежаваная колькасць праектаў"
+  },
+  "projectsIncluded": {
+    "message": "Уключана праектаў: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "serviceAccountsIncluded": {
+    "message": "Уключаных сэрвісных уліковых запісаў: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "additionalServiceAccountCost": {
+    "message": "$COST$ у месяц для дадатковых сэрвісных уліковых запісаў",
+    "placeholders": {
+      "cost": {
+        "content": "$1",
+        "example": "$0.50"
+      }
+    }
+  },
+  "addSecretsManager": {
+    "message": "Дадаць менеджар сакрэтаў"
+  },
+  "addSecretsManagerUpgradeDesc": {
+    "message": "Дадаць менеджар сакрэтаў у ваш абноўлены тарыфны план, каб падтрымліваць доступ да любых сакрэтаў, якія былі створаны з дапамогай вашых папярэдніх тарыфных планаў."
+  },
+  "additionalServiceAccounts": {
+    "message": "Additional service accounts"
+  },
+  "additionalServiceAccountsDesc": {
+    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "50"
+      },
+      "cost": {
+        "content": "$2",
+        "example": "$0.50"
+      }
+    }
+  },
+  "passwordManagerPlanPrice": {
+    "message": "Password Manager plan price"
+  },
+  "secretsManagerPlanPrice": {
+    "message": "Secrets Manager plan price"
+  },
+  "passwordManager": {
+    "message": "Password Manager"
+  },
+  "freeOrganization": {
+    "message": "Free Organization"
+  },
+  "limitServiceAccounts": {
+    "message": "Limit service accounts (optional)"
+  },
+  "limitServiceAccountsDesc": {
+    "message": "Set a limit for your service accounts. Once this limit is reached, you will not be able to create new service accounts."
+  },
+  "serviceAccountLimit": {
+    "message": "Service account limit (optional)"
+  },
+  "maxServiceAccountCost": {
+    "message": "Max potential service account cost"
   }
 }
