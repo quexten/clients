@@ -111,6 +111,27 @@ export const testData: ProtonPassJsonFile = {
           createTime: 1691001643,
           modifyTime: 1691001643,
         },
+        {
+          itemId:
+            "xqq_Bh8RxNMBerkiMvRdH427yswZznjYwps-f6C5D8tmKiPgMxCSPNz1BOd4nRJ309gciDiPhXcCVWOyfJ66ZA==",
+          shareId:
+            "SN5uWo4WZF2uT5wIDqtbdpkjuxCbNTOIdf-JQ_DYZcKYKURHiZB5csS1a1p9lklvju9ni42l08IKzwQG0B2ySg==",
+          data: {
+            metadata: {
+              name: "My Deleted Note",
+              note: "Secure note contents.",
+              itemUuid: "ad618070",
+            },
+            extraFields: [],
+            type: "note",
+            content: {},
+          },
+          state: 2,
+          aliasEmail: null,
+          contentFormatVersion: 1,
+          createTime: 1689182908,
+          modifyTime: 1689182908,
+        },
       ],
     },
     REDACTED_VAULT_ID_B: {

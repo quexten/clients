@@ -92,4 +92,16 @@ describe("Protonpass Json Importer", () => {
     expect(collections[0].name).toBe("Personal");
     expect(collections[1].name).toBe("Test");
   });
+
+  it("should not add deleted items", async () => {
+    const testDataJson = JSON.stringify(testData);
+    const result = await importer.parse(testDataJson);
+
+    const ciphers = result.ciphers;
+    for (const cipher of ciphers) {
+      expect(cipher.name).not.toBe("My Deleted Note");
+    }
+
+    expect(ciphers.length).toBe(4);
+  });
 });

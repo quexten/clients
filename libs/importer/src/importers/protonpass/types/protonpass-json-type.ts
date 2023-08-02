@@ -19,12 +19,17 @@ export type ProtonPassItem = {
   itemId: string;
   shareId: string;
   data: ProtonPassItemData;
-  state: number;
+  state: ProtonPassItemState;
   aliasEmail: string | null;
   contentFormatVersion: number;
   createTime: number;
   modifyTime: number;
 };
+
+export enum ProtonPassItemState {
+  ACTIVE = 1,
+  TRASHED = 2,
+}
 
 export type ProtonPassItemData = {
   metadata: ProtonPassItemMetadata;
