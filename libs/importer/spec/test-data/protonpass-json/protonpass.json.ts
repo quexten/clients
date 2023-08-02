@@ -1,5 +1,6 @@
-export const testData: any = {
-  // not using types because Map<string, ProtonPassVault> does not convert to json
+import { ProtonPassJsonFile } from "../../../src/importers/protonpass/types/protonpass-json-type";
+
+export const testData: ProtonPassJsonFile = {
   version: "1.3.1",
   userId: "REDACTED_USER_ID",
   encrypted: false,

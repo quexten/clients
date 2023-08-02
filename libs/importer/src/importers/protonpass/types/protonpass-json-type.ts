@@ -2,7 +2,7 @@ export type ProtonPassJsonFile = {
   version: string;
   userId: string;
   encrypted: boolean;
-  vaults: Map<string, ProtonPassVault>;
+  vaults: Record<string, ProtonPassVault>;
 };
 
 export type ProtonPassVault = {
