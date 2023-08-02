@@ -82,6 +82,34 @@ export const testData: any = {
           createTime: 1689182908,
           modifyTime: 1689182908,
         },
+        {
+          itemId:
+            "ZmGzd-HNQYTr6wmfWlSfiStXQLqGic_PYB2Q2T_hmuRM2JIA4pKAPJcmFafxJrDpXxLZ2EPjgD6Noc9a0U6AVQ==",
+          shareId:
+            "SN5uWo4WZF2uT5wIDqtbdpkjuxCbNTOIdf-JQ_DYZcKYKURHiZB5csS1a1p9lklvju9ni42l08IKzwQG0B2ySg==",
+          data: {
+            metadata: {
+              name: "Test Card",
+              note: "Credit Card Note",
+              itemUuid: "d8f45370",
+            },
+            extraFields: [],
+            type: "creditCard",
+            content: {
+              cardholderName: "Test name",
+              cardType: 0,
+              number: "1234222233334444",
+              verificationNumber: "333",
+              expirationDate: "012025",
+              pin: "1234",
+            },
+          },
+          state: 1,
+          aliasEmail: null,
+          contentFormatVersion: 1,
+          createTime: 1691001643,
+          modifyTime: 1691001643,
+        },
       ],
     },
     REDACTED_VAULT_ID_B: {

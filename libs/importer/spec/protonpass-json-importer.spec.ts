@@ -2,6 +2,7 @@ import { MockProxy } from "jest-mock-extended";
 
 import { FieldType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 
 import { ProtonPassJsonImporter } from "../src/importers";
 
@@ -22,6 +23,7 @@ describe("Protonpass Json Importer", () => {
 
     const cipher = result.ciphers.shift();
     expect(cipher.name).toEqual("Test Login - Personal Vault");
+    expect(cipher.type).toEqual(CipherType.Login);
     expect(cipher.login.username).toEqual("Username");
     expect(cipher.login.password).toEqual("Password");
     expect(cipher.login.uris.length).toEqual(2);
@@ -32,5 +34,36 @@ describe("Protonpass Json Importer", () => {
     expect(cipher.fields.at(2).name).toEqual("second 2fa secret");
     expect(cipher.fields.at(2).value).toEqual("TOTPCODE");
     expect(cipher.fields.at(2).type).toEqual(FieldType.Hidden);
+  });
+
+  it("should parse note data", async () => {
+    const testDataJson = JSON.stringify(testData);
+
+    const result = await importer.parse(testDataJson);
+    expect(result != null).toBe(true);
+
+    result.ciphers.shift();
+    const noteCipher = result.ciphers.shift();
+    expect(noteCipher.type).toEqual(CipherType.SecureNote);
+    expect(noteCipher.name).toEqual("My Secure Note");
+    expect(noteCipher.notes).toEqual("Secure note contents.");
+  });
+
+  it("should parse credit card data", async () => {
+    const testDataJson = JSON.stringify(testData);
+
+    const result = await importer.parse(testDataJson);
+    expect(result != null).toBe(true);
+
+    result.ciphers.shift();
+    result.ciphers.shift();
+
+    const creditCardCipher = result.ciphers.shift();
+    expect(creditCardCipher.type).toBe(CipherType.Card);
+    expect(creditCardCipher.card.number).toBe("1234222233334444");
+    expect(creditCardCipher.card.cardholderName).toBe("Test name");
+    expect(creditCardCipher.card.expMonth).toBe("01");
+    expect(creditCardCipher.card.expYear).toBe("2025");
+    expect(creditCardCipher.card.code).toBe("333");
   });
 });

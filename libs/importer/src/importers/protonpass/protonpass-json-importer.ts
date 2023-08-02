@@ -1,11 +1,19 @@
-import { FieldType } from "@bitwarden/common/enums";
+import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CardView } from "@bitwarden/common/vault/models/view/card.view";
+import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.view";
 
 import { ImportResult } from "../../models/import-result";
 import { BaseImporter } from "../base-importer";
 import { Importer } from "../importer";
 
-import { ProtonPassJsonFile } from "./types/protonpass-json-type";
+import {
+  ProtonPassCreditCardItemContent,
+  ProtonPassJsonFile,
+  ProtonPassLoginItemContent,
+} from "./types/protonpass-json-type";
+
 
 export class ProtonPassJsonImporter extends BaseImporter implements Importer {
   constructor(private i18nService: I18nService) {
@@ -33,26 +41,51 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
         cipher.notes = item.data.metadata.note;
 
         switch (item.data.type) {
-          case "login":
-            cipher.login.uris = this.makeUriArray(item.data.content.urls);
-            cipher.login.username = item.data.content.username;
-            cipher.login.password = item.data.content.password;
-            if (item.data.content.totpUri != "") {
-              cipher.login.totp = new URL(item.data.content.totpUri).searchParams.get("secret");
+          case "login": {
+            const loginContent: ProtonPassLoginItemContent = item.data.content;
+            cipher.login.uris = this.makeUriArray(loginContent.urls);
+            cipher.login.username = loginContent.username;
+            cipher.login.password = loginContent.password;
+            if (loginContent.totpUri != "") {
+              cipher.login.totp = new URL(loginContent.totpUri).searchParams.get("secret");
+            }
+            for (const extraField of item.data.extraFields) {
+              this.processKvp(
+                cipher,
+                extraField.fieldName,
+                extraField.type == "totp" ? extraField.data.totpUri : extraField.data.content,
+                extraField.type == "text" ? FieldType.Text : FieldType.Hidden
+              );
             }
             break;
+          }
+          case "note":
+            cipher.type = CipherType.SecureNote;
+            cipher.secureNote = new SecureNoteView();
+            cipher.secureNote.type = SecureNoteType.Generic;
+            break;
+          case "creditCard": {
+            const creditCardContent: ProtonPassCreditCardItemContent = item.data.content;
+            cipher.type = CipherType.Card;
+            cipher.card = new CardView();
+            cipher.card.cardholderName = creditCardContent.cardholderName;
+            cipher.card.number = creditCardContent.number;
+            cipher.card.brand = CardView.getCardBrandByPatterns(creditCardContent.number);
+            cipher.card.code = creditCardContent.verificationNumber;
+
+            if (!this.isNullOrWhitespace(creditCardContent.expirationDate)) {
+              cipher.card.expMonth = creditCardContent.expirationDate.substring(0, 2);
+              cipher.card.expYear = creditCardContent.expirationDate.substring(2, 6);
+            }
+
+            if (!this.isNullOrWhitespace(creditCardContent.pin)) {
+              this.processKvp(cipher, "PIN", creditCardContent.pin, FieldType.Hidden);
+            }
+
+            break;
+          }
         }
 
-        for (const extraField of item.data.extraFields) {
-          this.processKvp(
-            cipher,
-            extraField.fieldName,
-            extraField.type == "totp" ? extraField.data.totpUri : extraField.data.content,
-            extraField.type == "text" ? FieldType.Text : FieldType.Hidden
-          );
-        }
-
-        this.convertToNoteIfNeeded(cipher);
         this.cleanupCipher(cipher);
         result.ciphers.push(cipher);
       }

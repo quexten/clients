@@ -29,8 +29,8 @@ export type ProtonPassItem = {
 export type ProtonPassItemData = {
   metadata: ProtonPassItemMetadata;
   extraFields: ProtonPassItemExtraField[];
-  type: string;
-  content: ProtonPassItemContent;
+  type: "login" | "alias" | "creditCard" | "note";
+  content: ProtonPassLoginItemContent | ProtonPassCreditCardItemContent;
 };
 
 export type ProtonPassItemMetadata = {
@@ -50,9 +50,18 @@ export type ProtonPassItemExtraFieldData = {
   totpUri?: string;
 };
 
-export type ProtonPassItemContent = {
+export type ProtonPassLoginItemContent = {
   username?: string;
   password?: string;
   urls?: string[];
   totpUri?: string;
+};
+
+export type ProtonPassCreditCardItemContent = {
+  cardholderName?: string;
+  cardType?: number;
+  number?: string;
+  verificationNumber?: string;
+  expirationDate?: string;
+  pin?: string;
 };
