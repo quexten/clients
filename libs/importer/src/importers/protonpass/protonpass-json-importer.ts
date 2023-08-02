@@ -36,6 +36,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
 
     for (const [, vaultEntry] of Object.entries(results.vaults)) {
       const vault: ProtonPassVault = vaultEntry;
+      this.processFolder(result, vault.name);
       for (const item of vault.items) {
         const cipher = this.initLoginCipher();
         cipher.name = item.data.metadata.name;
