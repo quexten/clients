@@ -66,6 +66,9 @@ describe("Protonpass Json Importer", () => {
     expect(creditCardCipher.card.expMonth).toBe("01");
     expect(creditCardCipher.card.expYear).toBe("2025");
     expect(creditCardCipher.card.code).toBe("333");
+    expect(creditCardCipher.fields.at(0).name).toEqual("PIN");
+    expect(creditCardCipher.fields.at(0).value).toEqual("1234");
+    expect(creditCardCipher.fields.at(0).type).toEqual(FieldType.Hidden);
   });
 
   it("should create folders if not part of an organization", async () => {
