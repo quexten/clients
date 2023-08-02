@@ -95,7 +95,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
       }
     }
     if (this.organization) {
-      this.moveFoldersToCollections(this.result);
+      this.moveFoldersToCollections(result);
     }
     result.success = true;
     return Promise.resolve(result);
