@@ -63,7 +63,7 @@ describe("Protonpass Json Importer", () => {
     expect(creditCardCipher.type).toBe(CipherType.Card);
     expect(creditCardCipher.card.number).toBe("1234222233334444");
     expect(creditCardCipher.card.cardholderName).toBe("Test name");
-    expect(creditCardCipher.card.expMonth).toBe("01");
+    expect(creditCardCipher.card.expMonth).toBe("1");
     expect(creditCardCipher.card.expYear).toBe("2025");
     expect(creditCardCipher.card.code).toBe("333");
     expect(creditCardCipher.fields.at(0).name).toEqual("PIN");

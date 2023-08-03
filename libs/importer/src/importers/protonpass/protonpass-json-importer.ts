@@ -80,6 +80,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
 
             if (!this.isNullOrWhitespace(creditCardContent.expirationDate)) {
               cipher.card.expMonth = creditCardContent.expirationDate.substring(0, 2);
+              cipher.card.expMonth = cipher.card.expMonth.replace(/^0+/, "");
               cipher.card.expYear = creditCardContent.expirationDate.substring(2, 6);
             }
 
