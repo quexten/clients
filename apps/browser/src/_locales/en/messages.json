@@ -479,6 +479,9 @@
   "totpCaptureError": {
     "message": "Unable to capture TOTP code."
   },
+  "totpCaptureSuccess": {
+    "message": "TOTP code captured."
+  },
   "totpCapture": {
     "message": "Capture TOTP code from the current tab."
   },
