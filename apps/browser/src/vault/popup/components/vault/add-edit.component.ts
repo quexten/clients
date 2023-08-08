@@ -73,7 +73,8 @@ export class AddEditComponent extends BaseAddEditComponent {
       passwordRepromptService,
       organizationService,
       sendApiService,
-      dialogService
+      dialogService,
+      window
     );
   }
 

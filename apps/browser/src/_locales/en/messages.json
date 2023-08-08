@@ -299,6 +299,9 @@
   "password": {
     "message": "Password"
   },
+  "totp": {
+    "message": "Authenticator secret"
+  },
   "passphrase": {
     "message": "Passphrase"
   },
@@ -484,6 +487,9 @@
   },
   "totpCapture": {
     "message": "Scan authenticator QR code from current webpage"
+  },
+  "copyTOTP": {
+    "message": "Copy TOTP secret"
   },
   "loggedOut": {
     "message": "Logged out"

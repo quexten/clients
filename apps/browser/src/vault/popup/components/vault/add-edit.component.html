@@ -148,6 +148,15 @@
                 type="button"
                 class="row-btn"
                 appStopClick
+                appA11yTitle="{{ 'copyTOTP' | i18n }}"
+                (click)="copy(cipher.login.totp, 'totp', 'TOTP')"
+              >
+                <i class="bwi bwi-lg bwi-clone" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="row-btn"
+                appStopClick
                 appA11yTitle="{{ 'totpCapture' | i18n }}"
                 (click)="captureTOTPFromTab()"
                 *ngIf="!(!cipher.edit && editMode)"
