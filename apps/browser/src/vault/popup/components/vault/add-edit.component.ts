@@ -271,9 +271,8 @@ export class AddEditComponent extends BaseAddEditComponent {
       const screenshot = await BrowserApi.captureVisibleTab();
       const data = await qrcodeParser(screenshot);
       const url = new URL(data.toString());
-      const secret = url.searchParams.get("secret");
-      if (url.protocol == "otpauth:") {
-        this.cipher.login.totp = secret;
+      if (url.protocol == "otpauth:" && url.searchParams.has("secret")) {
+        this.cipher.login.totp = data.toString();
         this.platformUtilsService.showToast(
           "success",
           null,
