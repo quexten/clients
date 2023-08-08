@@ -150,6 +150,7 @@
                 appStopClick
                 appA11yTitle="{{ 'copyTOTP' | i18n }}"
                 (click)="copy(cipher.login.totp, 'totp', 'TOTP')"
+                *ngIf="!(!cipher.edit && editMode)"
               >
                 <i class="bwi bwi-lg bwi-clone" aria-hidden="true"></i>
               </button>
