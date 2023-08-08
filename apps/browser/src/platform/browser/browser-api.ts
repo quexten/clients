@@ -277,4 +277,10 @@ export class BrowserApi {
     }
     return win.opr?.sidebarAction || browser.sidebarAction;
   }
+
+  static captureVisibleTab(): Promise<string> {
+    return new Promise((resolve) => {
+      chrome.tabs.captureVisibleTab(null, { format: "png" }, resolve);
+    });
+  }
 }

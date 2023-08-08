@@ -476,6 +476,12 @@
   "autofillError": {
     "message": "Unable to auto-fill the selected item on this page. Copy and paste the information instead."
   },
+  "totpCaptureError": {
+    "message": "Unable to capture TOTP code."
+  },
+  "totpCapture": {
+    "message": "Capture TOTP code from the current tab."
+  },
   "loggedOut": {
     "message": "Logged out"
   },

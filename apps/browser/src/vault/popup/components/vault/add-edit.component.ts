@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import qrcodeParser from "qrcode-parser";
 import { first } from "rxjs/operators";
 
 import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
@@ -24,6 +25,7 @@ import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view
 
 import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
+
 
 @Component({
   selector: "app-vault-add-edit",
@@ -263,5 +265,23 @@ export class AddEditComponent extends BaseAddEditComponent {
         document.getElementById("name").focus();
       }
     }, 200);
+  }
+
+  async captureTOTPFromTab() {
+    try {
+      const screenshot = await BrowserApi.captureVisibleTab();
+      const data = await qrcodeParser(screenshot);
+      const url = new URL(data.toString());
+      const secret = url.searchParams.get("secret");
+      if (url.protocol == "otpauth:") {
+        this.cipher.login.totp = secret;
+      }
+    } catch (e) {
+      this.platformUtilsService.showToast(
+        "error",
+        this.i18nService.t("errorOccurred"),
+        this.i18nService.t("totpCaptureError")
+      );
+    }
   }
 }
