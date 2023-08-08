@@ -489,7 +489,7 @@
     "message": "Scan authenticator QR code from current webpage"
   },
   "copyTOTP": {
-    "message": "Copy TOTP secret"
+    "message": "Copy Authenticator key (TOTP)"
   },
   "loggedOut": {
     "message": "Logged out"
