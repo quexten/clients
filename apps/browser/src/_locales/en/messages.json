@@ -477,13 +477,13 @@
     "message": "Unable to auto-fill the selected item on this page. Copy and paste the information instead."
   },
   "totpCaptureError": {
-    "message": "Unable to capture TOTP code"
+    "message": "Unable to scan QR code from the current webpage"
   },
   "totpCaptureSuccess": {
-    "message": "TOTP code captured"
+    "message": "Authenticator key added"
   },
   "totpCapture": {
-    "message": "Capture TOTP code from the current tab"
+    "message": "Scan authenticator QR code from current webpage"
   },
   "loggedOut": {
     "message": "Logged out"
