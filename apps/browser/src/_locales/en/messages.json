@@ -477,13 +477,13 @@
     "message": "Unable to auto-fill the selected item on this page. Copy and paste the information instead."
   },
   "totpCaptureError": {
-    "message": "Unable to capture TOTP code."
+    "message": "Unable to capture TOTP code"
   },
   "totpCaptureSuccess": {
-    "message": "TOTP code captured."
+    "message": "TOTP code captured"
   },
   "totpCapture": {
-    "message": "Capture TOTP code from the current tab."
+    "message": "Capture TOTP code from the current tab"
   },
   "loggedOut": {
     "message": "Logged out"
