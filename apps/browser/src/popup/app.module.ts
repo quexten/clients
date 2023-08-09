@@ -45,6 +45,7 @@ import { AddEditComponent } from "../vault/popup/components/vault/add-edit.compo
 import { AttachmentsComponent } from "../vault/popup/components/vault/attachments.component";
 import { CollectionsComponent } from "../vault/popup/components/vault/collections.component";
 import { CurrentTabComponent } from "../vault/popup/components/vault/current-tab.component";
+import { NavigatableListComponent } from "../vault/popup/components/vault/navigatable-list.component";
 import { PasswordHistoryComponent } from "../vault/popup/components/vault/password-history.component";
 import { ShareComponent } from "../vault/popup/components/vault/share.component";
 import { VaultFilterComponent } from "../vault/popup/components/vault/vault-filter.component";
@@ -155,6 +156,7 @@ import "../platform/popup/locales";
     HelpAndFeedbackComponent,
     AutofillComponent,
     EnvironmentSelectorComponent,
+    NavigatableListComponent,
   ],
   providers: [CurrencyPipe, DatePipe],
   bootstrap: [AppComponent],

@@ -107,7 +107,7 @@
           {{ groupingTitle }}
           <span class="flex-right">{{ isSearching() ? ciphers.length : ciphers.length }}</span>
         </h2>
-        <div class="box-content">
+        <navigatable-list class="box-content">
           <app-cipher-row
             *cdkVirtualFor="let c of ciphers; let last = last"
             [cipher]="c"
@@ -116,7 +116,7 @@
             (onSelected)="selectCipher($event)"
             (launchEvent)="launchCipher($event)"
           ></app-cipher-row>
-        </div>
+        </navigatable-list>
       </div>
     </cdk-virtual-scroll-viewport>
   </ng-container>

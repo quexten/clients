@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
@@ -15,6 +15,8 @@ export class CipherRowComponent {
   @Input() showView = false;
   @Input() title: string;
 
+  constructor(private element: ElementRef) {}
+
   selectCipher(c: CipherView) {
     this.onSelected.emit(c);
   }
@@ -25,5 +27,32 @@ export class CipherRowComponent {
 
   viewCipher(c: CipherView) {
     this.onView.emit(c);
+  }
+
+  focus() {
+    this.getFocusableElement(this.element.nativeElement)?.focus();
+  }
+
+  private getFocusableElement(el: Element): HTMLElement {
+    if (this.isFocusableElement(el)) {return el as HTMLElement;}
+
+    for (let i = 0; i < el.children.length; i++) {
+      const focusable = this.getFocusableElement(el.children[i]);
+      if (focusable) {
+        return focusable;
+      }
+    }
+
+    return null;
+  }
+
+  private isFocusableElement(el: Element): boolean {
+    return (
+      el instanceof HTMLInputElement ||
+      el instanceof HTMLSelectElement ||
+      el instanceof HTMLTextAreaElement ||
+      el instanceof HTMLAnchorElement ||
+      el instanceof HTMLButtonElement
+    );
   }
 }
