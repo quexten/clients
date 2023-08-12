@@ -1,7 +1,7 @@
 import { FocusKeyManager } from "@angular/cdk/a11y";
 import { Component, ContentChildren, HostListener, QueryList } from "@angular/core";
 
-import { CipherRowComponent } from "../cipher-row.component";
+import { NavigatableListItemComponent } from "./navigatable-list-item.component";
 
 @Component({
   selector: "navigatable-list",
@@ -9,9 +9,10 @@ import { CipherRowComponent } from "../cipher-row.component";
   templateUrl: "navigatable-list.component.html",
 })
 export class NavigatableListComponent {
-  private keyManager: FocusKeyManager<CipherRowComponent>;
+  private keyManager: FocusKeyManager<NavigatableListItemComponent>;
 
-  @ContentChildren(CipherRowComponent, { descendants: true }) items: QueryList<CipherRowComponent>;
+  @ContentChildren(NavigatableListItemComponent, { descendants: true })
+  items: QueryList<NavigatableListItemComponent>;
 
   ngAfterContentInit() {
     this.keyManager = new FocusKeyManager(this.items);
@@ -24,5 +25,9 @@ export class NavigatableListComponent {
 
   focusTop() {
     this.keyManager.setFirstItemActive();
+  }
+
+  isFocused() {
+    return this.keyManager.activeItemIndex != null;
   }
 }

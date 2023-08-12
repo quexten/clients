@@ -29,10 +29,9 @@ import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import { BrowserGroupingsComponentState } from "../../../../models/browserGroupingsComponentState";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { BrowserStateService } from "../../../../platform/services/abstractions/browser-state.service";
+import { NavigatableListComponent } from "../../../../popup/components/navigatable-list.component";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
 import { VaultFilterService } from "../../../services/vault-filter.service";
-
-import { NavigatableListComponent } from "./navigatable-list.component";
 
 const ComponentId = "VaultComponent";
 

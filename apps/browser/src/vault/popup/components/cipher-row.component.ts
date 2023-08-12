@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
 import { TotpService } from "@bitwarden/common/abstractions/totp.service";
@@ -23,7 +23,6 @@ export class CipherRowComponent {
   @Input() title: string;
 
   constructor(
-    private element: ElementRef,
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
     private eventCollectionService: EventCollectionService,
@@ -41,36 +40,6 @@ export class CipherRowComponent {
 
   viewCipher(c: CipherView) {
     this.onView.emit(c);
-  }
-
-  focus() {
-    this.getFocusableElement(this.element.nativeElement)?.focus();
-  }
-
-  private getFocusableElement(el: Element): HTMLElement {
-    if (this.isFocusableElement(el)) {
-      return el as HTMLElement;
-    }
-
-    for (let i = 0; i < el.children.length; i++) {
-      const focusable = this.getFocusableElement(el.children[i]);
-      if (focusable) {
-        return focusable;
-      }
-    }
-
-    return null;
-  }
-
-  private isFocusableElement(el: Element): boolean {
-    return (
-      el.getAttribute("tabindex") == "0" ||
-      el instanceof HTMLInputElement ||
-      el instanceof HTMLSelectElement ||
-      el instanceof HTMLTextAreaElement ||
-      el instanceof HTMLAnchorElement ||
-      el instanceof HTMLButtonElement
-    );
   }
 
   @HostListener("keydown", ["$event"])

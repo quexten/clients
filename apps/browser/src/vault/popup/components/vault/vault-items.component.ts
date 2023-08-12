@@ -7,7 +7,8 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
- ViewChild } from "@angular/core";
+  ViewChild,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
 
@@ -30,10 +31,9 @@ import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import { BrowserComponentState } from "../../../../models/browserComponentState";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { BrowserStateService } from "../../../../platform/services/abstractions/browser-state.service";
+import { NavigatableListComponent } from "../../../../popup/components/navigatable-list.component";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
 import { VaultFilterService } from "../../../services/vault-filter.service";
-
-import { NavigatableListComponent } from "./navigatable-list.component";
 
 const ComponentId = "VaultItemsComponent";
 

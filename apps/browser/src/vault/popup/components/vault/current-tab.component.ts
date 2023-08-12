@@ -28,10 +28,9 @@ import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
 import { AutofillService } from "../../../../autofill/services/abstractions/autofill.service";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
+import { NavigatableListComponent } from "../../../../popup/components/navigatable-list.component";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
 import { VaultFilterService } from "../../../services/vault-filter.service";
-
-import { NavigatableListComponent } from "./navigatable-list.component";
 
 const BroadcasterSubscriptionId = "CurrentTabComponent";
 

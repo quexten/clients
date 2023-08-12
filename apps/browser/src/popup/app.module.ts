@@ -45,7 +45,6 @@ import { AddEditComponent } from "../vault/popup/components/vault/add-edit.compo
 import { AttachmentsComponent } from "../vault/popup/components/vault/attachments.component";
 import { CollectionsComponent } from "../vault/popup/components/vault/collections.component";
 import { CurrentTabComponent } from "../vault/popup/components/vault/current-tab.component";
-import { NavigatableListComponent } from "../vault/popup/components/vault/navigatable-list.component";
 import { PasswordHistoryComponent } from "../vault/popup/components/vault/password-history.component";
 import { ShareComponent } from "../vault/popup/components/vault/share.component";
 import { VaultFilterComponent } from "../vault/popup/components/vault/vault-filter.component";
@@ -57,6 +56,8 @@ import { FolderAddEditComponent } from "../vault/popup/settings/folder-add-edit.
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { NavigatableListItemComponent } from "./components/navigatable-list-item.component";
+import { NavigatableListComponent } from "./components/navigatable-list.component";
 import { PopOutComponent } from "./components/pop-out.component";
 import { PrivateModeWarningComponent } from "./components/private-mode-warning.component";
 import { SetPinComponent } from "./components/set-pin.component";
@@ -157,6 +158,7 @@ import "../platform/popup/locales";
     AutofillComponent,
     EnvironmentSelectorComponent,
     NavigatableListComponent,
+    NavigatableListItemComponent,
   ],
   providers: [CurrencyPipe, DatePipe],
   bootstrap: [AppComponent],
