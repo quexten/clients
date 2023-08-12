@@ -14,12 +14,15 @@ export class NavigatableListComponent {
   @ContentChildren(CipherRowComponent) items: QueryList<CipherRowComponent>;
 
   ngAfterContentInit() {
-    this.keyManager = new FocusKeyManager(this.items) // 3. Enabling wrapping
-      .withWrap();
+    this.keyManager = new FocusKeyManager(this.items);
   }
 
   @HostListener("keydown", ["$event"])
   onKeydown(event: KeyboardEvent) {
     this.keyManager.onKeydown(event);
+  }
+
+  focusTop() {
+    this.keyManager.setFirstItemActive();
   }
 }

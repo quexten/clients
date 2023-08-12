@@ -1,5 +1,14 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 import { first } from "rxjs/operators";
@@ -22,6 +31,8 @@ import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { BrowserStateService } from "../../../../platform/services/abstractions/browser-state.service";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
 import { VaultFilterService } from "../../../services/vault-filter.service";
+
+import { NavigatableListComponent } from "./navigatable-list.component";
 
 const ComponentId = "VaultComponent";
 
@@ -72,6 +83,8 @@ export class VaultFilterComponent implements OnInit, OnDestroy {
   private hasLoadedAllCiphers = false;
   private allCiphers: CipherView[] = null;
 
+  @ViewChild(NavigatableListComponent) navigatableListComponent: NavigatableListComponent;
+
   constructor(
     private i18nService: I18nService,
     private cipherService: CipherService,
@@ -86,7 +99,8 @@ export class VaultFilterComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private location: Location,
     private browserStateService: BrowserStateService,
-    private vaultFilterService: VaultFilterService
+    private vaultFilterService: VaultFilterService,
+    private element: ElementRef
   ) {
     this.noFolderListSize = 100;
   }
@@ -426,5 +440,19 @@ export class VaultFilterComponent implements OnInit, OnDestroy {
     }
 
     return true;
+  }
+
+  @HostListener("keydown", ["$event"])
+  onKeydown(event: KeyboardEvent) {
+    if (
+      event.key === "ArrowDown" &&
+      this.element.nativeElement.querySelector("#search") == document.activeElement
+    ) {
+      this.navigatableListComponent.focusTop();
+      event.preventDefault();
+    } else if (event.ctrlKey && event.key === "f") {
+      this.element.nativeElement.querySelector("#search").focus();
+      event.preventDefault();
+    }
   }
 }

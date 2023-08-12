@@ -206,7 +206,7 @@
       *ngIf="ciphers && ciphers.length > 0"
     >
       <div class="box list full-list">
-        <div class="box-content">
+        <navigatable-list class="box-content">
           <app-cipher-row
             *cdkVirtualFor="let searchedCipher of ciphers"
             [cipher]="searchedCipher"
@@ -215,7 +215,7 @@
             (launchEvent)="launchCipher($event)"
           >
           </app-cipher-row>
-        </div>
+        </navigatable-list>
       </div>
     </cdk-virtual-scroll-viewport>
   </ng-container>
