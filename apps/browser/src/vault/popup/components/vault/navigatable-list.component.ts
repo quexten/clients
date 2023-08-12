@@ -11,7 +11,7 @@ import { CipherRowComponent } from "../cipher-row.component";
 export class NavigatableListComponent {
   private keyManager: FocusKeyManager<CipherRowComponent>;
 
-  @ContentChildren(CipherRowComponent) items: QueryList<CipherRowComponent>;
+  @ContentChildren(CipherRowComponent, { descendants: true }) items: QueryList<CipherRowComponent>;
 
   ngAfterContentInit() {
     this.keyManager = new FocusKeyManager(this.items);
