@@ -327,10 +327,7 @@ export class CurrentTabComponent implements OnInit, OnDestroy {
 
   @HostListener("keydown", ["$event"])
   onKeydown(event: KeyboardEvent) {
-    if (
-      event.key === "ArrowDown" &&
-      this.element.nativeElement.querySelector("#search") == document.activeElement
-    ) {
+    if (event.key === "ArrowDown" && !this.navigatableListComponent.isFocused()) {
       this.navigatableListComponent.focusTop();
       event.preventDefault();
     } else if (event.ctrlKey && event.key === "f") {
