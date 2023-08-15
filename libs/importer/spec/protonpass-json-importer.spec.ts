@@ -79,6 +79,11 @@ describe("Protonpass Json Importer", () => {
     expect(folders.length).toBe(2);
     expect(folders[0].name).toBe("Personal");
     expect(folders[1].name).toBe("Test");
+
+    // "My Secure Note" is assigned to folder "Personal"
+    expect(result.folderRelationships[1]).toEqual([1, 0]);
+    // "Other vault login" is assigned to folder "Test"
+    expect(result.folderRelationships[3]).toEqual([3, 1]);
   });
 
   it("should create collections if part of an organization", async () => {
@@ -91,6 +96,11 @@ describe("Protonpass Json Importer", () => {
     expect(collections.length).toBe(2);
     expect(collections[0].name).toBe("Personal");
     expect(collections[1].name).toBe("Test");
+
+    // "My Secure Note" is assigned to folder "Personal"
+    expect(result.collectionRelationships[1]).toEqual([1, 0]);
+    // "Other vault login" is assigned to folder "Test"
+    expect(result.collectionRelationships[3]).toEqual([3, 1]);
   });
 
   it("should not add deleted items", async () => {
