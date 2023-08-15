@@ -711,11 +711,17 @@
   "unexpectedError": {
     "message": "Ein unerwarteter Fehler ist aufgetreten."
   },
+  "expirationDateError": {
+    "message": "Bitte wähle ein Ablaufdatum aus, das in der Zukunft liegt."
+  },
   "emailAddress": {
     "message": "E-Mail-Adresse"
   },
   "yourVaultIsLocked": {
     "message": "Dein Tresor ist gesperrt. Überprüfe dein Master-Passwort, um fortzufahren."
+  },
+  "uuid": {
+    "message": "UUID"
   },
   "unlock": {
     "message": "Entsperren"
@@ -948,6 +954,9 @@
   "copyVerificationCode": {
     "message": "Verifizierungscode kopieren"
   },
+  "copyUuid": {
+    "message": "UUID kopieren"
+  },
   "warning": {
     "message": "Warnung"
   },
@@ -1155,7 +1164,7 @@
     }
   },
   "kdfIterationsWarning": {
-    "message": "Wenn du die Anzahl der KDF-Iterationen zu hoch setzt, kann es sein, dass das Einloggen in (und Entsperren von) Bitwarden auf langsameren Geräten länger dauert. Wir empfehlen, dass du den Wert wiederholt um $INCREMENT$ anhebst und auf all deinen Geräten testest.",
+    "message": "Wenn du die Anzahl der KDF-Iterationen zu hoch setzt, kann es sein, dass das Anmelden in (und Entsperren von) Bitwarden auf langsameren Geräten länger dauert. Wir empfehlen, dass du den Wert wiederholt um $INCREMENT$ anhebst und auf all deinen Geräten testest.",
     "placeholders": {
       "increment": {
         "content": "$1",
@@ -1283,6 +1292,31 @@
   },
   "importEncKeyError": {
     "message": "Fehler beim Entschlüsseln der exportierten Datei. Dein Verschlüsselungsschlüssel stimmt nicht mit dem beim Export verwendeten Verschlüsselungsschlüssel überein."
+  },
+  "importDestination": {
+    "message": "Import-Ziel"
+  },
+  "learnAboutImportOptions": {
+    "message": "Erfahre mehr über deine Importoptionen"
+  },
+  "selectImportFolder": {
+    "message": "Ordner auswählen"
+  },
+  "selectImportCollection": {
+    "message": "Sammlung auswählen"
+  },
+  "importTargetHint": {
+    "message": "Wähle diese Option, wenn der importierte Dateiinhalt in eine(n) $DESTINATION$ verschoben werden soll",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Die Datei enthält nicht zugewiesene Einträge."
   },
   "selectFormat": {
     "message": "Wählen Sie das Format Ihrer Import-Datei"
@@ -3320,7 +3354,7 @@
     "message": "Lege ein Benutzerplatzlimit für dein Abonnement fest. Sobald dieses Limit erreicht ist, kannst du keine neuen Benutzer mehr einladen."
   },
   "limitSmSubscriptionDesc": {
-    "message": "Set a seat limit for your Secrets Manger subscription. Once this limit is reached, you will not be able to invite new members."
+    "message": "Lege ein Benutzerplätze-Limit für dein Secrets Manager Abonnement fest. Sobald dieses Limit erreicht ist, kannst du keine neuen Mitglieder mehr einladen."
   },
   "maxSeatLimit": {
     "message": "Benutzerplatzlimit (optional)",
@@ -3590,8 +3624,8 @@
   "attachmentsNeedFix": {
     "message": "Dieser Eintrag hat Anhänge, die repariert werden müssen."
   },
-  "attachmentFixDesc": {
-    "message": "Dieser Dateianhang muss aufgrund ihres Alters aktualisiert werden. Klicke hier, um mehr zu erfahren."
+  "attachmentFixDescription": {
+    "message": "Dieser Anhang verwendet eine veraltete Verschlüsselung. Wähle \"Reparieren\", um den Anhang herunterzuladen, erneut zu verschlüsseln und erneut hochzuladen."
   },
   "fix": {
     "message": "Reparieren",
@@ -4157,7 +4191,7 @@
     "message": "Benutzer eingeladen."
   },
   "acceptEmergencyAccess": {
-    "message": "Du wurdest eingeladen, ein Notfallkontakt für den oben genannten Benutzer zu werden. Um die Einladung anzunehmen, musst du dich einloggen oder ein neues Bitwarden-Konto erstellen."
+    "message": "Du wurdest eingeladen, ein Notfallkontakt für den oben genannten Benutzer zu werden. Um die Einladung anzunehmen, musst du dich anmelden oder ein neues Bitwarden-Konto erstellen."
   },
   "emergencyInviteAcceptFailed": {
     "message": "Die Einladung konnte nicht angenommen werden. Bitte den Benutzer, eine neue Einladung zu versenden."
@@ -4570,7 +4604,7 @@
     "message": "Passwort zurücksetzen"
   },
   "resetPasswordLoggedOutWarning": {
-    "message": "Wenn du fortfährst, wird $NAME$ aus seiner aktuellen Sitzung ausgeloggt und muss sich erneut einloggen. Aktive Sitzungen auf anderen Geräten können bis zu einer Stunde weiterhin aktiv bleiben.",
+    "message": "Wenn du fortfährst, wird $NAME$ aus seiner aktuellen Sitzung abgemeldet und muss sich erneut anmelden. Aktive Sitzungen auf anderen Geräten können bis zu einer Stunde weiterhin aktiv bleiben.",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -4704,8 +4738,8 @@
   "error": {
     "message": "Fehler"
   },
-  "resetPasswordManageUsers": {
-    "message": "\"Benutzer verwalten\" muss ebenfalls mit der \"Passwort zurücksetzen\"-Berechtigung aktiviert werden"
+  "accountRecoveryManageUsers": {
+    "message": "Manage users must also be granted with the manage account recovery permission"
   },
   "setupProvider": {
     "message": "Anbieter-Einrichtung"
@@ -5094,7 +5128,7 @@
     "message": "Angebot für eine bestehende Organisation akzeptieren oder eine neue Families-Organisation erstellen."
   },
   "setupSponsoredFamiliesLoginDesc": {
-    "message": "Dir wurde ein kostenloser Bitwarden Families-Organisationstarif angeboten. Um fortzufahren, musst du dich in das Konto einloggen, das das Angebot erhalten hat."
+    "message": "Dir wurde ein kostenloser Bitwarden Families-Organisationstarif angeboten. Um fortzufahren, musst du dich bei dem Konto anmelden, das das Angebot erhalten hat."
   },
   "sponsoredFamiliesAcceptFailed": {
     "message": "Angebot kann nicht angenommen werden. Bitte sende die Angebotsmail von deinem Unternehmenskonto erneut und versuche es noch einmal."
@@ -5429,8 +5463,8 @@
       }
     }
   },
-  "exportingOrganizationVaultDescription": {
-    "message": "Nur der mit $ORGANIZATION$ verbundene Tresor der Organisation wird exportiert. Persönliche Tresoreinträge und Einträge anderer Organisationen werden nicht berücksichtigt.",
+  "exportingOrganizationVaultDesc": {
+    "message": "Nur der mit $ORGANIZATION$ verbundene Organisationstresor wird exportiert. Einträge in persönlichen Tresoren oder anderen Organisationen werden nicht berücksichtigt.",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -5589,7 +5623,7 @@
     "message": "Geräteverifizierung aktivieren"
   },
   "deviceVerificationDesc": {
-    "message": "Verifizierungscodes werden an deine E-Mail-Adresse gesendet, wenn du dich von einem unbekannten Gerät einloggst"
+    "message": "Verifizierungscodes werden an deine E-Mail-Adresse gesendet, wenn du dich von einem unbekannten Gerät anmeldest"
   },
   "updatedDeviceVerification": {
     "message": "Geräteverifizierung aktualisiert"
@@ -6802,16 +6836,11 @@
   "enforceOnLoginDesc": {
     "message": "Bestehende Mitglieder auffordern, ihre Passwörter zu ändern"
   },
-  "region": {
-    "message": "Region"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "eu": {
-    "message": "EU",
-    "description": "European Union"
-  },
-  "us": {
-    "message": "US",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "smProjectDeleteAccessRestricted": {
     "message": "Dir fehlen die Berechtigungen, dieses Projekt zu löschen",
@@ -6824,8 +6853,8 @@
   "updateKdfSettings": {
     "message": "KDF-Einstellungen aktualisieren"
   },
-  "trustedDeviceEncryption": {
-    "message": "Vertrauenswürdige Geräteverschlüsselung"
+  "trustedDevices": {
+    "message": "Vertrauenswürdige Geräte"
   },
   "memberDecryptionTdeDescriptionPartOne": {
     "message": "Einmal authentifiziert, entschlüsseln Mitglieder Tresordaten mit einem Schlüssel auf ihrem Gerät. Die",
@@ -6955,6 +6984,14 @@
   "selectedRegionFlag": {
     "message": "Flagge der ausgewählten Region"
   },
+  "sendsNoItemsTitle": {
+    "message": "Keine aktiven Sends",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendsNoItemsMessage": {
+    "message": "Verwende Send, um verschlüsselte Informationen sicher mit anderen zu teilen.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "inviteUsers": {
     "message": "Benutzer einladen"
   },
@@ -6968,7 +7005,7 @@
     }
   },
   "secretsManagerForPlanDesc": {
-    "message": "For engineering and DevOps teams to manage secrets throughout the software development lifecycle."
+    "message": "Für Entwicklungs- und DevOps-Teams zur Verwaltung von Geheimnissen während des gesamten Softwareentwicklungszyklus."
   },
   "free2PersonOrganization": {
     "message": "Free 2-person Organizations"
@@ -7010,20 +7047,25 @@
     "message": "Secrets Manager hinzufügen"
   },
   "addSecretsManagerUpgradeDesc": {
-    "message": "Add Secrets Manager to your upgraded plan to maintain access to any secrets created with your previous plan."
+    "message": "Füge den Secrets Manager zu deinem aktualisierten Abonnement hinzu, um den Zugriff auf alle Geheimnisse zu erhalten, die mit deinem vorherigen Abonnement erstellt wurden."
   },
   "additionalServiceAccounts": {
     "message": "Zusätzliche Dienstkonten"
   },
-  "additionalServiceAccountsDesc": {
-    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+  "includedServiceAccounts": {
+    "message": "Dein Tarif enthält $COUNT$ Dienstkonten.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "50"
-      },
+      }
+    }
+  },
+  "addAdditionalServiceAccounts": {
+    "message": "Du kannst zusätzliche Dienstkonten für $COST$ pro Monat hinzufügen.",
+    "placeholders": {
       "cost": {
-        "content": "$2",
+        "content": "$1",
         "example": "$0.50"
       }
     }
@@ -7044,12 +7086,31 @@
     "message": "Dienstkonten beschränken (optional)"
   },
   "limitServiceAccountsDesc": {
-    "message": "Set a limit for your service accounts. Once this limit is reached, you will not be able to create new service accounts."
+    "message": "Lege ein Limit für deine Dienstkonten fest. Sobald dieses Limit erreicht ist, kannst du keine neuen Dienstkonten mehr erstellen."
   },
   "serviceAccountLimit": {
     "message": "Dienstkontenlimit (optional)"
   },
   "maxServiceAccountCost": {
-    "message": "Max potential service account cost"
+    "message": "Maximale potentielle Kosten für Dienstkonten"
+  },
+  "smBetaEndedDesc": {
+    "message": "Die Secrets Manager Beta endete am $BETA_ENDING_DATE$. Du hast $DAYS$ Tage Zeit, um den Secrets Manager zu deinem kostenpflichtigen Abonnement hinzuzufügen und den Zugriff auf die Daten des Secrets Manager zu erhalten. Kontaktiere den Kundensupport, um den Secrets Manager zu deinem Abonnement hinzuzufügen.",
+    "placeholders": {
+      "beta_ending_date": {
+        "content": "$1",
+        "example": "August 1, 2023"
+      },
+      "days": {
+        "content": "$2",
+        "example": "11"
+      }
+    }
+  },
+  "betaEnding": {
+    "message": "Beta-Ende"
+  },
+  "beta": {
+    "message": "Beta"
   }
 }

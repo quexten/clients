@@ -711,11 +711,17 @@
   "unexpectedError": {
     "message": "Ocorreu um erro inesperado."
   },
+  "expirationDateError": {
+    "message": "Por favor, selecione uma data de expiração futura."
+  },
   "emailAddress": {
     "message": "Endereço de e-mail"
   },
   "yourVaultIsLocked": {
     "message": "O seu cofre está bloqueado. Verifique a sua palavra-passe mestra para continuar."
+  },
+  "uuid": {
+    "message": "UUID"
   },
   "unlock": {
     "message": "Desbloquear"
@@ -947,6 +953,9 @@
   },
   "copyVerificationCode": {
     "message": "Copiar código de verificação"
+  },
+  "copyUuid": {
+    "message": "Copiar UUID"
   },
   "warning": {
     "message": "Aviso"
@@ -1283,6 +1292,31 @@
   },
   "importEncKeyError": {
     "message": "Erro ao desencriptar o ficheiro exportado. A sua chave de encriptação não corresponde à chave de encriptação utilizada para exportar os dados."
+  },
+  "importDestination": {
+    "message": "Destino da importação"
+  },
+  "learnAboutImportOptions": {
+    "message": "Saiba mais sobre as suas opções de importação"
+  },
+  "selectImportFolder": {
+    "message": "Selecionar uma pasta"
+  },
+  "selectImportCollection": {
+    "message": "Selecionar uma coleção"
+  },
+  "importTargetHint": {
+    "message": "Selecione esta opção se pretender que o conteúdo do ficheiro importado seja transferido para $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "O ficheiro contém itens não atribuídos."
   },
   "selectFormat": {
     "message": "Selecione o formato do ficheiro a importar"
@@ -3320,7 +3354,7 @@
     "message": "Defina um limite de lugares para a sua subscrição. Quando este limite for atingido, não será possível convidar novos membros."
   },
   "limitSmSubscriptionDesc": {
-    "message": "Set a seat limit for your Secrets Manger subscription. Once this limit is reached, you will not be able to invite new members."
+    "message": "Defina um limite de lugares para o seu Gestor de Segredos. Quando este limite for atingido, não será possível convidar novos membros."
   },
   "maxSeatLimit": {
     "message": "Limite de lugares (opcional)",
@@ -3590,8 +3624,8 @@
   "attachmentsNeedFix": {
     "message": "Este item tem anexos de ficheiros antigos que precisam de ser corrigidos."
   },
-  "attachmentFixDesc": {
-    "message": "Trata-se de um anexo de ficheiro antigos que precisa de ser corrigido. Clique para saber mais."
+  "attachmentFixDescription": {
+    "message": "Este anexo utiliza uma encriptação desatualizada. Selecione \"Corrigir\" para transferir, voltar a encriptar e voltar a carregar o anexo."
   },
   "fix": {
     "message": "Corrigir",
@@ -4704,8 +4738,8 @@
   "error": {
     "message": "Erro"
   },
-  "resetPasswordManageUsers": {
-    "message": "A permissão para gerir utilizadores deve também ser concedida com a permissão para gerir a reposição da palavra-passe"
+  "accountRecoveryManageUsers": {
+    "message": "A permissão para gerir utilizadores deve também ser concedida com a permissão para gerir a recuperação da conta"
   },
   "setupProvider": {
     "message": "Configuração do fornecedor"
@@ -5429,8 +5463,8 @@
       }
     }
   },
-  "exportingOrganizationVaultDescription": {
-    "message": "Apenas o cofre da organização associado a $ORGANIZATION$ serão exportados. Os itens do cofre pessoal e os de outras organizações não serão incluídos.",
+  "exportingOrganizationVaultDesc": {
+    "message": "Apenas o cofre da organização associado a $ORGANIZATION$ será exportado. Os itens em cofres individuais ou noutras organizações não serão incluídos.",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -6802,16 +6836,11 @@
   "enforceOnLoginDesc": {
     "message": "Exigir que os membros existentes alterem as suas palavras-passe"
   },
-  "region": {
-    "message": "Região"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "eu": {
-    "message": "UE",
-    "description": "European Union"
-  },
-  "us": {
-    "message": "EUA",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "smProjectDeleteAccessRestricted": {
     "message": "Não tem permissões para eliminar este projeto",
@@ -6824,8 +6853,8 @@
   "updateKdfSettings": {
     "message": "Atualizar as definições do KDF"
   },
-  "trustedDeviceEncryption": {
-    "message": "Encriptação de dispositivo de confiança"
+  "trustedDevices": {
+    "message": "Dispositivos de confiança"
   },
   "memberDecryptionTdeDescriptionPartOne": {
     "message": "Uma vez autenticados, os membros desencriptam os dados do cofre utilizando uma chave armazenada no seu dispositivo. A",
@@ -6955,11 +6984,19 @@
   "selectedRegionFlag": {
     "message": "Bandeira da região selecionada"
   },
+  "sendsNoItemsTitle": {
+    "message": "Sem Sends ativos",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendsNoItemsMessage": {
+    "message": "Utilize o Send para partilhar de forma segura informações encriptadas com qualquer pessoa.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "inviteUsers": {
     "message": "Convidar utilizadores"
   },
   "secretsManagerForPlan": {
-    "message": "Secrets Manager for $PLAN$",
+    "message": "Gestor de Segredos para $PLAN$",
     "placeholders": {
       "plan": {
         "content": "$1",
@@ -6968,19 +7005,19 @@
     }
   },
   "secretsManagerForPlanDesc": {
-    "message": "For engineering and DevOps teams to manage secrets throughout the software development lifecycle."
+    "message": "Para as equipas de engenharia e DevOps gerirem os segredos ao longo do ciclo de vida do desenvolvimento de software."
   },
   "free2PersonOrganization": {
-    "message": "Free 2-person Organizations"
+    "message": "Organizações gratuitas de 2 pessoas"
   },
   "unlimitedSecrets": {
-    "message": "Unlimited secrets"
+    "message": "Segredos ilimitados"
   },
   "unlimitedProjects": {
-    "message": "Unlimited projects"
+    "message": "Projetos ilimitados"
   },
   "projectsIncluded": {
-    "message": "$COUNT$ projects included",
+    "message": "$COUNT$ projetos incluídos",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -6989,7 +7026,7 @@
     }
   },
   "serviceAccountsIncluded": {
-    "message": "$COUNT$ service accounts included",
+    "message": "$COUNT$ contas de serviço incluídas",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -6998,7 +7035,7 @@
     }
   },
   "additionalServiceAccountCost": {
-    "message": "$COST$ per month for additional service accounts",
+    "message": "$COST$ por mês para contas de serviço adicionais",
     "placeholders": {
       "cost": {
         "content": "$1",
@@ -7007,49 +7044,73 @@
     }
   },
   "addSecretsManager": {
-    "message": "Add Secrets Manager"
+    "message": "Adicionar Gestor de Segredos"
   },
   "addSecretsManagerUpgradeDesc": {
-    "message": "Add Secrets Manager to your upgraded plan to maintain access to any secrets created with your previous plan."
+    "message": "Adicione o Gestor de Segredos ao seu plano atualizado para manter o acesso a quaisquer segredos criados com o seu plano anterior."
   },
   "additionalServiceAccounts": {
-    "message": "Additional service accounts"
+    "message": "Contas de serviço adicionais"
   },
-  "additionalServiceAccountsDesc": {
-    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+  "includedServiceAccounts": {
+    "message": "O seu plano inclui $COUNT$ contas de serviço.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "50"
-      },
+      }
+    }
+  },
+  "addAdditionalServiceAccounts": {
+    "message": "Pode adicionar contas de serviço adicionais por $COST$ por mês.",
+    "placeholders": {
       "cost": {
-        "content": "$2",
+        "content": "$1",
         "example": "$0.50"
       }
     }
   },
   "passwordManagerPlanPrice": {
-    "message": "Password Manager plan price"
+    "message": "Preço do plano do Gestor de Palavras-passe"
   },
   "secretsManagerPlanPrice": {
-    "message": "Secrets Manager plan price"
+    "message": "Preço do plano do Gestor de Segredos"
   },
   "passwordManager": {
-    "message": "Password Manager"
+    "message": "Gestor de Palavras-passe"
   },
   "freeOrganization": {
-    "message": "Free Organization"
+    "message": "Organização gratuita"
   },
   "limitServiceAccounts": {
-    "message": "Limit service accounts (optional)"
+    "message": "Limitar contas de serviço (opcional)"
   },
   "limitServiceAccountsDesc": {
-    "message": "Set a limit for your service accounts. Once this limit is reached, you will not be able to create new service accounts."
+    "message": "Defina um limite para as suas contas de serviço. Quando este limite for atingido, não será possível criar novas contas de serviço."
   },
   "serviceAccountLimit": {
-    "message": "Service account limit (optional)"
+    "message": "Limite de contas de serviço (opcional)"
   },
   "maxServiceAccountCost": {
-    "message": "Max potential service account cost"
+    "message": "Custo máximo potencial da conta de serviço"
+  },
+  "smBetaEndedDesc": {
+    "message": "O Gestor de Segredos Beta terminou a $BETA_ENDING_DATE$. Restam-lhe $DAYS$ dias para adicionar o Gestor de Segredos à sua subscrição paga e manter o acesso aos dados do Gestor de Segredos. Contacte o Serviço de Apoio ao Cliente para adicionar o Gestor de Segredos à sua subscrição.",
+    "placeholders": {
+      "beta_ending_date": {
+        "content": "$1",
+        "example": "August 1, 2023"
+      },
+      "days": {
+        "content": "$2",
+        "example": "11"
+      }
+    }
+  },
+  "betaEnding": {
+    "message": "Fim da versão Beta"
+  },
+  "beta": {
+    "message": "Beta"
   }
 }

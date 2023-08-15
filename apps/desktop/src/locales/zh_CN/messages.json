@@ -422,7 +422,7 @@
     "message": "单词分隔符"
   },
   "capitalize": {
-    "message": "大写",
+    "message": "首字母大写",
     "description": "Make the first letter of a word uppercase."
   },
   "includeNumber": {
@@ -824,7 +824,7 @@
     "message": "解锁​​​​"
   },
   "loggedInAsOn": {
-    "message": "已使用 $EMAIL$ 在 $HOSTNAME$ 上登录。",
+    "message": "已在 $HOSTNAME$ 上以 $EMAIL$ 身份登录。",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2252,16 +2252,14 @@
   "windowsBiometricUpdateWarningTitle": {
     "message": "推荐的设置更新"
   },
-  "region": {
-    "message": "区域"
+  "loggingInOn": {
+    "message": "登录到"
   },
-  "eu": {
-    "message": "欧盟",
-    "description": "European Union"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "us": {
-    "message": "美国",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "selfHosted": {
     "message": "自托管"

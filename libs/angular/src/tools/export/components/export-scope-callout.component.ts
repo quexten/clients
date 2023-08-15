@@ -30,12 +30,12 @@ export class ExportScopeCalloutComponent implements OnInit {
       this.organizationId != null
         ? {
             title: "exportingOrganizationVaultTitle",
-            description: "exportingOrganizationVaultDescription",
+            description: "exportingOrganizationVaultDesc",
             scopeIdentifier: this.organizationService.get(this.organizationId).name,
           }
         : {
             title: "exportingPersonalVaultTitle",
-            description: "exportingPersonalVaultDescription",
+            description: "exportingIndividualVaultDescription",
             scopeIdentifier: await this.stateService.getEmail(),
           };
     this.show = true;

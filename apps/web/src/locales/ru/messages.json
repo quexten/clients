@@ -711,11 +711,17 @@
   "unexpectedError": {
     "message": "Произошла непредвиденная ошибка."
   },
+  "expirationDateError": {
+    "message": "Выберите дату истечения срока действия в будущем."
+  },
   "emailAddress": {
     "message": "Адрес email"
   },
   "yourVaultIsLocked": {
     "message": "Ваше хранилище заблокировано. Для продолжения введите мастер-пароль."
+  },
+  "uuid": {
+    "message": "UUID"
   },
   "unlock": {
     "message": "Разблокировать"
@@ -947,6 +953,9 @@
   },
   "copyVerificationCode": {
     "message": "Скопировать код подтверждения"
+  },
+  "copyUuid": {
+    "message": "Скопировать UUID"
   },
   "warning": {
     "message": "Предупреждение"
@@ -1283,6 +1292,31 @@
   },
   "importEncKeyError": {
     "message": "Ошибка при расшифровке экспортированного файла. Ваш ключ шифрования не совпадает с ключом шифрования, используемым для экспорта данных."
+  },
+  "importDestination": {
+    "message": "Направление импорта"
+  },
+  "learnAboutImportOptions": {
+    "message": "Узнайте о возможностях импорта"
+  },
+  "selectImportFolder": {
+    "message": "Выбрать папку"
+  },
+  "selectImportCollection": {
+    "message": "Выбрать коллекцию"
+  },
+  "importTargetHint": {
+    "message": "Выберите эту опцию, если хотите, чтобы содержимое импортированного файла было перемещено в папку $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "File contains unassigned items."
   },
   "selectFormat": {
     "message": "Выберите формат файла импорта"
@@ -3320,7 +3354,7 @@
     "message": "Установите лимит мест для вашей подписки. По достижении этого лимита вы не сможете приглашать новых членов."
   },
   "limitSmSubscriptionDesc": {
-    "message": "Set a seat limit for your Secrets Manger subscription. Once this limit is reached, you will not be able to invite new members."
+    "message": "Установите лимит мест для вашей подписки на Менеджер секретов. По достижении этого лимита вы не сможете приглашать новых членов."
   },
   "maxSeatLimit": {
     "message": "Предел мест (необязательно)",
@@ -3590,8 +3624,8 @@
   "attachmentsNeedFix": {
     "message": "К этому элементу прикреплены старые вложения, которые необходимо исправить."
   },
-  "attachmentFixDesc": {
-    "message": "Это старое вложение необходимо исправить. Нажмите, чтобы узнать больше."
+  "attachmentFixDescription": {
+    "message": "Вложение использует устаревшее шифрование. Выберите 'Исправить' дня загрузки, повторного шифрования и выгрузки вложения."
   },
   "fix": {
     "message": "Исправить",
@@ -4704,8 +4738,8 @@
   "error": {
     "message": "Ошибка"
   },
-  "resetPasswordManageUsers": {
-    "message": "Для управления пользователями необходимо также предоставить разрешение на управление сбросом пароля"
+  "accountRecoveryManageUsers": {
+    "message": "Для управления пользователями также необходимо предоставить разрешение на управление восстановлением аккаунта"
   },
   "setupProvider": {
     "message": "Настройка поставщика"
@@ -5429,8 +5463,8 @@
       }
     }
   },
-  "exportingOrganizationVaultDescription": {
-    "message": "Будет экспортировано только хранилище организации, связанное с $ORGANIZATION$. Личные элементы хранилища и элементы из других организаций включены не будут.",
+  "exportingOrganizationVaultDesc": {
+    "message": "Будет экспортировано только хранилище организации, связанное с $ORGANIZATION$. Элементы из личных хранилищ и из других организаций включены не будут.",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -6802,16 +6836,11 @@
   "enforceOnLoginDesc": {
     "message": "Требовать от существующих пользователей смены паролей"
   },
-  "region": {
-    "message": "Регион"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "eu": {
-    "message": "Европа",
-    "description": "European Union"
-  },
-  "us": {
-    "message": "США",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "smProjectDeleteAccessRestricted": {
     "message": "У вас недостаточно прав для удаления этого проекта",
@@ -6824,8 +6853,8 @@
   "updateKdfSettings": {
     "message": "Обновить параметры KDF"
   },
-  "trustedDeviceEncryption": {
-    "message": "Шифрование доверенного устройства"
+  "trustedDevices": {
+    "message": "Доверенные устройства"
   },
   "memberDecryptionTdeDescriptionPartOne": {
     "message": "После аутентификации участники расшифровывают данные хранилища с помощью ключа, хранящегося на их устройстве.",
@@ -6955,11 +6984,19 @@
   "selectedRegionFlag": {
     "message": "Флаг выбранного региона"
   },
+  "sendsNoItemsTitle": {
+    "message": "Нет активных Send",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendsNoItemsMessage": {
+    "message": "Используйте Send для безопасного обмена зашифрованной информацией с кем угодно.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "inviteUsers": {
     "message": "Пригласить пользователей"
   },
   "secretsManagerForPlan": {
-    "message": "Secrets Manager for $PLAN$",
+    "message": "Менеджер секретов для $PLAN$",
     "placeholders": {
       "plan": {
         "content": "$1",
@@ -6968,19 +7005,19 @@
     }
   },
   "secretsManagerForPlanDesc": {
-    "message": "For engineering and DevOps teams to manage secrets throughout the software development lifecycle."
+    "message": "Командам инженеров и DevOps для управления секретами на протяжении всего жизненного цикла разработки ПО."
   },
   "free2PersonOrganization": {
-    "message": "Free 2-person Organizations"
+    "message": "Бесплатные организации из 2 человек"
   },
   "unlimitedSecrets": {
-    "message": "Unlimited secrets"
+    "message": "Неограниченные секреты"
   },
   "unlimitedProjects": {
-    "message": "Unlimited projects"
+    "message": "Неограниченные проекты"
   },
   "projectsIncluded": {
-    "message": "$COUNT$ projects included",
+    "message": "Включено $COUNT$ проектов",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -6989,7 +7026,7 @@
     }
   },
   "serviceAccountsIncluded": {
-    "message": "$COUNT$ service accounts included",
+    "message": "Включено $COUNT$ сервисных аккаунтов",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -6998,7 +7035,7 @@
     }
   },
   "additionalServiceAccountCost": {
-    "message": "$COST$ per month for additional service accounts",
+    "message": "$COST$ в месяц за дополнительные сервисные аккаунты",
     "placeholders": {
       "cost": {
         "content": "$1",
@@ -7010,29 +7047,34 @@
     "message": "Добавить Менеджер секретов"
   },
   "addSecretsManagerUpgradeDesc": {
-    "message": "Add Secrets Manager to your upgraded plan to maintain access to any secrets created with your previous plan."
+    "message": "Добавить Менеджер секретов к этому тарифному плану, чтобы сохранить доступ к секретам, созданным ранее."
   },
   "additionalServiceAccounts": {
-    "message": "Additional service accounts"
+    "message": "Дополнительные сервисные аккаунты"
   },
-  "additionalServiceAccountsDesc": {
-    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+  "includedServiceAccounts": {
+    "message": "Ваш план включает в себя $COUNT$ сервисных аккаунтов.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "50"
-      },
+      }
+    }
+  },
+  "addAdditionalServiceAccounts": {
+    "message": "Вы можете добавить дополнительные сервисные аккаунты за $COST$ в месяц.",
+    "placeholders": {
       "cost": {
-        "content": "$2",
+        "content": "$1",
         "example": "$0.50"
       }
     }
   },
   "passwordManagerPlanPrice": {
-    "message": "Password Manager plan price"
+    "message": "Стоимость плана Менеджер паролей"
   },
   "secretsManagerPlanPrice": {
-    "message": "Secrets Manager plan price"
+    "message": "Стоимость плана Менеджер секретов"
   },
   "passwordManager": {
     "message": "Менеджер паролей"
@@ -7041,15 +7083,34 @@
     "message": "Бесплатная организация"
   },
   "limitServiceAccounts": {
-    "message": "Limit service accounts (optional)"
+    "message": "Лимит сервисных аккаунтов (опционально)"
   },
   "limitServiceAccountsDesc": {
-    "message": "Set a limit for your service accounts. Once this limit is reached, you will not be able to create new service accounts."
+    "message": "Установите лимит для сервисных аккаунтов. По достижении этого лимита создание новых сервисных аккаунтов будет невозможным."
   },
   "serviceAccountLimit": {
-    "message": "Service account limit (optional)"
+    "message": "Лимит сервисного аккаунта (опционально)"
   },
   "maxServiceAccountCost": {
-    "message": "Max potential service account cost"
+    "message": "Максимальная потенциальная стоимость сервисного аккаунта"
+  },
+  "smBetaEndedDesc": {
+    "message": "Бета-версия Менеджера секретов завершилась $BETA_ENDING_DATE$. У вас осталось $DAYS$ дней, чтобы добавить его к своей платной подписке и сохранить доступ к данным. Чтобы добавить Менеджер секретов к подписке, обратитесь в службу поддержки клиентов.",
+    "placeholders": {
+      "beta_ending_date": {
+        "content": "$1",
+        "example": "August 1, 2023"
+      },
+      "days": {
+        "content": "$2",
+        "example": "11"
+      }
+    }
+  },
+  "betaEnding": {
+    "message": "Окончание бета-версии"
+  },
+  "beta": {
+    "message": "Beta"
   }
 }

@@ -263,7 +263,7 @@
     "message": "单词分隔符"
   },
   "capitalize": {
-    "message": "大写",
+    "message": "首字母大写",
     "description": "Make the first letter of a work uppercase."
   },
   "includeNumber": {
@@ -357,7 +357,7 @@
     "message": "解锁"
   },
   "loggedInAsOn": {
-    "message": "以 $EMAIL$ 在 $HOSTNAME$ 上登录。",
+    "message": "已在 $HOSTNAME$ 上以 $EMAIL$ 身份登录。",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -629,6 +629,12 @@
   },
   "notificationChangeSave": {
     "message": "更新"
+  },
+  "notificationUnlockDesc": {
+    "message": "解锁 Bitwarden 密码库以完成自动填充请求。"
+  },
+  "notificationUnlock": {
+    "message": "解锁​​​​"
   },
   "enableContextMenuItem": {
     "message": "显示上下文菜单选项"
@@ -2221,19 +2227,17 @@
       }
     }
   },
-  "region": {
-    "message": "区域"
+  "loggingInOn": {
+    "message": "登录到"
   },
   "opensInANewWindow": {
     "message": "在新窗口中打开"
   },
-  "eu": {
-    "message": "欧盟",
-    "description": "European Union"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "us": {
-    "message": "美国",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "accessDenied": {
     "message": "访问被拒绝。您没有权限查看此页面。"

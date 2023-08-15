@@ -630,6 +630,12 @@
   "notificationChangeSave": {
     "message": "Update"
   },
+  "notificationUnlockDesc": {
+    "message": "Unlock your Bitwarden vault to complete the auto-fill request."
+  },
+  "notificationUnlock": {
+    "message": "Unlock"
+  },
   "enableContextMenuItem": {
     "message": "Show context menu options"
   },
@@ -1440,9 +1446,6 @@
   "restoreItem": {
     "message": "Restore item"
   },
-  "restoreItemConfirmation": {
-    "message": "Are you sure you want to restore this item?"
-  },
   "restoredItem": {
     "message": "Item restored"
   },
@@ -2221,19 +2224,17 @@
       }
     }
   },
-  "region": {
-    "message": "Region"
+  "loggingInOn": {
+    "message": "Logging in on"
   },
   "opensInANewWindow": {
     "message": "Opens in a new window"
   },
-  "eu": {
-    "message": "EU",
-    "description": "European Union"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "us": {
-    "message": "US",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "accessDenied": {
     "message": "Access denied. You do not have permission to view this page."

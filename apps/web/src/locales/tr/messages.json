@@ -711,11 +711,17 @@
   "unexpectedError": {
     "message": "Beklenmedik bir hata oluştu."
   },
+  "expirationDateError": {
+    "message": "Please select an expiration date that is in the future."
+  },
   "emailAddress": {
     "message": "E-posta adresi"
   },
   "yourVaultIsLocked": {
     "message": "Kasanız kilitli. Devam etmek için ana parolanızı doğrulayın."
+  },
+  "uuid": {
+    "message": "UUID"
   },
   "unlock": {
     "message": "Kilidi aç"
@@ -948,6 +954,9 @@
   "copyVerificationCode": {
     "message": "Doğrulama kodunu kopyala"
   },
+  "copyUuid": {
+    "message": "UUID'yi kopyala"
+  },
   "warning": {
     "message": "Uyarı"
   },
@@ -961,7 +970,7 @@
     "message": "Dışa aktarılan dosyadaki verileriniz şifrelenmemiş olacak. Bu dosyayı güvensiz yöntemlerle (örn. e-posta) göndermemeli ve saklamamalısınız. İşiniz bittikten sonra dosyayı hemen silin."
   },
   "exportSecretsWarningDesc": {
-    "message": "This export contains your secrets data in an unencrypted format. You should not store or send the exported file over unsecure channels (such as email). Delete it immediately after you are done using it."
+    "message": "Dışa aktarılan dosyada, gizli verileriniz şifrelenmemiş halde bulunmaktadır. Bu dosyayı güvensiz yöntemlerle (örn. e-posta) göndermemeli ve saklamamalısınız. İşiniz bittikten sonra dosyayı hemen silin."
   },
   "encExportKeyWarningDesc": {
     "message": "Dışa aktardığınız bu dosyadaki verileriniz, hesabınızın şifreleme anahtarıyla şifrelenir. Hesabınızın şifreleme anahtarını değiştirirseniz bu dosyanın şifresi çözülemez hale gelir, dolayısıyla dosyayı yeniden dışa aktarmanız gerekir."
@@ -1283,6 +1292,31 @@
   },
   "importEncKeyError": {
     "message": "Dışa aktarılmış dosya çözülemedi. Şifreleme anahtarınız, veri dışa aktarılırken kullanılanla uyuşmuyor."
+  },
+  "importDestination": {
+    "message": "İçe aktarma hedefi"
+  },
+  "learnAboutImportOptions": {
+    "message": "İçe aktarma seçeneklerinizi öğrenin"
+  },
+  "selectImportFolder": {
+    "message": "Bir klasör seçin"
+  },
+  "selectImportCollection": {
+    "message": "Bir koleksiyon seçin"
+  },
+  "importTargetHint": {
+    "message": "Select this option if you want the imported file contents moved to a $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "File contains unassigned items."
   },
   "selectFormat": {
     "message": "İçe aktarma dosyasının biçimini seçin"
@@ -3590,8 +3624,8 @@
   "attachmentsNeedFix": {
     "message": "Bu kayıtta düzeltilmesi gereken eski dosya ekleri bulunuyor."
   },
-  "attachmentFixDesc": {
-    "message": "Bu eski dosya ekinin düzeltmesi gerekiyor. Daha fazla bilgi için tıklayın."
+  "attachmentFixDescription": {
+    "message": "This attachment uses outdated encryption. Select 'Fix' to download, re-encrypt, and re-upload the attachment."
   },
   "fix": {
     "message": "Düzelt",
@@ -4704,8 +4738,8 @@
   "error": {
     "message": "Hata"
   },
-  "resetPasswordManageUsers": {
-    "message": "\"Parola sıfırlamayı yönet\" izniyle birlikte \"Kullanıcıları yönet\" izni de verilmelidir"
+  "accountRecoveryManageUsers": {
+    "message": "Manage users must also be granted with the manage account recovery permission"
   },
   "setupProvider": {
     "message": "Sağlayıcı kurulumu"
@@ -5429,8 +5463,8 @@
       }
     }
   },
-  "exportingOrganizationVaultDescription": {
-    "message": "Yalnızca $ORGANIZATION$ ile ilişkili kuruluş kasası dışarı aktarılacak. Kişisel kasadaki ögeler ve diğer kuruluşlardaki ögeler dahil edilmeyecek.",
+  "exportingOrganizationVaultDesc": {
+    "message": "Only the organization vault associated with $ORGANIZATION$ will be exported. Items in individual vaults or other organizations will not be included.",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -5580,7 +5614,7 @@
     "description": "Part of a URL."
   },
   "apiAccessToken": {
-    "message": "API erişim anahtarı"
+    "message": "API erişim token'ı"
   },
   "deviceVerification": {
     "message": "Cihaz doğrulama"
@@ -5589,7 +5623,7 @@
     "message": "Cihaz doğrulamasını aç"
   },
   "deviceVerificationDesc": {
-    "message": "Etkinleştirildiğinde, tanınmayan bir cihazdan oturum açarken e-posta adresinize doğrulama kodları gönderilir"
+    "message": "Verification codes are sent to your email address when logging in from an unrecognized device"
   },
   "updatedDeviceVerification": {
     "message": "Cihaz doğrulaması güncellendi"
@@ -6139,11 +6173,11 @@
     "message": "Sır kalıcı olarak silindi"
   },
   "accessTokens": {
-    "message": "Erişim anahtarları",
+    "message": "Erişim token'ları",
     "description": "Title for the section displaying access tokens."
   },
   "newAccessToken": {
-    "message": "Yeni erişim belirteci",
+    "message": "Yeni erişim token'ı",
     "description": "Button label for creating a new access token."
   },
   "expires": {
@@ -6155,11 +6189,11 @@
     "description": "Label for the access level of an access token (Read only)."
   },
   "accessTokensNoItemsTitle": {
-    "message": "Gösterilecek erişim anahtarları yok",
+    "message": "Gösterilecek erişim token'ı yok",
     "description": "Title to be displayed when there are no access tokens to display in the list."
   },
   "accessTokensNoItemsDesc": {
-    "message": "Başlamak için bir erişim anahtarı oluşturun",
+    "message": "Başlamak için bir erişim token'ı oluşturun",
     "description": "Message to be displayed when there are no access tokens to display in the list."
   },
   "downloadAccessToken": {
@@ -6171,15 +6205,15 @@
     "description": "Label for the expiration date of an access token."
   },
   "accessTokenCallOutTitle": {
-    "message": "Erişim anahtarları saklanmaz ve geri alınamaz",
+    "message": "Erişim token'ları saklanmaz ve geri getirilemez",
     "description": "Notification to inform the user that access tokens are only displayed once and cannot be retrieved again."
   },
   "copyToken": {
-    "message": "Erişim anahtarını kopyala",
+    "message": "Token'ı kopyala",
     "description": "Copies the generated access token to the user's clipboard."
   },
   "accessToken": {
-    "message": "Erişim anahtarı",
+    "message": "Erişim token'ı",
     "description": "A unique string that gives a client application (eg. CLI) access to a secret or set of secrets."
   },
   "accessTokenExpirationRequired": {
@@ -6191,7 +6225,7 @@
     "description": "Notification to inform the user that the access token has been created and copied to the clipboard."
   },
   "revokeAccessToken": {
-    "message": "Erişim anahtarını İptal Et",
+    "message": "Erişim token'ını iptal et",
     "description": "Invalidates / cancels an access token and as such removes access to secrets for the client application."
   },
   "revokeAccessTokens": {
@@ -6248,10 +6282,10 @@
     "message": "İşaretlenirse bu, diğer tüm koleksiyon izinlerinin yerini alacaktır."
   },
   "selectMembers": {
-    "message": "Üyeleri seç"
+    "message": "Üyeleri seçin"
   },
   "selectCollections": {
-    "message": "Koleksiyonları seç"
+    "message": "Koleksiyonları seçin"
   },
   "role": {
     "message": "Rol"
@@ -6323,10 +6357,10 @@
     "message": "TXT kaydını kopyalayıp DNS sağlayıcınıza yapıştırın."
   },
   "domainNameInputHint": {
-    "message": "Örnek: mydomain.com. Alt alan adlarının doğrulanması için ayrı girişler gerekir."
+    "message": "Örnek: mydomain.com. Alt alan adlarının doğrulanması için ayrı kayıtlar gerekir."
   },
   "automaticDomainVerification": {
-    "message": "Otomatik Alan Doğrulaması"
+    "message": "Otomatik Alan Adı Doğrulaması"
   },
   "automaticDomainVerificationProcess": {
     "message": "Bitwarden, ilk 72 saat içinde etki alanını 3 kez doğrulamaya çalışacak. Alan doğrulanamıyorsa barındırıcınızdaki DNS kaydını kontrol edin ve manuel olarak doğrulayın. Alan adı, doğrulanmamışsa kuruluşunuzdan 7 gün içinde kaldırılacaktır"
@@ -6434,10 +6468,10 @@
     "message": "Üye"
   },
   "selectGroupsAndMembers": {
-    "message": "Grupları ve üyeleri seç"
+    "message": "Grupları ve üyeleri seçin"
   },
   "selectGroups": {
-    "message": "Grupları seç"
+    "message": "Grupları seçin"
   },
   "userPermissionOverrideHelper": {
     "message": "Bir üye için ayarlanan izinler, o üyenin grubu tarafından ayarlanan izinlerin yerini alacak"
@@ -6614,7 +6648,7 @@
     "message": "Yeni güvenlik önerilerini karşılamak ve hesap korumasını iyileştirmek için şifreleme ayarlarınızı güncelleyin."
   },
   "changeKdfLoggedOutWarning": {
-    "message": "İşlem, tüm aktif oturumlardan çıkış yapmanızı sağlayacaktır. Tekrar oturum açmanız ve iki adımlı oturum açma kurulumunu tamamlamanız gerekecek. Veri kaybını önlemek için şifreleme ayarlarınızı değiştirmeden önce kasanızı dışa aktarmanızı öneririz."
+    "message": "Devam ettiğinizde tüm aktif oturumlarınız kapatılacaktır. Tekrar giriş yapmanız ve iki aşamalı giriş kurulumunu tamamlamanız gerekecektir. Veri kaybını önlemek için, şifreleme ayarlarınızı değiştirmeden önce kasanızı dışa aktarmanızı öneririz."
   },
   "secretsManager": {
     "message": "Sır Yöneticisi"
@@ -6802,16 +6836,11 @@
   "enforceOnLoginDesc": {
     "message": "Mevcut üyelerin parolalarını değiştirmelerini zorunlu tut"
   },
-  "region": {
-    "message": "Bölge"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "eu": {
-    "message": "AB",
-    "description": "European Union"
-  },
-  "us": {
-    "message": "ABD",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "smProjectDeleteAccessRestricted": {
     "message": "Bu projeyi silme izniniz yok",
@@ -6824,8 +6853,8 @@
   "updateKdfSettings": {
     "message": "KDF ayarlarını güncelle"
   },
-  "trustedDeviceEncryption": {
-    "message": "Güvenilir cihaz şifrelemesi"
+  "trustedDevices": {
+    "message": "Güvenilen cihazlar"
   },
   "memberDecryptionTdeDescriptionPartOne": {
     "message": "Once authenticated, members will decrypt vault data using a key stored on their device. The",
@@ -6955,6 +6984,14 @@
   "selectedRegionFlag": {
     "message": "Seçilen bölgenin bayrağı"
   },
+  "sendsNoItemsTitle": {
+    "message": "Aktif Send yok",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendsNoItemsMessage": {
+    "message": "Şifrelenmiş bilgileri güvenle paylaşmak için Send'i kullanabilirsiniz.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "inviteUsers": {
     "message": "Kullanıcıları davet et"
   },
@@ -7015,15 +7052,20 @@
   "additionalServiceAccounts": {
     "message": "Additional service accounts"
   },
-  "additionalServiceAccountsDesc": {
-    "message": "Your plan comes with $COUNT$ service accounts. You can add additional service accounts for $COST$ per month.",
+  "includedServiceAccounts": {
+    "message": "Your plan comes with $COUNT$ service accounts.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "50"
-      },
+      }
+    }
+  },
+  "addAdditionalServiceAccounts": {
+    "message": "You can add additional service accounts for $COST$ per month.",
+    "placeholders": {
       "cost": {
-        "content": "$2",
+        "content": "$1",
         "example": "$0.50"
       }
     }
@@ -7051,5 +7093,24 @@
   },
   "maxServiceAccountCost": {
     "message": "Max potential service account cost"
+  },
+  "smBetaEndedDesc": {
+    "message": "The Secrets Manager Beta ended $BETA_ENDING_DATE$. You have $DAYS$ days left to add Secrets Manager to your paid subscription and maintain access to Secrets Manager data. Contact Customer Success to add Secrets Manager to your subscription.",
+    "placeholders": {
+      "beta_ending_date": {
+        "content": "$1",
+        "example": "August 1, 2023"
+      },
+      "days": {
+        "content": "$2",
+        "example": "11"
+      }
+    }
+  },
+  "betaEnding": {
+    "message": "Beta sona ediyor"
+  },
+  "beta": {
+    "message": "Beta"
   }
 }

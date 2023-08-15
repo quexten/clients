@@ -433,16 +433,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const confirmed = await this.dialogService.openSimpleDialog({
-      title: { key: "restoreItem" },
-      content: { key: "restoreItemConfirmation" },
-      type: SimpleDialogType.WARNING,
-    });
-
-    if (!confirmed) {
-      return false;
-    }
-
     try {
       this.restorePromise = this.restoreCipher();
       await this.restorePromise;
@@ -600,9 +590,11 @@ export class AddEditComponent implements OnInit, OnDestroy {
   }
 
   protected saveCipher(cipher: Cipher) {
+    const isNotClone = this.editMode && !this.cloneMode;
+    const orgAdmin = this.organization?.isAdmin;
     return this.cipher.id == null
-      ? this.cipherService.createWithServer(cipher)
-      : this.cipherService.updateWithServer(cipher);
+      ? this.cipherService.createWithServer(cipher, orgAdmin)
+      : this.cipherService.updateWithServer(cipher, orgAdmin, isNotClone);
   }
 
   protected deleteCipher() {

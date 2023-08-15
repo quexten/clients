@@ -14,6 +14,7 @@ apps/browser/src/auth @bitwarden/team-auth-dev
 apps/cli/src/auth @bitwarden/team-auth-dev
 apps/desktop/src/auth @bitwarden/team-auth-dev
 apps/web/src/app/auth @bitwarden/team-auth-dev
+libs/auth @bitwarden/team-auth-dev
 # web connectors used for auth
 apps/web/src/connectors @bitwarden/team-auth-dev
 bitwarden_license/bit-web/src/app/auth @bitwarden/team-auth-dev
@@ -73,6 +74,7 @@ apps/web/src/translation-constants.ts @bitwarden/team-platform-dev
 apps/browser/src/autofill @bitwarden/team-autofill-dev
 
 ## Component Library ##
+.storybook @bitwarden/team-platform-dev
 libs/components @bitwarden/team-platform-dev
 
 ## Desktop native module ##
@@ -94,7 +96,7 @@ apps/desktop/src/package.json
 
 package-lock.json
 
-## Locales ## 
+## Locales ##
 apps/browser/src/_locales/en/messages.json
 apps/cli/src/locales/en/messages.json
 apps/desktop/src/locales/en/messages.json
