@@ -52,7 +52,15 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
             cipher.login.username = loginContent.username;
             cipher.login.password = loginContent.password;
             if (loginContent.totpUri != "") {
-              cipher.login.totp = new URL(loginContent.totpUri).searchParams.get("secret");
+              if (loginContent.totpUri.startsWith("otpauth://")) {
+                try {
+                  cipher.login.totp = new URL(loginContent.totpUri).searchParams.get("secret");
+                } catch (e: unknown) {
+                  cipher.login.totp = loginContent.totpUri;
+                }
+              } else {
+                cipher.login.totp = loginContent.totpUri;
+              }
             }
             for (const extraField of item.data.extraFields) {
               this.processKvp(
