@@ -51,7 +51,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
             cipher.login.uris = this.makeUriArray(loginContent.urls);
             cipher.login.username = loginContent.username;
             cipher.login.password = loginContent.password;
-            cipher.login.totp = loginContent.totpUri;
+            cipher.login.totp = this.getValueOrDefault(loginContent.totpUri);
             for (const extraField of item.data.extraFields) {
               this.processKvp(
                 cipher,
