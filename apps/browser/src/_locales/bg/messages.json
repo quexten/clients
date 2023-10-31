@@ -14,7 +14,7 @@
     "message": "Впишете се или създайте нов абонамент, за да достъпите защитен трезор."
   },
   "createAccount": {
-    "message": "Създаване на абонамент"
+    "message": "Създаване на акаунт"
   },
   "login": {
     "message": "Вписване"
@@ -83,13 +83,22 @@
     "message": "Копиране на потребителското име"
   },
   "copyNumber": {
-    "message": "Копиране на номера"
+    "message": "Копиране на но̀мера"
   },
   "copySecurityCode": {
     "message": "Копиране на кода за сигурност"
   },
   "autoFill": {
     "message": "Автоматично дописване"
+  },
+  "autoFillLogin": {
+    "message": "Авт. попълване на данни за вход"
+  },
+  "autoFillCard": {
+    "message": "Самопопълваща се карта"
+  },
+  "autoFillIdentity": {
+    "message": "Самопопълваща се самоличност"
   },
   "generatePasswordCopied": {
     "message": "Генериране на парола (копирана)"
@@ -99,6 +108,21 @@
   },
   "noMatchingLogins": {
     "message": "Няма съвпадащи записи."
+  },
+  "noCards": {
+    "message": "Няма карти"
+  },
+  "noIdentities": {
+    "message": "Няма самоличности"
+  },
+  "addLoginMenu": {
+    "message": "Добавяне на запис за вход"
+  },
+  "addCardMenu": {
+    "message": "Добавяне на карта"
+  },
+  "addIdentityMenu": {
+    "message": "Добавяне на самоличност"
   },
   "unlockVaultMenu": {
     "message": "Отключете трезора си"
@@ -233,7 +257,7 @@
     "message": "Избор"
   },
   "generatePassword": {
-    "message": "Генериране на парола"
+    "message": "Нова парола"
   },
   "regeneratePassword": {
     "message": "Регенериране на паролата"
@@ -467,7 +491,7 @@
     "message": "Грешен код за потвърждаване"
   },
   "valueCopied": {
-    "message": "$VALUE$ — копирано",
+    "message": "Копирано е $VALUE$",
     "description": "Value has been copied to the clipboard.",
     "placeholders": {
       "value": {
@@ -537,7 +561,7 @@
     "message": "Копирана парола"
   },
   "uri": {
-    "message": "Адрес"
+    "message": "Унифициран идентификатор на ресурс"
   },
   "uriPosition": {
     "message": "Адрес $POSITION$",
@@ -550,7 +574,7 @@
     }
   },
   "newUri": {
-    "message": "Нов адрес"
+    "message": "Нов унифициран идентификатор на ресурс"
   },
   "addedItem": {
     "message": "Елементът е добавен"
@@ -631,7 +655,7 @@
     "message": "Да се обнови ли паролата в Bitwarden?"
   },
   "notificationChangeSave": {
-    "message": "Да, нека се обнови сега"
+    "message": "Осъвременяване"
   },
   "notificationUnlockDesc": {
     "message": "Отключете трезора си в Битуорден, за да завършите заявката за автоматично попълване."
@@ -684,7 +708,7 @@
     "message": "Потвърждаване на изнасянето на трезора"
   },
   "exportWarningDesc": {
-    "message": "Данните от трезора ви ще се изнесат в незащитен формат. Не го пращайте по незащитени канали като е-поща. Изтрийте файла незабавно след като свършите работата си с него."
+    "message": "Този износ съдържа данни на трезора ви в некриптиран формат. Не трябва да съхранявате или изпращате износния файл през незащитени канали (като имейл). Изтрийте файла моментално след като свършите работата си с него."
   },
   "encExportKeyWarningDesc": {
     "message": "При изнасяне данните се шифрират с ключа ви. Ако го смените, ще трябва наново да ги изнесете, защото няма да може да дешифрирате настоящия файл."
@@ -699,10 +723,10 @@
     "message": "Споделено"
   },
   "learnOrg": {
-    "message": "Разберете повече за организациите"
+    "message": "Научете за организациите"
   },
   "learnOrgConfirmation": {
-    "message": "Битуорден позволява да споделяте части от трезора си чрез използването на организация. Искате ли да научите повече от сайта bitwarden.com?"
+    "message": "Битуорден позволява да споделяте елементи от трезора си а други, използвайки организация. Бихте ли посетили сайта bitwarden.com, за да научите повече?"
   },
   "moveToOrganization": {
     "message": "Преместване в организация"
@@ -781,7 +805,7 @@
     "message": "Управление на абонамента"
   },
   "premiumManageAlert": {
-    "message": "Можете да управлявате абонамента си през сайта bitwarden.com. Искате ли да го посетите сега?"
+    "message": "Може да управлявате членството си в мрежата на трезора в bitwarden.com. Искате ли да посетите уебсайта сега?"
   },
   "premiumRefresh": {
     "message": "Опресняване на абонамента"
@@ -901,7 +925,7 @@
     "message": "Регистрацията е защитена с двустепенно удостоверяване, но никой от настроените доставчици на удостоверяване не се поддържа от този браузър."
   },
   "noTwoStepProviders2": {
-    "message": "Пробвайте с поддържан уеб браузър (като Chrome или Firefox) и други доставчици на удостоверяване, които се поддържат от браузърите (като специални програми за удостоверяване)."
+    "message": "Употребявайте поддържан браузър (като Chrome, Firefox) и/или добавете други доставчици на удостоверяване, които се поддържат по-добре от браузърите (като специални програми за удостоверяване)."
   },
   "twoStepOptions": {
     "message": "Настройки на двустепенното удостоверяване"
@@ -920,10 +944,10 @@
     "description": "'Authy' and 'Google Authenticator' are product names and should not be translated."
   },
   "yubiKeyTitle": {
-    "message": "Устройство YubiKey OTP"
+    "message": "Ключ за сигурност YubiKey OTP"
   },
   "yubiKeyDesc": {
-    "message": "Използвайте устройство на YubiKey, за да влезете в абонамента си. Поддържат се моделите YubiKey 4, 4 Nano, 4C и NEO."
+    "message": "Използвайте ключа за сигурност YubiKey, за да влезете в акаунта си. Работи с устройствата YubiKey 4, 4 Nano, 4C и NEO."
   },
   "duoDesc": {
     "message": "Удостоверяване чрез Duo Security, с ползване на приложението Duo Mobile, SMS, телефонен разговор или устройство U2F.",
@@ -1228,6 +1252,9 @@
   },
   "typeIdentity": {
     "message": "Самоличност"
+  },
+  "typePasskey": {
+    "message": "Секретен ключ"
   },
   "passwordHistory": {
     "message": "Хронология на паролата"
@@ -1628,6 +1655,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "Политика от някоя организация влияе на вариантите за собственост."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "Политика на организацията забранява да внасяте елементи в личния си трезор."
   },
   "excludedDomains": {
     "message": "Изключени домейни"
@@ -2096,7 +2126,7 @@
     "message": "собствен хостинг"
   },
   "thirdParty": {
-    "message": "Third-party"
+    "message": "Трета страна"
   },
   "thirdPartyServerMessage": {
     "message": "Connected to third-party server implementation, $SERVERNAME$. Please verify bugs using the official server, or report them to the third-party server.",
@@ -2159,13 +2189,13 @@
     "message": "Exposed Master Password"
   },
   "exposedMasterPasswordDesc": {
-    "message": "Password found in a data breach. Use a unique password to protect your account. Are you sure you want to use an exposed password?"
+    "message": "Паролата е намерена в пробив на данни. Използвайте уникална парола, за да защитите вашия акаунт. Наистина ли искате да използвате слаба парола?"
   },
   "weakAndExposedMasterPassword": {
     "message": "Weak and Exposed Master Password"
   },
   "weakAndBreachedMasterPasswordDesc": {
-    "message": "Weak password identified and found in a data breach. Use a strong and unique password to protect your account. Are you sure you want to use this password?"
+    "message": "Разпозната е слаба парола, която присъства в известен случай на изтекли данни. Използвайте сложна и уникална парола, за да защитите данните си. Наистина ли искате да използвате тази парола?"
   },
   "checkForBreaches": {
     "message": "Проверяване в известните случаи на изтекли данни за тази парола"
@@ -2421,5 +2451,231 @@
   "turnOffMasterPasswordPromptToEditField": {
     "message": "Изключете повторното въвеждане на главната парола, за да редактирате това поле",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
+  },
+  "importData": {
+    "message": "Внасяне на данни",
+    "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
+  },
+  "importError": {
+    "message": "Грешка при внасянето"
+  },
+  "importErrorDesc": {
+    "message": "Има проблем с данните, които внасяте. Поправете грешките посочени по-долу и пробвайте отново."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Оправете грешките по-долу и опитайте отново."
+  },
+  "description": {
+    "message": "Описание"
+  },
+  "importSuccess": {
+    "message": "Данните са внесени успешно"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Общо внесени елементи: $AMOUNT$.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Общо"
+  },
+  "importWarning": {
+    "message": "Внасяте данни към организацията „$ORGANIZATION$“. Данните могат да бъдат споделени с членовете ѝ. Сигурни ли сте, че искате да продължите?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Данните са в неправилен формат. Проверете файла за внасяне и пробвайте отново."
+  },
+  "importNothingError": {
+    "message": "Нищо не бе внесено."
+  },
+  "importEncKeyError": {
+    "message": "Грешка при дешифрирането на изнесения файл. Ключът за шифриране не отговаря на този, който е използван за изнасянето на данните."
+  },
+  "invalidFilePassword": {
+    "message": "Неправилна парола за файла. Използвайте паролата, която сте въвели при създаването на изнесения файл."
+  },
+  "importDestination": {
+    "message": "Място на внасяне"
+  },
+  "learnAboutImportOptions": {
+    "message": "Научете повече относно възможностите за внасяне"
+  },
+  "selectImportFolder": {
+    "message": "Изберете папка"
+  },
+  "selectImportCollection": {
+    "message": "Изберете колекция"
+  },
+  "importTargetHint": {
+    "message": "Изберете тази опция, ако искате съдържанието на внесения файл да бъде преместено в $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Файлът съдържа невъзложени елементи."
+  },
+  "selectFormat": {
+    "message": "Избор на форма̀та на файла за внасяне"
+  },
+  "selectImportFile": {
+    "message": "Изберете файла за внасяне"
+  },
+  "chooseFile": {
+    "message": "Изберете файл"
+  },
+  "noFileChosen": {
+    "message": "Не е избран файл"
+  },
+  "orCopyPasteFileContents": {
+    "message": "или поставете съдържанието му"
+  },
+  "instructionsFor": {
+    "message": "Инструкции за $NAME$",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Потвърждаване на внасянето на трезора"
+  },
+  "confirmVaultImportDesc": {
+    "message": "Този файл е защитен с парола. Трябва да въведете паролата, за да могат данните да бъдат внесени."
+  },
+  "confirmFilePassword": {
+    "message": "Потвърждаване на паролата на файла"
+  },
+  "passkeyNotCopied": {
+    "message": "Секретният ключ няма да бъде копиран"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "Секретният ключ няма да бъде копиран в клонирания елемент. Искате ли да продължите с клонирането на елемента?"
+  },
+  "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
+    "message": "Verification required by the initiating site. This feature is not yet implemented for accounts without master password."
+  },
+  "logInWithPasskey": {
+    "message": "Вписване със секретен ключ?"
+  },
+  "passkeyAlreadyExists": {
+    "message": "За това приложение вече съществува секретен ключ."
+  },
+  "noPasskeysFoundForThisApplication": {
+    "message": "Няма намерени секретни ключове за това приложение."
+  },
+  "noMatchingPasskeyLogin": {
+    "message": "Нямате елемент за вписване, подходящ за този уеб сайт."
+  },
+  "confirm": {
+    "message": "Потвърждаване"
+  },
+  "savePasskey": {
+    "message": "Запазване на секретния ключ"
+  },
+  "savePasskeyNewLogin": {
+    "message": "Запазване на секретния ключ като нов елемент за вписване"
+  },
+  "choosePasskey": {
+    "message": "Изберете елемент, в който да запазите този секретен ключ"
+  },
+  "passkeyItem": {
+    "message": "Passkey Item"
+  },
+  "overwritePasskey": {
+    "message": "Да се замени ли секретният ключ?"
+  },
+  "overwritePasskeyAlert": {
+    "message": "Този елемент вече съдържа секретен ключ. Наистина ли искате да замените текущия секретен ключ?"
+  },
+  "featureNotSupported": {
+    "message": "Тази функционалност все още не се поддържа"
+  },
+  "yourPasskeyIsLocked": {
+    "message": "За да се ползва секретният ключ, е необходимо удостоверяване. Потвърдете самоличността си, за да продължите."
+  },
+  "useBrowserName": {
+    "message": "Използване на браузъра"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Многостъпковото удостоверяване е отменено"
+  },
+  "noLastPassDataFound": {
+    "message": "Няма намерени данни от LastPass"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Неправилно потребителско име или парола"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Многостъпковото удостоверяване беше неуспешно"
+  },
+  "includeSharedFolders": {
+    "message": "Да се включат и споделените папки"
+  },
+  "lastPassEmail": {
+    "message": "Е-поща от LastPass"
+  },
+  "importingYourAccount": {
+    "message": "Внасяне на данните Ви…"
+  },
+  "lastPassMFARequired": {
+    "message": "Изисква се многостъпково удостоверяване за LastPass"
+  },
+  "lastPassMFADesc": {
+    "message": "Въведете еднократния код за достъп от приложението си за удостоверяване"
+  },
+  "lastPassOOBDesc": {
+    "message": "Одобрете заявката за вписване в приложението си за удостоверяване, или въведете еднократен код за достъп."
+  },
+  "passcode": {
+    "message": "Код за достъп"
+  },
+  "lastPassMasterPassword": {
+    "message": "Главна парола на LastPass"
+  },
+  "lastPassAuthRequired": {
+    "message": "Изисква се удостоверяване в LastPass"
+  },
+  "awaitingSSO": {
+    "message": "Изчакване на еднократното удостоверяване"
+  },
+  "awaitingSSODesc": {
+    "message": "Моля, продължете вписването с данните за удостоверяване на Вашата компания."
+  },
+  "seeDetailedInstructions": {
+    "message": "Може да намерите подробни инструкции в помощния ни уеб сайт на адрес",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Внасяне директно от LastPass"
+  },
+  "importFromCSV": {
+    "message": "Внасяне от CSV"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Опитайте отново или вижте дали имате е-писмо от LastPass за потвърждаване на самоличността си."
+  },
+  "collection": {
+    "message": "Колекция"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "Поставете устройството на YubiKey, което е свързано с регистрацията Ви в LastPass, в USB порт и натиснете бутона на устройството."
   }
 }

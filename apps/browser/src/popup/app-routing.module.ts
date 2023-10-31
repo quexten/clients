@@ -11,12 +11,14 @@ import {
 import { canAccessFeature } from "@bitwarden/angular/guard/feature-flag.guard";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 
+import { fido2AuthGuard } from "../auth/guards/fido2-auth.guard";
+import { AccountSwitcherComponent } from "../auth/popup/account-switching/account-switcher.component";
 import { EnvironmentComponent } from "../auth/popup/environment.component";
 import { HintComponent } from "../auth/popup/hint.component";
 import { HomeComponent } from "../auth/popup/home.component";
 import { LockComponent } from "../auth/popup/lock.component";
 import { LoginDecryptionOptionsComponent } from "../auth/popup/login-decryption-options/login-decryption-options.component";
-import { LoginWithDeviceComponent } from "../auth/popup/login-with-device.component";
+import { LoginViaAuthRequestComponent } from "../auth/popup/login-via-auth-request.component";
 import { LoginComponent } from "../auth/popup/login.component";
 import { RegisterComponent } from "../auth/popup/register.component";
 import { RemovePasswordComponent } from "../auth/popup/remove-password.component";
@@ -31,6 +33,8 @@ import { SendAddEditComponent } from "../tools/popup/send/send-add-edit.componen
 import { SendGroupingsComponent } from "../tools/popup/send/send-groupings.component";
 import { SendTypeComponent } from "../tools/popup/send/send-type.component";
 import { ExportComponent } from "../tools/popup/settings/export.component";
+import { ImportBrowserComponent } from "../tools/popup/settings/import/import-browser.component";
+import { Fido2Component } from "../vault/popup/components/fido2/fido2.component";
 import { AddEditComponent } from "../vault/popup/components/vault/add-edit.component";
 import { AttachmentsComponent } from "../vault/popup/components/vault/attachments.component";
 import { CollectionsComponent } from "../vault/popup/components/vault/collections.component";
@@ -74,6 +78,12 @@ const routes: Routes = [
     data: { state: "home" },
   },
   {
+    path: "fido2",
+    component: Fido2Component,
+    canActivate: [fido2AuthGuard],
+    data: { state: "fido2" },
+  },
+  {
     path: "login",
     component: LoginComponent,
     canActivate: [UnauthGuard],
@@ -81,13 +91,13 @@ const routes: Routes = [
   },
   {
     path: "login-with-device",
-    component: LoginWithDeviceComponent,
+    component: LoginViaAuthRequestComponent,
     canActivate: [],
     data: { state: "login-with-device" },
   },
   {
     path: "admin-approval-requested",
-    component: LoginWithDeviceComponent,
+    component: LoginViaAuthRequestComponent,
     canActivate: [],
     data: { state: "login-with-device" },
   },
@@ -95,7 +105,7 @@ const routes: Routes = [
     path: "lock",
     component: LockComponent,
     canActivate: [lockGuard()],
-    data: { state: "lock" },
+    data: { state: "lock", doNotSaveUrl: true },
   },
   {
     path: "2fa",
@@ -213,6 +223,12 @@ const routes: Routes = [
     component: PasswordGeneratorHistoryComponent,
     canActivate: [AuthGuard],
     data: { state: "generator-history" },
+  },
+  {
+    path: "import",
+    component: ImportBrowserComponent,
+    canActivate: [AuthGuard],
+    data: { state: "import" },
   },
   {
     path: "export",
@@ -346,6 +362,11 @@ const routes: Routes = [
         data: { state: "tabs_send" },
       },
     ],
+  },
+  {
+    path: "account-switcher",
+    component: AccountSwitcherComponent,
+    data: { state: "account-switcher" },
   },
 ];
 

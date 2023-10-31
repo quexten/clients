@@ -476,7 +476,7 @@
     "message": "بیشترین حجم پرونده ۵۰۰ مگابایت است."
   },
   "encryptionKeyMigrationRequired": {
-    "message": "Encryption key migration required. Please login through the web vault to update your encryption key."
+    "message": "انتقال کلید رمزگذاری مورد نیاز است. لطفاً از طریق گاوصندوق وب وارد شوید تا کلید رمزگذاری خود را به روز کنید."
   },
   "editedFolder": {
     "message": "پوشه ذخیره شد"
@@ -491,7 +491,7 @@
     "message": "پوشه حذف شد"
   },
   "loginOrCreateNewAccount": {
-    "message": "وارد شوید یا یک حساب کاربری بسازید تا به گاوصندوق امنتان دسترسی یابید."
+    "message": "وارد شوید یا یک حساب کاربری بسازید تا به گاوصندوق امن‌تان دسترسی یابید."
   },
   "createAccount": {
     "message": "ایجاد حساب کاربری"
@@ -1078,7 +1078,7 @@
     "message": "۱ گیگابایت فضای ذخیره‌سازی رمزنگاری شده برای پرونده‌های پیوست."
   },
   "premiumSignUpTwoStepOptions": {
-    "message": "Proprietary two-step login options such as YubiKey and Duo."
+    "message": "گزینه های ورود اضافی دو مرحله ای مانند YubiKey و Duo."
   },
   "premiumSignUpReports": {
     "message": "گزارش‌های بهداشت رمز عبور، سلامت حساب و نقض داده‌ها برای ایمن نگهداشتن گاوصندوق شما."
@@ -1493,7 +1493,7 @@
     "message": "یک گاوصندوق خارج شده درخواست احراز هویت مجدد را برای دسترسی آن می‌دهد."
   },
   "unlockMethodNeededToChangeTimeoutActionDesc": {
-    "message": "Set up an unlock method to change your vault timeout action."
+    "message": "یک روش بازگشایی برای پایان زمان مجاز تنظیم کنید."
   },
   "lock": {
     "message": "قفل",
@@ -1661,6 +1661,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "سیاست سازمانی بر تنظیمات مالکیت شما تأثیر می‌گذارد."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "An organization policy has blocked importing items into your individual vault."
   },
   "allSends": {
     "message": "همه ارسال ها",
@@ -1985,7 +1988,7 @@
     "message": "برون ریزی گاو‌صندوق شخصی"
   },
   "exportingIndividualVaultDescription": {
-    "message": "Only the individual vault items associated with $EMAIL$ will be exported. Organization vault items will not be included. Only vault item information will be exported and will not include associated attachments.",
+    "message": "فقط موارد شخصی گاوصندوق مرتبط با $EMAIL$ برون ریزی خواهند شد. موارد گاوصندوق سازمان شامل نخواهد شد. فقط اطلاعات مورد گاوصندوق برون ریزی خواهد شد و شامل تاریخچه کلمه عبور مرتبط یا پیوست نمی‌شود.",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2095,7 +2098,7 @@
     "message": "شما نیستید؟"
   },
   "newAroundHere": {
-    "message": "اینجا جدیده؟"
+    "message": "اینجا تازه واردی؟"
   },
   "loggingInTo": {
     "message": "ورود به $DOMAIN$",
@@ -2110,7 +2113,7 @@
     "message": "با دستگاه دیگری وارد شوید"
   },
   "loginInitiated": {
-    "message": "Login initiated"
+    "message": "ورود به سیستم آغاز شد"
   },
   "notificationSentDevice": {
     "message": "یک اعلان به دستگاه شما ارسال شده است."
@@ -2250,35 +2253,35 @@
     "message": "به‌روز رسانی تنظیمات توصیه شده"
   },
   "deviceApprovalRequired": {
-    "message": "Device approval required. Select an approval option below:"
+    "message": "تأیید دستگاه لازم است. یک روش تأیید انتخاب کنید:"
   },
   "rememberThisDevice": {
-    "message": "Remember this device"
+    "message": "این دستگاه را به خاطر بسپار"
   },
   "uncheckIfPublicDevice": {
-    "message": "Uncheck if using a public device"
+    "message": "اگر از دستگاه عمومی استفاده می‌کنید علامت را بردارید"
   },
   "approveFromYourOtherDevice": {
-    "message": "Approve from your other device"
+    "message": "تأیید با دستگاه دیگرتان"
   },
   "requestAdminApproval": {
-    "message": "Request admin approval"
+    "message": "درخواست تأیید مدیر"
   },
   "approveWithMasterPassword": {
-    "message": "Approve with master password"
+    "message": "تأیید با کلمه عبور اصلی"
   },
   "region": {
-    "message": "Region"
+    "message": "منطقه"
   },
   "ssoIdentifierRequired": {
-    "message": "Organization SSO identifier is required."
+    "message": "شناسه سازمان SSO مورد نیاز است."
   },
   "eu": {
-    "message": "EU",
+    "message": "اروپا",
     "description": "European Union"
   },
   "loggingInOn": {
-    "message": "Logging in on"
+    "message": "ورود با"
   },
   "usDomain": {
     "message": "bitwarden.com"
@@ -2287,46 +2290,46 @@
     "message": "bitwarden.eu"
   },
   "selfHostedServer": {
-    "message": "self-hosted"
+    "message": "خود میزبان"
   },
   "accessDenied": {
     "message": "دسترسی رد شد. شما اجازه مشاهده این صفحه را ندارید."
   },
   "accountSuccessfullyCreated": {
-    "message": "Account successfully created!"
+    "message": "حساب کاربری با موفقیت ایجاد شد!"
   },
   "adminApprovalRequested": {
-    "message": "Admin approval requested"
+    "message": "تأیید مدیر درخواست شد"
   },
   "adminApprovalRequestSentToAdmins": {
-    "message": "Your request has been sent to your admin."
+    "message": "درخواست شما به مدیرتان فرستاده شد."
   },
   "youWillBeNotifiedOnceApproved": {
-    "message": "You will be notified once approved."
+    "message": "به محض تأیید مطلع خواهید شد."
   },
   "troubleLoggingIn": {
-    "message": "Trouble logging in?"
+    "message": "در ورود مشکلی دارید؟"
   },
   "loginApproved": {
-    "message": "Login approved"
+    "message": "ورود تأیید شد"
   },
   "userEmailMissing": {
-    "message": "User email missing"
+    "message": "ایمیل کاربر وجود ندارد"
   },
   "deviceTrusted": {
-    "message": "Device trusted"
+    "message": "دستگاه مورد اعتماد است"
   },
   "inputRequired": {
-    "message": "Input is required."
+    "message": "ورودی ضروری است."
   },
   "required": {
-    "message": "required"
+    "message": "ضروری"
   },
   "search": {
-    "message": "Search"
+    "message": "جستجو"
   },
   "inputMinLength": {
-    "message": "Input must be at least $COUNT$ characters long.",
+    "message": "ورودی باید حداقل $COUNT$ کاراکتر داشته باشد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2335,7 +2338,7 @@
     }
   },
   "inputMaxLength": {
-    "message": "Input must not exceed $COUNT$ characters in length.",
+    "message": "طول ورودی نباید بیش از $COUNT$ کاراکتر باشد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2344,7 +2347,7 @@
     }
   },
   "inputForbiddenCharacters": {
-    "message": "The following characters are not allowed: $CHARACTERS$",
+    "message": "کاراکترهای زیر مجاز نیستند: $CHARACTERS$",
     "placeholders": {
       "characters": {
         "content": "$1",
@@ -2353,7 +2356,7 @@
     }
   },
   "inputMinValue": {
-    "message": "Input value must be at least $MIN$.",
+    "message": "مقدار ورودی باید حداقل $MIN$ باشد.",
     "placeholders": {
       "min": {
         "content": "$1",
@@ -2362,7 +2365,7 @@
     }
   },
   "inputMaxValue": {
-    "message": "Input value must not exceed $MAX$.",
+    "message": "مقدار ورودی نباید از $MAX$ تجاوز کند.",
     "placeholders": {
       "max": {
         "content": "$1",
@@ -2371,17 +2374,17 @@
     }
   },
   "multipleInputEmails": {
-    "message": "1 or more emails are invalid"
+    "message": "یک یا چند ایمیل نامعتبر است"
   },
   "inputTrimValidator": {
-    "message": "Input must not contain only whitespace.",
+    "message": "ورودی نباید فقط حاوی فضای خالی باشد.",
     "description": "Notification to inform the user that a form's input can't contain only whitespace."
   },
   "inputEmail": {
-    "message": "Input is not an email address."
+    "message": "ورودی یک نشانی ایمیل نیست."
   },
   "fieldsNeedAttention": {
-    "message": "$COUNT$ field(s) above need your attention.",
+    "message": "فیلد $COUNT$ در بالا به توجه شما نیاز دارد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2390,22 +2393,22 @@
     }
   },
   "selectPlaceholder": {
-    "message": "-- Select --"
+    "message": "-- انتخاب --"
   },
   "multiSelectPlaceholder": {
-    "message": "-- Type to filter --"
+    "message": "-- برای فیلتر تایپ کنید --"
   },
   "multiSelectLoading": {
-    "message": "Retrieving options..."
+    "message": "در حال بازیابی گزینه‌ها..."
   },
   "multiSelectNotFound": {
-    "message": "No items found"
+    "message": "موردی یافت نشد"
   },
   "multiSelectClearAll": {
-    "message": "Clear all"
+    "message": "پاک‌کردن همه"
   },
   "plusNMore": {
-    "message": "+ $QUANTITY$ more",
+    "message": "+ $QUANTITY$ بیشتر",
     "placeholders": {
       "quantity": {
         "content": "$1",
@@ -2414,9 +2417,193 @@
     }
   },
   "submenu": {
-    "message": "Submenu"
+    "message": "زیرمنو"
+  },
+  "typePasskey": {
+    "message": "کلید عبور"
+  },
+  "passkeyNotCopied": {
+    "message": "کلید عبور کپی نمی‌شود"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "کلید عبور در مورد شبیه سازی شده کپی نمی‌شود. آیا می‌خواهید به شبیه سازی این مورد ادامه دهید؟"
   },
   "aliasDomain": {
-    "message": "Alias domain"
+    "message": "دامنه مستعار"
+  },
+  "importData": {
+    "message": "Import data",
+    "description": "Used for the desktop menu item and the header of the import dialog"
+  },
+  "importError": {
+    "message": "Import error"
+  },
+  "importErrorDesc": {
+    "message": "There was a problem with the data you tried to import. Please resolve the errors listed below in your source file and try again."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Resolve the errors below and try again."
+  },
+  "description": {
+    "message": "Description"
+  },
+  "importSuccess": {
+    "message": "Data successfully imported"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "A total of $AMOUNT$ items were imported.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Total"
+  },
+  "importWarning": {
+    "message": "You are importing data to $ORGANIZATION$. Your data may be shared with members of this organization. Do you want to proceed?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Data is not formatted correctly. Please check your import file and try again."
+  },
+  "importNothingError": {
+    "message": "Nothing was imported."
+  },
+  "importEncKeyError": {
+    "message": "Error decrypting the exported file. Your encryption key does not match the encryption key used export the data."
+  },
+  "invalidFilePassword": {
+    "message": "Invalid file password, please use the password you entered when you created the export file."
+  },
+  "importDestination": {
+    "message": "Import destination"
+  },
+  "learnAboutImportOptions": {
+    "message": "Learn about your import options"
+  },
+  "selectImportFolder": {
+    "message": "Select a folder"
+  },
+  "selectImportCollection": {
+    "message": "Select a collection"
+  },
+  "importTargetHint": {
+    "message": "Select this option if you want the imported file contents moved to a $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "File contains unassigned items."
+  },
+  "selectFormat": {
+    "message": "Select the format of the import file"
+  },
+  "selectImportFile": {
+    "message": "Select the import file"
+  },
+  "chooseFile": {
+    "message": "Choose File"
+  },
+  "noFileChosen": {
+    "message": "No file chosen"
+  },
+  "orCopyPasteFileContents": {
+    "message": "or copy/paste the import file contents"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ Instructions",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Confirm vault import"
+  },
+  "confirmVaultImportDesc": {
+    "message": "This file is password-protected. Please enter the file password to import data."
+  },
+  "confirmFilePassword": {
+    "message": "Confirm file password"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Multifactor authentication cancelled"
+  },
+  "noLastPassDataFound": {
+    "message": "No LastPass data found"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Incorrect username or password"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Multifactor authentication failed"
+  },
+  "includeSharedFolders": {
+    "message": "Include shared folders"
+  },
+  "lastPassEmail": {
+    "message": "LastPass Email"
+  },
+  "importingYourAccount": {
+    "message": "Importing your account..."
+  },
+  "lastPassMFARequired": {
+    "message": "LastPass multifactor authentication required"
+  },
+  "lastPassMFADesc": {
+    "message": "Enter your one-time passcode from your authentication app"
+  },
+  "lastPassOOBDesc": {
+    "message": "Approve the login request in your authentication app or enter a one-time passcode."
+  },
+  "passcode": {
+    "message": "Passcode"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass master password"
+  },
+  "lastPassAuthRequired": {
+    "message": "LastPass authentication required"
+  },
+  "awaitingSSO": {
+    "message": "Awaiting SSO authentication"
+  },
+  "awaitingSSODesc": {
+    "message": "Please continue to log in using your company credentials."
+  },
+  "seeDetailedInstructions": {
+    "message": "See detailed instructions on our help site at",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Import directly from LastPass"
+  },
+  "importFromCSV": {
+    "message": "Import from CSV"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Try again or look for an email from LastPass to verify it's you."
+  },
+  "collection": {
+    "message": "Collection"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "Insert the YubiKey associated with your LastPass account into your computer's USB port, then touch its button."
   }
 }

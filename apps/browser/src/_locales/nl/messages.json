@@ -91,6 +91,15 @@
   "autoFill": {
     "message": "Auto-invullen"
   },
+  "autoFillLogin": {
+    "message": "Login automatisch invullen"
+  },
+  "autoFillCard": {
+    "message": "Kaart automatisch invullen"
+  },
+  "autoFillIdentity": {
+    "message": "Identiteit automatisch invullen"
+  },
   "generatePasswordCopied": {
     "message": "Wachtwoord genereren (op klembord)"
   },
@@ -99,6 +108,21 @@
   },
   "noMatchingLogins": {
     "message": "Geen overeenkomstige logins."
+  },
+  "noCards": {
+    "message": "Geen kaarten"
+  },
+  "noIdentities": {
+    "message": "Geen identiteiten"
+  },
+  "addLoginMenu": {
+    "message": "Login toevoegen"
+  },
+  "addCardMenu": {
+    "message": "Kaart toevoegen"
+  },
+  "addIdentityMenu": {
+    "message": "Identiteit toevoegen"
   },
   "unlockVaultMenu": {
     "message": "Ontgrendel je kluis"
@@ -772,7 +796,7 @@
     "message": "Functionaliteit niet beschikbaar"
   },
   "encryptionKeyMigrationRequired": {
-    "message": "Encryption key migration required. Please login through the web vault to update your encryption key."
+    "message": "Migratie van de encryptiesleutel vereist. Login via de website om je sleutel te bij te werken."
   },
   "premiumMembership": {
     "message": "Premium-abonnement"
@@ -1229,6 +1253,9 @@
   "typeIdentity": {
     "message": "Identiteit"
   },
+  "typePasskey": {
+    "message": "Passkey"
+  },
   "passwordHistory": {
     "message": "Geschiedenis"
   },
@@ -1628,6 +1655,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "Een organisatiebeleid heeft invloed op je eigendomsopties."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "Organisatiebeleid heeft het importeren van items in je persoonlijke kluis geblokkeerd."
   },
   "excludedDomains": {
     "message": "Uitgesloten domeinen"
@@ -2421,5 +2451,231 @@
   "turnOffMasterPasswordPromptToEditField": {
     "message": "Turn off master password re-prompt to edit this field",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
+  },
+  "importData": {
+    "message": "Data importeren",
+    "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
+  },
+  "importError": {
+    "message": "Fout bij importeren"
+  },
+  "importErrorDesc": {
+    "message": "Er was een probleem met de data die je probeerde te importeren. Los de onderstaande fouten op in het bronbestand en probeer het opnieuw."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Los onderstaande fouten op en probeer het opnieuw."
+  },
+  "description": {
+    "message": "Omschrijving"
+  },
+  "importSuccess": {
+    "message": "Data succesvol geïmporteerd"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Een totaal van $AMOUNT$ items zijn geïmporteerd.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Totaal"
+  },
+  "importWarning": {
+    "message": "Je importeert gegevens naar $ORGANIZATION$. Je gegevens kunnen gedeeld worden met de leden van deze organisatie. Wil je doorgaan?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "De gegevens zijn niet correct opgemaakt. Controleer je importbestand en probeer het opnieuw."
+  },
+  "importNothingError": {
+    "message": "Er is niets geïmporteerd."
+  },
+  "importEncKeyError": {
+    "message": "Fout bij het decoderen van het geëxporteerde bestand. Je encryptiesleutel komt niet overeen met de gebruikte sleutel waarmee de gegevens zijn geëxporteerd."
+  },
+  "invalidFilePassword": {
+    "message": "Onjuist bestandswachtwoord, gebruik het wachtwoord dat je hebt ingevoerd bij het aanmaken van het exportbestand."
+  },
+  "importDestination": {
+    "message": "Importbestemming"
+  },
+  "learnAboutImportOptions": {
+    "message": "Leer meer over je importopties"
+  },
+  "selectImportFolder": {
+    "message": "Map selecteren"
+  },
+  "selectImportCollection": {
+    "message": "Collectie selecteren"
+  },
+  "importTargetHint": {
+    "message": "Kies deze optie als je de geïmporteerde bestandsinhoud wilt verplaatsen naar een $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Bestand bevat niet-toegewezen items."
+  },
+  "selectFormat": {
+    "message": "Formaat van het importbestand kiezen"
+  },
+  "selectImportFile": {
+    "message": "Importbestand kiezen"
+  },
+  "chooseFile": {
+    "message": "Bestand kiezen"
+  },
+  "noFileChosen": {
+    "message": "Geen bestand gekozen"
+  },
+  "orCopyPasteFileContents": {
+    "message": "of kopieer en plak de inhoud van het importbestand"
+  },
+  "instructionsFor": {
+    "message": "Instructies voor $NAME$",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Kluisimport bevestigen"
+  },
+  "confirmVaultImportDesc": {
+    "message": "Dit bestand is beveiligd met een wachtwoord. Voer het bestandswachtwoord in om gegevens te importeren."
+  },
+  "confirmFilePassword": {
+    "message": "Bestandswachtwoord bevestigen"
+  },
+  "passkeyNotCopied": {
+    "message": "Passkey wordt niet gekopieerd"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "De passkey wordt niet gekopieerd naar het gekloonde item. Wil je doorgaan met het klonen van dit item?"
+  },
+  "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
+    "message": "De initiërende site vereist verificatie. Deze functie is nog niet geïmplementeerd voor accounts zonder hoofdwachtwoord."
+  },
+  "logInWithPasskey": {
+    "message": "Inloggen met passkey?"
+  },
+  "passkeyAlreadyExists": {
+    "message": "Er bestaat al een passkey voor deze applicatie."
+  },
+  "noPasskeysFoundForThisApplication": {
+    "message": "Geen passkeys gevonden voor deze applicatie."
+  },
+  "noMatchingPasskeyLogin": {
+    "message": "Je hebt geen overeenkomende login voor deze site."
+  },
+  "confirm": {
+    "message": "Bevestigen"
+  },
+  "savePasskey": {
+    "message": "Passkey opslaan"
+  },
+  "savePasskeyNewLogin": {
+    "message": "Passkey als nieuwe login opslaan"
+  },
+  "choosePasskey": {
+    "message": "Kies een login om deze passkey bij op te slaan"
+  },
+  "passkeyItem": {
+    "message": "Passkey-Item"
+  },
+  "overwritePasskey": {
+    "message": "Passkey overschrijven?"
+  },
+  "overwritePasskeyAlert": {
+    "message": "Dit item bevat al een passkey. Weet je zeker dat je de huidige passkey wilt overschrijven?"
+  },
+  "featureNotSupported": {
+    "message": "Functie nog niet ondersteund"
+  },
+  "yourPasskeyIsLocked": {
+    "message": "Authenticatie vereist om passkey te gebruiken. Verifieer je identiteit om door te gaan."
+  },
+  "useBrowserName": {
+    "message": "Browser gebruiken"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Multifactor-authenticatie geannuleerd"
+  },
+  "noLastPassDataFound": {
+    "message": "Geen LastPass-gegevens gevonden"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Onjuiste gebruikersnaam of wachtwoord"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Multifactor-authenticatie mislukt"
+  },
+  "includeSharedFolders": {
+    "message": "Gedeelde mappen insluiten"
+  },
+  "lastPassEmail": {
+    "message": "LastPass Email"
+  },
+  "importingYourAccount": {
+    "message": "Account impoteren..."
+  },
+  "lastPassMFARequired": {
+    "message": "LastPass multifactor-authenticatie vereist"
+  },
+  "lastPassMFADesc": {
+    "message": "Voer je eenmalige toegangscode van je authenticatie-app in"
+  },
+  "lastPassOOBDesc": {
+    "message": "Bevestig het inlogverzoek in je authenticatie-app of voer een eenmalige toegangscode in."
+  },
+  "passcode": {
+    "message": "Passcode"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass-hoofdwachtwoord"
+  },
+  "lastPassAuthRequired": {
+    "message": "LastPass-authenticatie vereist"
+  },
+  "awaitingSSO": {
+    "message": "Wacht op SSO-authenticatie"
+  },
+  "awaitingSSODesc": {
+    "message": "Ga door met inloggen met de inloggegevens van je bedrijf."
+  },
+  "seeDetailedInstructions": {
+    "message": "See detailed instructions on our help site at",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Rechtstreeks vanuit LastPass importeren"
+  },
+  "importFromCSV": {
+    "message": "Vanuit CSV importeren"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Probeer het opnieuw of zoek naar een e-mailbericht van LastPass om te verifiëren dat jij het bent."
+  },
+  "collection": {
+    "message": "Collectie"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "Insert the YubiKey associated with your LastPass account into your computer's USB port, then touch its button."
   }
 }

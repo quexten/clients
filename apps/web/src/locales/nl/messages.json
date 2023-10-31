@@ -611,6 +611,72 @@
   "loginWithMasterPassword": {
     "message": "Inloggen met je hoofdwachtwoord"
   },
+  "loginWithPasskey": {
+    "message": "Inloggen met passkey"
+  },
+  "loginWithPasskeyInfo": {
+    "message": "Gebruik een gegenereerde passkey die je automatisch inlogt zonder wachtwoord. Biometrie, zoals gezichtsherkenning of vingerafdruk, of een andere FIDO2-beveiligingsmethode controleren je identiteit."
+  },
+  "newPasskey": {
+    "message": "Nieuwe passkey"
+  },
+  "learnMoreAboutPasswordless": {
+    "message": "Meer lezen over wachtwoordloos"
+  },
+  "passkeyEnterMasterPassword": {
+    "message": "Voer je hoofdwachtwoord in om je instellingen voor het inloggen met passkey te veranderen."
+  },
+  "creatingPasskeyLoading": {
+    "message": "Passkey aanmaken..."
+  },
+  "creatingPasskeyLoadingInfo": {
+    "message": "Houd dit venster open en volg de aanwijzingen van je browser."
+  },
+  "errorCreatingPasskey": {
+    "message": "Fout bij het aanmaken van passkey"
+  },
+  "errorCreatingPasskeyInfo": {
+    "message": "Er ging iets mis met het aanmaken van je passkey."
+  },
+  "passkeySuccessfullyCreated": {
+    "message": "Passkey succesvol aangemaakt!"
+  },
+  "customName": {
+    "message": "Aangepaste naam"
+  },
+  "customPasskeyNameInfo": {
+    "message": "Geef je passkey een naam om deze later te herkennen."
+  },
+  "encryptionNotSupported": {
+    "message": "Encryptie niet ondersteund"
+  },
+  "loginWithPasskeyEnabled": {
+    "message": "Inloggen met passkey ingeschakeld"
+  },
+  "passkeySaved": {
+    "message": "$NAME$ opgeslagen",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Personal yubikey"
+      }
+    }
+  },
+  "passkeyRemoved": {
+    "message": "Passkey verwijderd"
+  },
+  "removePasskey": {
+    "message": "Passkey verwijderen"
+  },
+  "removePasskeyInfo": {
+    "message": "Als je alle passkeys verwijdert, heb je je hoofdwachtwoord nodig om op nieuwe apparaten in te loggen."
+  },
+  "passkeyLimitReachedInfo": {
+    "message": "Limiet van passkeys bereikt. Verwijder een passkey om een andere toe te voegen."
+  },
+  "tryAgain": {
+    "message": "Opnieuw proberen"
+  },
   "createAccount": {
     "message": "Account aanmaken"
   },
@@ -3572,6 +3638,18 @@
   "organizationIsDisabled": {
     "message": "Organisatie uitgeschakeld."
   },
+  "secretsAccessSuspended": {
+    "message": "Opgeschorte organisaties zijn niet toegankelijk. Neem contact op met de eigenaar van je organisatie voor hulp."
+  },
+  "secretsCannotCreate": {
+    "message": "Je kunt geen secrets aanmaken in opgeschorte organisaties. Neem contact op met de eigenaar van je organisatie voor hulp."
+  },
+  "projectsCannotCreate": {
+    "message": "Je kunt geen projecten aanmaken in opgeschorte organisaties. Neem contact op met de eigenaar van je organisatie voor hulp."
+  },
+  "serviceAccountsCannotCreate": {
+    "message": "Je kunt geen service accounts aanmaken in opgeschorte organisaties. Neem contact op met de eigenaar van je organisatie voor hulp."
+  },
   "disabledOrganizationFilterError": {
     "message": "Je kunt uitgeschakelde items in een organisatie niet benaderen. Neem contact op met de eigenaar van je organisatie voor hulp."
   },
@@ -3917,8 +3995,9 @@
   "ssoIdentifier": {
     "message": "SSO Identifier"
   },
-  "ssoIdentifierHint": {
-    "message": "Geef dit ID aan je leden door voor het inloggen met SSO."
+  "ssoIdentifierHintPartOne": {
+    "message": "Geef dit ID aan je leden voor inloggen met SSO. Om deze stap te omzeilen, configureer je ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Provide this ID to your members to login with SSO. To bypass this step, set up Domain verification'"
   },
   "unlinkSso": {
     "message": "SSO ontkoppelen"
@@ -4406,7 +4485,7 @@
     "message": "Een organisatiebeleid heeft invloed op je eigendomsopties."
   },
   "personalOwnershipPolicyInEffectImports": {
-    "message": "Een organisatiebeleid heeft het importeren van items in je persoonlijke kluis uitgeschakeld."
+    "message": "Organisatiebeleid heeft het importeren van items in je persoonlijke kluis geblokkeerd."
   },
   "personalOwnershipCheckboxDesc": {
     "message": "Schakel persoonlijke eigendom uit voor organisatiegebruikers"
@@ -5406,6 +5485,19 @@
   "required": {
     "message": "vereist"
   },
+  "charactersCurrentAndMaximum": {
+    "message": "$CURRENT$/$MAX$ maximum aantal tekens",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "0"
+      },
+      "max": {
+        "content": "$2",
+        "example": "100"
+      }
+    }
+  },
   "characterMaximum": {
     "message": "Maximaal $MAX$ tekens",
     "placeholders": {
@@ -5753,6 +5845,9 @@
   },
   "on": {
     "message": "Aan"
+  },
+  "off": {
+    "message": "Uit"
   },
   "members": {
     "message": "Leden"
@@ -7096,8 +7191,8 @@
       }
     }
   },
-  "addSecretsManager": {
-    "message": "Secrets Manager toevoegen"
+  "subscribeToSecretsManager": {
+    "message": "Abonneren op Secrets Manager"
   },
   "addSecretsManagerUpgradeDesc": {
     "message": "Secrets Manager toevoegen aan je geüpgraded abonnement zodat je toegang houdt tot geheimen die met je vorige abonnement zijn aangemaakt."
@@ -7177,5 +7272,18 @@
   },
   "alreadyHaveAccount": {
     "message": "Already have an account?"
+  },
+  "typePasskey": {
+    "message": "Passkey"
+  },
+  "passkeyNotCopied": {
+    "message": "Passkey wordt niet gekopieerd"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "De passkey wordt niet gekopieerd naar het gekloonde item. Wil je doorgaan met het klonen van dit item?"
+  },
+  "seeDetailedInstructions": {
+    "message": "See detailed instructions on our help site at",
+    "description": "This is followed a by a hyperlink to the help website."
   }
 }

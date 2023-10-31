@@ -10,6 +10,7 @@ import { ColorPasswordCountPipe } from "@bitwarden/angular/pipes/color-password-
 import { ColorPasswordPipe } from "@bitwarden/angular/pipes/color-password.pipe";
 
 import { AccessibilityCookieComponent } from "../auth/accessibility-cookie.component";
+import { SetPinComponent } from "../auth/components/set-pin.component";
 import { DeleteAccountComponent } from "../auth/delete-account.component";
 import { EnvironmentComponent } from "../auth/environment.component";
 import { HintComponent } from "../auth/hint.component";
@@ -24,7 +25,6 @@ import { TwoFactorOptionsComponent } from "../auth/two-factor-options.component"
 import { TwoFactorComponent } from "../auth/two-factor.component";
 import { UpdateTempPasswordComponent } from "../auth/update-temp-password.component";
 import { PremiumComponent } from "../vault/app/accounts/premium.component";
-import { PasswordRepromptComponent } from "../vault/app/components/password-reprompt.component";
 import { AddEditCustomFieldsComponent } from "../vault/app/vault/add-edit-custom-fields.component";
 import { AddEditComponent } from "../vault/app/vault/add-edit.component";
 import { AttachmentsComponent } from "../vault/app/vault/attachments.component";
@@ -42,7 +42,6 @@ import { SettingsComponent } from "./accounts/settings.component";
 import { VaultTimeoutInputComponent } from "./accounts/vault-timeout-input.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { SetPinComponent } from "./components/set-pin.component";
 import { UserVerificationComponent } from "./components/user-verification.component";
 import { AccountSwitcherComponent } from "./layout/account-switcher.component";
 import { HeaderComponent } from "./layout/header.component";
@@ -79,7 +78,6 @@ import { SendComponent } from "./tools/send/send.component";
     GeneratorComponent,
     PasswordGeneratorHistoryComponent,
     PasswordHistoryComponent,
-    PasswordRepromptComponent,
     PremiumComponent,
     RegisterComponent,
     RemovePasswordComponent,

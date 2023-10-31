@@ -19,10 +19,9 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { DialogService } from "@bitwarden/components";
 
+import { SetPinComponent } from "../../auth/components/set-pin.component";
 import { flagEnabled } from "../../platform/flags";
 import { ElectronStateService } from "../../platform/services/electron-state.service.abstraction";
-import { isWindowsStore } from "../../utils";
-import { SetPinComponent } from "../components/set-pin.component";
 @Component({
   selector: "app-settings",
   templateUrl: "settings.component.html",
@@ -589,7 +588,7 @@ export class SettingsComponent implements OnInit {
 
       this.form.controls.enableBrowserIntegration.setValue(false);
       return;
-    } else if (isWindowsStore()) {
+    } else if (ipc.platform.isWindowsStore) {
       await this.dialogService.openSimpleDialog({
         title: { key: "browserIntegrationUnsupportedTitle" },
         content: { key: "browserIntegrationWindowsStoreDesc" },

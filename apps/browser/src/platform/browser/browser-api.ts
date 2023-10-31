@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+
 import { DeviceType } from "@bitwarden/common/enums";
 
 import { TabMessage } from "../../types/tab-messages";
@@ -33,6 +35,10 @@ export class BrowserApi {
         resolve(window);
       })
     );
+  }
+
+  static async removeWindow(windowId: number) {
+    await chrome.windows.remove(windowId);
   }
 
   static async getTabFromCurrentWindowId(): Promise<chrome.tabs.Tab> | null {
@@ -199,6 +205,14 @@ export class BrowserApi {
     BrowserApi.removeTab(tabToClose.id);
   }
 
+  static createNewWindow(
+    url: string,
+    focused = true,
+    type: chrome.windows.createTypeEnum = "normal"
+  ) {
+    chrome.windows.create({ url, focused, type });
+  }
+
   // Keep track of all the events registered in a Safari popup so we can remove
   // them when the popup gets unloaded, otherwise we cause a memory leak
   private static registeredMessageListeners: any[] = [];
@@ -206,8 +220,13 @@ export class BrowserApi {
 
   static messageListener(
     name: string,
-    callback: (message: any, sender: chrome.runtime.MessageSender, response: any) => void
+    callback: (
+      message: any,
+      sender: chrome.runtime.MessageSender,
+      sendResponse: any
+    ) => boolean | void
   ) {
+    // eslint-disable-next-line no-restricted-syntax
     chrome.runtime.onMessage.addListener(callback);
 
     if (BrowserApi.isSafariApi && !BrowserApi.isBackgroundPage(window)) {
@@ -216,9 +235,31 @@ export class BrowserApi {
     }
   }
 
+  static messageListener$() {
+    return new Observable<unknown>((subscriber) => {
+      const handler = (message: unknown) => {
+        subscriber.next(message);
+      };
+
+      BrowserApi.messageListener("message", handler);
+
+      return () => {
+        chrome.runtime.onMessage.removeListener(handler);
+
+        if (BrowserApi.isSafariApi) {
+          const index = BrowserApi.registeredMessageListeners.indexOf(handler);
+          if (index !== -1) {
+            BrowserApi.registeredMessageListeners.splice(index, 1);
+          }
+        }
+      };
+    });
+  }
+
   static storageChangeListener(
     callback: Parameters<typeof chrome.storage.onChanged.addListener>[0]
   ) {
+    // eslint-disable-next-line no-restricted-syntax
     chrome.storage.onChanged.addListener(callback);
 
     if (BrowserApi.isSafariApi && !BrowserApi.isBackgroundPage(window)) {

@@ -91,6 +91,15 @@
   "autoFill": {
     "message": "Otomatik doldur"
   },
+  "autoFillLogin": {
+    "message": "Hesabı otomatik doldur"
+  },
+  "autoFillCard": {
+    "message": "Kartı otomatik doldur"
+  },
+  "autoFillIdentity": {
+    "message": "Kimliği otomatik doldur"
+  },
   "generatePasswordCopied": {
     "message": "Parola oluştur (ve kopyala)"
   },
@@ -99,6 +108,21 @@
   },
   "noMatchingLogins": {
     "message": "Eşleşen hesap yok"
+  },
+  "noCards": {
+    "message": "Kart yok"
+  },
+  "noIdentities": {
+    "message": "Kimlik yok"
+  },
+  "addLoginMenu": {
+    "message": "Hesap ekle"
+  },
+  "addCardMenu": {
+    "message": "Kart ekle"
+  },
+  "addIdentityMenu": {
+    "message": "Kimlik ekle"
   },
   "unlockVaultMenu": {
     "message": "Kasanızın kilidini açın"
@@ -1229,6 +1253,9 @@
   "typeIdentity": {
     "message": "Kimlik"
   },
+  "typePasskey": {
+    "message": "Geçiş anahtarı"
+  },
   "passwordHistory": {
     "message": "Parola geçmişi"
   },
@@ -1609,7 +1636,7 @@
     "message": "Biyometri doğrulanamadı"
   },
   "biometricsFailedDesc": {
-    "message": "Biometrics cannot be completed, consider using a master password or logging out. If this persists, please contact Bitwarden support."
+    "message": "Biyometri doğrulaması tamamlanamadı. Ana parolanızı kullanabilir veya çıkış yapabilirsiniz. Sorun devam ederse Bitwarden destek ekibiyle iletişime geçin."
   },
   "nativeMessaginPermissionErrorTitle": {
     "message": "İzin verilmedi"
@@ -1628,6 +1655,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "Bir kuruluş ilkesi sahiplik seçeneklerinizi etkiliyor."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "Bir kuruluş ilkesi, kayıtları kişisel kasanıza içe aktarmayı engelledi."
   },
   "excludedDomains": {
     "message": "Hariç tutulan alan adları"
@@ -2421,5 +2451,231 @@
   "turnOffMasterPasswordPromptToEditField": {
     "message": "Bu alanı düzenlemek için ana parolayı yeniden istemeyi kapatın",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
+  },
+  "importData": {
+    "message": "Verileri içe aktar",
+    "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
+  },
+  "importError": {
+    "message": "İçe aktarma hatası"
+  },
+  "importErrorDesc": {
+    "message": "İçe aktarmaya çalıştığınız verilerle ilgili bir problem var. Lütfen kaynak dosyanızdaki aşağıda belirtilen hataları çözüp tekrar deneyin."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Aşağıdaki hataları düzeltip yeniden deneyin."
+  },
+  "description": {
+    "message": "Açıklama"
+  },
+  "importSuccess": {
+    "message": "Veriler başarıyla içe aktarıldı"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Toplam $AMOUNT$ kayıt içe aktarıldı.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Toplam"
+  },
+  "importWarning": {
+    "message": "$ORGANIZATION$ kuruluşuna veri aktarıyorsunuz. Verileriniz bu kuruluşun üyeleriyle paylaşılabilir. Devam etmek istiyor musunuz?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Veriler doğru biçimlendirilmemiş. Lütfen içe aktarma dosyanızı kontrol edin ve tekrar deneyin."
+  },
+  "importNothingError": {
+    "message": "Hiçbir şey içe aktarılmadı."
+  },
+  "importEncKeyError": {
+    "message": "Dışa aktarılmış dosya çözülemedi. Şifreleme anahtarınız, veriler dışa aktarılırken kullanılanla uyuşmuyor."
+  },
+  "invalidFilePassword": {
+    "message": "Geçersiz dosya parolası. Lütfen dışa aktardığınız dosyayı oluştururken girdiğiniz parolayı kullanın."
+  },
+  "importDestination": {
+    "message": "İçe aktarma hedefi"
+  },
+  "learnAboutImportOptions": {
+    "message": "İçe aktarma seçeneklerinizi öğrenin"
+  },
+  "selectImportFolder": {
+    "message": "Bir klasör seçin"
+  },
+  "selectImportCollection": {
+    "message": "Bir koleksiyon seçin"
+  },
+  "importTargetHint": {
+    "message": "Select this option if you want the imported file contents moved to a $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Dosya atanmamış öğeler içeriyor."
+  },
+  "selectFormat": {
+    "message": "İçe aktarma dosyasının biçimini seçin"
+  },
+  "selectImportFile": {
+    "message": "İçe aktarma dosyasını seçin"
+  },
+  "chooseFile": {
+    "message": "Dosya seçin"
+  },
+  "noFileChosen": {
+    "message": "Dosya seçilmedi"
+  },
+  "orCopyPasteFileContents": {
+    "message": "veya içe aktarma dosyasının içeriğini kopyalayıp yapıştırın"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ Talimatları",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Kasayı içe aktarmayı onaylayın"
+  },
+  "confirmVaultImportDesc": {
+    "message": "Bu dosya parola korumalıdır. Verileri içe aktarmak için lütfen dosya parolasını girin."
+  },
+  "confirmFilePassword": {
+    "message": "Dosya parolasını onaylayın"
+  },
+  "passkeyNotCopied": {
+    "message": "Passkey will not be copied"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "The passkey will not be copied to the cloned item. Do you want to continue cloning this item?"
+  },
+  "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
+    "message": "Verification required by the initiating site. This feature is not yet implemented for accounts without master password."
+  },
+  "logInWithPasskey": {
+    "message": "Geçiş Anahtarı ile giriş yap?"
+  },
+  "passkeyAlreadyExists": {
+    "message": "Bu uygulama için bir Geçiş Anahtarı zaten bulunmakta."
+  },
+  "noPasskeysFoundForThisApplication": {
+    "message": "No passkeys found for this application."
+  },
+  "noMatchingPasskeyLogin": {
+    "message": "You do not have a matching login for this site."
+  },
+  "confirm": {
+    "message": "Confirm"
+  },
+  "savePasskey": {
+    "message": "Save passkey"
+  },
+  "savePasskeyNewLogin": {
+    "message": "Save passkey as new login"
+  },
+  "choosePasskey": {
+    "message": "Choose a login to save this passkey to"
+  },
+  "passkeyItem": {
+    "message": "Passkey Item"
+  },
+  "overwritePasskey": {
+    "message": "Overwrite passkey?"
+  },
+  "overwritePasskeyAlert": {
+    "message": "This item already contains a passkey. Are you sure you want to overwrite the current passkey?"
+  },
+  "featureNotSupported": {
+    "message": "Feature not yet supported"
+  },
+  "yourPasskeyIsLocked": {
+    "message": "Authentication required to use passkey. Verify your identity to continue."
+  },
+  "useBrowserName": {
+    "message": "Use browser"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Çok faktörlü kimlik doğrulama iptal edildi"
+  },
+  "noLastPassDataFound": {
+    "message": "LastPass verisi bulunamadı"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Kullanıcı adı veya parola yanlış"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Çok faktörlü kimlik doğrulama başarısız oldu"
+  },
+  "includeSharedFolders": {
+    "message": "Paylaşılan klasörleri dahil et"
+  },
+  "lastPassEmail": {
+    "message": "LastPass E-postası"
+  },
+  "importingYourAccount": {
+    "message": "Hesabınız içe aktarılıyor..."
+  },
+  "lastPassMFARequired": {
+    "message": "LastPass çok faktörlü kimlik doğrulaması gerekli"
+  },
+  "lastPassMFADesc": {
+    "message": "Kimlik doğrulama uygulamanızdaki tek kullanımlık kodu girin"
+  },
+  "lastPassOOBDesc": {
+    "message": "Kimlik doğrulama uygulamanızda oturum açma isteğini onaylayın veya tek kullanımlık kodu girin."
+  },
+  "passcode": {
+    "message": "Kod"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass ana parolası"
+  },
+  "lastPassAuthRequired": {
+    "message": "LastPass kimlik doğrulaması gerekli"
+  },
+  "awaitingSSO": {
+    "message": "SSO kimlik doğrulaması bekleniyor"
+  },
+  "awaitingSSODesc": {
+    "message": "Lütfen şirket hesabınızla giriş yapmaya devam edin."
+  },
+  "seeDetailedInstructions": {
+    "message": "Ayrıntılı talimatları yardım sitemizde bulabilirsiniz:",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Doğrudan LastPass'ten içe aktar"
+  },
+  "importFromCSV": {
+    "message": "CSV'den içe aktar"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Tekrar deneyin veya LastPass'ten gelecek kimlik doğrulama e-postasını kontrol edin."
+  },
+  "collection": {
+    "message": "Koleksiyon"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "LastPass hesabınızla ilişkili YubiKey'i bilgisayarınızın USB bağlantı noktasına takın ve ardından düğmesine dokunun."
   }
 }

@@ -1662,6 +1662,9 @@
   "personalOwnershipPolicyInEffect": {
     "message": "Politika organizácie ovplyvňuje vaše možnosti vlastníctva."
   },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "Zásady organizácie zablokovali importovanie položiek do vášho osobného trezoru."
+  },
   "allSends": {
     "message": "Všetky Sendy",
     "description": "'Sends' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
@@ -2416,7 +2419,191 @@
   "submenu": {
     "message": "Podponuka"
   },
+  "typePasskey": {
+    "message": "Prístupový kľúč"
+  },
+  "passkeyNotCopied": {
+    "message": "Prístupový kód sa neskopíruje"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "Prístupový kľúč sa do klonovanej položky neskopíruje. Chcete pokračovať v klonovaní tejto položky?"
+  },
   "aliasDomain": {
     "message": "Alias doména"
+  },
+  "importData": {
+    "message": "Import údajov",
+    "description": "Used for the desktop menu item and the header of the import dialog"
+  },
+  "importError": {
+    "message": "Chyba importu"
+  },
+  "importErrorDesc": {
+    "message": "Vyskytol sa problém s údajmi, ktoré ste sa pokúsili importovať. Vyriešte chyby uvedené nižšie v zdrojovom súbore a skúste to znova."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Vyriešte problémy nižšie a skúste to znova."
+  },
+  "description": {
+    "message": "Popis"
+  },
+  "importSuccess": {
+    "message": "Importovanie prebehlo úspešne"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Dokopy bolo importovaných $AMOUNT$ položiek.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Celkom"
+  },
+  "importWarning": {
+    "message": "Importujete údaje do $ORGANIZATION$. Vaše údaje môžu byť zdieľané s členmi tejto organizácie. Chcete pokračovať?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Dáta nie sú správne formátované. Prosím, overte importovaný súbor a skúste to znova."
+  },
+  "importNothingError": {
+    "message": "Nič sa neimportovalo."
+  },
+  "importEncKeyError": {
+    "message": "Chyba pri dešifrovaní exportovaného súboru. Váš šifrovací kľúč sa nezhoduje so šifrovacím kľúčom použitým pri exporte údajov."
+  },
+  "invalidFilePassword": {
+    "message": "Neplatné heslo súboru, použite heslo, ktoré ste zadali pri vytváraní exportného súboru."
+  },
+  "importDestination": {
+    "message": "Cieľ importu"
+  },
+  "learnAboutImportOptions": {
+    "message": "Zistiť viac o možnostiach importu"
+  },
+  "selectImportFolder": {
+    "message": "Vyberte priečinok"
+  },
+  "selectImportCollection": {
+    "message": "Vyberte zbierku"
+  },
+  "importTargetHint": {
+    "message": "Zvoľte túto možnosť, ak chcete obsah importovaného súboru presunúť do $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Súbor obsahuje nepriradené položky."
+  },
+  "selectFormat": {
+    "message": "Vyberte formát súboru importu"
+  },
+  "selectImportFile": {
+    "message": "Vybrať súbor na import"
+  },
+  "chooseFile": {
+    "message": "Vybrať súbor"
+  },
+  "noFileChosen": {
+    "message": "Nebol vybratý žiadny súbor"
+  },
+  "orCopyPasteFileContents": {
+    "message": "alebo kopírujte/vložte obsah súboru"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ pokyny",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Potvrdiť import trezoru"
+  },
+  "confirmVaultImportDesc": {
+    "message": "Tento súbor je chránený heslom. Ak chcete importovať údaje, zadajte heslo súboru."
+  },
+  "confirmFilePassword": {
+    "message": "Potvrdiť heslo súboru"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Viacfaktorové overenie zrušené"
+  },
+  "noLastPassDataFound": {
+    "message": "Nenašli sa žiadne údaje z LastPass"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Nesprávne používateľské meno alebo heslo"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Viacfaktorové overenie zlyhalo"
+  },
+  "includeSharedFolders": {
+    "message": "Zahrnúť zdieľané priečinky"
+  },
+  "lastPassEmail": {
+    "message": "E-mail LastPass"
+  },
+  "importingYourAccount": {
+    "message": "Importovanie vášho účtu..."
+  },
+  "lastPassMFARequired": {
+    "message": "Vyžaduje sa viacfaktorové overenie LastPass"
+  },
+  "lastPassMFADesc": {
+    "message": "Zadajte jednorazový prístupový kód z aplikácie na overovanie"
+  },
+  "lastPassOOBDesc": {
+    "message": "Schváľte žiadosť o prihlásenie v aplikácii na overovanie alebo zadajte jednorazový prístupový kód."
+  },
+  "passcode": {
+    "message": "Prístupový kód"
+  },
+  "lastPassMasterPassword": {
+    "message": "Hlavné heslo LastPass"
+  },
+  "lastPassAuthRequired": {
+    "message": "Vyžaduje sa overenie LastPass"
+  },
+  "awaitingSSO": {
+    "message": "Čaká sa na overenie SSO"
+  },
+  "awaitingSSODesc": {
+    "message": "Pokračujte v prihlasovaní pomocou prihlasovacích údajov svojej spoločnosti."
+  },
+  "seeDetailedInstructions": {
+    "message": "Podrobné pokyny nájdete na našej stránke pomoci na adrese",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Importovať priamo z LastPass"
+  },
+  "importFromCSV": {
+    "message": "Importovať z CSV"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Skúste to znova alebo vyhľadajte e-mail od spoločnosti LastPass, na overenie, či ste to vy."
+  },
+  "collection": {
+    "message": "Zbierka"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "Vložte kľúč YubiKey priradený k vášmu účtu LastPass do USB portu počítača a potom sa dotknite jeho tlačidla."
   }
 }

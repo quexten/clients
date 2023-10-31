@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, NgZone } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subject, takeUntil } from "rxjs";
+import { Subject, firstValueFrom, takeUntil } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { ViewComponent as BaseViewComponent } from "@bitwarden/angular/vault/components/view.component";
@@ -20,15 +20,19 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { PasswordRepromptService } from "@bitwarden/common/vault/abstractions/password-reprompt.service";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
 import { DialogService } from "@bitwarden/components";
+import { PasswordRepromptService } from "@bitwarden/vault";
 
 import { AutofillService } from "../../../../autofill/services/abstractions/autofill.service";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
+import {
+  BrowserFido2UserInterfaceSession,
+  fido2PopoutSessionData$,
+} from "../../../fido2/browser-fido2-user-interface.service";
 
 const BroadcasterSubscriptionId = "ChildViewComponent";
 
@@ -57,6 +61,7 @@ export class ViewComponent extends BaseViewComponent {
   loadPageDetailsTimeout: number;
   inPopout = false;
   cipherType = CipherType;
+  private fido2PopoutSessionData$ = fido2PopoutSessionData$();
 
   private destroy$ = new Subject<void>();
 
@@ -301,7 +306,14 @@ export class ViewComponent extends BaseViewComponent {
     return false;
   }
 
-  close() {
+  async close() {
+    // Would be refactored after rework is done on the windows popout service
+    const sessionData = await firstValueFrom(this.fido2PopoutSessionData$);
+    if (this.inPopout && sessionData.isFido2Session) {
+      BrowserFido2UserInterfaceSession.abortPopout(sessionData.sessionId);
+      return;
+    }
+
     if (this.inPopout && this.senderTabId) {
       BrowserApi.focusTab(this.senderTabId);
       window.close();
@@ -331,11 +343,21 @@ export class ViewComponent extends BaseViewComponent {
   }
 
   private async doAutofill() {
+    const originalTabURL = this.tab.url?.length && new URL(this.tab.url);
+
     if (!(await this.promptPassword())) {
       return false;
     }
 
-    if (this.pageDetails == null || this.pageDetails.length === 0) {
+    const currentTabURL = this.tab.url?.length && new URL(this.tab.url);
+
+    const originalTabHostPath =
+      originalTabURL && `${originalTabURL.origin}${originalTabURL.pathname}`;
+    const currentTabHostPath = currentTabURL && `${currentTabURL.origin}${currentTabURL.pathname}`;
+
+    const tabUrlChanged = originalTabHostPath !== currentTabHostPath;
+
+    if (this.pageDetails == null || this.pageDetails.length === 0 || tabUrlChanged) {
       this.platformUtilsService.showToast("error", null, this.i18nService.t("autofillError"));
       return false;
     }

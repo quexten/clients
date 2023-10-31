@@ -611,6 +611,72 @@
   "loginWithMasterPassword": {
     "message": "マスターパスワードでログイン"
   },
+  "loginWithPasskey": {
+    "message": "パスキー でログイン"
+  },
+  "loginWithPasskeyInfo": {
+    "message": "パスワードなしで自動的にログインできる、生成されたパスキーを使用します。顔や指紋などの生体認証、または他の FIDO2 認証方式で本人確認を行います。"
+  },
+  "newPasskey": {
+    "message": "新しいパスキー"
+  },
+  "learnMoreAboutPasswordless": {
+    "message": "パスワードレスの詳細"
+  },
+  "passkeyEnterMasterPassword": {
+    "message": "パスキー設定でのログインを変更するには、マスターパスワードを入力してください。"
+  },
+  "creatingPasskeyLoading": {
+    "message": "パスキーを作成中..."
+  },
+  "creatingPasskeyLoadingInfo": {
+    "message": "このウィンドウを開いたままにして、ブラウザの指示に従ってください。"
+  },
+  "errorCreatingPasskey": {
+    "message": "パスキーの作成に失敗しました"
+  },
+  "errorCreatingPasskeyInfo": {
+    "message": "パスキー作成中に問題が発生しました。"
+  },
+  "passkeySuccessfullyCreated": {
+    "message": "パスキーを作成しました！"
+  },
+  "customName": {
+    "message": "カスタム名"
+  },
+  "customPasskeyNameInfo": {
+    "message": "パスキーに名前を付けて、識別しやすいようにしましょう。"
+  },
+  "encryptionNotSupported": {
+    "message": "暗号化はサポートされていません"
+  },
+  "loginWithPasskeyEnabled": {
+    "message": "パスキーをオンにしてログイン"
+  },
+  "passkeySaved": {
+    "message": "$NAME$ を保存しました",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Personal yubikey"
+      }
+    }
+  },
+  "passkeyRemoved": {
+    "message": "パスキーを削除しました"
+  },
+  "removePasskey": {
+    "message": "パスキーを削除"
+  },
+  "removePasskeyInfo": {
+    "message": "すべてのパスキーを削除すると、マスターパスワードなしで新しいデバイスにログインすることはできません。"
+  },
+  "passkeyLimitReachedInfo": {
+    "message": "パスキーの上限に達しました。追加するにはまず既存のパスキーを削除してください。"
+  },
+  "tryAgain": {
+    "message": "再試行"
+  },
   "createAccount": {
     "message": "アカウントの作成"
   },
@@ -3572,6 +3638,18 @@
   "organizationIsDisabled": {
     "message": "組織は無効です。"
   },
+  "secretsAccessSuspended": {
+    "message": "一時停止された組織にはアクセスできません。組織の所有者にお問い合わせください。"
+  },
+  "secretsCannotCreate": {
+    "message": "一時停止中の組織ではシークレットを作成できません。組織の所有者に問い合わせてください。"
+  },
+  "projectsCannotCreate": {
+    "message": "一時停止中の組織ではプロジェクトを作成できません。組織の所有者に問い合わせてください。"
+  },
+  "serviceAccountsCannotCreate": {
+    "message": "一時停止中の組織ではサービスアカウントを作成できません。組織の所有者に問い合わせてください。"
+  },
   "disabledOrganizationFilterError": {
     "message": "無効な組織のアイテムにアクセスすることはできません。組織の所有者に連絡してください。"
   },
@@ -3917,8 +3995,9 @@
   "ssoIdentifier": {
     "message": "SSO 識別子"
   },
-  "ssoIdentifierHint": {
-    "message": "SSO でログインするには、この ID をメンバーに提供してください。"
+  "ssoIdentifierHintPartOne": {
+    "message": "SSO でログインできるようこの ID をメンバーに提供してください。この手順をバイパスするには、以下の設定をしてください：",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Provide this ID to your members to login with SSO. To bypass this step, set up Domain verification'"
   },
   "unlinkSso": {
     "message": "SSO のリンクを解除"
@@ -5406,6 +5485,19 @@
   "required": {
     "message": "必須"
   },
+  "charactersCurrentAndMaximum": {
+    "message": "$CURRENT$/$MAX$ 文字",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "0"
+      },
+      "max": {
+        "content": "$2",
+        "example": "100"
+      }
+    }
+  },
   "characterMaximum": {
     "message": "最大 $MAX$ 文字",
     "placeholders": {
@@ -5753,6 +5845,9 @@
   },
   "on": {
     "message": "オン"
+  },
+  "off": {
+    "message": "オフ"
   },
   "members": {
     "message": "メンバー"
@@ -7096,8 +7191,8 @@
       }
     }
   },
-  "addSecretsManager": {
-    "message": "シークレットマネージャーを追加"
+  "subscribeToSecretsManager": {
+    "message": "シークレットマネージャーに登録"
   },
   "addSecretsManagerUpgradeDesc": {
     "message": "アップグレードしたプランにシークレットマネージャーを追加して、以前のプランで作成されたシークレットへのアクセスを維持します。"
@@ -7177,5 +7272,18 @@
   },
   "alreadyHaveAccount": {
     "message": "既にアカウントをお持ちですか？"
+  },
+  "typePasskey": {
+    "message": "パスキー"
+  },
+  "passkeyNotCopied": {
+    "message": "パスキーはコピーされません"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "パスキーは複製されたアイテムにコピーされません。このアイテムを複製しますか？"
+  },
+  "seeDetailedInstructions": {
+    "message": "詳細な手順はこちらをご覧ください：",
+    "description": "This is followed a by a hyperlink to the help website."
   }
 }

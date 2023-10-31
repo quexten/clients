@@ -45,10 +45,27 @@ const routes: Routes = [
       },
       {
         path: "tools",
-        loadChildren: () =>
-          import("../tools/import-export/org-import-export.module").then(
-            (m) => m.OrganizationImportExportModule
-          ),
+        children: [
+          {
+            path: "import",
+            loadComponent: () =>
+              import("../../../tools/import/import-web.component").then(
+                (mod) => mod.ImportWebComponent
+              ),
+            canActivate: [OrganizationPermissionsGuard],
+            data: {
+              titleId: "importData",
+              organizationPermissions: (org: Organization) => org.canAccessImportExport,
+            },
+          },
+          {
+            path: "export",
+            loadChildren: () =>
+              import("../tools/vault-export/org-vault-export.module").then(
+                (m) => m.OrganizationVaultExportModule
+              ),
+          },
+        ],
       },
     ],
   },

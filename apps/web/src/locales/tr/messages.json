@@ -611,6 +611,72 @@
   "loginWithMasterPassword": {
     "message": "Ana parola ile giriş yap"
   },
+  "loginWithPasskey": {
+    "message": "Şifreyle giriş yapın"
+  },
+  "loginWithPasskeyInfo": {
+    "message": "Parola olmadan otomatik olarak oturum açmanızı sağlayacak oluşturulmuş bir geçiş anahtarı kullanın. Yüz tanıma veya parmak izi gibi biyometri veya başka bir FIDO2 güvenlik yöntemi kimliğinizi doğrulayacaktır."
+  },
+  "newPasskey": {
+    "message": "Yeni şifre"
+  },
+  "learnMoreAboutPasswordless": {
+    "message": "Şifresiz giriş hakkında daha fazla bilgi"
+  },
+  "passkeyEnterMasterPassword": {
+    "message": "Şifre anahtarıyla oturum açma ayarlarını değiştirmek için ana şifrenizi girin."
+  },
+  "creatingPasskeyLoading": {
+    "message": "Geçiş anahtarı oluşturuluyor..."
+  },
+  "creatingPasskeyLoadingInfo": {
+    "message": "Bu pencereyi açık tutun ve tarayıcınızdan gelen talimatları izleyin."
+  },
+  "errorCreatingPasskey": {
+    "message": "Geçiş anahtarı oluşturulurken hata oluştu"
+  },
+  "errorCreatingPasskeyInfo": {
+    "message": "Şifreniz oluşturulurken bir sorun oluştu."
+  },
+  "passkeySuccessfullyCreated": {
+    "message": "Geçiş anahtarı başarıyla oluşturuldu!"
+  },
+  "customName": {
+    "message": "Custom name"
+  },
+  "customPasskeyNameInfo": {
+    "message": "Name your passkey to help you identify it."
+  },
+  "encryptionNotSupported": {
+    "message": "Encryption not supported"
+  },
+  "loginWithPasskeyEnabled": {
+    "message": "Log in with passkey turned on"
+  },
+  "passkeySaved": {
+    "message": "$NAME$ kaydedildi",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Personal yubikey"
+      }
+    }
+  },
+  "passkeyRemoved": {
+    "message": "Passkey removed"
+  },
+  "removePasskey": {
+    "message": "Remove passkey"
+  },
+  "removePasskeyInfo": {
+    "message": "If all passkeys are removed, you will be unable to log into new devices without your master password."
+  },
+  "passkeyLimitReachedInfo": {
+    "message": "Passkey limit reached. Remove a passkey to add another."
+  },
+  "tryAgain": {
+    "message": "Yeniden dene"
+  },
   "createAccount": {
     "message": "Hesap aç"
   },
@@ -3572,6 +3638,18 @@
   "organizationIsDisabled": {
     "message": "Kuruluş askıya alındı"
   },
+  "secretsAccessSuspended": {
+    "message": "Askıya alınan kuruluşlara erişilemez. Lütfen yardım için kuruluşunuzun sahibiyle iletişime geçin."
+  },
+  "secretsCannotCreate": {
+    "message": "Askıya alınan kuruluşlarda sır oluşturulamaz. Lütfen yardım için kuruluşunuzun sahibiyle iletişime geçin."
+  },
+  "projectsCannotCreate": {
+    "message": "Askıya alınan kuruluşlarda proje oluşturulamaz. Lütfen yardım için kuruluşunuzun sahibiyle iletişime geçin."
+  },
+  "serviceAccountsCannotCreate": {
+    "message": "Askıya alınan kuruluşlarda hizmet hesapları oluşturulamaz. Lütfen yardım için kuruluşunuzun sahibiyle iletişime geçin."
+  },
   "disabledOrganizationFilterError": {
     "message": "Askıya alınmış kuruluşlardaki kayıtlara erişilemez. Destek almak için kuruluş sahibinizle iletişime geçin."
   },
@@ -3917,8 +3995,9 @@
   "ssoIdentifier": {
     "message": "SSO tanımlayıcı"
   },
-  "ssoIdentifierHint": {
-    "message": "SSO ile giriş yapan üyelere bu kimliği bildirin."
+  "ssoIdentifierHintPartOne": {
+    "message": "SSO ile giriş yapmaları için bu kimliği üyelerinize sağlayın. Bu adımı atlamak için kurulum yapın ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Provide this ID to your members to login with SSO. To bypass this step, set up Domain verification'"
   },
   "unlinkSso": {
     "message": "SSO bağlantısını kes"
@@ -5406,6 +5485,19 @@
   "required": {
     "message": "zorunlu"
   },
+  "charactersCurrentAndMaximum": {
+    "message": "$CURRENT$/$MAX$ character maximum",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "0"
+      },
+      "max": {
+        "content": "$2",
+        "example": "100"
+      }
+    }
+  },
   "characterMaximum": {
     "message": "en fazla $MAX$ karakter",
     "placeholders": {
@@ -5753,6 +5845,9 @@
   },
   "on": {
     "message": "Açık"
+  },
+  "off": {
+    "message": "Kapalı"
   },
   "members": {
     "message": "Üyeler"
@@ -7096,8 +7191,8 @@
       }
     }
   },
-  "addSecretsManager": {
-    "message": "Add Secrets Manager"
+  "subscribeToSecretsManager": {
+    "message": "Secrets Manager'a abone olun"
   },
   "addSecretsManagerUpgradeDesc": {
     "message": "Add Secrets Manager to your upgraded plan to maintain access to any secrets created with your previous plan."
@@ -7177,5 +7272,18 @@
   },
   "alreadyHaveAccount": {
     "message": "Zaten hesabınız var mı?"
+  },
+  "typePasskey": {
+    "message": "Geçiş anahtarı"
+  },
+  "passkeyNotCopied": {
+    "message": "Passkey will not be copied"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "The passkey will not be copied to the cloned item. Do you want to continue cloning this item?"
+  },
+  "seeDetailedInstructions": {
+    "message": "Ayrıntılı talimatları yardım sitemizde bulabilirsiniz:",
+    "description": "This is followed a by a hyperlink to the help website."
   }
 }

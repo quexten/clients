@@ -11,7 +11,7 @@
     "description": "Extension description"
   },
   "loginOrCreateNewAccount": {
-    "message": "وارد شوید یا یک حساب کاربری بسازید تا به گاوصندوق امنتان دسترسی یابید."
+    "message": "وارد شوید یا یک حساب کاربری بسازید تا به گاوصندوق امن‌تان دسترسی یابید."
   },
   "createAccount": {
     "message": "ایجاد حساب کاربری"
@@ -91,6 +91,15 @@
   "autoFill": {
     "message": "پر کردن خودکار"
   },
+  "autoFillLogin": {
+    "message": "پر کردن خودکار ورود"
+  },
+  "autoFillCard": {
+    "message": "پر کردن خودکار کارت"
+  },
+  "autoFillIdentity": {
+    "message": "پر کردن خودکار هویت"
+  },
   "generatePasswordCopied": {
     "message": "ساخت کلمه عبور (کپی شد)"
   },
@@ -99,6 +108,21 @@
   },
   "noMatchingLogins": {
     "message": "ورودی‌ها منتطبق نیست"
+  },
+  "noCards": {
+    "message": "کارتی وجود ندارد"
+  },
+  "noIdentities": {
+    "message": "هویتی وجود ندارد"
+  },
+  "addLoginMenu": {
+    "message": "افزودن ورود"
+  },
+  "addCardMenu": {
+    "message": "افزودن کارت"
+  },
+  "addIdentityMenu": {
+    "message": "افزودن هویت"
   },
   "unlockVaultMenu": {
     "message": "قفل گاوصندوق خود را باز کنید"
@@ -637,7 +661,7 @@
     "message": "برای پر کردن خودکار گاوصندوق Bitwarden خود را باز کنید."
   },
   "notificationUnlock": {
-    "message": "بازگشایی"
+    "message": "باز کردن قفل"
   },
   "enableContextMenuItem": {
     "message": "نمایش گزینه‌های منوی زمینه"
@@ -702,7 +726,7 @@
     "message": "درباره سازمان‌ها اطلاعات کسب کنید"
   },
   "learnOrgConfirmation": {
-    "message": "Bitwarden به شما اجازه می‌دهد با استفاده از سازماندهی، موارد گاوصندوق خود را با دیگران به اشتراک بگذارید. آیا مایل به بازدید از وب سایت bitwarden.com برای کسب اطلاعات بیشتر هستید؟"
+    "message": "Bitwarden به شما اجازه می‌دهد با استفاده از سازمان، موارد گاوصندوق خود را با دیگران به اشتراک بگذارید. آیا مایل به بازدید از وب سایت bitwarden.com برای کسب اطلاعات بیشتر هستید؟"
   },
   "moveToOrganization": {
     "message": "انتقال به سازمان"
@@ -772,7 +796,7 @@
     "message": "ویژگی موجود نیست"
   },
   "encryptionKeyMigrationRequired": {
-    "message": "Encryption key migration required. Please login through the web vault to update your encryption key."
+    "message": "انتقال کلید رمزگذاری مورد نیاز است. لطفاً از طریق گاوصندوق وب وارد شوید تا کلید رمزگذاری خود را به روز کنید."
   },
   "premiumMembership": {
     "message": "عضویت پرمیوم"
@@ -1229,6 +1253,9 @@
   "typeIdentity": {
     "message": "هویت"
   },
+  "typePasskey": {
+    "message": "کلید عبور"
+  },
   "passwordHistory": {
     "message": "تاریخچه کلمه عبور"
   },
@@ -1606,10 +1633,10 @@
     "message": "بیومتریک مرورگر در این دستگاه پشتیبانی نمی‌شود."
   },
   "biometricsFailedTitle": {
-    "message": "زیست‌سنجی ناتمام ماند"
+    "message": "زیست‌سنجی ناموفق بود"
   },
   "biometricsFailedDesc": {
-    "message": "زیست‌سنجی نمی تواند انجام شود، استفاده از کلمه عبور اصلی یا خروج را در نظر بگیرید. اگر این مشکل ادامه یافت لطفا با پشتیبانی Bitwarden تماس بگیرید."
+    "message": "زیست‌سنجی نمی‌تواند انجام شود، استفاده از کلمه عبور اصلی یا خروج را در نظر بگیرید. اگر این مشکل ادامه یافت لطفاً با پشتیبانی Bitwarden تماس بگیرید."
   },
   "nativeMessaginPermissionErrorTitle": {
     "message": "مجوز ارائه نشده است"
@@ -1628,6 +1655,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "سیاست سازمانی بر تنظیمات مالکیت شما تأثیر می‌گذارد."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "An organization policy has blocked importing items into your individual vault."
   },
   "excludedDomains": {
     "message": "دامنه های مستثنی"
@@ -1992,7 +2022,7 @@
     "message": "برون ریزی گاو‌صندوق شخصی"
   },
   "exportingIndividualVaultDescription": {
-    "message": "Only the individual vault items associated with $EMAIL$ will be exported. Organization vault items will not be included. Only vault item information will be exported and will not include associated attachments.",
+    "message": "فقط موارد شخصی گاوصندوق مرتبط با $EMAIL$ برون ریزی خواهند شد. موارد گاوصندوق سازمان شامل نخواهد شد. فقط اطلاعات مورد گاوصندوق برون ریزی خواهد شد و شامل تاریخچه کلمه عبور مرتبط یا پیوست نمی‌شود.",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2126,7 +2156,7 @@
     "message": "شما نیستید؟"
   },
   "newAroundHere": {
-    "message": "اینجا جدیده؟"
+    "message": "اینجا تازه واردی؟"
   },
   "rememberEmail": {
     "message": "ایمیل را به خاطر بسپار"
@@ -2234,28 +2264,28 @@
     }
   },
   "loggingInOn": {
-    "message": "ورود به عنوان"
+    "message": "ورود با"
   },
   "opensInANewWindow": {
     "message": "در پنجره جدید باز می‌شود"
   },
   "deviceApprovalRequired": {
-    "message": "تایید دستگاه لازم است. یک روش تایید برگزینید:"
+    "message": "تأیید دستگاه لازم است. یک روش تأیید انتخاب کنید:"
   },
   "rememberThisDevice": {
     "message": "این دستگاه را به خاطر بسپار"
   },
   "uncheckIfPublicDevice": {
-    "message": "بردارید اگر از دستگاه عمومی استفاده میکنید"
+    "message": "اگر از دستگاه عمومی استفاده می‌کنید علامت را بردارید"
   },
   "approveFromYourOtherDevice": {
-    "message": "تایید با دستگاه دیگرتان"
+    "message": "تأیید با دستگاه دیگرتان"
   },
   "requestAdminApproval": {
-    "message": "درخواست تایید مدیر"
+    "message": "درخواست تأیید مدیر"
   },
   "approveWithMasterPassword": {
-    "message": "تایید با کلمه عبور اصلی"
+    "message": "تأیید با کلمه عبور اصلی"
   },
   "ssoIdentifierRequired": {
     "message": "شناسه سازمان SSO مورد نیاز است."
@@ -2283,37 +2313,37 @@
     "message": "حساب کاربری با موفقیت ایجاد شد!"
   },
   "adminApprovalRequested": {
-    "message": "تایید مدیر در خواست شد"
+    "message": "تأیید مدیر درخواست شد"
   },
   "adminApprovalRequestSentToAdmins": {
     "message": "درخواست شما به مدیرتان فرستاده شد."
   },
   "youWillBeNotifiedOnceApproved": {
-    "message": "به محض تایید مطلع خواهید شد."
+    "message": "به محض تأیید مطلع خواهید شد."
   },
   "troubleLoggingIn": {
     "message": "در ورود مشکلی دارید؟"
   },
   "loginApproved": {
-    "message": "ورود تایید شد"
+    "message": "ورود تأیید شد"
   },
   "userEmailMissing": {
-    "message": "رایانامه کاربر کم است"
+    "message": "ایمیل کاربر وجود ندارد"
   },
   "deviceTrusted": {
     "message": "دستگاه مورد اعتماد است"
   },
   "inputRequired": {
-    "message": "ورودی مورد نیاز است."
+    "message": "ورودی ضروری است."
   },
   "required": {
-    "message": "الزامی"
+    "message": "ضروری"
   },
   "search": {
     "message": "جستجو"
   },
   "inputMinLength": {
-    "message": "ورودی باید حداقل $COUNT$ نشانه داشته باشد.",
+    "message": "ورودی باید حداقل $COUNT$ کاراکتر داشته باشد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2322,7 +2352,7 @@
     }
   },
   "inputMaxLength": {
-    "message": "اندازه ورودی نباید بیش از $COUNT$ نشانه باشد.",
+    "message": "طول ورودی نباید بیش از $COUNT$ کاراکتر باشد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2331,7 +2361,7 @@
     }
   },
   "inputForbiddenCharacters": {
-    "message": "نشانه های زیر مجاز نیستند: $CHARACTERS$",
+    "message": "کاراکترهای زیر مجاز نیستند: $CHARACTERS$",
     "placeholders": {
       "characters": {
         "content": "$1",
@@ -2340,7 +2370,7 @@
     }
   },
   "inputMinValue": {
-    "message": "مقدار ورودی باید دست کم $MIN$ باشد.",
+    "message": "مقدار ورودی باید حداقل $MIN$ باشد.",
     "placeholders": {
       "min": {
         "content": "$1",
@@ -2349,7 +2379,7 @@
     }
   },
   "inputMaxValue": {
-    "message": "مقدار ورودی نباید بیش از $MAX$ باشد.",
+    "message": "مقدار ورودی نباید از $MAX$ تجاوز کند.",
     "placeholders": {
       "max": {
         "content": "$1",
@@ -2358,17 +2388,17 @@
     }
   },
   "multipleInputEmails": {
-    "message": "یک یا چند رایانامه نامعتبر است"
+    "message": "یک یا چند ایمیل نامعتبر است"
   },
   "inputTrimValidator": {
-    "message": "ورودی نباید فقط فاصله باشد.",
+    "message": "ورودی نباید فقط حاوی فضای خالی باشد.",
     "description": "Notification to inform the user that a form's input can't contain only whitespace."
   },
   "inputEmail": {
-    "message": "ورودی یک نشانی رایانامه نیست."
+    "message": "ورودی یک نشانی ایمیل نیست."
   },
   "fieldsNeedAttention": {
-    "message": "بخش (های) $COUNT$ در بالا نیازمند توجه شما است.",
+    "message": "فیلد $COUNT$ در بالا به توجه شما نیاز دارد.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -2380,16 +2410,16 @@
     "message": "-- انتخاب --"
   },
   "multiSelectPlaceholder": {
-    "message": "-- برای گزینش چیزی بنویسید --"
+    "message": "-- برای فیلتر تایپ کنید --"
   },
   "multiSelectLoading": {
     "message": "در حال بازیابی گزینه‌ها..."
   },
   "multiSelectNotFound": {
-    "message": "موردی پیدا نشد"
+    "message": "موردی یافت نشد"
   },
   "multiSelectClearAll": {
-    "message": "پاک کردن همه"
+    "message": "پاک‌کردن همه"
   },
   "plusNMore": {
     "message": "+ $QUANTITY$ بیشتر",
@@ -2401,25 +2431,251 @@
     }
   },
   "submenu": {
-    "message": "زیرفهرست"
+    "message": "زیرمنو"
   },
   "toggleCollapse": {
-    "message": "باز و بسته کردن",
+    "message": "دکمه بستن",
     "description": "Toggling an expand/collapse state."
   },
   "aliasDomain": {
-    "message": "Alias domain"
+    "message": "دامنه مستعار"
   },
   "passwordRepromptDisabledAutofillOnPageLoad": {
-    "message": "Items with master password re-prompt cannot be auto-filled on page load. Auto-fill on page load turned off.",
+    "message": "موارد با درخواست مجدد کلمه عبور اصلی را نمی‌توان در بارگذاری صفحه به‌صورت خودکار پر کرد. پر کردن خودکار در بارگیری صفحه خاموش شد.",
     "description": "Toast message for describing that master password re-prompt cannot be auto-filled on page load."
   },
   "autofillOnPageLoadSetToDefault": {
-    "message": "Auto-fill on page load set to use default setting.",
+    "message": "پر کردن خودکار در بارگیری صفحه برای استفاده از تنظیمات پیش‌فرض تنظیم شده است.",
     "description": "Toast message for informing the user that auto-fill on page load has been set to the default setting."
   },
   "turnOffMasterPasswordPromptToEditField": {
-    "message": "Turn off master password re-prompt to edit this field",
+    "message": "برای ویرایش این فیلد، درخواست مجدد کلمه عبور اصلی را خاموش کنید",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
+  },
+  "importData": {
+    "message": "Import data",
+    "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
+  },
+  "importError": {
+    "message": "Import error"
+  },
+  "importErrorDesc": {
+    "message": "There was a problem with the data you tried to import. Please resolve the errors listed below in your source file and try again."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Resolve the errors below and try again."
+  },
+  "description": {
+    "message": "Description"
+  },
+  "importSuccess": {
+    "message": "Data successfully imported"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "A total of $AMOUNT$ items were imported.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Total"
+  },
+  "importWarning": {
+    "message": "You are importing data to $ORGANIZATION$. Your data may be shared with members of this organization. Do you want to proceed?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Data is not formatted correctly. Please check your import file and try again."
+  },
+  "importNothingError": {
+    "message": "Nothing was imported."
+  },
+  "importEncKeyError": {
+    "message": "Error decrypting the exported file. Your encryption key does not match the encryption key used export the data."
+  },
+  "invalidFilePassword": {
+    "message": "Invalid file password, please use the password you entered when you created the export file."
+  },
+  "importDestination": {
+    "message": "Import destination"
+  },
+  "learnAboutImportOptions": {
+    "message": "Learn about your import options"
+  },
+  "selectImportFolder": {
+    "message": "Select a folder"
+  },
+  "selectImportCollection": {
+    "message": "Select a collection"
+  },
+  "importTargetHint": {
+    "message": "Select this option if you want the imported file contents moved to a $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "File contains unassigned items."
+  },
+  "selectFormat": {
+    "message": "Select the format of the import file"
+  },
+  "selectImportFile": {
+    "message": "Select the import file"
+  },
+  "chooseFile": {
+    "message": "Choose File"
+  },
+  "noFileChosen": {
+    "message": "No file chosen"
+  },
+  "orCopyPasteFileContents": {
+    "message": "or copy/paste the import file contents"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ Instructions",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Confirm vault import"
+  },
+  "confirmVaultImportDesc": {
+    "message": "This file is password-protected. Please enter the file password to import data."
+  },
+  "confirmFilePassword": {
+    "message": "Confirm file password"
+  },
+  "passkeyNotCopied": {
+    "message": "کلید عبور کپی نمی‌شود"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "کلید عبور در مورد شبیه سازی شده کپی نمی‌شود. آیا می‌خواهید به شبیه سازی این مورد ادامه دهید؟"
+  },
+  "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
+    "message": "تأیید توسط سایت آغازگر الزامی است. این ویژگی هنوز برای حساب‌های بدون کلمه عبور اصلی اجرا نشده است."
+  },
+  "logInWithPasskey": {
+    "message": "با کلید عبور وارد می‌شوید؟"
+  },
+  "passkeyAlreadyExists": {
+    "message": "یک کلید عبور از قبل برای این برنامه وجود دارد."
+  },
+  "noPasskeysFoundForThisApplication": {
+    "message": "هیچ کلمه عبوری برای این برنامه یافت نشد."
+  },
+  "noMatchingPasskeyLogin": {
+    "message": "شما هیچ ورود مشابهی برای این سایت ندارید."
+  },
+  "confirm": {
+    "message": "تأیید"
+  },
+  "savePasskey": {
+    "message": "ذخیره کلید عبور"
+  },
+  "savePasskeyNewLogin": {
+    "message": "کلید عبور را به عنوان ورود جدید ذخیره کن"
+  },
+  "choosePasskey": {
+    "message": "یک ورود برای ذخیره این کلید عبور انتخاب کنید"
+  },
+  "passkeyItem": {
+    "message": "مورد کلید عبور"
+  },
+  "overwritePasskey": {
+    "message": "بازنویسی کلید عبور؟"
+  },
+  "overwritePasskeyAlert": {
+    "message": "این مورد از قبل دارای یک کلید عبور است. آیا مطمئنید که می‌خواهید کلمه عبور فعلی را بازنویسی کنید؟"
+  },
+  "featureNotSupported": {
+    "message": "ویژگی هنوز پشتیبانی نمی‌شود"
+  },
+  "yourPasskeyIsLocked": {
+    "message": "برای استفاده از کلید عبور، احراز هویت لازم است. برای ادامه، هویت خود را تأیید کنید."
+  },
+  "useBrowserName": {
+    "message": "استفاده از مرورگر وب"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Multifactor authentication cancelled"
+  },
+  "noLastPassDataFound": {
+    "message": "No LastPass data found"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Incorrect username or password"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Multifactor authentication failed"
+  },
+  "includeSharedFolders": {
+    "message": "Include shared folders"
+  },
+  "lastPassEmail": {
+    "message": "LastPass Email"
+  },
+  "importingYourAccount": {
+    "message": "Importing your account..."
+  },
+  "lastPassMFARequired": {
+    "message": "LastPass multifactor authentication required"
+  },
+  "lastPassMFADesc": {
+    "message": "Enter your one-time passcode from your authentication app"
+  },
+  "lastPassOOBDesc": {
+    "message": "Approve the login request in your authentication app or enter a one-time passcode."
+  },
+  "passcode": {
+    "message": "Passcode"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass master password"
+  },
+  "lastPassAuthRequired": {
+    "message": "LastPass authentication required"
+  },
+  "awaitingSSO": {
+    "message": "Awaiting SSO authentication"
+  },
+  "awaitingSSODesc": {
+    "message": "Please continue to log in using your company credentials."
+  },
+  "seeDetailedInstructions": {
+    "message": "See detailed instructions on our help site at",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Import directly from LastPass"
+  },
+  "importFromCSV": {
+    "message": "Import from CSV"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Try again or look for an email from LastPass to verify it's you."
+  },
+  "collection": {
+    "message": "Collection"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "Insert the YubiKey associated with your LastPass account into your computer's USB port, then touch its button."
   }
 }

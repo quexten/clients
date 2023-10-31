@@ -67,7 +67,7 @@ jobs:
 
       - name: Check Release Version
         id: version
-        uses: bitwarden/gh-actions/release-version-check@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/release-version-check@master
         with:
           release-type: ${{ inputs.release_type }}
           project-type: ts
@@ -110,7 +110,7 @@ jobs:
 
       - name: Retrieve secrets
         id: retrieve-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/get-keyvault-secrets@master
         with:
           keyvault: "bitwarden-ci"
           secrets: "aws-electron-access-id,
@@ -123,7 +123,7 @@ jobs:
 
       - name: Download all artifacts
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success
@@ -132,7 +132,7 @@ jobs:
 
       - name: Dry Run - Download all artifacts
         if: ${{ github.event.inputs.release_type == 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success
@@ -185,7 +185,7 @@ jobs:
           --endpoint-url https://${CF_ACCOUNT}.r2.cloudflarestorage.com
 
       - name: Get checksum files
-        uses: bitwarden/gh-actions/get-checksum@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/get-checksum@master
         with:
           packages_dir: "apps/desktop/artifacts"
           file_path: "apps/desktop/artifacts/sha256-checksums.txt"
@@ -263,15 +263,13 @@ jobs:
 
       - name: Retrieve secrets
         id: retrieve-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/get-keyvault-secrets@master
         with:
           keyvault: "bitwarden-ci"
           secrets: "snapcraft-store-token"
 
       - name: Install Snap
         uses: samuelmeuli/action-snapcraft@d33c176a9b784876d966f80fb1b461808edc0641 # v2.1.1
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ steps.retrieve-secrets.outputs.snapcraft-store-token }}
 
       - name: Setup
         run: mkdir dist
@@ -279,7 +277,7 @@ jobs:
 
       - name: Download Snap artifact
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success
@@ -289,7 +287,7 @@ jobs:
 
       - name: Dry Run - Download Snap artifact
         if: ${{ github.event.inputs.release_type == 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success
@@ -302,8 +300,8 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ steps.retrieve-secrets.outputs.snapcraft-store-token }}
         run: |
-          /snap/bin/snapcraft upload bitwarden_${{ env._PKG_VERSION }}_amd64.snap --release stable
-          /snap/bin/snapcraft logout
+          snapcraft upload bitwarden_${{ env._PKG_VERSION }}_amd64.snap --release stable
+          snapcraft logout
         working-directory: apps/desktop/dist
 
   choco:
@@ -329,7 +327,7 @@ jobs:
 
       - name: Retrieve secrets
         id: retrieve-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/get-keyvault-secrets@master
         with:
           keyvault: "bitwarden-ci"
           secrets: "cli-choco-api-key"
@@ -347,7 +345,7 @@ jobs:
 
       - name: Download choco artifact
         if: ${{ github.event.inputs.release_type != 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success
@@ -357,7 +355,7 @@ jobs:
 
       - name: Dry Run - Download choco artifact
         if: ${{ github.event.inputs.release_type == 'Dry Run' }}
-        uses: bitwarden/gh-actions/download-artifacts@62d1bf7c3e31c458cc7236b1e69a475d235cd78f
+        uses: bitwarden/gh-actions/download-artifacts@master
         with:
           workflow: build-desktop.yml
           workflow_conclusion: success

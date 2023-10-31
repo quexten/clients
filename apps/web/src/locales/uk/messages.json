@@ -611,6 +611,72 @@
   "loginWithMasterPassword": {
     "message": "Увійти з головним паролем"
   },
+  "loginWithPasskey": {
+    "message": "Увійти з ключем доступу"
+  },
+  "loginWithPasskeyInfo": {
+    "message": "Використовуйте згенерований ключ доступу для автоматичного входу без пароля. Ваша авторизація відбуватиметься з використанням біометрії, як-от розпізнавання обличчя чи відбитків пальців, або іншого методу безпеки FIDO2."
+  },
+  "newPasskey": {
+    "message": "Новий ключ доступу"
+  },
+  "learnMoreAboutPasswordless": {
+    "message": "Докладніше про безпарольну авторизацію"
+  },
+  "passkeyEnterMasterPassword": {
+    "message": "Введіть головний пароль, щоб змінити налаштування входу з ключем доступу."
+  },
+  "creatingPasskeyLoading": {
+    "message": "Створення ключа доступу..."
+  },
+  "creatingPasskeyLoadingInfo": {
+    "message": "Не закривайте це вікно та дотримуйтесь підказок у браузері."
+  },
+  "errorCreatingPasskey": {
+    "message": "Помилка створення ключа доступу"
+  },
+  "errorCreatingPasskeyInfo": {
+    "message": "Під час створення вашого ключа доступу виникла проблема."
+  },
+  "passkeySuccessfullyCreated": {
+    "message": "Ключ доступу успішно створено!"
+  },
+  "customName": {
+    "message": "Власна назва"
+  },
+  "customPasskeyNameInfo": {
+    "message": "Назвіть свій ключ доступу для полегшення розпізнавання."
+  },
+  "encryptionNotSupported": {
+    "message": "Шифрування не підтримується"
+  },
+  "loginWithPasskeyEnabled": {
+    "message": "Увійдіть з активованим ключем доступу"
+  },
+  "passkeySaved": {
+    "message": "$NAME$ збережено",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Personal yubikey"
+      }
+    }
+  },
+  "passkeyRemoved": {
+    "message": "Ключ доступу вилучено"
+  },
+  "removePasskey": {
+    "message": "Вилучити ключ доступу"
+  },
+  "removePasskeyInfo": {
+    "message": "Якщо всі ключі доступу вилучено, ви не зможете увійти на нових пристроях без головного пароля."
+  },
+  "passkeyLimitReachedInfo": {
+    "message": "Досягнуто обмеження ключів доступу. Вилучіть один ключ, щоб додати інший."
+  },
+  "tryAgain": {
+    "message": "Спробуйте знову"
+  },
   "createAccount": {
     "message": "Створити обліковий запис"
   },
@@ -1273,7 +1339,7 @@
     "message": "Дані успішно експортовано"
   },
   "importWarning": {
-    "message": "Ви імпортуєте дані до $ORGANIZATION$. Ваші дані можуть бути доступними учасникам цієї організації. Ви хочете продовжити?",
+    "message": "Ви імпортуєте дані до $ORGANIZATION$. Ваші дані можуть бути доступні учасникам цієї організації. Хочете продовжити?",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -3572,6 +3638,18 @@
   "organizationIsDisabled": {
     "message": "Організацію призупинено"
   },
+  "secretsAccessSuspended": {
+    "message": "До призупинених організацій не можна отримати доступ. Зверніться до власника вашої організації для отримання допомоги."
+  },
+  "secretsCannotCreate": {
+    "message": "У призупинених організаціях не можна створювати секрети. Зверніться до власника вашої організації для отримання допомоги."
+  },
+  "projectsCannotCreate": {
+    "message": "У призупинених організаціях не можна створювати проєкти. Зверніться до власника вашої організації для отримання допомоги."
+  },
+  "serviceAccountsCannotCreate": {
+    "message": "У призупинених організаціях не можна створювати службові облікові записи. Зверніться до власника вашої організації для отримання допомоги."
+  },
   "disabledOrganizationFilterError": {
     "message": "Записи у призупинених організаціях недоступні. Зверніться до власника вашої організації для отримання допомоги."
   },
@@ -3917,8 +3995,9 @@
   "ssoIdentifier": {
     "message": "SSO-ідентифікатор"
   },
-  "ssoIdentifierHint": {
-    "message": "Надайте цей ID своїм учасникам для входу з використанням SSO."
+  "ssoIdentifierHintPartOne": {
+    "message": "Надайте цей ID своїм учасникам для входу з використанням SSO. Щоб обійти цей крок, налаштуйте ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Provide this ID to your members to login with SSO. To bypass this step, set up Domain verification'"
   },
   "unlinkSso": {
     "message": "Від'єднати SSO"
@@ -5406,6 +5485,19 @@
   "required": {
     "message": "обов'язково"
   },
+  "charactersCurrentAndMaximum": {
+    "message": "Використано $CURRENT$ (максимум $MAX$)",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "0"
+      },
+      "max": {
+        "content": "$2",
+        "example": "100"
+      }
+    }
+  },
   "characterMaximum": {
     "message": "Максимум $MAX$ символів",
     "placeholders": {
@@ -5753,6 +5845,9 @@
   },
   "on": {
     "message": "Увімкнено"
+  },
+  "off": {
+    "message": "Вимк"
   },
   "members": {
     "message": "Учасники"
@@ -7096,8 +7191,8 @@
       }
     }
   },
-  "addSecretsManager": {
-    "message": "Додати менеджер секретів"
+  "subscribeToSecretsManager": {
+    "message": "Передплатити менеджер секретів"
   },
   "addSecretsManagerUpgradeDesc": {
     "message": "Додайте менеджер секретів до свого оновленого плану, щоб підтримувати доступ до будь-яких секретів, створених у вашому минулому плані."
@@ -7170,12 +7265,25 @@
     "message": "Бета"
   },
   "baseUrl": {
-    "message": "Server URL"
+    "message": "URL-адреса сервера"
   },
   "aliasDomain": {
-    "message": "Alias domain"
+    "message": "Псевдонім домену"
   },
   "alreadyHaveAccount": {
     "message": "Вже маєте обліковий запис?"
+  },
+  "typePasskey": {
+    "message": "Ключ доступу"
+  },
+  "passkeyNotCopied": {
+    "message": "Ключ доступу не буде скопійовано"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "Ключ доступу не буде скопійовано до клонованого запису. Хочете продовжити клонування цього запису?"
+  },
+  "seeDetailedInstructions": {
+    "message": "Перегляньте докладні інструкції на нашому довідковому сайті",
+    "description": "This is followed a by a hyperlink to the help website."
   }
 }

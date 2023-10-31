@@ -12,9 +12,9 @@ import {
   takeUntil,
 } from "rxjs";
 
-import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
-import { OrganizationUserUserDetailsResponse } from "@bitwarden/common/abstractions/organization-user/responses";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
+import { OrganizationUserUserDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-user/responses";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -51,7 +51,7 @@ export interface CollectionDialogParams {
 
 export interface CollectionDialogResult {
   action: CollectionDialogAction;
-  collection: CollectionResponse;
+  collection: CollectionResponse | CollectionView;
 }
 
 export enum CollectionDialogAction {
@@ -263,7 +263,7 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
       this.i18nService.t("deletedCollectionId", this.collection?.name)
     );
 
-    this.close(CollectionDialogAction.Deleted);
+    this.close(CollectionDialogAction.Deleted, this.collection);
   };
 
   ngOnDestroy(): void {
@@ -271,7 +271,7 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private close(action: CollectionDialogAction, collection?: CollectionResponse) {
+  private close(action: CollectionDialogAction, collection?: CollectionResponse | CollectionView) {
     this.dialogRef.close({ action, collection } as CollectionDialogResult);
   }
 }
