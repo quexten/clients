@@ -1,7 +1,17 @@
-import { AbstractMemoryStorageService } from "../abstractions/storage.service";
+import { Subject } from "rxjs";
+
+import { AbstractMemoryStorageService, StorageUpdate } from "../abstractions/storage.service";
 
 export class MemoryStorageService extends AbstractMemoryStorageService {
-  private store = new Map<string, any>();
+  private store = new Map<string, unknown>();
+  private updatesSubject = new Subject<StorageUpdate>();
+
+  get valuesRequireDeserialization(): boolean {
+    return false;
+  }
+  get updates$() {
+    return this.updatesSubject.asObservable();
+  }
 
   get<T>(key: string): Promise<T> {
     if (this.store.has(key)) {
@@ -15,16 +25,18 @@ export class MemoryStorageService extends AbstractMemoryStorageService {
     return (await this.get(key)) != null;
   }
 
-  save(key: string, obj: any): Promise<any> {
+  save<T>(key: string, obj: T): Promise<void> {
     if (obj == null) {
       return this.remove(key);
     }
     this.store.set(key, obj);
+    this.updatesSubject.next({ key, updateType: "save" });
     return Promise.resolve();
   }
 
-  remove(key: string): Promise<any> {
+  remove(key: string): Promise<void> {
     this.store.delete(key);
+    this.updatesSubject.next({ key, updateType: "remove" });
     return Promise.resolve();
   }
 

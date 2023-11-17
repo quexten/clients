@@ -51,6 +51,13 @@
                 </div>
               </div>
 
+              <ng-container *ngIf="selfHosted">
+                <bit-menu-divider></bit-menu-divider>
+                <span class="tw-break-all tw-px-4 tw-py-1 tw-text-left tw-text-muted">
+                  {{ hostname }}
+                </span>
+              </ng-container>
+
               <bit-menu-divider></bit-menu-divider>
 
               <a bitMenuItem routerLink="/settings/account">
@@ -68,7 +75,7 @@
 
               <bit-menu-divider></bit-menu-divider>
 
-              <button bitMenuItem type="button" (click)="lock()">
+              <button *ngIf="canLock$ | async" bitMenuItem type="button" (click)="lock()">
                 <i class="bwi bwi-fw bwi-lock" aria-hidden="true"></i>
                 {{ "lockNow" | i18n }}
               </button>

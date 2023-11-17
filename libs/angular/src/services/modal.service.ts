@@ -21,6 +21,9 @@ export class ModalConfig<D = any> {
   replaceTopModal?: boolean;
 }
 
+/**
+ * @deprecated Use the Component Library's `DialogService` instead.
+ */
 @Injectable()
 export class ModalService {
   protected modalList: ComponentRef<DynamicModalComponent>[] = [];
@@ -50,7 +53,7 @@ export class ModalService {
   }
 
   /**
-   * @deprecated Use `dialogService.open` (in web) or `modalService.open` (in desktop/browser) instead.
+   * @deprecated Use `dialogService.open` instead.
    * If replacing an existing call to this method, also remove any `@ViewChild` and `<ng-template>` associated with the
    * existing usage.
    */
@@ -83,13 +86,6 @@ export class ModalService {
     const [modalRef] = this.openInternal(componentType, config, true);
 
     return modalRef;
-  }
-
-  registerComponentFactoryResolver<T>(
-    componentType: Type<T>,
-    componentFactoryResolver: ComponentFactoryResolver
-  ): void {
-    this.factoryResolvers.set(componentType, componentFactoryResolver);
   }
 
   resolveComponentFactory<T>(componentType: Type<T>): ComponentFactory<T> {

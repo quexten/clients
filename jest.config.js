@@ -21,11 +21,13 @@ module.exports = {
     "<rootDir>/bitwarden_license/bit-web/jest.config.js",
 
     "<rootDir>/libs/angular/jest.config.js",
+    "<rootDir>/libs/auth/jest.config.js",
     "<rootDir>/libs/common/jest.config.js",
     "<rootDir>/libs/components/jest.config.js",
-    "<rootDir>/libs/importer/jest.config.js",
     "<rootDir>/libs/exporter/jest.config.js",
+    "<rootDir>/libs/importer/jest.config.js",
     "<rootDir>/libs/node/jest.config.js",
+    "<rootDir>/libs/vault/jest.config.js",
   ],
 
   // Workaround for a memory leak that crashes tests in CI:

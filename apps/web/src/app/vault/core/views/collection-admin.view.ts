@@ -1,3 +1,4 @@
+import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { CollectionAccessDetailsResponse } from "@bitwarden/common/src/vault/models/response/collection.response";
 import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 
@@ -28,5 +29,17 @@ export class CollectionAdminView extends CollectionView {
       : [];
 
     this.assigned = response.assigned;
+  }
+
+  override canEdit(org: Organization): boolean {
+    return org?.canEditAnyCollection || (org?.canEditAssignedCollections && this.assigned);
+  }
+
+  override canDelete(org: Organization, flexibleCollectionsEnabled: boolean): boolean {
+    if (flexibleCollectionsEnabled) {
+      return org?.canDeleteAnyCollection;
+    } else {
+      return org?.canDeleteAnyCollection || (org?.canDeleteAssignedCollections && this.assigned);
+    }
   }
 }

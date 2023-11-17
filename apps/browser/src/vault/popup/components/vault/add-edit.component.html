@@ -129,6 +129,18 @@
               </button>
             </div>
           </div>
+
+          <!--Passkey-->
+          <div class="box" *ngIf="cipher.login.hasFido2Credentials && !cloneMode">
+            <div class="box-content">
+              <div class="box-content-row text-muted">
+                <span class="row-label">{{ "typePasskey" | i18n }}</span>
+                {{ "dateCreated" | i18n }}
+                {{ cipher.login.fido2Credentials[0].creationDate | date : "short" }}
+              </div>
+            </div>
+          </div>
+
           <div class="box-content-row box-content-row-flex" appBoxRow>
             <div class="row-main">
               <label for="loginTotp">{{ "authenticatorKeyTotp" | i18n }}</label>
@@ -167,6 +179,7 @@
             </div>
           </div>
         </div>
+
         <!-- Card -->
         <div *ngIf="cipher.type === cipherType.Card">
           <div class="box-content-row" appBoxRow>
@@ -588,6 +601,7 @@
           <select
             id="autofillOnPageLoad"
             name="AutofillOnPageLoad"
+            [disabled]="reprompt"
             [(ngModel)]="cipher.login.autofillOnPageLoad"
           >
             <option *ngFor="let o of autofillOnPageLoadOptions" [ngValue]="o.value">
@@ -595,6 +609,9 @@
             </option>
           </select>
         </div>
+      </div>
+      <div class="box-footer !tw-mb-0 !tw-pb-0" *ngIf="reprompt">
+        {{ "turnOffMasterPasswordPromptToEditField" | i18n }}
       </div>
     </div>
     <div class="box">

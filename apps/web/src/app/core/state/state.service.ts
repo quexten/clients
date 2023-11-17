@@ -6,8 +6,8 @@ import {
   STATE_FACTORY,
   STATE_SERVICE_USE_CACHE,
 } from "@bitwarden/angular/services/injection-tokens";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { StateMigrationService } from "@bitwarden/common/platform/abstractions/state-migration.service";
 import {
   AbstractMemoryStorageService,
   AbstractStorageService,
@@ -30,8 +30,8 @@ export class StateService extends BaseStateService<GlobalState, Account> {
     @Inject(SECURE_STORAGE) secureStorageService: AbstractStorageService,
     @Inject(MEMORY_STORAGE) memoryStorageService: AbstractMemoryStorageService,
     logService: LogService,
-    stateMigrationService: StateMigrationService,
     @Inject(STATE_FACTORY) stateFactory: StateFactory<GlobalState, Account>,
+    accountService: AccountService,
     @Inject(STATE_SERVICE_USE_CACHE) useAccountCache = true
   ) {
     super(
@@ -39,8 +39,8 @@ export class StateService extends BaseStateService<GlobalState, Account> {
       secureStorageService,
       memoryStorageService,
       logService,
-      stateMigrationService,
       stateFactory,
+      accountService,
       useAccountCache
     );
   }

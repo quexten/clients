@@ -475,8 +475,8 @@
   "maxFileSize": {
     "message": "Maksimal fayl həcmi 500 MB-dır."
   },
-  "updateKey": {
-    "message": "Şifrələmə açarınızı güncəlləyənə qədər bu özəlliyi istifadə edə bilməzsiniz."
+  "encryptionKeyMigrationRequired": {
+    "message": "Şifrələmə açarının daşınması tələb olunur. Şifrələmə açarınızı güncəlləmək üçün zəhmət olmasa veb anbar üzərindən giriş edin."
   },
   "editedFolder": {
     "message": "Qovluğa düzəliş edildi"
@@ -1077,8 +1077,8 @@
   "premiumSignUpStorage": {
     "message": "Fayl qoşmaları üçün 1 GB şifrələnmiş saxlama sahəsi."
   },
-  "premiumSignUpTwoStep": {
-    "message": "YubiKey, FIDO U2F və Duo kimi iki mərhələli giriş seçimləri."
+  "premiumSignUpTwoStepOptions": {
+    "message": "YubiKey və Duo kimi mülkiyyətçi iki addımlı giriş seçimləri."
   },
   "premiumSignUpReports": {
     "message": "Anbarınızın təhlükəsiyini təmin etmək üçün parol gigiyenası, hesab sağlamlığı və verilənlərin pozulması hesabatları."
@@ -1492,6 +1492,9 @@
   "vaultTimeoutActionLogOutDesc": {
     "message": "Çıxış edilmiş bir anbar, təkrar müraciət etmək üçün yenidən kimlik təsdiqləmə tələb edir."
   },
+  "unlockMethodNeededToChangeTimeoutActionDesc": {
+    "message": "Anbar vaxt bitməsi əməliyyatınızı dəyişdirmək üçün bir kilid açma üsulu quraşdırın."
+  },
   "lock": {
     "message": "Kilidlə",
     "description": "Verb form: to make secure or inaccesible by"
@@ -1512,12 +1515,6 @@
   "permanentlyDeletedItem": {
     "message": "Element birdəfəlik silindi"
   },
-  "restoreItem": {
-    "message": "Elementi bərpa et"
-  },
-  "restoreItemConfirmation": {
-    "message": "Elementi bərpa etmək istədiyinizə əminsiniz?"
-  },
   "restoredItem": {
     "message": "Element bərpa edildi"
   },
@@ -1536,8 +1533,13 @@
   "setMasterPassword": {
     "message": "Ana parolu tənzimlə"
   },
-  "ssoCompleteRegistration": {
-    "message": "SSO ilə giriş prosesini tamamlamaq üçün zəhmət olmasa anbarınıza müraciət etmək və onu qorumaq üçün bir ana parol tənzimləyin."
+  "orgPermissionsUpdatedMustSetPassword": {
+    "message": "Təşkilatınızın icazələri güncəlləndi və bir ana parol ayarlamağınızı tələb edir.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "orgRequiresYouToSetPassword": {
+    "message": "Təşkilatınız bir ana parol ayarlamağı tələb edir.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "currentMasterPass": {
     "message": "Hazırkı ana parol"
@@ -1664,6 +1666,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "Bir təşkilat siyasəti, sahiblik seçimlərinizə təsir edir."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "An organization policy has blocked importing items into your individual vault."
   },
   "allSends": {
     "message": "Bütün \"Send\"lər",
@@ -1987,8 +1992,8 @@
   "exportingPersonalVaultTitle": {
     "message": "Şəxsi anbarın ixracı"
   },
-  "exportingPersonalVaultDescription": {
-    "message": "Yalnız $EMAIL$ ilə əlaqəli şəxsi anbar elementləri ixrac ediləcək. Təşkilat anbar elementləri daxil edilmir.",
+  "exportingIndividualVaultDescription": {
+    "message": "Yalnız $EMAIL$ ilə əlaqələndirilmiş fərdi anbar elementləri xaricə köçürüləcək. Təşkilat anbar elementləri daxil edilməyəcək. Yalnız anbar element məlumatları xaricə köçürüləcək və əlaqələndirilmiş qoşmalar daxil edilməyəcək.",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2112,8 +2117,8 @@
   "logInWithAnotherDevice": {
     "message": "Başqa cihazla giriş et"
   },
-  "logInInitiated": {
-    "message": "Giriş etmə başladıldı"
+  "loginInitiated": {
+    "message": "Giriş başladıldı"
   },
   "notificationSentDevice": {
     "message": "Cihazınıza bir bildiriş göndərildi."
@@ -2252,21 +2257,358 @@
   "windowsBiometricUpdateWarningTitle": {
     "message": "Tövsiyə edilən Tənzimləmələr Güncəlləməsi"
   },
+  "deviceApprovalRequired": {
+    "message": "Cihaz təsdiqi tələb olunur. Aşağıdan bir təsdiq variantı seçin:"
+  },
+  "rememberThisDevice": {
+    "message": "Bu cihazı xatırla"
+  },
+  "uncheckIfPublicDevice": {
+    "message": "Hər kəsə açıq bir cihaz istifadə edirsinizsə işarəni götürün"
+  },
+  "approveFromYourOtherDevice": {
+    "message": "Digər cihazınızdan təsdiqləyin"
+  },
+  "requestAdminApproval": {
+    "message": "Admin təsdiqini tələb et"
+  },
+  "approveWithMasterPassword": {
+    "message": "Ana parolla təsdiqlə"
+  },
   "region": {
     "message": "Bölgə"
+  },
+  "ssoIdentifierRequired": {
+    "message": "Təşkilat SSO identifikatoru tələb olunur."
   },
   "eu": {
     "message": "AB",
     "description": "European Union"
   },
-  "us": {
-    "message": "ABŞ",
-    "description": "United States"
+  "loggingInOn": {
+    "message": "Giriş edilir"
   },
-  "selfHosted": {
-    "message": "Öz-özünə sahiblik edən"
+  "usDomain": {
+    "message": "bitwarden.com"
+  },
+  "euDomain": {
+    "message": "bitwarden.eu"
+  },
+  "selfHostedServer": {
+    "message": "öz-özünə sahiblik edən"
   },
   "accessDenied": {
     "message": "Müraciət rədd edildi. Bu səhifəyə baxmaq üçün icazəniz yoxdur."
+  },
+  "accountSuccessfullyCreated": {
+    "message": "Hesab uğurla yaradıldı!"
+  },
+  "adminApprovalRequested": {
+    "message": "Admin təsdiqi tələb olunur"
+  },
+  "adminApprovalRequestSentToAdmins": {
+    "message": "Tələbiniz admininizə göndərildi."
+  },
+  "youWillBeNotifiedOnceApproved": {
+    "message": "Təsdiqləndikdən sonra məlumatlandırılacaqsınız."
+  },
+  "troubleLoggingIn": {
+    "message": "Girişdə problem var?"
+  },
+  "loginApproved": {
+    "message": "Giriş təsdiqləndi"
+  },
+  "userEmailMissing": {
+    "message": "İstifadəçi e-poçtu əskikdir"
+  },
+  "deviceTrusted": {
+    "message": "Cihaz güvənlidir"
+  },
+  "inputRequired": {
+    "message": "Giriş lazımdır."
+  },
+  "required": {
+    "message": "tələb olunur"
+  },
+  "search": {
+    "message": "Axtar"
+  },
+  "inputMinLength": {
+    "message": "Giriş, ən azı $COUNT$ simvol uzunluğunda olmalıdır.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxLength": {
+    "message": "Giriş uzunluğu $COUNT$ simvolu aşmamalıdır.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "20"
+      }
+    }
+  },
+  "inputForbiddenCharacters": {
+    "message": "Aşağıdakı simvollara icazə verilmir: $CHARACTERS$",
+    "placeholders": {
+      "characters": {
+        "content": "$1",
+        "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "Giriş dəyəri ən azı $MIN$ olmalıdır.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "Giriş dəyəri $MAX$ dəyərini aşmamalıdır.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "multipleInputEmails": {
+    "message": "1 və ya daha çox e-poçt yararsızdır"
+  },
+  "inputTrimValidator": {
+    "message": "Giriş, yalnız boşluq ehtiva etməməlidir.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
+  "inputEmail": {
+    "message": "Giriş, bir e-poçt ünvanı deyil."
+  },
+  "fieldsNeedAttention": {
+    "message": "Yuxarıdakı $COUNT$ sahənin diqqətinizə ehtiyacı var.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "selectPlaceholder": {
+    "message": "-- Seç --"
+  },
+  "multiSelectPlaceholder": {
+    "message": "-- Filtrləmək üçün yazın --"
+  },
+  "multiSelectLoading": {
+    "message": "Seçimlər alınır..."
+  },
+  "multiSelectNotFound": {
+    "message": "Heç bir element tapılmadı"
+  },
+  "multiSelectClearAll": {
+    "message": "Hamısını təmizlə"
+  },
+  "plusNMore": {
+    "message": "daha $QUANTITY$ ədəd",
+    "placeholders": {
+      "quantity": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "submenu": {
+    "message": "Alt menyu"
+  },
+  "typePasskey": {
+    "message": "Keçid açarı"
+  },
+  "passkeyNotCopied": {
+    "message": "Keçid açarı kopyalanmır"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "Keçid açarı, klonlanmış elementə kopyalanmayacaq. Bu elementi klonlamağa davam etmək istəyirsiniz?"
+  },
+  "aliasDomain": {
+    "message": "Domen ləqəbi"
+  },
+  "importData": {
+    "message": "Datanı daxilə köçür",
+    "description": "Used for the desktop menu item and the header of the import dialog"
+  },
+  "importError": {
+    "message": "Daxilə köçürmə xətası"
+  },
+  "importErrorDesc": {
+    "message": "There was a problem with the data you tried to import. Please resolve the errors listed below in your source file and try again."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "Aşağıdakı xətaları həll edin və yenidən sınayın."
+  },
+  "description": {
+    "message": "Açıqlama"
+  },
+  "importSuccess": {
+    "message": "Data uğurla daxilə köçürüldü"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "Cəmi $AMOUNT$ element daxilə köçürüldü.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "Cəmi"
+  },
+  "importWarning": {
+    "message": "Datanı $ORGANIZATION$ təşkilatına köçürürsünüz. Datanızı bu təşkilatın üzvləri ilə paylaşa bilərsiniz. Davam etmək istəyirsiniz?",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "Data doğru format edilməyib. Lütfən daxilə köçürmə faylınızı yoxlayıb yenidən sınayın."
+  },
+  "importNothingError": {
+    "message": "Heç nə daxilə köçürülmədi."
+  },
+  "importEncKeyError": {
+    "message": "Xaricə köçürülən faylın şifrəsi açılarkən xəta baş verdi. Şifrələmə açarınız, datanın xaricə köçürülməsi zamanı istifadə edilən şifrələmə açarı ilə uyğunlaşmır."
+  },
+  "invalidFilePassword": {
+    "message": "Yararsız fayl parolu, lütfən xaricə köçürmə faylını yaradarkən daxil etdiyiniz parolu istifadə edin."
+  },
+  "importDestination": {
+    "message": "Hədəfi daxilə köçür"
+  },
+  "learnAboutImportOptions": {
+    "message": "Daxilə köçürmə seçimlərinizi öyrənin"
+  },
+  "selectImportFolder": {
+    "message": "Bir qovluq seçin"
+  },
+  "selectImportCollection": {
+    "message": "Bir kolleksiya seçin"
+  },
+  "importTargetHint": {
+    "message": "Daxilə köçürülən fayl məzmununun $DESTINATION$ yerinə daşınmasını istəyirsinizsə bu variantı seçin",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Faylda təyin edilməmiş elementlər var."
+  },
+  "selectFormat": {
+    "message": "Daxilə köçürmə faylının formatını seçin"
+  },
+  "selectImportFile": {
+    "message": "Daxilə köçürmə faylını seçin"
+  },
+  "chooseFile": {
+    "message": "Fayl seç"
+  },
+  "noFileChosen": {
+    "message": "Heç bir fayl seçilməyib"
+  },
+  "orCopyPasteFileContents": {
+    "message": "və ya daxilə köçürmə faylının məzmununu kopyalayın/yapışdırın"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ Təlimatları",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "Anbarın daxilə köçürülməsini təsdiqləyin"
+  },
+  "confirmVaultImportDesc": {
+    "message": "Bu fayl parolla qorunur. Məlumatları daxilə köçürmək üçün fayl parolunu daxil edin."
+  },
+  "confirmFilePassword": {
+    "message": "Fayl parolunu təsdiqlə"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "Çox faktorlu kimlik doğrulama ləğv edildi"
+  },
+  "noLastPassDataFound": {
+    "message": "LastPass datası tapılmadı"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "Yanlış istifadəçi adı və ya parol"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "Çox faktorlu kimlik doğrulama uğursuz oldu"
+  },
+  "includeSharedFolders": {
+    "message": "Paylaşılan qovluqları daxil et"
+  },
+  "lastPassEmail": {
+    "message": "LastPass E-poçtu"
+  },
+  "importingYourAccount": {
+    "message": "Hesabınız daxilə köçürülür..."
+  },
+  "lastPassMFARequired": {
+    "message": "LastPass çox faktorlu kimlik doğrulama tələb olunur"
+  },
+  "lastPassMFADesc": {
+    "message": "Kimlik doğrulama tətbiqinizdəki təkistifadəlik kodu daxil edin"
+  },
+  "lastPassOOBDesc": {
+    "message": "Kimlik doğrulama tətbiqinizdəki giriş tələbini təsdiqləyin və ya təkistifadəlik kodu daxil edin."
+  },
+  "passcode": {
+    "message": "Kod"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass ana parolu"
+  },
+  "lastPassAuthRequired": {
+    "message": "LastPass kimlik doğrulama tələb olunur"
+  },
+  "awaitingSSO": {
+    "message": "SSO kimlik doğrulaması gözlənilir"
+  },
+  "awaitingSSODesc": {
+    "message": "Lütfən şirkət kimlik məlumatlarınızı istifadə edərək giriş etməyə davam edin."
+  },
+  "seeDetailedInstructions": {
+    "message": "Kömək saytımızda detallı təlimatlara baxın",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "Birbaşa \"LastPass\"dan daxilə köçür"
+  },
+  "importFromCSV": {
+    "message": "CSV-dən daxilə köçür"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Yenidən snayın və ya siz olduğunuzu doğrulamaq üçün \"LastPass\"dan gələcək e-poçtu yoxlayın."
+  },
+  "collection": {
+    "message": "Kolleksiya"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "LastPass hesabınızla əlaqələndirilmiş \"YubiKey\"i kompüterinizin USB yuvasına taxın, daha sonra düyməsinə basın."
   }
 }

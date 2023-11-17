@@ -272,6 +272,7 @@ const devServer =
                   https://api.2fa.directory/v3/totp.json
                   https://api.stripe.com
                   https://www.paypal.com
+                  https://api.sandbox.braintreegateway.com
                   https://api.braintreegateway.com
                   https://client-analytics.braintreegateway.com
                   https://*.braintree-api.com
@@ -279,7 +280,7 @@ const devServer =
                   http://127.0.0.1:10000
                   https://app.simplelogin.io/api/alias/random/new
                   https://quack.duckduckgo.com/api/email/addresses
-                  https://app.anonaddy.com/api/v1/aliases
+                  https://app.addy.io/api/v1/aliases
                   https://api.fastmail.com
                   https://api.forwardemail.net
                   http://localhost:5000
@@ -349,10 +350,6 @@ const webpackConfig = {
     extensions: [".ts", ".js"],
     symlinks: false,
     modules: [path.resolve("../../node_modules")],
-    alias: {
-      sweetalert2: require.resolve("sweetalert2/dist/sweetalert2.js"),
-      "#sweetalert2": require.resolve("sweetalert2/src/sweetalert2.scss"),
-    },
     fallback: {
       buffer: false,
       util: require.resolve("util/"),

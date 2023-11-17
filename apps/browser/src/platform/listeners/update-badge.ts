@@ -42,6 +42,13 @@ export class UpdateBadge {
     "deletedCipher",
   ];
 
+  static async windowsOnFocusChangedListener(
+    windowId: number,
+    serviceCache: Record<string, unknown>
+  ) {
+    await new UpdateBadge(self).run({ windowId, existingServices: serviceCache });
+  }
+
   static async tabsOnActivatedListener(
     activeInfo: chrome.tabs.TabActiveInfo,
     serviceCache: Record<string, unknown>
@@ -263,9 +270,6 @@ export class UpdateBadge {
         win: self,
       },
       stateServiceOptions: {
-        stateFactory: new StateFactory(GlobalState, Account),
-      },
-      stateMigrationServiceOptions: {
         stateFactory: new StateFactory(GlobalState, Account),
       },
       apiServiceOptions: {

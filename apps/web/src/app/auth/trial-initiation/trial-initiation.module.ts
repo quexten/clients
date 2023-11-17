@@ -6,9 +6,10 @@ import { FormFieldModule } from "@bitwarden/components";
 
 import { OrganizationCreateModule } from "../../admin-console/organizations/create/organization-create.module";
 import { RegisterFormModule } from "../../auth/register-form/register-form.module";
+import { PaymentComponent, TaxInfoComponent } from "../../billing";
 import { BillingComponent } from "../../billing/accounts/trial-initiation/billing.component";
 import { EnvironmentSelectorModule } from "../../components/environment-selector/environment-selector.module";
-import { LooseComponentsModule, SharedModule } from "../../shared";
+import { SharedModule } from "../../shared";
 
 import { ConfirmationDetailsComponent } from "./confirmation-details.component";
 import { AbmEnterpriseContentComponent } from "./content/abm-enterprise-content.component";
@@ -26,6 +27,7 @@ import { LogoUSNewsComponent } from "./content/logo-us-news.component";
 import { TeamsContentComponent } from "./content/teams-content.component";
 import { Teams1ContentComponent } from "./content/teams1-content.component";
 import { Teams2ContentComponent } from "./content/teams2-content.component";
+import { Teams3ContentComponent } from "./content/teams3-content.component";
 import { TrialInitiationComponent } from "./trial-initiation.component";
 import { VerticalStepperModule } from "./vertical-stepper/vertical-stepper.module";
 
@@ -37,8 +39,9 @@ import { VerticalStepperModule } from "./vertical-stepper/vertical-stepper.modul
     FormFieldModule,
     RegisterFormModule,
     OrganizationCreateModule,
-    LooseComponentsModule,
     EnvironmentSelectorModule,
+    PaymentComponent,
+    TaxInfoComponent,
   ],
   declarations: [
     TrialInitiationComponent,
@@ -53,6 +56,7 @@ import { VerticalStepperModule } from "./vertical-stepper/vertical-stepper.modul
     TeamsContentComponent,
     Teams1ContentComponent,
     Teams2ContentComponent,
+    Teams3ContentComponent,
     CnetEnterpriseContentComponent,
     CnetIndividualContentComponent,
     CnetTeamsContentComponent,

@@ -768,8 +768,16 @@
 
       // Detect if within an iframe, and the iframe is sandboxed
       function isSandboxed() {
-          // self.origin is 'null' if inside a frame with sandboxed csp or iframe tag
-          return self.origin == null || self.origin === 'null';
+        // self.origin is 'null' if inside a frame with sandboxed csp or iframe tag
+        if (String(self.origin).toLowerCase() === "null") {
+          return true;
+        }
+
+        if (window.frameElement?.hasAttribute("sandbox")) {
+          return true;
+        }
+
+        return location.hostname === "";
       }
 
       function doFill(fillScript) {
@@ -978,7 +986,7 @@
           styleTimeout = 200;
 
       /**
-       * Fll an element `el` using the value `op` from the fill script
+       * Fill an element `el` using the value `op` from the fill script
        * @param {HTMLElement} el
        * @param {string} op
        */

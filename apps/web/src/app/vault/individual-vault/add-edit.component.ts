@@ -1,6 +1,6 @@
+import { DatePipe } from "@angular/common";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 
-import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { AddEditComponent as BaseAddEditComponent } from "@bitwarden/angular/vault/components/add-edit.component";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
@@ -18,9 +18,10 @@ import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.s
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { PasswordRepromptService } from "@bitwarden/common/vault/abstractions/password-reprompt.service";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
-import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
+import { Launchable } from "@bitwarden/common/vault/interfaces/launchable";
+import { DialogService } from "@bitwarden/components";
+import { PasswordRepromptService } from "@bitwarden/vault";
 
 @Component({
   selector: "app-vault-add-edit",
@@ -42,6 +43,15 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
   protected totpInterval: number;
   protected override componentName = "app-vault-add-edit";
 
+  get fido2CredentialCreationDateValue(): string {
+    const dateCreated = this.i18nService.t("dateCreated");
+    const creationDate = this.datePipe.transform(
+      this.cipher?.login?.fido2Credentials?.[0]?.creationDate,
+      "short"
+    );
+    return `${dateCreated} ${creationDate}`;
+  }
+
   constructor(
     cipherService: CipherService,
     folderService: FolderService,
@@ -59,7 +69,8 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     logService: LogService,
     passwordRepromptService: PasswordRepromptService,
     sendApiService: SendApiService,
-    dialogService: DialogServiceAbstraction
+    dialogService: DialogService,
+    private datePipe: DatePipe
   ) {
     super(
       cipherService,
@@ -131,7 +142,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     }
   }
 
-  launch(uri: LoginUriView) {
+  launch(uri: Launchable) {
     if (!uri.canLaunch) {
       return;
     }

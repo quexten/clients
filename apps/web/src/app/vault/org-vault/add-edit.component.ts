@@ -1,6 +1,6 @@
+import { DatePipe } from "@angular/common";
 import { Component } from "@angular/core";
 
-import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
@@ -17,9 +17,10 @@ import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.s
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { PasswordRepromptService } from "@bitwarden/common/vault/abstractions/password-reprompt.service";
 import { CipherData } from "@bitwarden/common/vault/models/data/cipher.data";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
+import { DialogService } from "@bitwarden/components";
+import { PasswordRepromptService } from "@bitwarden/vault";
 
 import { AddEditComponent as BaseAddEditComponent } from "../individual-vault/add-edit.component";
 
@@ -49,7 +50,8 @@ export class AddEditComponent extends BaseAddEditComponent {
     passwordRepromptService: PasswordRepromptService,
     organizationService: OrganizationService,
     sendApiService: SendApiService,
-    dialogService: DialogServiceAbstraction
+    dialogService: DialogService,
+    datePipe: DatePipe
   ) {
     super(
       cipherService,
@@ -68,7 +70,8 @@ export class AddEditComponent extends BaseAddEditComponent {
       logService,
       passwordRepromptService,
       sendApiService,
-      dialogService
+      dialogService,
+      datePipe
     );
   }
 
@@ -110,7 +113,7 @@ export class AddEditComponent extends BaseAddEditComponent {
     if (!this.organization.canEditAnyCollection) {
       return super.encryptCipher();
     }
-    return this.cipherService.encrypt(this.cipher, null, this.originalCipher);
+    return this.cipherService.encrypt(this.cipher, null, null, this.originalCipher);
   }
 
   protected async deleteCipher() {

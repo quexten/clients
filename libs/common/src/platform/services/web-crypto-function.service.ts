@@ -273,17 +273,37 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return p;
   }
 
-  aesDecryptFast(parameters: DecryptParameters<string>): Promise<string> {
-    const dataBuffer = forge.util.createBuffer(parameters.data);
-    const decipher = forge.cipher.createDecipher("AES-CBC", parameters.encKey);
-    decipher.start({ iv: parameters.iv });
+  aesDecryptFast(parameters: DecryptParameters<string>, mode: "cbc" | "ecb"): Promise<string> {
+    const decipher = (forge as any).cipher.createDecipher(
+      this.toWebCryptoAesMode(mode),
+      parameters.encKey
+    );
+    const options = {} as any;
+    if (mode === "cbc") {
+      options.iv = parameters.iv;
+    }
+    const dataBuffer = (forge as any).util.createBuffer(parameters.data);
+    decipher.start(options);
     decipher.update(dataBuffer);
     decipher.finish();
     const val = decipher.output.toString();
     return Promise.resolve(val);
   }
 
-  async aesDecrypt(data: Uint8Array, iv: Uint8Array, key: Uint8Array): Promise<Uint8Array> {
+  async aesDecrypt(
+    data: Uint8Array,
+    iv: Uint8Array,
+    key: Uint8Array,
+    mode: "cbc" | "ecb"
+  ): Promise<Uint8Array> {
+    if (mode === "ecb") {
+      // Web crypto does not support AES-ECB mode, so we need to do this in forge.
+      const params = new DecryptParameters<string>();
+      params.data = this.toByteString(data);
+      params.encKey = this.toByteString(key);
+      const result = await this.aesDecryptFast(params, "ecb");
+      return Utils.fromByteStringToArray(result);
+    }
     const impKey = await this.subtle.importKey("raw", key, { name: "AES-CBC" } as any, false, [
       "decrypt",
     ]);
@@ -347,6 +367,23 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return new Uint8Array(buffer);
   }
 
+  async aesGenerateKey(bitLength = 128 | 192 | 256 | 512): Promise<CsprngArray> {
+    if (bitLength === 512) {
+      // 512 bit keys are not supported in WebCrypto, so we concat two 256 bit keys
+      const key1 = await this.aesGenerateKey(256);
+      const key2 = await this.aesGenerateKey(256);
+      return new Uint8Array([...key1, ...key2]) as CsprngArray;
+    }
+    const aesParams = {
+      name: "AES-CBC",
+      length: bitLength,
+    };
+
+    const key = await this.subtle.generateKey(aesParams, true, ["encrypt", "decrypt"]);
+    const rawKey = await this.subtle.exportKey("raw", key);
+    return new Uint8Array(rawKey) as CsprngArray;
+  }
+
   async rsaGenerateKeyPair(length: 1024 | 2048 | 4096): Promise<[Uint8Array, Uint8Array]> {
     const rsaParams = {
       name: "RSA-OAEP",
@@ -355,10 +392,7 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       // Have to specify some algorithm
       hash: { name: this.toWebCryptoAlgorithm("sha1") },
     };
-    const keyPair = (await this.subtle.generateKey(rsaParams, true, [
-      "encrypt",
-      "decrypt",
-    ])) as CryptoKeyPair;
+    const keyPair = await this.subtle.generateKey(rsaParams, true, ["encrypt", "decrypt"]);
     const publicKey = await this.subtle.exportKey("spki", keyPair.publicKey);
     const privateKey = await this.subtle.exportKey("pkcs8", keyPair.privateKey);
     return [new Uint8Array(publicKey), new Uint8Array(privateKey)];
@@ -395,6 +429,10 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
       throw new Error("MD5 is not supported in WebCrypto.");
     }
     return algorithm === "sha1" ? "SHA-1" : algorithm === "sha256" ? "SHA-256" : "SHA-512";
+  }
+
+  private toWebCryptoAesMode(mode: "cbc" | "ecb"): string {
+    return mode === "cbc" ? "AES-CBC" : "AES-ECB";
   }
 
   // ref: https://stackoverflow.com/a/47880734/1090359

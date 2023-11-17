@@ -17,19 +17,15 @@ import { FileDownloadService } from "@bitwarden/common/platform/abstractions/fil
 import { I18nService as I18nServiceAbstraction } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService as MessagingServiceAbstraction } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService as PlatformUtilsServiceAbstraction } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { StateMigrationService as StateMigrationServiceAbstraction } from "@bitwarden/common/platform/abstractions/state-migration.service";
 import { StateService as BaseStateServiceAbstraction } from "@bitwarden/common/platform/abstractions/state.service";
 import { AbstractStorageService } from "@bitwarden/common/platform/abstractions/storage.service";
 import { StateFactory } from "@bitwarden/common/platform/factories/state-factory";
 import { MemoryStorageService } from "@bitwarden/common/platform/services/memory-storage.service";
-import { PasswordRepromptService as PasswordRepromptServiceAbstraction } from "@bitwarden/common/vault/abstractions/password-reprompt.service";
 
 import { PolicyListService } from "../admin-console/core/policy-list.service";
 import { HtmlStorageService } from "../core/html-storage.service";
 import { I18nService } from "../core/i18n.service";
-import { StateMigrationService } from "../core/state-migration.service";
 import { CollectionAdminService } from "../vault/core/collection-admin.service";
-import { PasswordRepromptService } from "../vault/core/password-reprompt.service";
 
 import { BroadcasterMessagingService } from "./broadcaster-messaging.service";
 import { EventService } from "./event.service";
@@ -84,19 +80,10 @@ import { WebPlatformUtilsService } from "./web-platform-utils.service";
     },
     { provide: MessagingServiceAbstraction, useClass: BroadcasterMessagingService },
     { provide: ModalServiceAbstraction, useClass: ModalService },
-    {
-      provide: StateMigrationServiceAbstraction,
-      useClass: StateMigrationService,
-      deps: [AbstractStorageService, SECURE_STORAGE, STATE_FACTORY],
-    },
     StateService,
     {
       provide: BaseStateServiceAbstraction,
       useExisting: StateService,
-    },
-    {
-      provide: PasswordRepromptServiceAbstraction,
-      useClass: PasswordRepromptService,
     },
     {
       provide: FileDownloadService,

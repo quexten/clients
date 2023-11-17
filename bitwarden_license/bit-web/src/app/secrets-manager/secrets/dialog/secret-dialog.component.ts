@@ -3,12 +3,11 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { lastValueFrom, Subject, takeUntil } from "rxjs";
 
-import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
-import { BitValidators } from "@bitwarden/components";
+import { DialogService, BitValidators } from "@bitwarden/components";
 
 import { ProjectListView } from "../../models/view/project-list.view";
 import { ProjectView } from "../../models/view/project.view";
@@ -30,6 +29,7 @@ export interface SecretOperation {
   operation: OperationType;
   projectId?: string;
   secretId?: string;
+  organizationEnabled: boolean;
 }
 
 @Component({
@@ -38,17 +38,17 @@ export interface SecretOperation {
 export class SecretDialogComponent implements OnInit {
   protected formGroup = new FormGroup({
     name: new FormControl("", {
-      validators: [Validators.required, BitValidators.trimValidator],
+      validators: [Validators.required, Validators.maxLength(500), BitValidators.trimValidator],
       updateOn: "submit",
     }),
-    value: new FormControl("", [Validators.required]),
+    value: new FormControl("", [Validators.required, Validators.maxLength(25000)]),
     notes: new FormControl("", {
-      validators: [BitValidators.trimValidator],
+      validators: [Validators.maxLength(7000), BitValidators.trimValidator],
       updateOn: "submit",
     }),
     project: new FormControl("", [Validators.required]),
     newProjectName: new FormControl("", {
-      validators: [BitValidators.trimValidator],
+      validators: [Validators.maxLength(500), BitValidators.trimValidator],
       updateOn: "submit",
     }),
   });
@@ -66,7 +66,7 @@ export class SecretDialogComponent implements OnInit {
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
     private projectService: ProjectService,
-    private dialogService: DialogServiceAbstraction,
+    private dialogService: DialogService,
     private organizationService: OrganizationService
   ) {}
 
@@ -164,6 +164,11 @@ export class SecretDialogComponent implements OnInit {
   }
 
   submit = async () => {
+    if (!this.data.organizationEnabled) {
+      this.platformUtilsService.showToast("error", null, this.i18nService.t("secretsCannotCreate"));
+      return;
+    }
+
     this.formGroup.markAllAsTouched();
 
     if (this.formGroup.invalid) {

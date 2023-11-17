@@ -10,6 +10,7 @@ window.addEventListener(
         command: event.data.command,
         code: event.data.code,
         state: event.data.state,
+        lastpass: event.data.lastpass,
         referrer: event.source.location.hostname,
       });
     }
@@ -27,11 +28,10 @@ window.addEventListener(
 );
 
 const forwardCommands = [
-  "promptForLogin",
+  "bgUnlockPopoutOpened",
   "addToLockedVaultPendingNotifications",
   "unlockCompleted",
   "addedCipher",
-  "openAddEditCipher",
 ];
 
 chrome.runtime.onMessage.addListener((event) => {

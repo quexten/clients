@@ -1,10 +1,13 @@
-// eslint-disable-next-line no-restricted-imports
-import { Substitute, Arg } from "@fluffy-spoon/substitute";
 import { mock, MockProxy } from "jest-mock-extended";
 
+import { makeStaticByteArray } from "../../../../spec";
 import { EncryptionType } from "../../../enums";
 import { EncryptService } from "../../../platform/abstractions/encrypt.service";
-import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
+import {
+  OrgKey,
+  SymmetricCryptoKey,
+  UserKey,
+} from "../../../platform/models/domain/symmetric-crypto-key";
 import { CryptoService } from "../../abstractions/crypto.service";
 import { ContainerService } from "../../services/container.service";
 
@@ -60,11 +63,16 @@ describe("EncString", () => {
     describe("decrypt", () => {
       const encString = new EncString(EncryptionType.Rsa2048_OaepSha256_B64, "data");
 
-      const cryptoService = Substitute.for<CryptoService>();
-      cryptoService.getOrgKey(null).resolves(null);
+      const cryptoService = mock<CryptoService>();
+      cryptoService.hasUserKey.mockResolvedValue(true);
+      cryptoService.getUserKeyWithLegacySupport.mockResolvedValue(
+        new SymmetricCryptoKey(makeStaticByteArray(32)) as UserKey
+      );
 
-      const encryptService = Substitute.for<EncryptService>();
-      encryptService.decryptToUtf8(encString, Arg.any()).resolves("decrypted");
+      const encryptService = mock<EncryptService>();
+      encryptService.decryptToUtf8
+        .calledWith(encString, expect.anything())
+        .mockResolvedValue("decrypted");
 
       beforeEach(() => {
         (window as any).bitwardenContainerService = new ContainerService(
@@ -81,7 +89,7 @@ describe("EncString", () => {
 
       it("result should be cached", async () => {
         const decrypted = await encString.decrypt(null);
-        encryptService.received(1).decryptToUtf8(Arg.any(), Arg.any());
+        expect(encryptService.decryptToUtf8).toBeCalledTimes(1);
 
         expect(decrypted).toBe("decrypted");
       });
@@ -225,12 +233,12 @@ describe("EncString", () => {
 
       await encString.decrypt(null, key);
 
-      expect(cryptoService.getKeyForUserEncryption).not.toHaveBeenCalled();
+      expect(cryptoService.getUserKeyWithLegacySupport).not.toHaveBeenCalled();
       expect(encryptService.decryptToUtf8).toHaveBeenCalledWith(encString, key);
     });
 
     it("gets an organization key if required", async () => {
-      const orgKey = mock<SymmetricCryptoKey>();
+      const orgKey = mock<OrgKey>();
 
       cryptoService.getOrgKey.calledWith("orgId").mockResolvedValue(orgKey);
 
@@ -241,13 +249,13 @@ describe("EncString", () => {
     });
 
     it("gets the user's decryption key if required", async () => {
-      const userKey = mock<SymmetricCryptoKey>();
+      const userKey = mock<UserKey>();
 
-      cryptoService.getKeyForUserEncryption.mockResolvedValue(userKey);
+      cryptoService.getUserKeyWithLegacySupport.mockResolvedValue(userKey);
 
       await encString.decrypt(null, null);
 
-      expect(cryptoService.getKeyForUserEncryption).toHaveBeenCalledWith();
+      expect(cryptoService.getUserKeyWithLegacySupport).toHaveBeenCalledWith();
       expect(encryptService.decryptToUtf8).toHaveBeenCalledWith(encString, userKey);
     });
   });

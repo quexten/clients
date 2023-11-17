@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
+import { PlanType } from "@bitwarden/common/billing/enums";
 import { ProductType } from "@bitwarden/common/enums";
 
-import { OrganizationPlansComponent } from "../../settings/organization-plans.component";
+import { OrganizationPlansComponent } from "../../organizations";
 
 @Component({
   selector: "app-billing",
@@ -14,7 +15,8 @@ export class BillingComponent extends OrganizationPlansComponent {
   @Output() previousStep = new EventEmitter();
 
   async ngOnInit() {
-    const additionalSeats = this.product == ProductType.Families ? 0 : 1;
+    const additionalSeats =
+      this.product == ProductType.Families || this.plan === PlanType.TeamsStarter ? 0 : 1;
     this.formGroup.patchValue({
       name: this.orgInfoForm.value.name,
       billingEmail: this.orgInfoForm.value.email,

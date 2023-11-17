@@ -3,7 +3,7 @@ import { TitleCasePipe } from "@angular/common";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { UntypedFormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { first, Subject, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 
 import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
@@ -24,6 +24,7 @@ enum ValidOrgParams {
   families = "families",
   enterprise = "enterprise",
   teams = "teams",
+  teamsStarter = "teamsStarter",
   individual = "individual",
   premium = "premium",
   free = "free",
@@ -34,6 +35,7 @@ enum ValidLayoutParams {
   teams = "teams",
   teams1 = "teams1",
   teams2 = "teams2",
+  teams3 = "teams3",
   enterprise = "enterprise",
   enterprise1 = "enterprise1",
   enterprise2 = "enterprise2",
@@ -64,6 +66,7 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
   enforcedPolicyOptions: MasterPasswordPolicyOptions;
   trialFlowOrgs: string[] = [
     ValidOrgParams.teams,
+    ValidOrgParams.teamsStarter,
     ValidOrgParams.enterprise,
     ValidOrgParams.families,
   ];
@@ -94,6 +97,13 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
 
     if (this.referenceData.id === "") {
       this.referenceData.id = null;
+    } else {
+      // Matches "_ga_QBRN562QQQ=value1.value2.session" and captures values and session.
+      const regex = /_ga_QBRN562QQQ=([^.]+)\.([^.]+)\.(\d+)/;
+      const match = document.cookie.match(regex);
+      if (match) {
+        this.referenceData.session = match[3];
+      }
     }
   }
 
@@ -113,8 +123,7 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // eslint-disable-next-line rxjs-angular/prefer-takeuntil
-    this.route.queryParams.pipe(first()).subscribe((qParams) => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((qParams) => {
       this.referenceData = new ReferenceEventRequest();
       if (qParams.email != null && qParams.email.indexOf("@") > -1) {
         this.email = qParams.email;
@@ -129,13 +138,16 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
 
       if (this.trialFlowOrgs.includes(qParams.org)) {
         this.org = qParams.org;
-        this.orgLabel = this.titleCasePipe.transform(this.org);
+        this.orgLabel = this.titleCasePipe.transform(this.orgDisplayName);
         this.useTrialStepper = true;
         this.referenceData.flow = qParams.org;
 
         if (this.org === ValidOrgParams.families) {
           this.plan = PlanType.FamiliesAnnually;
           this.product = ProductType.Families;
+        } else if (this.org === ValidOrgParams.teamsStarter) {
+          this.plan = PlanType.TeamsStarter;
+          this.product = ProductType.TeamsStarter;
         } else if (this.org === ValidOrgParams.teams) {
           this.plan = PlanType.TeamsAnnually;
           this.product = ProductType.Teams;
@@ -199,7 +211,9 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
     // Set org info sub label
     if (event.selectedIndex === 1 && this.orgInfoFormGroup.controls.name.value === "") {
       this.orgInfoSubLabel =
-        "Enter your " + this.titleCasePipe.transform(this.org) + " organization information";
+        "Enter your " +
+        this.titleCasePipe.transform(this.orgDisplayName) +
+        " organization information";
     } else if (event.previouslySelectedIndex === 1) {
       this.orgInfoSubLabel = this.orgInfoFormGroup.controls.name.value;
     }
@@ -232,6 +246,14 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
 
   previousStep() {
     this.verticalStepper.previous();
+  }
+
+  get orgDisplayName() {
+    if (this.org === "teamsStarter") {
+      return "Teams Starter";
+    }
+
+    return this.org;
   }
 
   private setupFamilySponsorship(sponsorshipToken: string) {

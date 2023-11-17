@@ -13,10 +13,12 @@
   "dev": {
     "proxyApi": "https://api.bitwarden.com",
     "proxyIdentity": "https://identity.bitwarden.com",
-    "proxyEvents": "https://events.bitwarden.com"
+    "proxyEvents": "https://events.bitwarden.com",
+    "proxyNotifications": "https://notifications.bitwarden.com"
   },
   "flags": {
     "secretsManager": true,
-    "showPasswordless": true
+    "showPasswordless": true,
+    "enableCipherKeyEncryption": false
   }
 }

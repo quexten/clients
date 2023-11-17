@@ -1,14 +1,30 @@
 import { Observable } from "rxjs";
+import { SemVer } from "semver";
 
 import { FeatureFlag } from "../../../enums/feature-flag.enum";
+import { Region } from "../environment.service";
 
 import { ServerConfig } from "./server-config";
 
 export abstract class ConfigServiceAbstraction {
   serverConfig$: Observable<ServerConfig | null>;
-  fetchServerConfig: () => Promise<ServerConfig>;
-  getFeatureFlagBool: (key: FeatureFlag, defaultValue?: boolean) => Promise<boolean>;
-  getFeatureFlagString: (key: FeatureFlag, defaultValue?: string) => Promise<string>;
-  getFeatureFlagNumber: (key: FeatureFlag, defaultValue?: number) => Promise<number>;
-  getCloudRegion: (defaultValue?: string) => Promise<string>;
+  cloudRegion$: Observable<Region>;
+  getFeatureFlag$: <T extends boolean | number | string>(
+    key: FeatureFlag,
+    defaultValue?: T
+  ) => Observable<T>;
+  getFeatureFlag: <T extends boolean | number | string>(
+    key: FeatureFlag,
+    defaultValue?: T
+  ) => Promise<T>;
+  checkServerMeetsVersionRequirement$: (
+    minimumRequiredServerVersion: SemVer
+  ) => Observable<boolean>;
+
+  /**
+   * Force ConfigService to fetch an updated config from the server and emit it from serverConfig$
+   * @deprecated The service implementation should subscribe to an observable and use that to trigger a new fetch from
+   * server instead
+   */
+  triggerServerConfigFetch: () => void;
 }

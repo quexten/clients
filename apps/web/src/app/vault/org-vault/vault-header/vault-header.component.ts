@@ -2,17 +2,14 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
-import {
-  SimpleDialogType,
-  DialogServiceAbstraction,
-  SimpleDialogCloseType,
-  SimpleDialogOptions,
-} from "@bitwarden/angular/services/dialog";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { ProductType } from "@bitwarden/common/enums";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { TreeNode } from "@bitwarden/common/models/domain/tree-node";
+import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { DialogService, SimpleDialogOptions } from "@bitwarden/components";
 
 import { CollectionAdminView } from "../../../vault/core/views/collection-admin.view";
 import { CollectionDialogTabType } from "../../components/collection-dialog";
@@ -61,13 +58,22 @@ export class VaultHeaderComponent {
   protected CollectionDialogTabType = CollectionDialogTabType;
   protected organizations$ = this.organizationService.organizations$;
 
+  private flexibleCollectionsEnabled: boolean;
+
   constructor(
     private organizationService: OrganizationService,
     private i18nService: I18nService,
-    private dialogService: DialogServiceAbstraction,
+    private dialogService: DialogService,
     private collectionAdminService: CollectionAdminService,
-    private router: Router
+    private router: Router,
+    private configService: ConfigServiceAbstraction
   ) {}
+
+  async ngOnInit() {
+    this.flexibleCollectionsEnabled = await this.configService.getFeatureFlag(
+      FeatureFlag.FlexibleCollections
+    );
+  }
 
   get title() {
     if (this.collection !== undefined) {
@@ -114,7 +120,7 @@ export class VaultHeaderComponent {
           : "freeOrgMaxCollectionReachedNoManageBilling",
         this.organization.maxCollections
       ),
-      type: SimpleDialogType.PRIMARY,
+      type: "primary",
     };
 
     if (this.organization.canEditSubscription) {
@@ -126,12 +132,12 @@ export class VaultHeaderComponent {
 
     const simpleDialog = this.dialogService.openSimpleDialogRef(orgUpgradeSimpleDialogOpts);
 
-    firstValueFrom(simpleDialog.closed).then((result: SimpleDialogCloseType | undefined) => {
+    firstValueFrom(simpleDialog.closed).then((result: boolean | undefined) => {
       if (!result) {
         return;
       }
 
-      if (result == SimpleDialogCloseType.ACCEPT && this.organization.canEditSubscription) {
+      if (result && this.organization.canEditSubscription) {
         this.router.navigate(["/organizations", this.organization.id, "billing", "subscription"], {
           queryParams: { upgrade: true },
         });
@@ -146,10 +152,7 @@ export class VaultHeaderComponent {
     }
 
     // Otherwise, check if we can edit the specified collection
-    return (
-      this.organization.canEditAnyCollection ||
-      (this.organization.canEditAssignedCollections && this.collection?.node.assigned)
-    );
+    return this.collection.node.canEdit(this.organization);
   }
 
   addCipher() {
@@ -179,10 +182,7 @@ export class VaultHeaderComponent {
     }
 
     // Otherwise, check if we can delete the specified collection
-    return (
-      this.organization?.canDeleteAnyCollection ||
-      (this.organization?.canDeleteAssignedCollections && this.collection.node.assigned)
-    );
+    return this.collection.node.canDelete(this.organization, this.flexibleCollectionsEnabled);
   }
 
   deleteCollection() {

@@ -10,39 +10,45 @@ import { MessagingService } from "../../platform/abstractions/messaging.service"
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { StateService } from "../../platform/abstractions/state.service";
 import { Utils } from "../../platform/misc/utils";
-import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
+import {
+  MasterKey,
+  SymmetricCryptoKey,
+  UserKey,
+} from "../../platform/models/domain/symmetric-crypto-key";
 import {
   PasswordStrengthService,
   PasswordStrengthServiceAbstraction,
 } from "../../tools/password-strength";
+import { CsprngArray } from "../../types/csprng";
 import { AuthService } from "../abstractions/auth.service";
 import { TokenService } from "../abstractions/token.service";
 import { TwoFactorService } from "../abstractions/two-factor.service";
 import { TwoFactorProviderType } from "../enums/two-factor-provider-type";
-import { ForceResetPasswordReason } from "../models/domain/force-reset-password-reason";
-import { PasswordLogInCredentials } from "../models/domain/log-in-credentials";
+import { ForceSetPasswordReason } from "../models/domain/force-set-password-reason";
+import { PasswordLoginCredentials } from "../models/domain/login-credentials";
+import { IdentityTokenResponse } from "../models/response/identity-token.response";
 import { IdentityTwoFactorResponse } from "../models/response/identity-two-factor.response";
 import { MasterPasswordPolicyResponse } from "../models/response/master-password-policy.response";
 
 import { identityTokenResponseFactory } from "./login.strategy.spec";
-import { PasswordLogInStrategy } from "./password-login.strategy";
+import { PasswordLoginStrategy } from "./password-login.strategy";
 
 const email = "hello@world.com";
 const masterPassword = "password";
 const hashedPassword = "HASHED_PASSWORD";
 const localHashedPassword = "LOCAL_HASHED_PASSWORD";
-const preloginKey = new SymmetricCryptoKey(
+const masterKey = new SymmetricCryptoKey(
   Utils.fromB64ToArray(
     "N2KWjlLpfi5uHjv+YcfUKIpZ1l+W+6HRensmIqD+BFYBf6N/dvFpJfWwYnVBdgFCK2tJTAIMLhqzIQQEUmGFgg=="
   )
-);
+) as MasterKey;
 const deviceId = Utils.newGuid();
 const masterPasswordPolicy = new MasterPasswordPolicyResponse({
   EnforceOnLogin: true,
   MinLength: 8,
 });
 
-describe("PasswordLogInStrategy", () => {
+describe("PasswordLoginStrategy", () => {
   let cryptoService: MockProxy<CryptoService>;
   let apiService: MockProxy<ApiService>;
   let tokenService: MockProxy<TokenService>;
@@ -56,8 +62,9 @@ describe("PasswordLogInStrategy", () => {
   let policyService: MockProxy<PolicyService>;
   let passwordStrengthService: MockProxy<PasswordStrengthServiceAbstraction>;
 
-  let passwordLogInStrategy: PasswordLogInStrategy;
-  let credentials: PasswordLogInCredentials;
+  let passwordLoginStrategy: PasswordLoginStrategy;
+  let credentials: PasswordLoginCredentials;
+  let tokenResponse: IdentityTokenResponse;
 
   beforeEach(async () => {
     cryptoService = mock<CryptoService>();
@@ -76,18 +83,18 @@ describe("PasswordLogInStrategy", () => {
     appIdService.getAppId.mockResolvedValue(deviceId);
     tokenService.decodeToken.mockResolvedValue({});
 
-    authService.makePreloginKey.mockResolvedValue(preloginKey);
+    authService.makePreloginKey.mockResolvedValue(masterKey);
 
-    cryptoService.hashPassword
+    cryptoService.hashMasterKey
       .calledWith(masterPassword, expect.anything(), undefined)
       .mockResolvedValue(hashedPassword);
-    cryptoService.hashPassword
+    cryptoService.hashMasterKey
       .calledWith(masterPassword, expect.anything(), HashPurpose.LocalAuthorization)
       .mockResolvedValue(localHashedPassword);
 
     policyService.evaluateMasterPassword.mockReturnValue(true);
 
-    passwordLogInStrategy = new PasswordLogInStrategy(
+    passwordLoginStrategy = new PasswordLoginStrategy(
       cryptoService,
       apiService,
       tokenService,
@@ -101,15 +108,14 @@ describe("PasswordLogInStrategy", () => {
       policyService,
       authService
     );
-    credentials = new PasswordLogInCredentials(email, masterPassword);
+    credentials = new PasswordLoginCredentials(email, masterPassword);
+    tokenResponse = identityTokenResponseFactory(masterPasswordPolicy);
 
-    apiService.postIdentityToken.mockResolvedValue(
-      identityTokenResponseFactory(masterPasswordPolicy)
-    );
+    apiService.postIdentityToken.mockResolvedValue(tokenResponse);
   });
 
   it("sends master password credentials to the server", async () => {
-    await passwordLogInStrategy.logIn(credentials);
+    await passwordLoginStrategy.logIn(credentials);
 
     expect(apiService.postIdentityToken).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -127,43 +133,51 @@ describe("PasswordLogInStrategy", () => {
     );
   });
 
-  it("sets the local environment after a successful login", async () => {
-    await passwordLogInStrategy.logIn(credentials);
+  it("sets keys after a successful authentication", async () => {
+    const userKey = new SymmetricCryptoKey(new Uint8Array(64).buffer as CsprngArray) as UserKey;
 
-    expect(cryptoService.setKey).toHaveBeenCalledWith(preloginKey);
-    expect(cryptoService.setKeyHash).toHaveBeenCalledWith(localHashedPassword);
+    cryptoService.getMasterKey.mockResolvedValue(masterKey);
+    cryptoService.decryptUserKeyWithMasterKey.mockResolvedValue(userKey);
+
+    await passwordLoginStrategy.logIn(credentials);
+
+    expect(cryptoService.setMasterKey).toHaveBeenCalledWith(masterKey);
+    expect(cryptoService.setMasterKeyHash).toHaveBeenCalledWith(localHashedPassword);
+    expect(cryptoService.setMasterKeyEncryptedUserKey).toHaveBeenCalledWith(tokenResponse.key);
+    expect(cryptoService.setUserKey).toHaveBeenCalledWith(userKey);
+    expect(cryptoService.setPrivateKey).toHaveBeenCalledWith(tokenResponse.privateKey);
   });
 
   it("does not force the user to update their master password when there are no requirements", async () => {
-    apiService.postIdentityToken.mockResolvedValueOnce(identityTokenResponseFactory(null));
+    apiService.postIdentityToken.mockResolvedValueOnce(identityTokenResponseFactory());
 
-    const result = await passwordLogInStrategy.logIn(credentials);
+    const result = await passwordLoginStrategy.logIn(credentials);
 
     expect(policyService.evaluateMasterPassword).not.toHaveBeenCalled();
-    expect(result.forcePasswordReset).toEqual(ForceResetPasswordReason.None);
+    expect(result.forcePasswordReset).toEqual(ForceSetPasswordReason.None);
   });
 
   it("does not force the user to update their master password when it meets requirements", async () => {
     passwordStrengthService.getPasswordStrength.mockReturnValue({ score: 5 } as any);
     policyService.evaluateMasterPassword.mockReturnValue(true);
 
-    const result = await passwordLogInStrategy.logIn(credentials);
+    const result = await passwordLoginStrategy.logIn(credentials);
 
     expect(policyService.evaluateMasterPassword).toHaveBeenCalled();
-    expect(result.forcePasswordReset).toEqual(ForceResetPasswordReason.None);
+    expect(result.forcePasswordReset).toEqual(ForceSetPasswordReason.None);
   });
 
   it("forces the user to update their master password on successful login when it does not meet master password policy requirements", async () => {
     passwordStrengthService.getPasswordStrength.mockReturnValue({ score: 0 } as any);
     policyService.evaluateMasterPassword.mockReturnValue(false);
 
-    const result = await passwordLogInStrategy.logIn(credentials);
+    const result = await passwordLoginStrategy.logIn(credentials);
 
     expect(policyService.evaluateMasterPassword).toHaveBeenCalled();
-    expect(stateService.setForcePasswordResetReason).toHaveBeenCalledWith(
-      ForceResetPasswordReason.WeakMasterPassword
+    expect(stateService.setForceSetPasswordReason).toHaveBeenCalledWith(
+      ForceSetPasswordReason.WeakMasterPassword
     );
-    expect(result.forcePasswordReset).toEqual(ForceResetPasswordReason.WeakMasterPassword);
+    expect(result.forcePasswordReset).toEqual(ForceSetPasswordReason.WeakMasterPassword);
   });
 
   it("forces the user to update their master password on successful 2FA login when it does not meet master password policy requirements", async () => {
@@ -180,13 +194,13 @@ describe("PasswordLogInStrategy", () => {
 
     // First login request fails requiring 2FA
     apiService.postIdentityToken.mockResolvedValueOnce(token2FAResponse);
-    const firstResult = await passwordLogInStrategy.logIn(credentials);
+    const firstResult = await passwordLoginStrategy.logIn(credentials);
 
     // Second login request succeeds
     apiService.postIdentityToken.mockResolvedValueOnce(
       identityTokenResponseFactory(masterPasswordPolicy)
     );
-    const secondResult = await passwordLogInStrategy.logInTwoFactor(
+    const secondResult = await passwordLoginStrategy.logInTwoFactor(
       {
         provider: TwoFactorProviderType.Authenticator,
         token: "123456",
@@ -196,12 +210,12 @@ describe("PasswordLogInStrategy", () => {
     );
 
     // First login attempt should not save the force password reset options
-    expect(firstResult.forcePasswordReset).toEqual(ForceResetPasswordReason.None);
+    expect(firstResult.forcePasswordReset).toEqual(ForceSetPasswordReason.None);
 
     // Second login attempt should save the force password reset options and return in result
-    expect(stateService.setForcePasswordResetReason).toHaveBeenCalledWith(
-      ForceResetPasswordReason.WeakMasterPassword
+    expect(stateService.setForceSetPasswordReason).toHaveBeenCalledWith(
+      ForceSetPasswordReason.WeakMasterPassword
     );
-    expect(secondResult.forcePasswordReset).toEqual(ForceResetPasswordReason.WeakMasterPassword);
+    expect(secondResult.forcePasswordReset).toEqual(ForceSetPasswordReason.WeakMasterPassword);
   });
 });

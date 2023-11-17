@@ -3,18 +3,21 @@ import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { combineLatest, of, shareReplay, Subject, switchMap, takeUntil } from "rxjs";
 
-import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
-import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
 import {
   OrganizationUserStatusType,
   OrganizationUserType,
 } from "@bitwarden/common/admin-console/enums";
 import { PermissionsApi } from "@bitwarden/common/admin-console/models/api/permissions.api";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { ProductType } from "@bitwarden/common/enums";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
+import { DialogService } from "@bitwarden/components";
 
 import { flagEnabled } from "../../../../../../utils/flags";
 import { CollectionAdminService } from "../../../../../vault/core/collection-admin.service";
@@ -35,7 +38,8 @@ import {
 } from "../../../shared/components/access-selector";
 
 import { commaSeparatedEmails } from "./validators/comma-separated-emails.validator";
-import { freeOrgSeatLimitReachedValidator } from "./validators/free-org-inv-limit-reached.validator";
+import { orgWithoutAdditionalSeatLimitReachedWithUpgradePathValidator } from "./validators/org-without-additional-seat-limit-reached-with-upgrade-path.validator";
+import { orgWithoutAdditionalSeatLimitReachedWithoutUpgradePathValidator } from "./validators/org-without-additional-seat-limit-reached-without-upgrade-path.validator";
 
 export enum MemberDialogTab {
   Role = 0,
@@ -64,6 +68,11 @@ export enum MemberDialogResult {
   templateUrl: "member-dialog.component.html",
 })
 export class MemberDialogComponent implements OnInit, OnDestroy {
+  protected flexibleCollectionsEnabled$ = this.configService.getFeatureFlag$(
+    FeatureFlag.FlexibleCollections,
+    false
+  );
+
   loading = true;
   editMode = false;
   isRevoked = false;
@@ -134,7 +143,8 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
     private groupService: GroupService,
     private userService: UserAdminService,
     private organizationUserService: OrganizationUserService,
-    private dialogService: DialogServiceAbstraction
+    private dialogService: DialogService,
+    private configService: ConfigServiceAbstraction
   ) {}
 
   async ngOnInit() {
@@ -172,10 +182,15 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
         const emailsControlValidators = [
           Validators.required,
           commaSeparatedEmails,
-          freeOrgSeatLimitReachedValidator(
+          orgWithoutAdditionalSeatLimitReachedWithUpgradePathValidator(
             this.organization,
             this.params.allOrganizationUserEmails,
             this.i18nService.t("subscriptionFreePlan", organization.seats)
+          ),
+          orgWithoutAdditionalSeatLimitReachedWithoutUpgradePathValidator(
+            this.organization,
+            this.params.allOrganizationUserEmails,
+            this.i18nService.t("subscriptionFamiliesPlan", organization.seats)
           ),
         ];
 
@@ -359,10 +374,12 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
       await this.userService.save(userView);
     } else {
       userView.id = this.params.organizationUserId;
+      const maxEmailsCount =
+        this.organization.planProductType === ProductType.TeamsStarter ? 10 : 20;
       const emails = [...new Set(this.formGroup.value.emails.trim().split(/\s*,\s*/))];
-      if (emails.length > 20) {
+      if (emails.length > maxEmailsCount) {
         this.formGroup.controls.emails.setErrors({
-          tooManyEmails: { message: this.i18nService.t("tooManyEmails", 20) },
+          tooManyEmails: { message: this.i18nService.t("tooManyEmails", maxEmailsCount) },
         });
         return;
       }
@@ -389,7 +406,7 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
     let confirmed = await this.dialogService.openSimpleDialog({
       title: { key: "removeUserIdAccess", placeholders: [this.params.name] },
       content: { key: message },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
 
     if (!confirmed) {
@@ -426,7 +443,7 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
       title: { key: "revokeUserId", placeholders: [this.params.name] },
       content: { key: "revokeUserConfirmation" },
       acceptButtonText: { key: "revokeAccess" },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
 
     if (!confirmed) {
@@ -496,9 +513,11 @@ export class MemberDialogComponent implements OnInit, OnDestroy {
         key: "removeOrgUserNoMasterPasswordDesc",
         placeholders: [this.params.name],
       },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
   }
+
+  protected readonly ProductType = ProductType;
 }
 
 function mapCollectionToAccessItemView(
@@ -557,7 +576,7 @@ function mapToGroupAccessSelections(groups: string[]): AccessItemValue[] {
  * @param config Configuration for the dialog
  */
 export function openUserAddEditDialog(
-  dialogService: DialogServiceAbstraction,
+  dialogService: DialogService,
   config: DialogConfig<MemberDialogParams>
 ) {
   return dialogService.open<MemberDialogResult, MemberDialogParams>(MemberDialogComponent, config);

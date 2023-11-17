@@ -67,7 +67,6 @@ const main = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         "./src/package.json",

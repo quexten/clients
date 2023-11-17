@@ -3,7 +3,7 @@ import * as inquirer from "inquirer";
 
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import { ImportServiceAbstraction, ImportType } from "@bitwarden/importer";
+import { ImportServiceAbstraction, ImportType } from "@bitwarden/importer/core";
 
 import { Response } from "../models/response";
 import { MessageResponse } from "../models/response/message.response";
@@ -66,8 +66,10 @@ export class ImportCommand {
 
     try {
       let contents;
-      if (format === "1password1pux") {
-        contents = await CliUtils.extract1PuxContent(filepath);
+      if (format === "1password1pux" && filepath.endsWith(".1pux")) {
+        contents = await CliUtils.extractZipContent(filepath, "export.data");
+      } else if (format === "protonpass" && filepath.endsWith(".zip")) {
+        contents = await CliUtils.extractZipContent(filepath, "Proton Pass/data.json");
       } else {
         contents = await CliUtils.readFile(filepath);
       }

@@ -18,6 +18,7 @@ export enum OperationType {
 export interface ProjectOperation {
   organizationId: string;
   operation: OperationType;
+  organizationEnabled: boolean;
   projectId?: string;
 }
 
@@ -27,7 +28,7 @@ export interface ProjectOperation {
 export class ProjectDialogComponent implements OnInit {
   protected formGroup = new FormGroup({
     name: new FormControl("", {
-      validators: [Validators.required, BitValidators.trimValidator],
+      validators: [Validators.required, Validators.maxLength(500), BitValidators.trimValidator],
       updateOn: "submit",
     }),
   });
@@ -63,6 +64,15 @@ export class ProjectDialogComponent implements OnInit {
   }
 
   submit = async () => {
+    if (!this.data.organizationEnabled) {
+      this.platformUtilsService.showToast(
+        "error",
+        null,
+        this.i18nService.t("projectsCannotCreate")
+      );
+      return;
+    }
+
     this.formGroup.markAllAsTouched();
 
     if (this.formGroup.invalid) {

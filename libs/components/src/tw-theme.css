@@ -1,3 +1,5 @@
+@import "./reset.css";
+
 :root {
   --color-transparent-hover: rgb(0 0 0 / 0.03);
 
@@ -151,13 +153,14 @@
 
   --color-text-main: 253 246 227;
   --color-text-muted: 147 161 161;
-  --color-text-contrast: 0 43 54;
+  --color-text-contrast: 0 0 0;
   --color-text-alt2: 255 255 255;
   --color-text-code: 240 141 199;
 
   --tw-ring-offset-color: #002b36;
 }
 
+@import "./popover/popover.component.css";
 @import "./search/search.component.css";
 
 /** 

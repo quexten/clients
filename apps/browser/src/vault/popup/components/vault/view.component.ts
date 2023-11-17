@@ -1,9 +1,9 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, NgZone } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Subject, firstValueFrom, takeUntil } from "rxjs";
 import { first } from "rxjs/operators";
 
-import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
 import { ViewComponent as BaseViewComponent } from "@bitwarden/angular/vault/components/view.component";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
@@ -20,16 +20,32 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { PasswordRepromptService } from "@bitwarden/common/vault/abstractions/password-reprompt.service";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
+import { DialogService } from "@bitwarden/components";
+import { PasswordRepromptService } from "@bitwarden/vault";
 
 import { AutofillService } from "../../../../autofill/services/abstractions/autofill.service";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
-import { PopupUtilsService } from "../../../../popup/services/popup-utils.service";
+import BrowserPopupUtils from "../../../../platform/popup/browser-popup-utils";
+import {
+  BrowserFido2UserInterfaceSession,
+  fido2PopoutSessionData$,
+} from "../../../fido2/browser-fido2-user-interface.service";
 
 const BroadcasterSubscriptionId = "ChildViewComponent";
+
+export const AUTOFILL_ID = "autofill";
+export const COPY_USERNAME_ID = "copy-username";
+export const COPY_PASSWORD_ID = "copy-password";
+export const COPY_VERIFICATIONCODE_ID = "copy-totp";
+
+type LoadAction =
+  | typeof AUTOFILL_ID
+  | typeof COPY_USERNAME_ID
+  | typeof COPY_PASSWORD_ID
+  | typeof COPY_VERIFICATIONCODE_ID;
 
 @Component({
   selector: "app-vault-view",
@@ -39,9 +55,15 @@ export class ViewComponent extends BaseViewComponent {
   showAttachments = true;
   pageDetails: any[] = [];
   tab: any;
+  senderTabId?: number;
+  loadAction?: LoadAction;
+  uilocation?: "popout" | "popup" | "sidebar" | "tab";
   loadPageDetailsTimeout: number;
   inPopout = false;
   cipherType = CipherType;
+  private fido2PopoutSessionData$ = fido2PopoutSessionData$();
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     cipherService: CipherService,
@@ -62,12 +84,11 @@ export class ViewComponent extends BaseViewComponent {
     eventCollectionService: EventCollectionService,
     private autofillService: AutofillService,
     private messagingService: MessagingService,
-    private popupUtilsService: PopupUtilsService,
     apiService: ApiService,
     passwordRepromptService: PasswordRepromptService,
     logService: LogService,
     fileDownloadService: FileDownloadService,
-    dialogService: DialogServiceAbstraction
+    dialogService: DialogService
   ) {
     super(
       cipherService,
@@ -93,7 +114,14 @@ export class ViewComponent extends BaseViewComponent {
   }
 
   ngOnInit() {
-    this.inPopout = this.popupUtilsService.inPopout(window);
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+      this.loadAction = value?.action;
+      this.senderTabId = parseInt(value?.senderTabId, 10) || undefined;
+      this.uilocation = value?.uilocation;
+    });
+
+    this.inPopout = this.uilocation === "popout" || BrowserPopupUtils.inPopout(window);
+
     // eslint-disable-next-line rxjs-angular/prefer-takeuntil, rxjs/no-async-subscribe
     this.route.queryParams.pipe(first()).subscribe(async (params) => {
       if (params.cipherId) {
@@ -134,6 +162,8 @@ export class ViewComponent extends BaseViewComponent {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     super.ngOnDestroy();
     this.broadcasterService.unsubscribe(BroadcasterSubscriptionId);
   }
@@ -141,6 +171,27 @@ export class ViewComponent extends BaseViewComponent {
   async load() {
     await super.load();
     await this.loadPageDetails();
+
+    switch (this.loadAction) {
+      case AUTOFILL_ID:
+        await this.fillCipher();
+        break;
+      case COPY_USERNAME_ID:
+        await this.copy(this.cipher.login.username, "username", "Username");
+        break;
+      case COPY_PASSWORD_ID:
+        await this.copy(this.cipher.login.password, "password", "Password");
+        break;
+      case COPY_VERIFICATIONCODE_ID:
+        await this.copy(this.totpCode, "verificationCodeTotp", "TOTP");
+        break;
+      default:
+        break;
+    }
+
+    if (this.inPopout && this.loadAction) {
+      setTimeout(() => this.close(), 1000);
+    }
   }
 
   async edit() {
@@ -254,16 +305,35 @@ export class ViewComponent extends BaseViewComponent {
     return false;
   }
 
-  close() {
+  async close() {
+    // Would be refactored after rework is done on the windows popout service
+    const sessionData = await firstValueFrom(this.fido2PopoutSessionData$);
+    if (this.inPopout && sessionData.isFido2Session) {
+      BrowserFido2UserInterfaceSession.abortPopout(sessionData.sessionId);
+      return;
+    }
+
+    if (this.inPopout && this.senderTabId) {
+      BrowserApi.focusTab(this.senderTabId);
+      window.close();
+      return;
+    }
+
     this.location.back();
   }
 
   private async loadPageDetails() {
     this.pageDetails = [];
     this.tab = await BrowserApi.getTabFromCurrentWindow();
-    if (this.tab == null) {
+
+    if (this.senderTabId) {
+      this.tab = await BrowserApi.getTab(this.senderTabId);
+    }
+
+    if (!this.tab) {
       return;
     }
+
     BrowserApi.tabSendMessage(this.tab, {
       command: "collectPageDetails",
       tab: this.tab,
@@ -272,11 +342,21 @@ export class ViewComponent extends BaseViewComponent {
   }
 
   private async doAutofill() {
+    const originalTabURL = this.tab.url?.length && new URL(this.tab.url);
+
     if (!(await this.promptPassword())) {
       return false;
     }
 
-    if (this.pageDetails == null || this.pageDetails.length === 0) {
+    const currentTabURL = this.tab.url?.length && new URL(this.tab.url);
+
+    const originalTabHostPath =
+      originalTabURL && `${originalTabURL.origin}${originalTabURL.pathname}`;
+    const currentTabHostPath = currentTabURL && `${currentTabURL.origin}${currentTabURL.pathname}`;
+
+    const tabUrlChanged = originalTabHostPath !== currentTabHostPath;
+
+    if (this.pageDetails == null || this.pageDetails.length === 0 || tabUrlChanged) {
       this.platformUtilsService.showToast("error", null, this.i18nService.t("autofillError"));
       return false;
     }

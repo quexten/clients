@@ -62,6 +62,7 @@ import {
   PasswordDragonXmlImporter,
   PasswordSafeXmlImporter,
   PasswordWalletTxtImporter,
+  ProtonPassJsonImporter,
   PsonoJsonImporter,
   RememBearCsvImporter,
   RoboFormCsvImporter,
@@ -110,7 +111,7 @@ export class ImportService implements ImportServiceAbstraction {
     fileContents: string,
     organizationId: string = null,
     selectedImportTarget: string = null,
-    isUserAdmin: boolean
+    canAccessImportExport: boolean
   ): Promise<ImportResult> {
     let importResult: ImportResult;
     try {
@@ -146,7 +147,11 @@ export class ImportService implements ImportServiceAbstraction {
       }
     }
 
-    if (organizationId && Utils.isNullOrWhitespace(selectedImportTarget) && !isUserAdmin) {
+    if (
+      organizationId &&
+      Utils.isNullOrWhitespace(selectedImportTarget) &&
+      !canAccessImportExport
+    ) {
       const hasUnassignedCollections = importResult.ciphers.some(
         (c) => !Array.isArray(c.collectionIds) || c.collectionIds.length == 0
       );
@@ -202,6 +207,7 @@ export class ImportService implements ImportServiceAbstraction {
         return new BitwardenPasswordProtectedImporter(
           this.cryptoService,
           this.i18nService,
+          this.cipherService,
           promptForPassword_callback
         );
       case "lastpasscsv":
@@ -319,6 +325,8 @@ export class ImportService implements ImportServiceAbstraction {
         return new PsonoJsonImporter();
       case "passkyjson":
         return new PasskyJsonImporter();
+      case "protonpass":
+        return new ProtonPassJsonImporter(this.i18nService);
       default:
         return null;
     }

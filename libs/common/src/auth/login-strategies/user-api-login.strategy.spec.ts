@@ -9,15 +9,21 @@ import { MessagingService } from "../../platform/abstractions/messaging.service"
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { StateService } from "../../platform/abstractions/state.service";
 import { Utils } from "../../platform/misc/utils";
+import {
+  MasterKey,
+  SymmetricCryptoKey,
+  UserKey,
+} from "../../platform/models/domain/symmetric-crypto-key";
+import { CsprngArray } from "../../types/csprng";
 import { KeyConnectorService } from "../abstractions/key-connector.service";
 import { TokenService } from "../abstractions/token.service";
 import { TwoFactorService } from "../abstractions/two-factor.service";
-import { UserApiLogInCredentials } from "../models/domain/log-in-credentials";
+import { UserApiLoginCredentials } from "../models/domain/login-credentials";
 
 import { identityTokenResponseFactory } from "./login.strategy.spec";
-import { UserApiLogInStrategy } from "./user-api-login.strategy";
+import { UserApiLoginStrategy } from "./user-api-login.strategy";
 
-describe("UserApiLogInStrategy", () => {
+describe("UserApiLoginStrategy", () => {
   let cryptoService: MockProxy<CryptoService>;
   let apiService: MockProxy<ApiService>;
   let tokenService: MockProxy<TokenService>;
@@ -30,8 +36,8 @@ describe("UserApiLogInStrategy", () => {
   let keyConnectorService: MockProxy<KeyConnectorService>;
   let environmentService: MockProxy<EnvironmentService>;
 
-  let apiLogInStrategy: UserApiLogInStrategy;
-  let credentials: UserApiLogInCredentials;
+  let apiLogInStrategy: UserApiLoginStrategy;
+  let credentials: UserApiLoginCredentials;
 
   const deviceId = Utils.newGuid();
   const keyConnectorUrl = "KEY_CONNECTOR_URL";
@@ -55,7 +61,7 @@ describe("UserApiLogInStrategy", () => {
     tokenService.getTwoFactorToken.mockResolvedValue(null);
     tokenService.decodeToken.mockResolvedValue({});
 
-    apiLogInStrategy = new UserApiLogInStrategy(
+    apiLogInStrategy = new UserApiLoginStrategy(
       cryptoService,
       apiService,
       tokenService,
@@ -69,7 +75,7 @@ describe("UserApiLogInStrategy", () => {
       keyConnectorService
     );
 
-    credentials = new UserApiLogInCredentials(apiClientId, apiClientSecret);
+    credentials = new UserApiLoginCredentials(apiClientId, apiClientSecret);
   });
 
   it("sends api key credentials to the server", async () => {
@@ -101,7 +107,18 @@ describe("UserApiLogInStrategy", () => {
     expect(stateService.addAccount).toHaveBeenCalled();
   });
 
-  it("gets and sets the Key Connector key from environmentUrl", async () => {
+  it("sets the encrypted user key and private key from the identity token response", async () => {
+    const tokenResponse = identityTokenResponseFactory();
+
+    apiService.postIdentityToken.mockResolvedValue(tokenResponse);
+
+    await apiLogInStrategy.logIn(credentials);
+
+    expect(cryptoService.setMasterKeyEncryptedUserKey).toHaveBeenCalledWith(tokenResponse.key);
+    expect(cryptoService.setPrivateKey).toHaveBeenCalledWith(tokenResponse.privateKey);
+  });
+
+  it("gets and sets the master key if Key Connector is enabled", async () => {
     const tokenResponse = identityTokenResponseFactory();
     tokenResponse.apiUseKeyConnector = true;
 
@@ -110,6 +127,24 @@ describe("UserApiLogInStrategy", () => {
 
     await apiLogInStrategy.logIn(credentials);
 
-    expect(keyConnectorService.getAndSetKey).toHaveBeenCalledWith(keyConnectorUrl);
+    expect(keyConnectorService.setMasterKeyFromUrl).toHaveBeenCalledWith(keyConnectorUrl);
+  });
+
+  it("decrypts and sets the user key if Key Connector is enabled", async () => {
+    const userKey = new SymmetricCryptoKey(new Uint8Array(64).buffer as CsprngArray) as UserKey;
+    const masterKey = new SymmetricCryptoKey(new Uint8Array(64).buffer as CsprngArray) as MasterKey;
+
+    const tokenResponse = identityTokenResponseFactory();
+    tokenResponse.apiUseKeyConnector = true;
+
+    apiService.postIdentityToken.mockResolvedValue(tokenResponse);
+    environmentService.getKeyConnectorUrl.mockReturnValue(keyConnectorUrl);
+    cryptoService.getMasterKey.mockResolvedValue(masterKey);
+    cryptoService.decryptUserKeyWithMasterKey.mockResolvedValue(userKey);
+
+    await apiLogInStrategy.logIn(credentials);
+
+    expect(cryptoService.decryptUserKeyWithMasterKey).toHaveBeenCalledWith(masterKey);
+    expect(cryptoService.setUserKey).toHaveBeenCalledWith(userKey);
   });
 });

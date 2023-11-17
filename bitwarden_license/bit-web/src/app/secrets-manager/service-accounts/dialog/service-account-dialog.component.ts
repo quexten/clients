@@ -18,6 +18,7 @@ export interface ServiceAccountOperation {
   organizationId: string;
   serviceAccountId?: string;
   operation: OperationType;
+  organizationEnabled: boolean;
 }
 
 @Component({
@@ -27,7 +28,7 @@ export class ServiceAccountDialogComponent {
   protected formGroup = new FormGroup(
     {
       name: new FormControl("", {
-        validators: [Validators.required, BitValidators.trimValidator],
+        validators: [Validators.required, Validators.maxLength(500), BitValidators.trimValidator],
         updateOn: "submit",
       }),
     },
@@ -62,6 +63,15 @@ export class ServiceAccountDialogComponent {
   }
 
   submit = async () => {
+    if (!this.data.organizationEnabled) {
+      this.platformUtilsService.showToast(
+        "error",
+        null,
+        this.i18nService.t("serviceAccountsCannotCreate")
+      );
+      return;
+    }
+
     this.formGroup.markAllAsTouched();
 
     if (this.formGroup.invalid) {

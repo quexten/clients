@@ -1,16 +1,15 @@
 import { Component, NgZone } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ipcRenderer } from "electron";
 
 import { LockComponent as BaseLockComponent } from "@bitwarden/angular/auth/components/lock.component";
-import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { VaultTimeoutService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeout.service";
-import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeoutSettings.service";
+import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
+import { VaultTimeoutService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout.service";
 import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { InternalPolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
-import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-connector.service";
-import { DeviceType, KeySuffixOptions } from "@bitwarden/common/enums";
+import { DeviceTrustCryptoServiceAbstraction } from "@bitwarden/common/auth/abstractions/device-trust-crypto.service.abstraction";
+import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
+import { DeviceType } from "@bitwarden/common/enums";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
@@ -19,9 +18,9 @@ import { LogService } from "@bitwarden/common/platform/abstractions/log.service"
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
+import { DialogService } from "@bitwarden/components";
 
 import { ElectronStateService } from "../platform/services/electron-state.service.abstraction";
-import { BiometricStorageAction, BiometricMessage } from "../types/biometric-message";
 
 const BroadcasterSubscriptionId = "LockComponent";
 
@@ -51,8 +50,9 @@ export class LockComponent extends BaseLockComponent {
     policyService: InternalPolicyService,
     passwordStrengthService: PasswordStrengthServiceAbstraction,
     logService: LogService,
-    keyConnectorService: KeyConnectorService,
-    dialogService: DialogServiceAbstraction
+    dialogService: DialogService,
+    deviceTrustCryptoService: DeviceTrustCryptoServiceAbstraction,
+    userVerificationService: UserVerificationService
   ) {
     super(
       router,
@@ -66,12 +66,13 @@ export class LockComponent extends BaseLockComponent {
       stateService,
       apiService,
       logService,
-      keyConnectorService,
       ngZone,
       policyApiService,
       policyService,
       passwordStrengthService,
-      dialogService
+      dialogService,
+      deviceTrustCryptoService,
+      userVerificationService
     );
   }
 
@@ -89,7 +90,7 @@ export class LockComponent extends BaseLockComponent {
           return;
         }
 
-        if (await ipcRenderer.invoke("windowVisible")) {
+        if (await ipc.platform.isWindowVisible()) {
           this.unlockBiometric();
         }
       }, 1000);
@@ -129,17 +130,11 @@ export class LockComponent extends BaseLockComponent {
 
   private async canUseBiometric() {
     const userId = await this.stateService.getUserId();
-    const val = await ipcRenderer.invoke("biometric", {
-      action: BiometricStorageAction.EnabledForUser,
-      key: `${userId}_masterkey_biometric`,
-      keySuffix: KeySuffixOptions.Biometric,
-      userId: userId,
-    } as BiometricMessage);
-    return val != null ? (JSON.parse(val) as boolean) : null;
+    return await ipc.platform.biometric.enabled(userId);
   }
 
   private focusInput() {
-    document.getElementById(this.pinLock ? "pin" : "masterPassword").focus();
+    document.getElementById(this.pinEnabled ? "pin" : "masterPassword")?.focus();
   }
 
   private async displayBiometricUpdateWarning(): Promise<void> {
@@ -155,7 +150,7 @@ export class LockComponent extends BaseLockComponent {
       const response = await this.dialogService.openSimpleDialog({
         title: { key: "windowsBiometricUpdateWarningTitle" },
         content: { key: "windowsBiometricUpdateWarning" },
-        type: SimpleDialogType.WARNING,
+        type: "warning",
       });
 
       await this.stateService.setBiometricRequirePasswordOnStart(response);

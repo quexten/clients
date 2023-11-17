@@ -35,7 +35,7 @@ defaults:
 jobs:
   cloc:
     name: CLOC
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
@@ -51,30 +51,40 @@ jobs:
 
   setup:
     name: Setup
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
-      package_version: ${{ steps.retrieve-version.outputs.package_version }}
+      package_version: ${{ steps.retrieve-package-version.outputs.package_version }}
+      node_version: ${{ steps.retrieve-node-version.outputs.node_version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Get Package Version
-        id: retrieve-version
+        id: retrieve-package-version
         run: |
           PKG_VERSION=$(jq -r .version package.json)
           echo "package_version=$PKG_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get Node Version
+        id: retrieve-node-version
+        working-directory: ./
+        run: |
+          NODE_NVMRC=$(cat .nvmrc)
+          NODE_VERSION=${NODE_NVMRC/v/''}
+          echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
 
 
   cli:
     name: Build CLI ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-11]
+        os: [ubuntu-22.04, macos-11]
     runs-on: ${{ matrix.os }}
     needs:
       - setup
     env:
       _PACKAGE_VERSION: ${{ needs.setup.outputs.package_version }}
+      _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
       _WIN_PKG_FETCH_VERSION: 18.5.0
       _WIN_PKG_VERSION: 3.4
     steps:
@@ -92,7 +102,7 @@ jobs:
         with:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-          node-version: '18'
+          node-version: ${{ env._NODE_VERSION }}
 
       - name: Install node-gyp
         run: |
@@ -149,6 +159,7 @@ jobs:
       - setup
     env:
       _PACKAGE_VERSION: ${{ needs.setup.outputs.package_version }}
+      _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
       _WIN_PKG_FETCH_VERSION: 18.5.0
       _WIN_PKG_VERSION: 3.4
     steps:
@@ -166,7 +177,7 @@ jobs:
         with:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-          node-version: '18'
+          node-version: ${{ env._NODE_VERSION }}
 
       - name: Install node-gyp
         run: |
@@ -293,7 +304,7 @@ jobs:
 
   snap:
     name: Build Snap
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup, cli]
     env:
       _PACKAGE_VERSION: ${{ needs.setup.outputs.package_version }}
@@ -322,7 +333,7 @@ jobs:
           ls -alth
 
       - name: Build snap
-        uses: snapcore/action-build@3457752ec9b1c79a8290b5167fce2d14df0997c1 # v1.1.2
+        uses: snapcore/action-build@2ee46bc29d163c9c836f2820cc46b39664bf0de2 # v1.1.3
         with:
           path: apps/cli/dist/snap
 
@@ -368,7 +379,7 @@ jobs:
   check-failures:
     name: Check for failures
     if: always()
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
       - cloc
       - setup
@@ -404,7 +415,7 @@ jobs:
       - name: Retrieve secrets
         id: retrieve-secrets
         if: failure()
-        uses: bitwarden/gh-actions/get-keyvault-secrets@a30e9c3d658dc97c4c2e61ec749fdab64b83386c
+        uses: bitwarden/gh-actions/get-keyvault-secrets@main
         with:
           keyvault: "bitwarden-ci"
           secrets: "devops-alerts-slack-webhook-url"

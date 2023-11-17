@@ -70,7 +70,7 @@
             </button>
           </div>
         </div>
-        <div class="box">
+        <div class="box" *ngIf="!comingFromAddEdit">
           <div class="box-content condensed">
             <div
               class="box-content-row box-content-row-radio"
@@ -95,7 +95,6 @@
                   [value]="o.value"
                   (change)="typeChanged()"
                   [checked]="type === o.value"
-                  [disabled]="comingFromAddEdit && type !== o.value"
                 />
                 <label class="unstyled" for="type_{{ o.value }}">
                   {{ o.name }}
@@ -381,6 +380,16 @@
                     (blur)="saveUsernameOptions()"
                   />
                 </div>
+                <div class="box-content-row" appBoxRow>
+                  <label for="simplelogin-baseUrl">{{ "baseUrl" | i18n }}</label>
+                  <input
+                    id="simplelogin-baseUrl"
+                    type="text"
+                    name="SimpleLoginDomain"
+                    [(ngModel)]="usernameOptions.forwardedSimpleLoginBaseUrl"
+                    (blur)="saveUsernameOptions()"
+                  />
+                </div>
               </ng-container>
               <ng-container *ngIf="usernameOptions.forwardedService === 'duckduckgo'">
                 <div class="box-content-row" appBoxRow>
@@ -406,12 +415,22 @@
                   />
                 </div>
                 <div class="box-content-row" appBoxRow>
-                  <label for="anonaddy-domain">{{ "domainName" | i18n }}</label>
+                  <label for="anonaddy-domain">{{ "aliasDomain" | i18n }}</label>
                   <input
                     id="anonaddy-domain"
                     type="text"
                     name="AnonAddyDomain"
                     [(ngModel)]="usernameOptions.forwardedAnonAddyDomain"
+                    (blur)="saveUsernameOptions()"
+                  />
+                </div>
+                <div class="box-content-row" appBoxRow>
+                  <label for="anonaddy-baseUrl">{{ "baseUrl" | i18n }}</label>
+                  <input
+                    id="anonaddy-baseUrl"
+                    type="text"
+                    name="AnonAddyDomain"
+                    [(ngModel)]="usernameOptions.forwardedAnonAddyBaseUrl"
                     (blur)="saveUsernameOptions()"
                   />
                 </div>
@@ -452,7 +471,7 @@
                   />
                 </div>
                 <div class="box-content-row" appBoxRow>
-                  <label for="forwardemail-domain">{{ "domainName" | i18n }}</label>
+                  <label for="forwardemail-domain">{{ "aliasDomain" | i18n }}</label>
                   <input
                     id="forwardemail-domain"
                     type="text"

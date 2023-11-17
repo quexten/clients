@@ -13,7 +13,6 @@ export class OrganizationResponse extends BaseResponse {
   businessTaxNumber: string;
   billingEmail: string;
   plan: PlanResponse;
-  secretsManagerPlan: PlanResponse;
   planType: PlanType;
   seats: number;
   maxAutoscaleSeats: number;
@@ -33,6 +32,7 @@ export class OrganizationResponse extends BaseResponse {
   smServiceAccounts?: number;
   maxAutoscaleSmSeats?: number;
   maxAutoscaleSmServiceAccounts?: number;
+  limitCollectionCreationDeletion: boolean;
 
   constructor(response: any) {
     super(response);
@@ -48,10 +48,6 @@ export class OrganizationResponse extends BaseResponse {
 
     const plan = this.getResponseProperty("Plan");
     this.plan = plan == null ? null : new PlanResponse(plan);
-
-    const secretsManagerPlan = this.getResponseProperty("SecretsManagerPlan");
-    this.secretsManagerPlan =
-      secretsManagerPlan == null ? null : new PlanResponse(secretsManagerPlan);
 
     this.planType = this.getResponseProperty("PlanType");
     this.seats = this.getResponseProperty("Seats");
@@ -72,5 +68,8 @@ export class OrganizationResponse extends BaseResponse {
     this.smServiceAccounts = this.getResponseProperty("SmServiceAccounts");
     this.maxAutoscaleSmSeats = this.getResponseProperty("MaxAutoscaleSmSeats");
     this.maxAutoscaleSmServiceAccounts = this.getResponseProperty("MaxAutoscaleSmServiceAccounts");
+    this.limitCollectionCreationDeletion = this.getResponseProperty(
+      "LimitCollectionCreationDeletion"
+    );
   }
 }

@@ -80,6 +80,9 @@ export class EventService {
       case EventType.User_MigratedKeyToKeyConnector:
         msg = humanReadableMsg = this.i18nService.t("migratedKeyConnector");
         break;
+      case EventType.User_RequestedDeviceApproval:
+        msg = humanReadableMsg = this.i18nService.t("requestedDeviceApproval");
+        break;
       // Cipher
       case EventType.Cipher_Created:
         msg = this.i18nService.t("createdItemId", this.formatCipherId(ev, options));
@@ -307,6 +310,20 @@ export class EventService {
           this.getShortId(ev.organizationUserId)
         );
         break;
+      case EventType.OrganizationUser_ApprovedAuthRequest:
+        msg = this.i18nService.t("approvedAuthRequest", this.formatOrgUserId(ev));
+        humanReadableMsg = this.i18nService.t(
+          "approvedAuthRequest",
+          this.getShortId(ev.organizationUserId)
+        );
+        break;
+      case EventType.OrganizationUser_RejectedAuthRequest:
+        msg = this.i18nService.t("rejectedAuthRequest", this.formatOrgUserId(ev));
+        humanReadableMsg = this.i18nService.t(
+          "rejectedAuthRequest",
+          this.getShortId(ev.organizationUserId)
+        );
+        break;
       // Org
       case EventType.Organization_Updated:
         msg = humanReadableMsg = this.i18nService.t("editedOrgSettings");
@@ -469,6 +486,12 @@ export class EventService {
         return ["bwi-globe", this.i18nService.t("webVault") + " - IE"];
       case DeviceType.Server:
         return ["bwi-server", this.i18nService.t("server")];
+      case DeviceType.WindowsCLI:
+        return ["bwi-cli", this.i18nService.t("cli") + " - Windows"];
+      case DeviceType.MacOsCLI:
+        return ["bwi-cli", this.i18nService.t("cli") + " - macOS"];
+      case DeviceType.LinuxCLI:
+        return ["bwi-cli", this.i18nService.t("cli") + " - Linux"];
       case DeviceType.UnknownBrowser:
         return [
           "bwi-globe",

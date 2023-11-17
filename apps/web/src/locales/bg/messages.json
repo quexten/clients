@@ -508,9 +508,6 @@
   "maxFileSize": {
     "message": "Големината на файла е най-много 500 MB."
   },
-  "updateKey": {
-    "message": "Трябва да обновите шифриращия си ключ, за да използвате тази възможност."
-  },
   "addedItem": {
     "message": "Елементът е добавен"
   },
@@ -614,6 +611,87 @@
   "loginWithMasterPassword": {
     "message": "Вписване с главната парола"
   },
+  "loginWithPasskey": {
+    "message": "Вписване със секретен ключ"
+  },
+  "loginWithPasskeyInfo": {
+    "message": "Използвайте автоматично създаден секретен ключ, чрез който ще се вписвате без нуждата от парола. За удостоверяване на самоличността Ви, ще се ползват биометрични данни, лицево разпознаване, пръстов отпечатък или друг метод за защита от тип FIDO2."
+  },
+  "newPasskey": {
+    "message": "Нов секретен ключ"
+  },
+  "learnMoreAboutPasswordless": {
+    "message": "Learn more about passwordless"
+  },
+  "passkeyEnterMasterPassword": {
+    "message": "Въведете главната си парола, за да променяте настройките за вписване със секретен ключ."
+  },
+  "creatingPasskeyLoading": {
+    "message": "Създаване на секретен ключ…"
+  },
+  "creatingPasskeyLoadingInfo": {
+    "message": "Оставете този прозорец отворен и следвайте насоките в браузъра си."
+  },
+  "errorCreatingPasskey": {
+    "message": "Грешка при създаването на секретен ключ"
+  },
+  "errorCreatingPasskeyInfo": {
+    "message": "Възникна проблем при създаването на секретния ключ."
+  },
+  "passkeySuccessfullyCreated": {
+    "message": "Секретният ключ е създаден успешно!"
+  },
+  "customName": {
+    "message": "Custom name"
+  },
+  "customPasskeyNameInfo": {
+    "message": "Изберете име за секретния си ключ, за да го разпознавате по-лесно."
+  },
+  "useForVaultEncryption": {
+    "message": "Използване за шифроване на трезора"
+  },
+  "useForVaultEncryptionInfo": {
+    "message": "Вписването и отключването са възможни на поддържаните устройства, без необходимостта от главна парола. Следвайте инструкциите в браузъра си, за да завършите настройката."
+  },
+  "useForVaultEncryptionErrorReadingPasskey": {
+    "message": "Грешка при прочитането на секретния ключ. Опитайте отново или махнете тази отметка."
+  },
+  "encryptionNotSupported": {
+    "message": "Encryption not supported"
+  },
+  "encryptionNotEnabled": {
+    "message": "Шифроването не е включено"
+  },
+  "usedForEncryption": {
+    "message": "Използва се за шифроване"
+  },
+  "loginWithPasskeyEnabled": {
+    "message": "Вписването със секретен ключ е включено"
+  },
+  "passkeySaved": {
+    "message": "Запазено: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Personal yubikey"
+      }
+    }
+  },
+  "passkeyRemoved": {
+    "message": "Секретният ключ е премахнат"
+  },
+  "removePasskey": {
+    "message": "Премахване на секретния ключ"
+  },
+  "removePasskeyInfo": {
+    "message": "Ако всички секретни ключове бъдат премахнати, няма да можете да се впишете в нови устройства без главната си парола."
+  },
+  "passkeyLimitReachedInfo": {
+    "message": "Достигнато е ограничението за броя на секретните ключове. Премахнете някой, за да може да добавите нов."
+  },
+  "tryAgain": {
+    "message": "Нов опит"
+  },
   "createAccount": {
     "message": "Създаване на абонамент"
   },
@@ -711,11 +789,17 @@
   "unexpectedError": {
     "message": "Възникна неочаквана грешка."
   },
+  "expirationDateError": {
+    "message": "Моля, изберете дата на давност, която е в бъдещето."
+  },
   "emailAddress": {
     "message": "Адрес на електронната поща"
   },
   "yourVaultIsLocked": {
     "message": "Трезорът е заключен — въведете главната си парола, за да продължите."
+  },
+  "uuid": {
+    "message": "UUID"
   },
   "unlock": {
     "message": "Отключване"
@@ -947,6 +1031,9 @@
   },
   "copyVerificationCode": {
     "message": "Копиране на кода за потвърждаване"
+  },
+  "copyUuid": {
+    "message": "Copy UUID"
   },
   "warning": {
     "message": "Внимание"
@@ -1284,6 +1371,31 @@
   "importEncKeyError": {
     "message": "Грешка при дешифрирането на изнесения файл. Ключът за шифриране не отговаря на този, който е използван за изнасянето на данните."
   },
+  "importDestination": {
+    "message": "Място на внасяне"
+  },
+  "learnAboutImportOptions": {
+    "message": "Научете повече относно възможностите за внасяне"
+  },
+  "selectImportFolder": {
+    "message": "Изберете папка"
+  },
+  "selectImportCollection": {
+    "message": "Изберете колекция"
+  },
+  "importTargetHint": {
+    "message": "Изберете тази опция, ако искате съдържанието на внесения файл да бъде преместено в $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "Файлът съдържа невъзложени елементи."
+  },
   "selectFormat": {
     "message": "Избор на форма̀та на файла за внасяне"
   },
@@ -1391,12 +1503,15 @@
   "twoStepLoginDesc": {
     "message": "Допълнителна защита на абонамента чрез изискването на допълнително действие при вписване."
   },
-  "twoStepLoginOrganizationDescStart": {
-    "message": "Enforce Bitwarden Two-step Login options for members by using the ",
+  "twoStepLoginTeamsDesc": {
+    "message": "Включете двустепенното удостоверяване за организацията си."
+  },
+  "twoStepLoginEnterpriseDescStart": {
+    "message": "Задължете членовете да използват вариантите за двустепенно удостоверяване в Битуорден, като използвате ",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Enforce Bitwarden Two-step Login options for members by using the Two-step Login Policy.'"
   },
   "twoStepLoginPolicy": {
-    "message": "Two-step Login Policy"
+    "message": "Политика за двустепенно удостоверяване"
   },
   "twoStepLoginOrganizationDuoDesc": {
     "message": "За да направите двустепенното удостоверяване чрез Duo задължително, използвайте настройките по-долу."
@@ -1444,6 +1559,9 @@
   },
   "manage": {
     "message": "Управление"
+  },
+  "canManage": {
+    "message": "Може да управлява"
   },
   "disable": {
     "message": "Изключване"
@@ -1686,7 +1804,7 @@
     "message": "Открити са записи без двустепенна идентификация"
   },
   "inactive2faFoundDesc": {
-    "message": "We found $COUNT$ website(s) in your vault that may not be configured with two-step login (according to 2fa.directory). To further protect these accounts, you should set up two-step login.",
+    "message": "В трезора ви има $COUNT$ уебсайт(а), които е възможно да не са настроени за вписване чрез двустепенно удостоверяване (според сайта 2fa.directory). За да защитите тези регистрации, трябва да настроите двустепенното удостоверяване.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -1890,8 +2008,8 @@
   "premiumSignUpStorage": {
     "message": "1 GB пространство за файлове, които се шифрират."
   },
-  "premiumSignUpTwoStep": {
-    "message": "Двустепенно удостоверяване чрез YubiKey, FIDO U2F и Duo."
+  "premiumSignUpTwoStepOptions": {
+    "message": "Частно двустепенно удостоверяване чрез YubiKey и Duo."
   },
   "premiumSignUpEmergency": {
     "message": "Авариен достъп"
@@ -2005,6 +2123,9 @@
         "example": "month or year"
       }
     }
+  },
+  "paymentChargedWithUnpaidSubscription": {
+    "message": "Сумата за всички неплатени абонаменти ще бъде изискана от Вашия метод за плащане."
   },
   "paymentChargedWithTrial": {
     "message": "Планът ви идва с пробен период от 7 дена. Плащането няма се изиска преди това, след което ще се повтаря всеки $INTERVAL$. Може да се откажете по всяко време."
@@ -2174,6 +2295,9 @@
   "contactSupport": {
     "message": "Връзка с поддръжката на потребители"
   },
+  "contactSupportShort": {
+    "message": "Свържете се с поддръжката"
+  },
   "updatedPaymentMethod": {
     "message": "Обновен метод за плащане."
   },
@@ -2274,6 +2398,9 @@
   },
   "planDescTeams": {
     "message": "За компании и други екипни организации."
+  },
+  "planNameTeamsStarter": {
+    "message": "Стартов екипен"
   },
   "planNameEnterprise": {
     "message": "За големи организации"
@@ -2634,6 +2761,9 @@
   },
   "webVault": {
     "message": "Трезор по уеб"
+  },
+  "cli": {
+    "message": "CLI"
   },
   "bitWebVault": {
     "message": "Трезор по уеб"
@@ -3358,6 +3488,9 @@
   "subscriptionUpdated": {
     "message": "Абонаментът е обновен"
   },
+  "subscribedToSecretsManager": {
+    "message": "Абонаментът е обновен. Вече имате достъп до Управлението на тайни."
+  },
   "additionalOptions": {
     "message": "Допълнителни настройки"
   },
@@ -3373,6 +3506,15 @@
       "max": {
         "content": "$1",
         "example": "50"
+      }
+    }
+  },
+  "subscriptionUserSeatsWithoutAdditionalSeatsOption": {
+    "message": "Можете да поканите до $COUNT$ членове без допълнителни такси. Свържете се с поддръжката, ако искате да надградите плана си и да каните повече членове.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
       }
     }
   },
@@ -3436,17 +3578,11 @@
   "keyUpdated": {
     "message": "Ключът е обновен"
   },
-  "updateKeyTitle": {
-    "message": "Обновяване на ключа"
-  },
   "updateEncryptionKey": {
     "message": "Обновяване на ключа за шифриране"
   },
-  "updateEncryptionKeyShortDesc": {
-    "message": "Ползвате остаряла схема за шифриране."
-  },
-  "updateEncryptionKeyDesc": {
-    "message": "Вече ползваме по-дълги ключове за по-добра сигурност и повече възможности. Обновяването на ключа е бързо и лесно. Просто въведете главната си парола по-долу. В някой бъдещ момент това обновяване ще бъде задължително."
+  "updateEncryptionSchemeDesc": {
+    "message": "Променихме схемата на шифроване, за да подобрим сигурността. Обновете шифриращия си ключ сега, като въведете главната си парола по-долу."
   },
   "updateEncryptionKeyWarning": {
     "message": "След смяната на ключа за шифриране ще трябва да се отпишете и след това да се впишете в регистрацията си във всички приложения на Битуорден, които ползвате (като мобилното приложение и разширенията за браузъри). Ако не се отпишете и впишете повторно (за да получите достъп до новия ключ), рискувате да повредите записите си. Сега ще се пробва да бъдете отписани автоматично, това обаче може да се забави."
@@ -3502,6 +3638,9 @@
   "vaultTimeoutDesc": {
     "message": "Изберете колко да е времето за достъп и какво ще е действието след това."
   },
+  "vaultTimeoutLogoutDesc": {
+    "message": "Изберете кога да бъдете отписан(а) от трезора си."
+  },
   "oneMinute": {
     "message": "1 минута"
   },
@@ -3537,6 +3676,18 @@
   },
   "organizationIsDisabled": {
     "message": "Организацията е изключена."
+  },
+  "secretsAccessSuspended": {
+    "message": "Изключените организации са недостъпни. Свържете се със собственика на организацията си за помощ."
+  },
+  "secretsCannotCreate": {
+    "message": "В изключени организации не могат да се създават тайни. Свържете се със собственика на организацията си за помощ."
+  },
+  "projectsCannotCreate": {
+    "message": "В изключени организации не могат да се създават проекти. Свържете се със собственика на организацията си за помощ."
+  },
+  "serviceAccountsCannotCreate": {
+    "message": "В изключени организации не могат да се създават сервизни акаунти. Свържете се със собственика на организацията си за помощ."
   },
   "disabledOrganizationFilterError": {
     "message": "Записите в изключени организации не са достъпни. Свържете се със собственика на организацията си за помощ."
@@ -3590,8 +3741,8 @@
   "attachmentsNeedFix": {
     "message": "Този запис съдържа стар, прикачен файл, който трябва да бъде поправен. Натиснете, за да научите повече."
   },
-  "attachmentFixDesc": {
-    "message": "Този прикачен файл е стар и трябва да бъде поправен. Натиснете, за да научите повече."
+  "attachmentFixDescription": {
+    "message": "Този прикачен файл използва остарял метод на шифроване. Избирете „Поправяне“ за да го свалите, пре-шифровате и качите отново."
   },
   "fix": {
     "message": "Поправяне",
@@ -3808,29 +3959,11 @@
   "restoreSelected": {
     "message": "Възстановяване на избраните"
   },
-  "restoreItem": {
-    "message": "Възстановяване на запис"
-  },
   "restoredItem": {
     "message": "Записът е възстановен"
   },
   "restoredItems": {
     "message": "Записите са възстановени"
-  },
-  "restoreItemConfirmation": {
-    "message": "Сигурни ли сте, че искате да възстановите записа?"
-  },
-  "restoreItems": {
-    "message": "Възстановяване на записи"
-  },
-  "restoreSelectedItemsDesc": {
-    "message": "За възстановяване сте избрали $COUNT$ запис/а. Сигурни ли сте, че искате да ги възстановите?",
-    "placeholders": {
-      "count": {
-        "content": "$1",
-        "example": "150"
-      }
-    }
   },
   "restoredItemId": {
     "message": "Запис № $ID$ е възстановен.",
@@ -3865,9 +3998,6 @@
   "setMasterPassword": {
     "message": "Задаване на главна парола"
   },
-  "ssoCompleteRegistration": {
-    "message": "За да завършите настройките за еднократна идентификация, трябва да зададете главна парола за трезора."
-  },
   "identifier": {
     "message": "Идентификатор"
   },
@@ -3884,7 +4014,22 @@
     "message": "Вече може да затворите подпрозореца и да продължите в разширението."
   },
   "includeAllTeamsFeatures": {
-    "message": "Всички възможности в екип плюс:"
+    "message": "Всички възможности на Екипния план, плюс:"
+  },
+  "includeAllTeamsStarterFeatures": {
+    "message": "Всички възможности на Стартовия екипен план, плюс:"
+  },
+  "chooseMonthlyOrAnnualBilling": {
+    "message": "Изберете месечно или годишно таксуване"
+  },
+  "abilityToAddMoreThanNMembers": {
+    "message": "Възможност да добавяте повече от $COUNT$ членове",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
   },
   "includeSsoAuthentication": {
     "message": "Еднократна идентификация чрез SAML2.0 и OpenID Connect"
@@ -3901,8 +4046,9 @@
   "ssoIdentifier": {
     "message": "Идентификатор за еднократна идентификация"
   },
-  "ssoIdentifierHint": {
-    "message": "Дайте този идентификатор на членовете си, за да могат да се вписват чрез еднократна идентификация."
+  "ssoIdentifierHintPartOne": {
+    "message": "Дайте този идентификатор на членовете си, за да могат да се вписват чрез еднократно удостоверяване. Ако искате да пропуснете тази стъпка, настройте ",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Provide this ID to your members to login with SSO. To bypass this step, set up Domain verification'"
   },
   "unlinkSso": {
     "message": "Прекъсване на еднократна идентификация"
@@ -4705,7 +4851,7 @@
     "message": "Грешка"
   },
   "accountRecoveryManageUsers": {
-    "message": "Manage users must also be granted with the manage account recovery permission"
+    "message": "Управлението на потребителите трябва да бъде дадено заедно с разрешението за Управление на възстановяването на регистрации"
   },
   "setupProvider": {
     "message": "Настройка на доставчика"
@@ -4736,10 +4882,10 @@
     "message": "Потребителят с най-големи права на достъп, който може да управлява всички настройки на доставчика, както и да има достъп до и да управлява клиентските организации."
   },
   "serviceUser": {
-    "message": "Service user"
+    "message": "Сервизен потребител"
   },
   "serviceUserDesc": {
-    "message": "Service users can access and manage all client organizations."
+    "message": "Сервизните потребители имат достъп до всички клиентски организации и могат да ги управляват."
   },
   "providerInviteUserDesc": {
     "message": "Може да поканите потребител към доставчика си, като попълните адреса му за електронна поща, с който е регистриран в Битуорден, по-долу. В случай, че потребителят не е регистриран, той автоматично ще получи покана и да се регистрира."
@@ -4916,8 +5062,8 @@
   "disablePersonalVaultExport": {
     "message": "Забраняване на изнасянето на личния трезор"
   },
-  "disablePersonalVaultExportDesc": {
-    "message": "Забранява на потребителите да изнасят данните от своя личен трезор."
+  "disablePersonalVaultExportDescription": {
+    "message": "Да не се разрешава на членовете да изнасят данните от собствените си трезори."
   },
   "vaultExportDisabled": {
     "message": "Изнасянето на трезора е изключено"
@@ -5151,10 +5297,10 @@
     "message": "Премахване на спонсорирането"
   },
   "removeSponsorshipConfirmation": {
-    "message": "After removing a sponsorship, you will be responsible for this subscription and related invoices. Are you sure you want to continue?"
+    "message": "След като премахнете спонсорството, Вие ще поемете отговорността за този абонамент и свързаните с него плащания. Наистина ли искате да продължите?"
   },
   "sponsorshipCreated": {
-    "message": "Sponsorship created"
+    "message": "Спонсорството е създадено"
   },
   "emailSent": {
     "message": "Писмото е изпратено"
@@ -5271,7 +5417,7 @@
     "message": "Migrated to Key Connector"
   },
   "paymentSponsored": {
-    "message": "Please provide a payment method to associate with the organization. Don't worry, we won't charge you anything unless you select additional features or your sponsorship expires. "
+    "message": "Посочете метод за плащане, който да бъде свързан с организацията. Не се притеснявайте – от него няма да бъдат изискани никакви суми, докато не изберете допълнителни функционалности или докато не изтече периода на спонсорирането Ви. "
   },
   "orgCreatedSponsorshipInvalid": {
     "message": "The sponsorship offer has expired. You may delete the organization you created to avoid a charge at the end of your 7 day trial. Otherwise you may close this prompt to keep the organization and assume billing responsibility."
@@ -5390,6 +5536,19 @@
   "required": {
     "message": "задължително"
   },
+  "charactersCurrentAndMaximum": {
+    "message": "Максимален брой знаци: $CURRENT$/$MAX$",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "0"
+      },
+      "max": {
+        "content": "$2",
+        "example": "100"
+      }
+    }
+  },
   "characterMaximum": {
     "message": "Максимален брой знаци: $MAX$",
     "placeholders": {
@@ -5420,8 +5579,8 @@
   "exportingOrganizationVaultTitle": {
     "message": "Изнасяне на трезора на организацията"
   },
-  "exportingPersonalVaultDescription": {
-    "message": "Ще бъдат изнесени само записите от личния трезор свързан с $EMAIL$. Записите в трезора на организацията няма да бъдат включени.",
+  "exportingIndividualVaultDescription": {
+    "message": "Ще бъдат изнесени само отделните записи в трезора, които са свързани с $EMAIL$. Записите от трезора на организацията няма да бъдат включени. Ще бъде изнесена само информацията за записите от трезора, а свързаните прикачени елементи няма да бъдат включени.",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -5429,8 +5588,8 @@
       }
     }
   },
-  "exportingOrganizationVaultDescription": {
-    "message": "Ще бъдат изнесени само записите от трезора свързан с $ORGANIZATION$. Записите в личния трезор и тези в други организации няма да бъдат включени.",
+  "exportingOrganizationVaultDesc": {
+    "message": "Ще бъдат изнесени само записите от трезора свързан с $ORGANIZATION$. Записите в отделните лични трезори и тези в други организации няма да бъдат включени.",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -5737,6 +5896,9 @@
   },
   "on": {
     "message": "Включено"
+  },
+  "off": {
+    "message": "Изключено"
   },
   "members": {
     "message": "Членове"
@@ -6484,6 +6646,24 @@
       }
     }
   },
+  "teamsStarterPlanInvLimitReachedManageBilling": {
+    "message": "Стартовите екипни планове може да имат не повече от $SEATCOUNT$ членове. Свържете се с поддръжката, ако искате да надградите плана си и да каните повече членове.",
+    "placeholders": {
+      "seatcount": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "teamsStarterPlanInvLimitReachedNoManageBilling": {
+    "message": "Стартовите екипни планове може да имат не повече от $SEATCOUNT$ членове. Свържете се със собственика на организацията си, ако искате да надградите плана си и да каните повече членове.",
+    "placeholders": {
+      "seatcount": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
   "freeOrgMaxCollectionReachedManageBilling": {
     "message": "Безплатните организации могат да имат не повече от $COLLECTIONCOUNT$ колекции. Надградете до платен план, ако искате да имате повече колекции.",
     "placeholders": {
@@ -6614,7 +6794,7 @@
     "message": "Променете настройките си за шифроване, така че да отговарят на новите препоръки за сигурността и да подобрите защитата на регистрацията си."
   },
   "changeKdfLoggedOutWarning": {
-    "message": "Proceeding will log you out of all active sessions. You will need to log back in and complete two-step login setup. We recommend exporting your vault before changing your encryption settings to prevent data loss."
+    "message": "Ако продължите, ще излезете от всички активни сесии. Ще трябва да се впишете отново и да завършите настройката на двустепенното удостоверяване. Препоръчително е да изнесете трезора си преди да променяте настройките за шифроване, за да избегнете загуба на данни."
   },
   "secretsManager": {
     "message": "Управление на тайни"
@@ -6802,16 +6982,11 @@
   "enforceOnLoginDesc": {
     "message": "Задължаване на текущите членове да сменят паролите си"
   },
-  "region": {
-    "message": "Регион"
+  "usDomain": {
+    "message": "bitwarden.com"
   },
-  "eu": {
-    "message": "ЕС",
-    "description": "European Union"
-  },
-  "us": {
-    "message": "САЩ",
-    "description": "United States"
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "smProjectDeleteAccessRestricted": {
     "message": "Нямате право за изтриване на този проект",
@@ -6824,28 +6999,68 @@
   "updateKdfSettings": {
     "message": "Промяна на настройките за KDF"
   },
+  "loginInitiated": {
+    "message": "Вписването е стартирано"
+  },
+  "deviceApprovalRequired": {
+    "message": "Изисква се одобрение на устройството. Изберете начин за одобрение по-долу:"
+  },
+  "rememberThisDevice": {
+    "message": "Запомняне на това устройство"
+  },
+  "uncheckIfPublicDevice": {
+    "message": "Махнете отметката, ако използвате публично устройство"
+  },
+  "approveFromYourOtherDevice": {
+    "message": "Одобряване с другото Ви устройство"
+  },
+  "requestAdminApproval": {
+    "message": "Подаване на заявка за одобрение от администратор"
+  },
+  "approveWithMasterPassword": {
+    "message": "Одобряване с главната парола"
+  },
+  "trustedDeviceEncryption": {
+    "message": "Шифроване чрез доверено устройство"
+  },
   "trustedDevices": {
     "message": "Доверени устройства"
   },
-  "memberDecryptionTdeDescriptionPartOne": {
+  "memberDecryptionOptionTdeDescriptionPartOne": {
     "message": "След вписване, членовете ще дешифрират данните от трезорите си чрез ключ, който се съхранява на устройство. Политиката за",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO Required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionLinkOne": {
+  "memberDecryptionOptionTdeDescriptionLinkOne": {
     "message": "единствена организация",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionPartTwo": {
-    "message": "и тази за ",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionOptionTdeDescriptionPartTwo": {
+    "message": ",",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionLinkTwo": {
-    "message": "управление на възстановяването на регистрации",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionOptionTdeDescriptionLinkTwo": {
+    "message": "политиката за изискване на еднократно удостоверяване",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
   },
-  "memberDecryptionTdeDescriptionPartThree": {
-    "message": "с автоматично включване ще бъде активирана при използването на тази настройка.",
-    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  "memberDecryptionOptionTdeDescriptionPartThree": {
+    "message": "и",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionOptionTdeDescriptionLinkThree": {
+    "message": "политиката за управление на възстановяването на регистрации",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "memberDecryptionOptionTdeDescriptionPartFour": {
+    "message": "с автоматично включване ще бъдат активирани при използването на тази настройка.",
+    "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Once authenticated, members will decrypt vault data using a key stored on their device. The single organization policy, SSO required policy, and account recovery administration policy with automatic enrollment will turn on when this option is used.'"
+  },
+  "orgPermissionsUpdatedMustSetPassword": {
+    "message": "Правата Ви в организацията бяха променени, необходимо е да зададете главна парола.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "orgRequiresYouToSetPassword": {
+    "message": "Организацията Ви изисква да зададете главна парола.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "notFound": {
     "message": "Няма намерен $RESOURCE$",
@@ -6934,6 +7149,27 @@
   "removeMembersWithoutMasterPasswordWarning": {
     "message": "Ако премахвате членове без да настроите главни пароли за тях, те може да загубят пълния достъп до регистрациите си."
   },
+  "approvedAuthRequest": {
+    "message": "Одобрено устройство за $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "First 8 Character of a GUID"
+      }
+    }
+  },
+  "rejectedAuthRequest": {
+    "message": "Отказано устройство за $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "First 8 Character of a GUID"
+      }
+    }
+  },
+  "requestedDeviceApproval": {
+    "message": "Заявено е одобрение на устройство."
+  },
   "startYour7DayFreeTrialOfBitwardenFor": {
     "message": "Започнете свой безплатен 7-дневен пробен период на Битуорден за $ORG$",
     "placeholders": {
@@ -6946,14 +7182,32 @@
   "next": {
     "message": "Next"
   },
-  "usFlag": {
-    "message": "Знаме на САЩ"
-  },
-  "euFlag": {
-    "message": "Знаме на ЕС"
-  },
   "selectedRegionFlag": {
     "message": "Знаме на избрания регион"
+  },
+  "accountSuccessfullyCreated": {
+    "message": "Регистрацията е създадена успешно!"
+  },
+  "adminApprovalRequested": {
+    "message": "Заявено е одобрение от администратор"
+  },
+  "adminApprovalRequestSentToAdmins": {
+    "message": "Вашата заявка беше изпратена до администратора Ви."
+  },
+  "youWillBeNotifiedOnceApproved": {
+    "message": "Ще получите известие, когато тя бъде одобрена."
+  },
+  "troubleLoggingIn": {
+    "message": "Имате проблем с вписването?"
+  },
+  "loginApproved": {
+    "message": "Вписването е одобрено"
+  },
+  "userEmailMissing": {
+    "message": "Липсва е-поща на потребителя"
+  },
+  "deviceTrusted": {
+    "message": "Устройството е доверено"
   },
   "sendsNoItemsTitle": {
     "message": "Няма активни Изпращания",
@@ -7014,8 +7268,8 @@
       }
     }
   },
-  "addSecretsManager": {
-    "message": "Добавяне на Управление на тайни"
+  "subscribeToSecretsManager": {
+    "message": "Абониране за Управлението на тайни"
   },
   "addSecretsManagerUpgradeDesc": {
     "message": "Добавете Управление на тайни към своя надграден план, за да продължите да имате достъп до тайните създадени при предишния Ви план."
@@ -7023,18 +7277,35 @@
   "additionalServiceAccounts": {
     "message": "Допълнителни сервизни акаунти"
   },
-  "additionalServiceAccountsDesc": {
-    "message": "Планът Ви включва $COUNT$ сервизни акаунта. Можете да добавите още за $COST$ на месец.",
+  "includedServiceAccounts": {
+    "message": "В плана Ви са включени $COUNT$ сервизни акаунта.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "50"
-      },
+      }
+    }
+  },
+  "addAdditionalServiceAccounts": {
+    "message": "Може да добавите още сервизни акаунти за $COST$ на месец.",
+    "placeholders": {
       "cost": {
-        "content": "$2",
+        "content": "$1",
         "example": "$0.50"
       }
     }
+  },
+  "collectionManagement": {
+    "message": "Управление на колекциите"
+  },
+  "collectionManagementDesc": {
+    "message": "Управление на поведението на колекциите за организацията"
+  },
+  "limitCollectionCreationDeletionDesc": {
+    "message": "Ограничаване на създаването и изтриването на колекции, така че да може да се извършва само от собствениците и администраторите"
+  },
+  "collectionManagementUpdated": {
+    "message": "Поведението за управлението на колекциите е запазено"
   },
   "passwordManagerPlanPrice": {
     "message": "Цена на плана за Управителя на пароли"
@@ -7059,5 +7330,67 @@
   },
   "maxServiceAccountCost": {
     "message": "Максимална възможна цена за сервизни акаунти"
+  },
+  "loggedInExclamation": {
+    "message": "Вписахте се!"
+  },
+  "smBetaEndedDesc": {
+    "message": "Бета-версията на Управлението на тайни приключи на $BETA_ENDING_DATE$. Остават $DAYS$ дни да добавите Управлението на тайни към своя платен абонамент, за да запазите достъпа си до създадените данни. Свържете се с поддръжката, ако искате да добавите Управлението на тайни към абонамента си.",
+    "placeholders": {
+      "beta_ending_date": {
+        "content": "$1",
+        "example": "August 1, 2023"
+      },
+      "days": {
+        "content": "$2",
+        "example": "11"
+      }
+    }
+  },
+  "betaEnding": {
+    "message": "Бета-версията приключва"
+  },
+  "beta": {
+    "message": "Бета"
+  },
+  "assignCollectionAccess": {
+    "message": "Задаване на достъп за колекциите"
+  },
+  "editedCollections": {
+    "message": "Редактирани колекции"
+  },
+  "baseUrl": {
+    "message": "Адрес на сървъра"
+  },
+  "aliasDomain": {
+    "message": "Псевдонимен домейн"
+  },
+  "alreadyHaveAccount": {
+    "message": "Вече имате регистрация?"
+  },
+  "customBillingStart": {
+    "message": "Персонализираното таксуване не е отразено. Посетете страницата за "
+  },
+  "customBillingEnd": {
+    "message": " за последните фактури."
+  },
+  "managePermissionRequired": {
+    "message": "Поне един член или група трябва да има правото за управление."
+  },
+  "typePasskey": {
+    "message": "Секретен ключ"
+  },
+  "passkeyNotCopied": {
+    "message": "Секретният ключ няма да бъде копиран"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "Секретният ключ няма да бъде копиран в клонирания елемент. Искате ли да продължите с клонирането на елемента?"
+  },
+  "seeDetailedInstructions": {
+    "message": "Може да намерите подробни инструкции в помощния ни уеб сайт на адрес",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "projectAccessUpdated": {
+    "message": "Достъпът до проекта е актуализиран"
   }
 }

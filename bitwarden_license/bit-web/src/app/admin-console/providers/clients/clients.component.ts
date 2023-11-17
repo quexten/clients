@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { firstValueFrom } from "rxjs";
 import { first } from "rxjs/operators";
 
-import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
@@ -17,6 +17,7 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
+import { DialogService } from "@bitwarden/components";
 
 import { WebProviderService } from "../services/web-provider.service";
 
@@ -26,6 +27,7 @@ const DisallowedPlanTypes = [
   PlanType.Free,
   PlanType.FamiliesAnnually2019,
   PlanType.FamiliesAnnually,
+  PlanType.TeamsStarter,
 ];
 
 @Component({
@@ -33,8 +35,6 @@ const DisallowedPlanTypes = [
 })
 // eslint-disable-next-line rxjs-angular/prefer-takeuntil
 export class ClientsComponent implements OnInit {
-  @ViewChild("add", { read: ViewContainerRef, static: true }) addModalRef: ViewContainerRef;
-
   providerId: string;
   searchText: string;
   addableOrganizations: Organization[];
@@ -63,7 +63,7 @@ export class ClientsComponent implements OnInit {
     private modalService: ModalService,
     private organizationService: OrganizationService,
     private organizationApiService: OrganizationApiServiceAbstraction,
-    private dialogService: DialogServiceAbstraction
+    private dialogService: DialogService
   ) {}
 
   async ngOnInit() {
@@ -135,30 +135,21 @@ export class ClientsComponent implements OnInit {
   }
 
   async addExistingOrganization() {
-    const [modal] = await this.modalService.openViewRef(
-      AddOrganizationComponent,
-      this.addModalRef,
-      (comp) => {
-        comp.providerId = this.providerId;
-        comp.organizations = this.addableOrganizations;
-        // eslint-disable-next-line rxjs-angular/prefer-takeuntil, rxjs/no-async-subscribe
-        comp.onAddedOrganization.subscribe(async () => {
-          try {
-            await this.load();
-            modal.close();
-          } catch (e) {
-            this.logService.error(`Handled exception: ${e}`);
-          }
-        });
-      }
-    );
+    const dialogRef = AddOrganizationComponent.open(this.dialogService, {
+      providerId: this.providerId,
+      organizations: this.addableOrganizations,
+    });
+
+    if (await firstValueFrom(dialogRef.closed)) {
+      await this.load();
+    }
   }
 
   async remove(organization: ProviderOrganizationOrganizationDetailsResponse) {
     const confirmed = await this.dialogService.openSimpleDialog({
       title: organization.organizationName,
       content: { key: "detachOrganizationConfirmation" },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
 
     if (!confirmed) {

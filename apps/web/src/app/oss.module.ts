@@ -1,8 +1,7 @@
 import { NgModule } from "@angular/core";
 
-import { OrganizationCreateModule } from "./admin-console/organizations/create/organization-create.module";
-import { OrganizationManageModule } from "./admin-console/organizations/manage/organization-manage.module";
 import { OrganizationUserModule } from "./admin-console/organizations/users/organization-user.module";
+import { AuthModule } from "./auth";
 import { LoginModule } from "./auth/login/login.module";
 import { TrialInitiationModule } from "./auth/trial-initiation/trial-initiation.module";
 import { LooseComponentsModule, SharedModule } from "./shared";
@@ -16,10 +15,9 @@ import { VaultFilterModule } from "./vault/individual-vault/vault-filter/vault-f
     TrialInitiationModule,
     VaultFilterModule,
     OrganizationBadgeModule,
-    OrganizationManageModule,
     OrganizationUserModule,
-    OrganizationCreateModule,
     LoginModule,
+    AuthModule,
   ],
   exports: [
     SharedModule,

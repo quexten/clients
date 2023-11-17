@@ -10,10 +10,9 @@ import {
   takeUntil,
 } from "rxjs";
 
-import { DialogServiceAbstraction } from "@bitwarden/angular/services/dialog";
-import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { DialogService } from "@bitwarden/components";
 import { openUserVerificationPrompt } from "@bitwarden/web-vault/app/auth/shared/components/user-verification";
 
 import { ServiceAccountView } from "../../models/view/service-account.view";
@@ -36,8 +35,7 @@ export class AccessTokenComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private accessService: AccessService,
-    private dialogService: DialogServiceAbstraction,
-    private modalService: ModalService,
+    private dialogService: DialogService,
     private platformUtilsService: PlatformUtilsService,
     private i18nService: I18nService,
     private serviceAccountService: ServiceAccountService

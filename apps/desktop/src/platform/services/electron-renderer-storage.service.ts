@@ -1,34 +1,35 @@
-import { ipcRenderer } from "electron";
+import { Subject } from "rxjs";
 
-import { AbstractStorageService } from "@bitwarden/common/platform/abstractions/storage.service";
+import {
+  AbstractStorageService,
+  StorageUpdate,
+} from "@bitwarden/common/platform/abstractions/storage.service";
 
 export class ElectronRendererStorageService implements AbstractStorageService {
+  private updatesSubject = new Subject<StorageUpdate>();
+
+  get valuesRequireDeserialization(): boolean {
+    return true;
+  }
+  get updates$() {
+    return this.updatesSubject.asObservable();
+  }
+
   get<T>(key: string): Promise<T> {
-    return ipcRenderer.invoke("storageService", {
-      action: "get",
-      key: key,
-    });
+    return ipc.platform.storage.get(key);
   }
 
   has(key: string): Promise<boolean> {
-    return ipcRenderer.invoke("storageService", {
-      action: "has",
-      key: key,
-    });
+    return ipc.platform.storage.has(key);
   }
 
-  save(key: string, obj: any): Promise<any> {
-    return ipcRenderer.invoke("storageService", {
-      action: "save",
-      key: key,
-      obj: obj,
-    });
+  async save<T>(key: string, obj: T): Promise<void> {
+    await ipc.platform.storage.save(key, obj);
+    this.updatesSubject.next({ key, updateType: "save" });
   }
 
-  remove(key: string): Promise<any> {
-    return ipcRenderer.invoke("storageService", {
-      action: "remove",
-      key: key,
-    });
+  async remove(key: string): Promise<void> {
+    await ipc.platform.storage.remove(key);
+    this.updatesSubject.next({ key, updateType: "remove" });
   }
 }

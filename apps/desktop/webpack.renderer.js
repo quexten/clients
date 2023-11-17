@@ -13,6 +13,8 @@ console.log("Renderer process config");
 const envConfig = configurator.load(NODE_ENV);
 configurator.log(envConfig);
 
+const ENV = process.env.ENV == null ? "development" : process.env.ENV;
+
 const common = {
   module: {
     rules: [
@@ -62,6 +64,8 @@ const common = {
 const renderer = {
   mode: NODE_ENV,
   devtool: "source-map",
+  // TODO: Replace this with web.
+  // target: "web",
   target: "electron-renderer",
   node: {
     __dirname: false,
@@ -168,6 +172,7 @@ const renderer = {
       chunkFilename: "[id].[contenthash].css",
     }),
     new webpack.EnvironmentPlugin({
+      ENV: ENV,
       FLAGS: envConfig.flags,
       DEV_FLAGS: NODE_ENV === "development" ? envConfig.devFlags : {},
     }),

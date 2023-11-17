@@ -16,26 +16,28 @@ import { MessagingService } from "../../platform/abstractions/messaging.service"
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { StateService } from "../../platform/abstractions/state.service";
 import { Utils } from "../../platform/misc/utils";
-import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
+import { MasterKey } from "../../platform/models/domain/symmetric-crypto-key";
 import { PasswordStrengthServiceAbstraction } from "../../tools/password-strength";
+import { AuthRequestCryptoServiceAbstraction } from "../abstractions/auth-request-crypto.service.abstraction";
 import { AuthService as AuthServiceAbstraction } from "../abstractions/auth.service";
+import { DeviceTrustCryptoServiceAbstraction } from "../abstractions/device-trust-crypto.service.abstraction";
 import { KeyConnectorService } from "../abstractions/key-connector.service";
 import { TokenService } from "../abstractions/token.service";
 import { TwoFactorService } from "../abstractions/two-factor.service";
 import { AuthenticationStatus } from "../enums/authentication-status";
 import { AuthenticationType } from "../enums/authentication-type";
-import { PasswordLogInStrategy } from "../login-strategies/password-login.strategy";
-import { PasswordlessLogInStrategy } from "../login-strategies/passwordless-login.strategy";
-import { SsoLogInStrategy } from "../login-strategies/sso-login.strategy";
-import { UserApiLogInStrategy } from "../login-strategies/user-api-login.strategy";
+import { AuthRequestLoginStrategy } from "../login-strategies/auth-request-login.strategy";
+import { PasswordLoginStrategy } from "../login-strategies/password-login.strategy";
+import { SsoLoginStrategy } from "../login-strategies/sso-login.strategy";
+import { UserApiLoginStrategy } from "../login-strategies/user-api-login.strategy";
 import { AuthResult } from "../models/domain/auth-result";
 import { KdfConfig } from "../models/domain/kdf-config";
 import {
-  PasswordlessLogInCredentials,
-  PasswordLogInCredentials,
-  SsoLogInCredentials,
-  UserApiLogInCredentials,
-} from "../models/domain/log-in-credentials";
+  AuthRequestLoginCredentials,
+  PasswordLoginCredentials,
+  SsoLoginCredentials,
+  UserApiLoginCredentials,
+} from "../models/domain/login-credentials";
 import { TokenTwoFactorRequest } from "../models/request/identity-token/token-two-factor.request";
 import { PasswordlessAuthRequest } from "../models/request/passwordless-auth.request";
 import { AuthRequestResponse } from "../models/response/auth-request.response";
@@ -45,9 +47,9 @@ const sessionTimeoutLength = 2 * 60 * 1000; // 2 minutes
 export class AuthService implements AuthServiceAbstraction {
   get email(): string {
     if (
-      this.logInStrategy instanceof PasswordLogInStrategy ||
-      this.logInStrategy instanceof PasswordlessLogInStrategy ||
-      this.logInStrategy instanceof SsoLogInStrategy
+      this.logInStrategy instanceof PasswordLoginStrategy ||
+      this.logInStrategy instanceof AuthRequestLoginStrategy ||
+      this.logInStrategy instanceof SsoLoginStrategy
     ) {
       return this.logInStrategy.email;
     }
@@ -56,34 +58,34 @@ export class AuthService implements AuthServiceAbstraction {
   }
 
   get masterPasswordHash(): string {
-    return this.logInStrategy instanceof PasswordLogInStrategy
+    return this.logInStrategy instanceof PasswordLoginStrategy
       ? this.logInStrategy.masterPasswordHash
       : null;
   }
 
   get accessCode(): string {
-    return this.logInStrategy instanceof PasswordlessLogInStrategy
+    return this.logInStrategy instanceof AuthRequestLoginStrategy
       ? this.logInStrategy.accessCode
       : null;
   }
 
   get authRequestId(): string {
-    return this.logInStrategy instanceof PasswordlessLogInStrategy
+    return this.logInStrategy instanceof AuthRequestLoginStrategy
       ? this.logInStrategy.authRequestId
       : null;
   }
 
   get ssoEmail2FaSessionToken(): string {
-    return this.logInStrategy instanceof SsoLogInStrategy
+    return this.logInStrategy instanceof SsoLoginStrategy
       ? this.logInStrategy.ssoEmail2FaSessionToken
       : null;
   }
 
   private logInStrategy:
-    | UserApiLogInStrategy
-    | PasswordLogInStrategy
-    | SsoLogInStrategy
-    | PasswordlessLogInStrategy;
+    | UserApiLoginStrategy
+    | PasswordLoginStrategy
+    | SsoLoginStrategy
+    | AuthRequestLoginStrategy;
   private sessionTimeout: any;
 
   private pushNotificationSubject = new Subject<string>();
@@ -103,27 +105,29 @@ export class AuthService implements AuthServiceAbstraction {
     protected i18nService: I18nService,
     protected encryptService: EncryptService,
     protected passwordStrengthService: PasswordStrengthServiceAbstraction,
-    protected policyService: PolicyService
+    protected policyService: PolicyService,
+    protected deviceTrustCryptoService: DeviceTrustCryptoServiceAbstraction,
+    protected authReqCryptoService: AuthRequestCryptoServiceAbstraction
   ) {}
 
   async logIn(
     credentials:
-      | UserApiLogInCredentials
-      | PasswordLogInCredentials
-      | SsoLogInCredentials
-      | PasswordlessLogInCredentials
+      | UserApiLoginCredentials
+      | PasswordLoginCredentials
+      | SsoLoginCredentials
+      | AuthRequestLoginCredentials
   ): Promise<AuthResult> {
     this.clearState();
 
     let strategy:
-      | UserApiLogInStrategy
-      | PasswordLogInStrategy
-      | SsoLogInStrategy
-      | PasswordlessLogInStrategy;
+      | UserApiLoginStrategy
+      | PasswordLoginStrategy
+      | SsoLoginStrategy
+      | AuthRequestLoginStrategy;
 
     switch (credentials.type) {
       case AuthenticationType.Password:
-        strategy = new PasswordLogInStrategy(
+        strategy = new PasswordLoginStrategy(
           this.cryptoService,
           this.apiService,
           this.tokenService,
@@ -139,7 +143,7 @@ export class AuthService implements AuthServiceAbstraction {
         );
         break;
       case AuthenticationType.Sso:
-        strategy = new SsoLogInStrategy(
+        strategy = new SsoLoginStrategy(
           this.cryptoService,
           this.apiService,
           this.tokenService,
@@ -149,11 +153,14 @@ export class AuthService implements AuthServiceAbstraction {
           this.logService,
           this.stateService,
           this.twoFactorService,
-          this.keyConnectorService
+          this.keyConnectorService,
+          this.deviceTrustCryptoService,
+          this.authReqCryptoService,
+          this.i18nService
         );
         break;
       case AuthenticationType.UserApi:
-        strategy = new UserApiLogInStrategy(
+        strategy = new UserApiLoginStrategy(
           this.cryptoService,
           this.apiService,
           this.tokenService,
@@ -167,8 +174,8 @@ export class AuthService implements AuthServiceAbstraction {
           this.keyConnectorService
         );
         break;
-      case AuthenticationType.Passwordless:
-        strategy = new PasswordlessLogInStrategy(
+      case AuthenticationType.AuthRequest:
+        strategy = new AuthRequestLoginStrategy(
           this.cryptoService,
           this.apiService,
           this.tokenService,
@@ -178,7 +185,7 @@ export class AuthService implements AuthServiceAbstraction {
           this.logService,
           this.stateService,
           this.twoFactorService,
-          this
+          this.deviceTrustCryptoService
         );
         break;
     }
@@ -222,39 +229,48 @@ export class AuthService implements AuthServiceAbstraction {
   }
 
   authingWithUserApiKey(): boolean {
-    return this.logInStrategy instanceof UserApiLogInStrategy;
+    return this.logInStrategy instanceof UserApiLoginStrategy;
   }
 
   authingWithSso(): boolean {
-    return this.logInStrategy instanceof SsoLogInStrategy;
+    return this.logInStrategy instanceof SsoLoginStrategy;
   }
 
   authingWithPassword(): boolean {
-    return this.logInStrategy instanceof PasswordLogInStrategy;
+    return this.logInStrategy instanceof PasswordLoginStrategy;
   }
 
   authingWithPasswordless(): boolean {
-    return this.logInStrategy instanceof PasswordlessLogInStrategy;
+    return this.logInStrategy instanceof AuthRequestLoginStrategy;
   }
 
   async getAuthStatus(userId?: string): Promise<AuthenticationStatus> {
+    // If we don't have an access token or userId, we're logged out
     const isAuthenticated = await this.stateService.getIsAuthenticated({ userId: userId });
     if (!isAuthenticated) {
       return AuthenticationStatus.LoggedOut;
     }
 
-    // Keys aren't stored for a device that is locked or logged out
-    // Make sure we're logged in before checking this, otherwise we could mix up those states
-    const neverLock =
-      (await this.cryptoService.hasKeyStored(KeySuffixOptions.Auto, userId)) &&
-      !(await this.stateService.getEverBeenUnlocked({ userId: userId }));
-    if (neverLock) {
-      // TODO: This also _sets_ the key so when we check memory in the next line it finds a key.
-      // We should refactor here.
-      await this.cryptoService.getKey(KeySuffixOptions.Auto, userId);
+    // If we don't have a user key in memory, we're locked
+    if (!(await this.cryptoService.hasUserKeyInMemory(userId))) {
+      // Check if the user has vault timeout set to never and verify that
+      // they've never unlocked their vault
+      const neverLock =
+        (await this.cryptoService.hasUserKeyStored(KeySuffixOptions.Auto, userId)) &&
+        !(await this.stateService.getEverBeenUnlocked({ userId: userId }));
+
+      if (neverLock) {
+        // Attempt to get the key from storage and set it in memory
+        const userKey = await this.cryptoService.getUserKeyFromStorage(
+          KeySuffixOptions.Auto,
+          userId
+        );
+        await this.cryptoService.setUserKey(userKey, userId);
+      }
     }
 
-    const hasKeyInMemory = await this.cryptoService.hasKeyInMemory(userId);
+    // We do another check here in case setting the auto key failed
+    const hasKeyInMemory = await this.cryptoService.hasUserKeyInMemory(userId);
     if (!hasKeyInMemory) {
       return AuthenticationStatus.Locked;
     }
@@ -262,7 +278,7 @@ export class AuthService implements AuthServiceAbstraction {
     return AuthenticationStatus.Unlocked;
   }
 
-  async makePreloginKey(masterPassword: string, email: string): Promise<SymmetricCryptoKey> {
+  async makePreloginKey(masterPassword: string, email: string): Promise<MasterKey> {
     email = email.trim().toLowerCase();
     let kdf: KdfType = null;
     let kdfConfig: KdfConfig = null;
@@ -281,7 +297,7 @@ export class AuthService implements AuthServiceAbstraction {
         throw e;
       }
     }
-    return this.cryptoService.makeKey(masterPassword, email, kdf, kdfConfig);
+    return await this.cryptoService.makeMasterKey(masterPassword, email, kdf, kdfConfig);
   }
 
   async authResponsePushNotification(notification: AuthRequestPushNotification): Promise<any> {
@@ -298,22 +314,33 @@ export class AuthService implements AuthServiceAbstraction {
     requestApproved: boolean
   ): Promise<AuthRequestResponse> {
     const pubKey = Utils.fromB64ToArray(key);
-    const encryptedKey = await this.cryptoService.rsaEncrypt(
-      (
-        await this.cryptoService.getKey()
-      ).encKey,
-      pubKey
-    );
-    let encryptedMasterPassword = null;
-    if ((await this.stateService.getKeyHash()) != null) {
-      encryptedMasterPassword = await this.cryptoService.rsaEncrypt(
-        Utils.fromUtf8ToArray(await this.stateService.getKeyHash()),
-        pubKey
-      );
+
+    const masterKey = await this.cryptoService.getMasterKey();
+    let keyToEncrypt;
+    let encryptedMasterKeyHash = null;
+
+    if (masterKey) {
+      keyToEncrypt = masterKey.encKey;
+
+      // Only encrypt the master password hash if masterKey exists as
+      // we won't have a masterKeyHash without a masterKey
+      const masterKeyHash = await this.stateService.getKeyHash();
+      if (masterKeyHash != null) {
+        encryptedMasterKeyHash = await this.cryptoService.rsaEncrypt(
+          Utils.fromUtf8ToArray(masterKeyHash),
+          pubKey
+        );
+      }
+    } else {
+      const userKey = await this.cryptoService.getUserKey();
+      keyToEncrypt = userKey.key;
     }
+
+    const encryptedKey = await this.cryptoService.rsaEncrypt(keyToEncrypt, pubKey);
+
     const request = new PasswordlessAuthRequest(
       encryptedKey.encryptedString,
-      encryptedMasterPassword?.encryptedString,
+      encryptedMasterKeyHash?.encryptedString,
       await this.appIdService.getAppId(),
       requestApproved
     );
@@ -322,10 +349,10 @@ export class AuthService implements AuthServiceAbstraction {
 
   private saveState(
     strategy:
-      | UserApiLogInStrategy
-      | PasswordLogInStrategy
-      | SsoLogInStrategy
-      | PasswordlessLogInStrategy
+      | UserApiLoginStrategy
+      | PasswordLoginStrategy
+      | SsoLoginStrategy
+      | AuthRequestLoginStrategy
   ) {
     this.logInStrategy = strategy;
     this.startSessionTimeout();

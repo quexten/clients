@@ -10,24 +10,25 @@ import {
 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import { ipcRenderer } from "electron";
 import { IndividualConfig, ToastrService } from "ngx-toastr";
 import { firstValueFrom, Subject, takeUntil } from "rxjs";
 
 import { ModalRef } from "@bitwarden/angular/components/modal/modal.ref";
-import { DialogServiceAbstraction, SimpleDialogType } from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
+import { FingerprintDialogComponent } from "@bitwarden/auth";
 import { EventUploadService } from "@bitwarden/common/abstractions/event/event-upload.service";
 import { NotificationsService } from "@bitwarden/common/abstractions/notifications.service";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
-import { VaultTimeoutService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeout.service";
-import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vaultTimeout/vaultTimeoutSettings.service";
+import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
+import { VaultTimeoutService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout.service";
 import { InternalPolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-connector.service";
+import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
-import { ForceResetPasswordReason } from "@bitwarden/common/auth/models/domain/force-reset-password-reason";
+import { ForceSetPasswordReason } from "@bitwarden/common/auth/models/domain/force-set-password-reason";
+import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
@@ -43,16 +44,18 @@ import { CollectionService } from "@bitwarden/common/vault/abstractions/collecti
 import { InternalFolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { DialogService } from "@bitwarden/components";
 
 import { DeleteAccountComponent } from "../auth/delete-account.component";
 import { LoginApprovalComponent } from "../auth/login/login-approval.component";
-import { MenuUpdateRequest } from "../main/menu/menu.updater";
+import { MenuAccount, MenuUpdateRequest } from "../main/menu/menu.updater";
 import { PremiumComponent } from "../vault/app/accounts/premium.component";
 import { FolderAddEditComponent } from "../vault/app/vault/folder-add-edit.component";
 
 import { SettingsComponent } from "./accounts/settings.component";
 import { ExportComponent } from "./tools/export/export.component";
 import { GeneratorComponent } from "./tools/generator.component";
+import { ImportDesktopComponent } from "./tools/import/import-desktop.component";
 import { PasswordGeneratorHistoryComponent } from "./tools/password-generator-history.component";
 
 const BroadcasterSubscriptionId = "AppComponent";
@@ -77,6 +80,7 @@ const systemTimeoutOptions = {
     <ng-template #appGenerator></ng-template>
     <ng-template #loginApproval></ng-template>
     <app-header></app-header>
+
     <div id="container">
       <div class="loading" *ngIf="loading">
         <i class="bwi bwi-spinner bwi-spin bwi-3x" aria-hidden="true"></i>
@@ -137,8 +141,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private policyService: InternalPolicyService,
     private modalService: ModalService,
     private keyConnectorService: KeyConnectorService,
+    private userVerificationService: UserVerificationService,
     private configService: ConfigServiceAbstraction,
-    private dialogService: DialogServiceAbstraction
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -222,13 +227,13 @@ export class AppComponent implements OnInit, OnDestroy {
             this.systemService.cancelProcessReload();
             break;
           case "reloadProcess":
-            ipcRenderer.send("reload-process");
+            ipc.platform.reloadProcess();
             break;
           case "syncStarted":
             break;
           case "syncCompleted":
             await this.updateAppMenu();
-            await this.configService.fetchServerConfig();
+            this.configService.triggerServerConfigFetch();
             break;
           case "openSettings":
             await this.openModal<SettingsComponent>(SettingsComponent, this.settingsRef);
@@ -240,18 +245,8 @@ export class AppComponent implements OnInit, OnDestroy {
             const fingerprint = await this.cryptoService.getFingerprint(
               await this.stateService.getUserId()
             );
-            const result = await this.dialogService.openSimpleDialog({
-              title: { key: "fingerprintPhrase" },
-              content:
-                this.i18nService.t("yourAccountsFingerprint") + ":\n" + fingerprint.join("-"),
-              acceptButtonText: { key: "learnMore" },
-              cancelButtonText: { key: "close" },
-              type: SimpleDialogType.INFO,
-            });
-
-            if (result) {
-              this.platformUtilsService.launchUri("https://bitwarden.com/help/fingerprint-phrase/");
-            }
+            const dialogRef = FingerprintDialogComponent.open(this.dialogService, { fingerprint });
+            await firstValueFrom(dialogRef.closed);
             break;
           }
           case "deleteAccount":
@@ -281,7 +276,7 @@ export class AppComponent implements OnInit, OnDestroy {
               title: { key: "premiumRequired" },
               content: { key: "premiumRequiredDesc" },
               acceptButtonText: { key: "learnMore" },
-              type: SimpleDialogType.SUCCESS,
+              type: "success",
             });
             if (premiumConfirmed) {
               await this.openModal<PremiumComponent>(PremiumComponent, this.premiumRef);
@@ -293,7 +288,7 @@ export class AppComponent implements OnInit, OnDestroy {
               title: { key: "emailVerificationRequired" },
               content: { key: "emailVerificationRequiredDesc" },
               acceptButtonText: { key: "learnMore" },
-              type: SimpleDialogType.INFO,
+              type: "info",
             });
             if (emailVerificationConfirmed) {
               this.platformUtilsService.launchUri(
@@ -334,6 +329,9 @@ export class AppComponent implements OnInit, OnDestroy {
             }
             this.messagingService.send("scheduleNextSync");
             break;
+          case "importVault":
+            await this.dialogService.open(ImportDesktopComponent);
+            break;
           case "exportVault":
             await this.openExportVault();
             break;
@@ -371,8 +369,8 @@ export class AppComponent implements OnInit, OnDestroy {
               (await this.authService.getAuthStatus(message.userId)) ===
               AuthenticationStatus.Locked;
             const forcedPasswordReset =
-              (await this.stateService.getForcePasswordResetReason({ userId: message.userId })) !=
-              ForceResetPasswordReason.None;
+              (await this.stateService.getForceSetPasswordReason({ userId: message.userId })) !=
+              ForceSetPasswordReason.None;
             if (locked) {
               this.messagingService.send("locked", { userId: message.userId });
             } else if (forcedPasswordReset) {
@@ -399,6 +397,9 @@ export class AppComponent implements OnInit, OnDestroy {
             if (message.notificationId != null) {
               await this.openLoginApproval(message.notificationId);
             }
+            break;
+          case "redrawMenu":
+            await this.updateAppMenu();
             break;
         }
       });
@@ -488,28 +489,32 @@ export class AppComponent implements OnInit, OnDestroy {
       updateRequest = {
         accounts: null,
         activeUserId: null,
-        hideChangeMasterPassword: true,
       };
     } else {
-      const accounts: { [userId: string]: any } = {};
+      const accounts: { [userId: string]: MenuAccount } = {};
       for (const i in stateAccounts) {
         if (i != null && stateAccounts[i]?.profile?.userId != null) {
           const userId = stateAccounts[i].profile.userId;
+          const availableTimeoutActions = await firstValueFrom(
+            this.vaultTimeoutSettingsService.availableVaultTimeoutActions$(userId)
+          );
+
           accounts[userId] = {
             isAuthenticated: await this.stateService.getIsAuthenticated({
               userId: userId,
             }),
             isLocked:
               (await this.authService.getAuthStatus(userId)) === AuthenticationStatus.Locked,
+            isLockable: availableTimeoutActions.includes(VaultTimeoutAction.Lock),
             email: stateAccounts[i].profile.email,
             userId: stateAccounts[i].profile.userId,
+            hasMasterPassword: await this.userVerificationService.hasMasterPassword(userId),
           };
         }
       }
       updateRequest = {
         accounts: accounts,
         activeUserId: await this.stateService.getUserId(),
-        hideChangeMasterPassword: await this.keyConnectorService.getUsesKeyConnector(),
       };
     }
 
@@ -532,6 +537,19 @@ export class AppComponent implements OnInit, OnDestroy {
       this.keyConnectorService.clear(),
     ]);
 
+    const preLogoutActiveUserId = this.activeUserId;
+    await this.stateService.clean({ userId: userBeingLoggedOut });
+
+    if (this.activeUserId == null) {
+      this.router.navigate(["login"]);
+    } else if (preLogoutActiveUserId !== this.activeUserId) {
+      this.messagingService.send("switchAccount");
+    }
+
+    await this.updateAppMenu();
+
+    // This must come last otherwise the logout will prematurely trigger
+    // a process reload before all the state service user data can be cleaned up
     if (userBeingLoggedOut === this.activeUserId) {
       this.searchService.clearIndex();
       this.authService.logOut(async () => {
@@ -544,17 +562,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
     }
-
-    const preLogoutActiveUserId = this.activeUserId;
-    await this.stateService.clean({ userId: userBeingLoggedOut });
-
-    if (this.activeUserId == null) {
-      this.router.navigate(["login"]);
-    } else if (preLogoutActiveUserId !== this.activeUserId) {
-      this.messagingService.send("switchAccount");
-    }
-
-    await this.updateAppMenu();
   }
 
   private async recordActivity() {

@@ -16,23 +16,17 @@ import {
 
 import { SearchPipe } from "@bitwarden/angular/pipes/search.pipe";
 import { UserNamePipe } from "@bitwarden/angular/pipes/user-name.pipe";
-import {
-  DialogServiceAbstraction,
-  SimpleDialogCloseType,
-  SimpleDialogOptions,
-  SimpleDialogType,
-} from "@bitwarden/angular/services/dialog";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { OrganizationUserService } from "@bitwarden/common/abstractions/organization-user/organization-user.service";
-import { OrganizationUserConfirmRequest } from "@bitwarden/common/abstractions/organization-user/requests";
-import {
-  OrganizationUserBulkResponse,
-  OrganizationUserUserDetailsResponse,
-} from "@bitwarden/common/abstractions/organization-user/responses";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
+import { OrganizationUserConfirmRequest } from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
+import {
+  OrganizationUserBulkResponse,
+  OrganizationUserUserDetailsResponse,
+} from "@bitwarden/common/admin-console/abstractions/organization-user/responses";
 import { PolicyApiServiceAbstraction as PolicyApiService } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import {
@@ -55,10 +49,11 @@ import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.serv
 import { CollectionData } from "@bitwarden/common/vault/models/data/collection.data";
 import { Collection } from "@bitwarden/common/vault/models/domain/collection";
 import { CollectionDetailsResponse } from "@bitwarden/common/vault/models/response/collection.response";
+import { DialogService, SimpleDialogOptions } from "@bitwarden/components";
 
 import { flagEnabled } from "../../../../utils/flags";
 import { openEntityEventsDialog } from "../../../admin-console/organizations/manage/entity-events.component";
-import { BasePeopleComponent } from "../../../common/base.people.component";
+import { BasePeopleComponent } from "../../common/base.people.component";
 import { GroupService } from "../core";
 import { OrganizationUserView } from "../core/views/organization-user.view";
 
@@ -125,7 +120,7 @@ export class PeopleComponent
     private organizationService: OrganizationService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private organizationUserService: OrganizationUserService,
-    dialogService: DialogServiceAbstraction,
+    dialogService: DialogService,
     private router: Router,
     private groupService: GroupService,
     private collectionService: CollectionService
@@ -350,38 +345,85 @@ export class PeopleComponent
     );
   }
 
-  private async showFreeOrgUpgradeDialog(): Promise<void> {
+  private getManageBillingText(): string {
+    return this.organization.canEditSubscription ? "ManageBilling" : "NoManageBilling";
+  }
+
+  private getProductKey(productType: ProductType): string {
+    let product = "";
+    switch (productType) {
+      case ProductType.Free:
+        product = "freeOrg";
+        break;
+      case ProductType.TeamsStarter:
+        product = "teamsStarterPlan";
+        break;
+      default:
+        throw new Error(`Unsupported product type: ${productType}`);
+    }
+    return `${product}InvLimitReached${this.getManageBillingText()}`;
+  }
+
+  private getDialogTitle(productType: ProductType): string {
+    switch (productType) {
+      case ProductType.Free:
+        return "upgrade";
+      case ProductType.TeamsStarter:
+        return "contactSupportShort";
+      default:
+        throw new Error(`Unsupported product type: ${productType}`);
+    }
+  }
+
+  private getDialogContent(): string {
+    return this.i18nService.t(
+      this.getProductKey(this.organization.planProductType),
+      this.organization.seats
+    );
+  }
+
+  private getAcceptButtonText(): string {
+    if (!this.organization.canEditSubscription) {
+      return this.i18nService.t("ok");
+    }
+
+    return this.i18nService.t(this.getDialogTitle(this.organization.planProductType));
+  }
+
+  private async handleDialogClose(result: boolean | undefined): Promise<void> {
+    if (!result || !this.organization.canEditSubscription) {
+      return;
+    }
+
+    switch (this.organization.planProductType) {
+      case ProductType.Free:
+        await this.router.navigate(
+          ["/organizations", this.organization.id, "billing", "subscription"],
+          { queryParams: { upgrade: true } }
+        );
+        break;
+      case ProductType.TeamsStarter:
+        window.open("https://bitwarden.com/contact/", "_blank");
+        break;
+      default:
+        throw new Error(`Unsupported product type: ${this.organization.planProductType}`);
+    }
+  }
+
+  private async showSeatLimitReachedDialog(): Promise<void> {
     const orgUpgradeSimpleDialogOpts: SimpleDialogOptions = {
       title: this.i18nService.t("upgradeOrganization"),
-      content: this.i18nService.t(
-        this.organization.canEditSubscription
-          ? "freeOrgInvLimitReachedManageBilling"
-          : "freeOrgInvLimitReachedNoManageBilling",
-        this.organization.seats
-      ),
-      type: SimpleDialogType.PRIMARY,
+      content: this.getDialogContent(),
+      type: "primary",
+      acceptButtonText: this.getAcceptButtonText(),
     };
 
-    if (this.organization.canEditSubscription) {
-      orgUpgradeSimpleDialogOpts.acceptButtonText = this.i18nService.t("upgrade");
-    } else {
-      orgUpgradeSimpleDialogOpts.acceptButtonText = this.i18nService.t("ok");
-      orgUpgradeSimpleDialogOpts.cancelButtonText = null; // hide secondary btn
+    if (!this.organization.canEditSubscription) {
+      orgUpgradeSimpleDialogOpts.cancelButtonText = null;
     }
 
     const simpleDialog = this.dialogService.openSimpleDialogRef(orgUpgradeSimpleDialogOpts);
-
-    firstValueFrom(simpleDialog.closed).then((result: SimpleDialogCloseType | undefined) => {
-      if (!result) {
-        return;
-      }
-
-      if (result == SimpleDialogCloseType.ACCEPT && this.organization.canEditSubscription) {
-        this.router.navigate(["/organizations", this.organization.id, "billing", "subscription"], {
-          queryParams: { upgrade: true },
-        });
-      }
-    });
+    firstValueFrom(simpleDialog.closed).then(this.handleDialogClose.bind(this));
   }
 
   async edit(user: OrganizationUserView, initialTab: MemberDialogTab = MemberDialogTab.Role) {
@@ -391,11 +433,12 @@ export class PeopleComponent
     // User attempting to invite new users in a free org with max users
     if (
       !user &&
-      this.organization.planProductType === ProductType.Free &&
-      this.allUsers.length === this.organization.seats
+      this.allUsers.length === this.organization.seats &&
+      (this.organization.planProductType === ProductType.Free ||
+        this.organization.planProductType === ProductType.TeamsStarter)
     ) {
       // Show org upgrade modal
-      await this.showFreeOrgUpgradeDialog();
+      await this.showSeatLimitReachedDialog();
       return;
     }
 
@@ -454,16 +497,13 @@ export class PeopleComponent
       return;
     }
 
-    const ref = this.modalService.open(BulkRestoreRevokeComponent, {
-      allowMultipleModals: true,
-      data: {
-        organizationId: this.organization.id,
-        users: this.getCheckedUsers(),
-        isRevoking: isRevoking,
-      },
+    const ref = BulkRestoreRevokeComponent.open(this.dialogService, {
+      organizationId: this.organization.id,
+      users: this.getCheckedUsers(),
+      isRevoking: isRevoking,
     });
 
-    await ref.onClosedPromise();
+    await firstValueFrom(ref.closed);
     await this.load();
   }
 
@@ -581,7 +621,7 @@ export class PeopleComponent
         placeholders: [this.userNamePipe.transform(user)],
       },
       content: { key: content },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
 
     if (!confirmed) {
@@ -600,7 +640,7 @@ export class PeopleComponent
       title: { key: "revokeAccess", placeholders: [this.userNamePipe.transform(user)] },
       content: this.revokeWarningMessage(),
       acceptButtonText: { key: "revokeAccess" },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
 
     if (!confirmed) {
@@ -676,7 +716,7 @@ export class PeopleComponent
         key: "removeOrgUserNoMasterPasswordDesc",
         placeholders: [this.userNamePipe.transform(user)],
       },
-      type: SimpleDialogType.WARNING,
+      type: "warning",
     });
   }
 }

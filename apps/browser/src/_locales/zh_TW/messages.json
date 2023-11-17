@@ -91,6 +91,15 @@
   "autoFill": {
     "message": "自動填入"
   },
+  "autoFillLogin": {
+    "message": "自動填入登入"
+  },
+  "autoFillCard": {
+    "message": "自動填入支付卡"
+  },
+  "autoFillIdentity": {
+    "message": "自動填入身分"
+  },
   "generatePasswordCopied": {
     "message": "產生及複製密碼"
   },
@@ -99,6 +108,21 @@
   },
   "noMatchingLogins": {
     "message": "無符合的登入資料"
+  },
+  "noCards": {
+    "message": "無支付卡"
+  },
+  "noIdentities": {
+    "message": "無身分"
+  },
+  "addLoginMenu": {
+    "message": "新增登入"
+  },
+  "addCardMenu": {
+    "message": "新增支付卡"
+  },
+  "addIdentityMenu": {
+    "message": "新增身分"
   },
   "unlockVaultMenu": {
     "message": "解鎖您的密碼庫"
@@ -338,6 +362,9 @@
   "other": {
     "message": "其他"
   },
+  "unlockMethodNeededToChangeTimeoutActionDesc": {
+    "message": "設定解鎖方法來變更您的密碼庫逾時動作。"
+  },
   "rateExtension": {
     "message": "為本套件評分"
   },
@@ -507,7 +534,7 @@
     "message": "您可以在 bitwarden.com 網頁版密碼庫變更主密碼。現在要前往嗎？"
   },
   "twoStepLoginConfirmation": {
-    "message": "兩步驟登入需要您從其他裝置（例如安全金鑰、驗證器程式、SMS、手機或電子郵件）來驗證您的登入，這使您的帳戶更加安全。兩步驟登入可以在 bitwarden.com 網頁版密碼庫啟用。現在要前往嗎？"
+    "message": "兩步驟登入需要您從其他裝置（例如安全鑰匙、驗證器程式、SMS、手機或電子郵件）來驗證您的登入，這使您的帳戶更加安全。兩步驟登入可以在 bitwarden.com 網頁版密碼庫啟用。現在要前往嗎？"
   },
   "editedFolder": {
     "message": "資料夾已儲存"
@@ -629,6 +656,12 @@
   },
   "notificationChangeSave": {
     "message": "更新"
+  },
+  "notificationUnlockDesc": {
+    "message": "解鎖您的 Bitwarden 密碼庫以完成自動填入請求。"
+  },
+  "notificationUnlock": {
+    "message": "解鎖"
   },
   "enableContextMenuItem": {
     "message": "顯示內容選單選項"
@@ -762,8 +795,8 @@
   "featureUnavailable": {
     "message": "功能不可用"
   },
-  "updateKey": {
-    "message": "更新加密金鑰前不能使用此功能。"
+  "encryptionKeyMigrationRequired": {
+    "message": "需要遷移加密金鑰。請透過網頁版密碼庫登入以更新您的加密金鑰。"
   },
   "premiumMembership": {
     "message": "進階會員"
@@ -786,8 +819,8 @@
   "ppremiumSignUpStorage": {
     "message": "用於檔案附件的 1 GB 加密儲存空間。"
   },
-  "ppremiumSignUpTwoStep": {
-    "message": "YubiKey、FIDO U2F 和 Duo 等額外的兩步驟登入選項。"
+  "premiumSignUpTwoStepOptions": {
+    "message": "專有的兩步驟登入選項，例如 YubiKey 和 Duo。"
   },
   "ppremiumSignUpReports": {
     "message": "密碼健康度檢查、提供帳戶體檢以及資料外洩報告，以保障您的密碼庫安全。"
@@ -874,7 +907,7 @@
     "message": "將您的 YubiKey 插入電腦的 USB 連接埠，然後按一下它的按鈕。"
   },
   "insertU2f": {
-    "message": "將您的安全金鑰插入電腦的 USB 連接埠，然後按一下它的按鈕（如有的話）。"
+    "message": "將您的安全鑰匙插入電腦的 USB 連接埠，然後觸摸其按鈕（如有的話）。"
   },
   "webAuthnNewTab": {
     "message": "要開始 WebAuthn 2FA 驗證，請點選下面的按鈕開啟一個新分頁，並依照新分頁中提供的說明操作。"
@@ -911,24 +944,24 @@
     "description": "'Authy' and 'Google Authenticator' are product names and should not be translated."
   },
   "yubiKeyTitle": {
-    "message": "YubiKey OTP 安全金鑰"
+    "message": "YubiKey OTP 安全鑰匙"
   },
   "yubiKeyDesc": {
     "message": "使用 YubiKey 存取您的帳戶。支援 YubiKey 4、4 Nano、4C、以及 NEO 裝置。"
   },
   "duoDesc": {
-    "message": "使用 Duo Security 的 Duo Mobile 程式、SMS 、撥打電話或 U2F 安全金鑰進行驗證。",
+    "message": "使用 Duo Security 的 Duo Mobile 程式、SMS 、撥打電話或 U2F 安全鑰匙進行驗證。",
     "description": "'Duo Security' and 'Duo Mobile' are product names and should not be translated."
   },
   "duoOrganizationDesc": {
-    "message": "為您的組織使用 Duo Security 的 Duo Mobile 程式、SMS、撥打電話或 U2F 安全金鑰進行驗證。",
+    "message": "為您的組織使用 Duo Security 的 Duo Mobile 程式、SMS、撥打電話或 U2F 安全鑰匙進行驗證。",
     "description": "'Duo Security' and 'Duo Mobile' are product names and should not be translated."
   },
   "webAuthnTitle": {
     "message": "FIDO2 WebAuthn"
   },
   "webAuthnDesc": {
-    "message": "使用任何具有 WebAuthn 功能的安全金鑰來存取您的帳戶。"
+    "message": "使用任何具有 WebAuthn 功能的安全鑰匙來存取您的帳戶。"
   },
   "emailTitle": {
     "message": "電子郵件"
@@ -976,7 +1009,7 @@
     "message": "網頁載入時如果偵測到登入表單，則執行自動填入。"
   },
   "experimentalFeature": {
-    "message": "被入侵或不可信任的網站可以利用自動填入功能在網頁載入時竊取資訊。"
+    "message": "被入侵或不可信任的網站可以利用網頁載入時的自動填入功能。"
   },
   "learnMoreAboutAutofill": {
     "message": "進一步瞭解「自動填入」功能"
@@ -1220,6 +1253,9 @@
   "typeIdentity": {
     "message": "身分"
   },
+  "typePasskey": {
+    "message": "密碼金鑰"
+  },
   "passwordHistory": {
     "message": "密碼歷史記錄"
   },
@@ -1255,10 +1291,10 @@
     "description": "To clear something out. example: To clear browser history."
   },
   "checkPassword": {
-    "message": "檢查密碼是否已外洩。"
+    "message": "檢查密碼是否已暴露。"
   },
   "passwordExposed": {
-    "message": "此密碼已外洩了 $VALUE$ 次，應立即變更密碼。",
+    "message": "此密碼在資料外洩事件中被暴露了 $VALUE$ 次，應立即變更它。",
     "placeholders": {
       "value": {
         "content": "$1",
@@ -1406,10 +1442,10 @@
     "message": "您必須至少選擇一個集合。"
   },
   "cloneItem": {
-    "message": "複製項目"
+    "message": "克隆項目"
   },
   "clone": {
-    "message": "複製"
+    "message": "克隆"
   },
   "passwordGeneratorPolicyInEffect": {
     "message": "一個或多個組織原則正影響密碼產生器設定。"
@@ -1440,9 +1476,6 @@
   "restoreItem": {
     "message": "還原項目"
   },
-  "restoreItemConfirmation": {
-    "message": "您確定要還原此項目嗎？"
-  },
   "restoredItem": {
     "message": "項目已還原"
   },
@@ -1471,7 +1504,7 @@
     "message": "這個表單寄放在不同的網域，而非您儲存登入資訊的 URI。選擇「確認」則依然自動填入，「取消」則停止本動作。"
   },
   "autofillIframeWarningTip": {
-    "message": "若以後不想再跳出這個警告，請儲存 URI「$HOSTNAME$」到您這個網站的 Bitwarden 登入項目。",
+    "message": "若以後不想再跳出這個警告，請將這個網站的 URI「$HOSTNAME$」儲存到您的 Bitwarden 登入項目。",
     "placeholders": {
       "hostname": {
         "content": "$1",
@@ -1489,7 +1522,7 @@
     "message": "新的主密碼"
   },
   "confirmNewMasterPass": {
-    "message": "確認新主密碼"
+    "message": "確認新的主密碼"
   },
   "masterPasswordPolicyInEffect": {
     "message": "一個或多個組織原則要求您的主密碼須符合下列條件："
@@ -1534,7 +1567,7 @@
     "message": "您新的主密碼不符合原則要求。"
   },
   "acceptPolicies": {
-    "message": "若選取此方塊，代表您同意下列項目："
+    "message": "選中此選取框，即表示您同意下列條款："
   },
   "acceptPoliciesRequired": {
     "message": "尚未接受服務條款與隱私權政策。"
@@ -1599,6 +1632,12 @@
   "biometricsNotSupportedDesc": {
     "message": "此裝置不支援瀏覽器生物特徵辨識。"
   },
+  "biometricsFailedTitle": {
+    "message": "生物特徵辨識失敗"
+  },
+  "biometricsFailedDesc": {
+    "message": "生物特徵辨識無法完成，請考慮使用主密碼或登出。如果這種情況仍然存在，請聯絡 Bitwarden 支援。"
+  },
   "nativeMessaginPermissionErrorTitle": {
     "message": "未提供權限"
   },
@@ -1616,6 +1655,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "組織原則正在影響您的擁有權選項。"
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "某個組織原則已禁止您將項目匯入至您的個人密碼庫。"
   },
   "excludedDomains": {
     "message": "排除網域"
@@ -1872,7 +1914,7 @@
     "message": "您的主密碼最近被您的組織管理者變更過。若要存取密碼庫，您必須立即更新主密碼。繼續操作會登出目前的登入階段，並要求您重新登入。其他裝置上的活動登入階段最多會保持一個小時。"
   },
   "updateWeakMasterPasswordWarning": {
-    "message": "您的主密碼不符合您的組織政策之一或多個要求。您必須立即更新您的主密碼以存取密碼庫。進行此操作將登出您目前的工作階段，需要您重新登入。其他裝置上的工作階段可能繼續長達一小時。"
+    "message": "您的主密碼不符合一個或多個組織原則要求。您必須立即更新您的主密碼才能存取密碼庫。進行此動作將登出您目前的工作階段，需要您重新登入。其他裝置上的工作階段可能繼續長達一小時。"
   },
   "resetPasswordPolicyAutoEnroll": {
     "message": "自動註冊"
@@ -1883,8 +1925,13 @@
   "selectFolder": {
     "message": "選擇資料夾⋯"
   },
-  "ssoCompleteRegistration": {
-    "message": "要完成 SSO 登入設定，請設定一組主密碼以存取和保護您的密碼庫。"
+  "orgPermissionsUpdatedMustSetPassword": {
+    "message": "Your organization permissions were updated, requiring you to set a master password.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "orgRequiresYouToSetPassword": {
+    "message": "Your organization requires you to set a master password.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "hours": {
     "message": "小時"
@@ -1906,7 +1953,7 @@
     }
   },
   "vaultTimeoutPolicyWithActionInEffect": {
-    "message": "您的組織原則正在影響您的密碼庫逾時時間。密碼庫逾時時間最多可以設定到 $HOURS$ 小時 $MINUTES$ 分鐘。您密碼庫的逾時動作是設為 $ACTION$。",
+    "message": "您的組織原則正在影響您的密碼庫逾時時間。密碼庫逾時時間最多可以設定到 $HOURS$ 小時 $MINUTES$ 分鐘。您密碼庫的逾時動作被設定為 $ACTION$。",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -1923,7 +1970,7 @@
     }
   },
   "vaultTimeoutActionPolicyInEffect": {
-    "message": "您的組織原則已將密碼庫逾時動作設為 $ACTION$。",
+    "message": "您的組織原則已將密碼庫逾時動作設定為 $ACTION$。",
     "placeholders": {
       "action": {
         "content": "$1",
@@ -1979,8 +2026,8 @@
   "exportingPersonalVaultTitle": {
     "message": "正匯出個人密碼庫"
   },
-  "exportingPersonalVaultDescription": {
-    "message": "只會匯出與 $EMAIL$ 關聯的個人密碼庫項目。組織密碼庫的項目不包含在內。",
+  "exportingIndividualVaultDescription": {
+    "message": "僅匯出與 $EMAIL$ 關聯的個人密碼庫項目。組織密碼庫項目將不包括在內。僅匯出密碼庫項目資訊，不包括關聯的附件。",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2080,7 +2127,7 @@
   "serverVersion": {
     "message": "伺服器版本"
   },
-  "selfHosted": {
+  "selfHostedServer": {
     "message": "自我裝載"
   },
   "thirdParty": {
@@ -2140,26 +2187,26 @@
   "notificationSentDevice": {
     "message": "已傳送通知至您的裝置。"
   },
-  "logInInitiated": {
-    "message": "登入已起始"
+  "loginInitiated": {
+    "message": "登入已發起"
   },
   "exposedMasterPassword": {
     "message": "已暴露的主密碼"
   },
   "exposedMasterPasswordDesc": {
-    "message": "在其他資料庫中找到您的密碼。我們建議您使用一個獨特的密碼來保護您的帳號，您確定要用這個密碼嗎？"
+    "message": "在資料外洩事件中找到了密碼。我們建議您使用一個獨特的密碼來保護您的帳戶，您確定要使用已暴露的密碼嗎？"
   },
   "weakAndExposedMasterPassword": {
     "message": "強度不足且已暴露的主密碼"
   },
   "weakAndBreachedMasterPasswordDesc": {
-    "message": "密碼強度不足，且在其他資料庫中找到這個密碼。使用一個強度足夠和獨特的密碼來保護您的帳號。請問您確定要用這個密碼嗎？"
+    "message": "密碼強度不足，且在資料外洩事件中找到了這個密碼。使用一個強度足夠和獨特的密碼來保護您的帳戶。您確定要使用這個密碼嗎？"
   },
   "checkForBreaches": {
     "message": "檢查外洩密碼資料庫中是否有此密碼"
   },
   "important": {
-    "message": "重要事項："
+    "message": "重要："
   },
   "masterPasswordHint": {
     "message": "如果您忘記主密碼，沒有復原的方法！"
@@ -2204,7 +2251,7 @@
     "message": "自動填入快速鍵尚未設定。請在瀏覽器的設定中變更。"
   },
   "autofillShortcutText": {
-    "message": "自動填入快速鍵是：$COMMAND$。請在瀏覽器的設定中變更。",
+    "message": "自動填入快速鍵：$COMMAND$。請在瀏覽器的設定中變更。",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2221,19 +2268,42 @@
       }
     }
   },
-  "region": {
-    "message": "區域"
+  "loggingInOn": {
+    "message": "正登入到"
   },
   "opensInANewWindow": {
     "message": "在新視窗開啟"
   },
+  "deviceApprovalRequired": {
+    "message": "裝置核准已要求。請在下面選擇一個核准選項："
+  },
+  "rememberThisDevice": {
+    "message": "記住這個裝置"
+  },
+  "uncheckIfPublicDevice": {
+    "message": "若使用公用裝置，请勿選中"
+  },
+  "approveFromYourOtherDevice": {
+    "message": "從其他裝置核准"
+  },
+  "requestAdminApproval": {
+    "message": "要求管理員核准"
+  },
+  "approveWithMasterPassword": {
+    "message": "使用主密碼批准"
+  },
+  "ssoIdentifierRequired": {
+    "message": "需要組織 SSO 識別碼。"
+  },
   "eu": {
-    "message": "歐洲 (EU)",
+    "message": "EU",
     "description": "European Union"
   },
-  "us": {
-    "message": "美國 (US)",
-    "description": "United States"
+  "usDomain": {
+    "message": "bitwarden.com"
+  },
+  "euDomain": {
+    "message": "bitwarden.eu"
   },
   "accessDenied": {
     "message": "拒絕存取。您沒有檢視此頁面的權限。"
@@ -2243,5 +2313,374 @@
   },
   "display": {
     "message": "顯示"
+  },
+  "accountSuccessfullyCreated": {
+    "message": "已成功建立帳戶！"
+  },
+  "adminApprovalRequested": {
+    "message": "已要求管理員核准"
+  },
+  "adminApprovalRequestSentToAdmins": {
+    "message": "您的要求已傳送給您的管理員。"
+  },
+  "youWillBeNotifiedOnceApproved": {
+    "message": "核准後將通知您。"
+  },
+  "troubleLoggingIn": {
+    "message": "登入時遇到困難？"
+  },
+  "loginApproved": {
+    "message": "登入已核准"
+  },
+  "userEmailMissing": {
+    "message": "缺少使用者電子郵件"
+  },
+  "deviceTrusted": {
+    "message": "裝置已信任"
+  },
+  "inputRequired": {
+    "message": "必須輸入內容。"
+  },
+  "required": {
+    "message": "必填"
+  },
+  "search": {
+    "message": "搜尋"
+  },
+  "inputMinLength": {
+    "message": "必須輸入至少 $COUNT$ 個字元。",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxLength": {
+    "message": "輸入的內容長度不得超過 $COUNT$ 字元。",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "20"
+      }
+    }
+  },
+  "inputForbiddenCharacters": {
+    "message": "以下字元不被允許：$CHARACTERS$",
+    "placeholders": {
+      "characters": {
+        "content": "$1",
+        "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "輸入的值不能低於 $MIN$。",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "輸入值不得超過 $MAX$。",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "multipleInputEmails": {
+    "message": "一個或多個電子郵件無效"
+  },
+  "inputTrimValidator": {
+    "message": "輸入不得僅包含空格。",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
+  "inputEmail": {
+    "message": "輸入的不是電子郵件地址。"
+  },
+  "fieldsNeedAttention": {
+    "message": "您需注意上方的 $COUNT$ 個欄位。",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "selectPlaceholder": {
+    "message": "-- 選擇 --"
+  },
+  "multiSelectPlaceholder": {
+    "message": "-- 輸入以進行篩選 --"
+  },
+  "multiSelectLoading": {
+    "message": "正在取得選項…"
+  },
+  "multiSelectNotFound": {
+    "message": "找不到任何項目"
+  },
+  "multiSelectClearAll": {
+    "message": "全部清除"
+  },
+  "plusNMore": {
+    "message": "+ $QUANTITY$ more",
+    "placeholders": {
+      "quantity": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "submenu": {
+    "message": "子選單"
+  },
+  "toggleCollapse": {
+    "message": "切換折疊",
+    "description": "Toggling an expand/collapse state."
+  },
+  "aliasDomain": {
+    "message": "別名網域"
+  },
+  "passwordRepromptDisabledAutofillOnPageLoad": {
+    "message": "使用主密碼重新提示的項目無法在頁面加載時自動填寫。已關閉頁面加載時的自動填入。",
+    "description": "Toast message for describing that master password re-prompt cannot be auto-filled on page load."
+  },
+  "autofillOnPageLoadSetToDefault": {
+    "message": "將頁面加載時的自動填入設置為使用默認設定。",
+    "description": "Toast message for informing the user that auto-fill on page load has been set to the default setting."
+  },
+  "turnOffMasterPasswordPromptToEditField": {
+    "message": "關閉主密碼重新提示以編輯此欄位",
+    "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
+  },
+  "importData": {
+    "message": "匯入資料",
+    "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
+  },
+  "importError": {
+    "message": "匯入時發生錯誤"
+  },
+  "importErrorDesc": {
+    "message": "您嘗試匯入的資料有問題，請處理下方列出的來源檔案中的錯誤然後再試一次。"
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "請解決下面的錯誤然後再試一次。"
+  },
+  "description": {
+    "message": "描述"
+  },
+  "importSuccess": {
+    "message": "資料匯入成功"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "一共匯入了 $AMOUNT$ 個項目。",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "總計"
+  },
+  "importWarning": {
+    "message": "即將匯入資料至 $ORGANIZATION$。您的資料可能會與該組織中的成員共用，確定要繼續嗎？",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "資料格式不正確。請檢查您匯入的檔案後再試一次。"
+  },
+  "importNothingError": {
+    "message": "沒有匯入任何內容。"
+  },
+  "importEncKeyError": {
+    "message": "解密匯出的檔案時發生錯誤，您的加密金鑰與匯出資料時使用的金鑰不同。"
+  },
+  "invalidFilePassword": {
+    "message": "檔案密碼無效，請使用您當初匯出檔案時輸入的密碼。"
+  },
+  "importDestination": {
+    "message": "匯入目的地"
+  },
+  "learnAboutImportOptions": {
+    "message": "瞭解更多匯入選項"
+  },
+  "selectImportFolder": {
+    "message": "選擇一個資料夾"
+  },
+  "selectImportCollection": {
+    "message": "選擇一個集合"
+  },
+  "importTargetHint": {
+    "message": "如果您要將匯入檔案的内容移動到 $DESTINATION$，請選擇此選項",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "檔案包含未指派的項目。"
+  },
+  "selectFormat": {
+    "message": "選擇匯入檔案的格式"
+  },
+  "selectImportFile": {
+    "message": "選擇要匯入的檔案"
+  },
+  "chooseFile": {
+    "message": "選擇檔案"
+  },
+  "noFileChosen": {
+    "message": "未選擇任何檔案"
+  },
+  "orCopyPasteFileContents": {
+    "message": "或複製/貼上要匯入的檔案內容"
+  },
+  "instructionsFor": {
+    "message": "$NAME$ 教學",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "確認匯入密碼庫"
+  },
+  "confirmVaultImportDesc": {
+    "message": "此檔案受密碼保護，請輸入檔案密碼以匯入資料。"
+  },
+  "confirmFilePassword": {
+    "message": "確認檔案密碼"
+  },
+  "passkeyNotCopied": {
+    "message": "密碼金鑰不會被複製"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "密碼金鑰不會被複製到克隆的項目。 您想繼續克隆該項目嗎？"
+  },
+  "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
+    "message": "發起站點需要驗證。對於沒有主密碼的帳戶，此功能尚未實現。"
+  },
+  "logInWithPasskey": {
+    "message": "使用密碼金鑰登入？"
+  },
+  "passkeyAlreadyExists": {
+    "message": "用於這個應用程式的密碼金鑰已經存在。"
+  },
+  "noPasskeysFoundForThisApplication": {
+    "message": "未發現用於這個應用程式的密碼金鑰。"
+  },
+  "noMatchingPasskeyLogin": {
+    "message": "您還沒有與該網站一致的登入項目。"
+  },
+  "confirm": {
+    "message": "確認"
+  },
+  "savePasskey": {
+    "message": "儲存密碼金鑰"
+  },
+  "savePasskeyNewLogin": {
+    "message": "儲存密碼金鑰作爲新的登入"
+  },
+  "choosePasskey": {
+    "message": "選擇一個用於儲存此密碼金鑰的登入項目"
+  },
+  "passkeyItem": {
+    "message": "密碼金鑰項目"
+  },
+  "overwritePasskey": {
+    "message": "覆寫密碼金輪嗎？"
+  },
+  "overwritePasskeyAlert": {
+    "message": "該項目已包含密碼金鑰。您確定要覆寫目前的密碼金鑰嗎？"
+  },
+  "featureNotSupported": {
+    "message": "功能尚不受支援"
+  },
+  "yourPasskeyIsLocked": {
+    "message": "使用密碼金鑰需要身分驗證。請驗證您的身份以繼續。"
+  },
+  "useBrowserName": {
+    "message": "使用瀏覽器"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "多因素驗證已取消"
+  },
+  "noLastPassDataFound": {
+    "message": "未找到任何 LastPass 資料"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "使用者名稱或密碼不正確"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "多因素驗證失敗"
+  },
+  "includeSharedFolders": {
+    "message": "包含共用的資料夾"
+  },
+  "lastPassEmail": {
+    "message": "LastPass Email"
+  },
+  "importingYourAccount": {
+    "message": "正在匯入您的帳戶..."
+  },
+  "lastPassMFARequired": {
+    "message": "要求 LastPass 多因素驗證"
+  },
+  "lastPassMFADesc": {
+    "message": "輸入來自身分驗證 App 的一次性通行代碼"
+  },
+  "lastPassOOBDesc": {
+    "message": "在身分驗證 App 中核准登入請求或輸入一次性通行代碼。"
+  },
+  "passcode": {
+    "message": "繞行代碼"
+  },
+  "lastPassMasterPassword": {
+    "message": "LastPass 主密碼"
+  },
+  "lastPassAuthRequired": {
+    "message": "要求 LastPass 驗證"
+  },
+  "awaitingSSO": {
+    "message": "等待 SSO 驗證"
+  },
+  "awaitingSSODesc": {
+    "message": "請使用您的公司憑證繼續登入。"
+  },
+  "seeDetailedInstructions": {
+    "message": "請參閱我們的幫助網站上的詳細說明：",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "從 LastPass 直接匯入"
+  },
+  "importFromCSV": {
+    "message": "從 CSV 匯入"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "Try again or look for an email from LastPass to verify it's you."
+  },
+  "collection": {
+    "message": "集合"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "將與您的 LastPass 帳戶關聯的 YubiKey 插入電腦的 USB 連接埠，然後觸摸其按鈕。"
   }
 }

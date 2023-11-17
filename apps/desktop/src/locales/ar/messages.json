@@ -475,8 +475,8 @@
   "maxFileSize": {
     "message": "الحجم الأقصى للملف هو 500 ميجابايت."
   },
-  "updateKey": {
-    "message": "لا يمكنك استخدام هذه الميزة حتى تقوم بتحديث مفتاح التشفير الخاص بك."
+  "encryptionKeyMigrationRequired": {
+    "message": "مطلوب ترحيل مفتاح التشفير. الرجاء تسجيل الدخول بواسطة مخزن الويب لتحديث مفتاح التشفير الخاص بك."
   },
   "editedFolder": {
     "message": "تم تعديل المجلد"
@@ -1077,8 +1077,8 @@
   "premiumSignUpStorage": {
     "message": "1 جيغابايت وحدة تخزين مشفرة لمرفقات الملفات."
   },
-  "premiumSignUpTwoStep": {
-    "message": "خيارات تسجيل الدخول الإضافية من خطوتين مثل YubiKey و FIDO U2F و Duo."
+  "premiumSignUpTwoStepOptions": {
+    "message": "خيارات تسجيل الدخول بخطوتين المملوكة مثل YubiKey و Duo."
   },
   "premiumSignUpReports": {
     "message": "نظافة كلمة المرور، صحة الحساب، وتقارير خرق البيانات للحفاظ على سلامة خزنتك."
@@ -1492,6 +1492,9 @@
   "vaultTimeoutActionLogOutDesc": {
     "message": "تسجيل الخروج من الخزنة يتطلب إعادة المصادقة للوصول إليها مرة أخرى."
   },
+  "unlockMethodNeededToChangeTimeoutActionDesc": {
+    "message": "أعدنّ طريقة إلغاء القُفْل لتغيير إجراء مهلة المخزن الخاص بك."
+  },
   "lock": {
     "message": "قفل",
     "description": "Verb form: to make secure or inaccesible by"
@@ -1512,12 +1515,6 @@
   "permanentlyDeletedItem": {
     "message": "تم حذف العنصر بشكل دائم"
   },
-  "restoreItem": {
-    "message": "استعادة العنصر"
-  },
-  "restoreItemConfirmation": {
-    "message": "هل أنت متأكد من أنك تريد استعادة هذا العنصر؟"
-  },
   "restoredItem": {
     "message": "العنصر المستعاد"
   },
@@ -1536,8 +1533,13 @@
   "setMasterPassword": {
     "message": "تعيين كلمة المرور الرئيسية"
   },
-  "ssoCompleteRegistration": {
-    "message": "من أجل إكمال تسجيل الدخول باستخدام SSO، يرجى تعيين كلمة مرور رئيسية للوصول وحماية خزنتك."
+  "orgPermissionsUpdatedMustSetPassword": {
+    "message": "تم تحديث أذونات مؤسستك ، مما يتطلب عليك تعيين كلمة مرور رئيسية.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "orgRequiresYouToSetPassword": {
+    "message": "تتطلب مؤسستك تعيين كلمة مرور رئيسية.",
+    "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "currentMasterPass": {
     "message": "كلمة المرور الرئيسية الحالية"
@@ -1664,6 +1666,9 @@
   },
   "personalOwnershipPolicyInEffect": {
     "message": "تؤثر سياسة مؤسسة على خيارات الملكية الخاصة بك."
+  },
+  "personalOwnershipPolicyInEffectImports": {
+    "message": "لقد حالت سياسة المؤسسة دون استيراد العناصر إلى خزانتك الشخصية."
   },
   "allSends": {
     "message": "كل الإرسالات",
@@ -1987,8 +1992,8 @@
   "exportingPersonalVaultTitle": {
     "message": "تصدير الخزنة الشخصية"
   },
-  "exportingPersonalVaultDescription": {
-    "message": "سيتم تصدير فقط عناصر الخزنة الشخصية المرتبطة بـ $EMAIL$. لن يتم إدراج عناصر خزنة المؤسسة.",
+  "exportingIndividualVaultDescription": {
+    "message": "سيتم تصدير عناصر المخزن الفردية المرتبطة بـ $EMAIL$ فقط. لن يتم إدراج عناصر مخزن المؤسسة. سيتم تصدير معلومات المنتج فقط ولن تشمل المرفقات المرتبطة بها.",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -2112,8 +2117,8 @@
   "logInWithAnotherDevice": {
     "message": "تسجيل الدخول باستخدام جهاز آخر"
   },
-  "logInInitiated": {
-    "message": "بدء تسجيل الدخول"
+  "loginInitiated": {
+    "message": "بَدْء تسجيل الدخول"
   },
   "notificationSentDevice": {
     "message": "تم إرسال إشعار إلى جهازك."
@@ -2252,21 +2257,358 @@
   "windowsBiometricUpdateWarningTitle": {
     "message": "تحديث الإعدادات الموصى بها"
   },
+  "deviceApprovalRequired": {
+    "message": "موافقة الجهاز مطلوبة. حدد خيار الموافقة أدناه:"
+  },
+  "rememberThisDevice": {
+    "message": "تذكر هذا الجهاز"
+  },
+  "uncheckIfPublicDevice": {
+    "message": "إلغاء تحديد عند استخدام جهاز عام"
+  },
+  "approveFromYourOtherDevice": {
+    "message": "الموافقة من جهازك الآخر"
+  },
+  "requestAdminApproval": {
+    "message": "طلب موافقة المشرف"
+  },
+  "approveWithMasterPassword": {
+    "message": "الموافقة بواسطة كلمة المرور الرئيسية"
+  },
   "region": {
     "message": "المنطقة"
+  },
+  "ssoIdentifierRequired": {
+    "message": "معرف الـSSO للمؤسسة مطلوب."
   },
   "eu": {
     "message": "الاتحاد الأوروبي",
     "description": "European Union"
   },
-  "us": {
-    "message": "الولايات المتحدة",
-    "description": "United States"
+  "loggingInOn": {
+    "message": "جارٍ تسجيل الدخول"
   },
-  "selfHosted": {
+  "usDomain": {
+    "message": "bitwarden.com"
+  },
+  "euDomain": {
+    "message": "bitwarden.eu"
+  },
+  "selfHostedServer": {
     "message": "استضافة ذاتية"
   },
   "accessDenied": {
-    "message": "Access denied. You do not have permission to view this page."
+    "message": "غير مسموح بالدخول. ليس لديك الصلاحية لعرض هذه الصفحة."
+  },
+  "accountSuccessfullyCreated": {
+    "message": "تم إنشاء الحساب بنجاح!"
+  },
+  "adminApprovalRequested": {
+    "message": "طلبت موافقة المسؤول"
+  },
+  "adminApprovalRequestSentToAdmins": {
+    "message": "تم إرسال طلبك إلى المشرف الخاص بك."
+  },
+  "youWillBeNotifiedOnceApproved": {
+    "message": "سيتم إعلامك بمجرد الموافقة."
+  },
+  "troubleLoggingIn": {
+    "message": "مشكلة في تسجيل الدخول؟"
+  },
+  "loginApproved": {
+    "message": "تمت الموافقة على تسجيل الدخول"
+  },
+  "userEmailMissing": {
+    "message": "البريد الإلكتروني للمستخدم مفقود"
+  },
+  "deviceTrusted": {
+    "message": "الجهاز موثوق به"
+  },
+  "inputRequired": {
+    "message": "الإدخال مطلوب."
+  },
+  "required": {
+    "message": "مطلوب"
+  },
+  "search": {
+    "message": "بحث"
+  },
+  "inputMinLength": {
+    "message": "الإدخال يجب أن يكون على الأقل $COUNT$ حرفاً.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxLength": {
+    "message": "الإدخال يجب أن لا يتجاوز أحرف $COUNT$ في الطول.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "20"
+      }
+    }
+  },
+  "inputForbiddenCharacters": {
+    "message": "الأحرف التالية غير مسموح بها: $CHARACTERS$",
+    "placeholders": {
+      "characters": {
+        "content": "$1",
+        "example": "@, #, $, %"
+      }
+    }
+  },
+  "inputMinValue": {
+    "message": "يجب أن تكون قيمة الإدخال على الأقل $MIN$.",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      }
+    }
+  },
+  "inputMaxValue": {
+    "message": "يجب ألا تتجاوز قيمة الإدخال $MAX$.",
+    "placeholders": {
+      "max": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "multipleInputEmails": {
+    "message": "1 أو أكثر من رسائل البريد الإلكتروني غير صالحة"
+  },
+  "inputTrimValidator": {
+    "message": "الإدخال يجب أن لا يحتوي على مساحة بيضاء فقط.",
+    "description": "Notification to inform the user that a form's input can't contain only whitespace."
+  },
+  "inputEmail": {
+    "message": "الإدخال ليس عنوان بريد إلكتروني."
+  },
+  "fieldsNeedAttention": {
+    "message": "الحقل (الحقول) $COUNT$ أعلاه بحاجة إلى اهتمامك.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "selectPlaceholder": {
+    "message": "-- اختيار --"
+  },
+  "multiSelectPlaceholder": {
+    "message": "-- اكتب للنصفية --"
+  },
+  "multiSelectLoading": {
+    "message": "استرداد الخيارات..."
+  },
+  "multiSelectNotFound": {
+    "message": "لم يتم العثور على عناصر"
+  },
+  "multiSelectClearAll": {
+    "message": "امسح الكل"
+  },
+  "plusNMore": {
+    "message": "+ $QUANTITY$ المزيد",
+    "placeholders": {
+      "quantity": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "submenu": {
+    "message": "قائمة فرعية"
+  },
+  "typePasskey": {
+    "message": "مفتاح المرور"
+  },
+  "passkeyNotCopied": {
+    "message": "لن يتم نسخ مفتاح المرور"
+  },
+  "passkeyNotCopiedAlert": {
+    "message": "لن يتم نسخ مفتاح المرور إلى العنصر المستنسخ. هل تريد الاستمرار في استنساخ هذا العنصر؟"
+  },
+  "aliasDomain": {
+    "message": "الاسم البديل للنطاق"
+  },
+  "importData": {
+    "message": "استيراد البيانات",
+    "description": "Used for the desktop menu item and the header of the import dialog"
+  },
+  "importError": {
+    "message": "خطأ في الاستيراد"
+  },
+  "importErrorDesc": {
+    "message": "حدثت مشكلة في البيانات التي حاولت استيرادها. الرجاء حل الأخطاء المدرجة أدناه في الملف المصدر الخاص بك وحاول مرة أخرى."
+  },
+  "resolveTheErrorsBelowAndTryAgain": {
+    "message": "قم بحل الأخطاء أدناه ثم حاول مرة أخرى."
+  },
+  "description": {
+    "message": "الوصف"
+  },
+  "importSuccess": {
+    "message": "تم استيراد البيانات بنجاح"
+  },
+  "importSuccessNumberOfItems": {
+    "message": "تم استيراد مجموع العناصر $AMOUNT$.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "total": {
+    "message": "المجموع"
+  },
+  "importWarning": {
+    "message": "أنت تستورد البيانات إلى $ORGANIZATION$. قد يتم مشاركة بياناتك مع أعضاء هذه المؤسسة. هل تريد المتابعة؟",
+    "placeholders": {
+      "organization": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
+  "importFormatError": {
+    "message": "لم يتم تنسيق البيانات بشكل صحيح. الرجاء التحقق من ملف الاستيراد الخاص بك وحاول مرة أخرى."
+  },
+  "importNothingError": {
+    "message": "لم يتم استيراد أي شيء."
+  },
+  "importEncKeyError": {
+    "message": "خطأ في فك تشفير الملف المصدر. مفتاح التشفير الخاص بك لا يتطابق مع مفتاح التشفير المستخدم عند تصدير البيانات."
+  },
+  "invalidFilePassword": {
+    "message": "كلمة مرور الملف غير صالحة، الرجاء استخدام كلمة المرور التي أدخلتها عند إنشاء ملف التصدير."
+  },
+  "importDestination": {
+    "message": "وجهة الاستيراد"
+  },
+  "learnAboutImportOptions": {
+    "message": "تعرف على خيارات الاستيراد الخاصة بك"
+  },
+  "selectImportFolder": {
+    "message": "تحديد المجلد"
+  },
+  "selectImportCollection": {
+    "message": "اختر مجموعة"
+  },
+  "importTargetHint": {
+    "message": "حدد هذا الخيار إذا كنت تريد نقل محتويات الملف المستورد إلى $DESTINATION$",
+    "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
+    "placeholders": {
+      "destination": {
+        "content": "$1",
+        "example": "folder or collection"
+      }
+    }
+  },
+  "importUnassignedItemsError": {
+    "message": "الملف يحتوي على عناصر غير معينة."
+  },
+  "selectFormat": {
+    "message": "حدد تنسيق ملف الاستيراد"
+  },
+  "selectImportFile": {
+    "message": "حدد ملف الاستيراد"
+  },
+  "chooseFile": {
+    "message": "اختيار ملف"
+  },
+  "noFileChosen": {
+    "message": "لم يتم اختيار ملف"
+  },
+  "orCopyPasteFileContents": {
+    "message": "او قم بنسخ ولصق محتويات مِلَفّ الاستيراد"
+  },
+  "instructionsFor": {
+    "message": "تعليمات $NAME$",
+    "description": "The title for the import tool instructions.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "LastPass (csv)"
+      }
+    }
+  },
+  "confirmVaultImport": {
+    "message": "تأكيد تصدير الخزنة"
+  },
+  "confirmVaultImportDesc": {
+    "message": "هذا الملف محمي بكلمة مرور. الرجاء إدخال كلمة مرور الملف لاستيراد البيانات."
+  },
+  "confirmFilePassword": {
+    "message": "تأكيد كلمة مرور الملف"
+  },
+  "multifactorAuthenticationCancelled": {
+    "message": "تم إلغاء المصادقة المتعددة"
+  },
+  "noLastPassDataFound": {
+    "message": "لم يتم العثور على بيانات LastPass"
+  },
+  "incorrectUsernameOrPassword": {
+    "message": "اسم المستخدم أو كلمة المرور غير صحيحة"
+  },
+  "multifactorAuthenticationFailed": {
+    "message": "فشلت المصادقة المتعددة العوامل"
+  },
+  "includeSharedFolders": {
+    "message": "تضمين المجلدات المشتركة"
+  },
+  "lastPassEmail": {
+    "message": "بريد LastPass الإلكتروني"
+  },
+  "importingYourAccount": {
+    "message": "استيراد حسابك..."
+  },
+  "lastPassMFARequired": {
+    "message": "مطلوب المصادقة متعددة العوامل من LastPass"
+  },
+  "lastPassMFADesc": {
+    "message": "أدخل رمز المرور الخاص بك لمرة واحدة من تطبيق المصادقة الخاص بك"
+  },
+  "lastPassOOBDesc": {
+    "message": "الموافقة على طلب تسجيل الدخول في تطبيق المصادقة الخاص بك أو إدخال رمز مرور لمرة واحدة."
+  },
+  "passcode": {
+    "message": "رمز المرور"
+  },
+  "lastPassMasterPassword": {
+    "message": "كلمة المرور الرئيسية لـ LastPass"
+  },
+  "lastPassAuthRequired": {
+    "message": "مطلوب مصادقة LastPass"
+  },
+  "awaitingSSO": {
+    "message": "في انتظار مصادقة SSO"
+  },
+  "awaitingSSODesc": {
+    "message": "الرجاء الاستمرار في تسجيل الدخول باستخدام بيانات اعتماد الشركة الخاصة بك."
+  },
+  "seeDetailedInstructions": {
+    "message": "راجع التعليمات المفصلة في موقع المساعدة الخاص بنا في",
+    "description": "This is followed a by a hyperlink to the help website."
+  },
+  "importDirectlyFromLastPass": {
+    "message": "استيراد مباشرة من LastPass"
+  },
+  "importFromCSV": {
+    "message": "استيراد من CSV"
+  },
+  "lastPassTryAgainCheckEmail": {
+    "message": "حاول مرة أخرى أو ابحث عن بريد إلكتروني من LastPass للتحقق منك."
+  },
+  "collection": {
+    "message": "مجموعات"
+  },
+  "lastPassYubikeyDesc": {
+    "message": "أدخل YubiKey المرتبط بحسابك LastPass في منفذ USB الخاص بك، ثم المس الزر."
   }
 }
