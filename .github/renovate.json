@@ -6,25 +6,28 @@
     ":dependencyDashboard",
     ":maintainLockFilesWeekly",
     ":pinAllExceptPeerDependencies",
+    ":prConcurrentLimit10",
     ":rebaseStalePrs",
     ":separateMajorReleases",
     "group:monorepos",
     "schedule:weekends"
   ],
-  "prConcurrentLimit": 3,
   "enabledManagers": ["cargo", "github-actions", "npm"],
   "commitMessagePrefix": "[deps]:",
   "commitMessageTopic": "{{depName}}",
   "packageRules": [
     {
-      "groupName": "cargo minor",
-      "matchManagers": ["cargo"],
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
       "groupName": "gh minor",
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "commitMessagePrefix": "[deps] DevOps:"
+    },
+    {
+      "matchManagers": ["cargo"],
+      "commitMessagePrefix": "[deps] Platform:"
     },
     {
       "matchPackageNames": ["typescript", "zone.js"],
@@ -79,7 +82,6 @@
       "matchPackageNames": [
         "@types/duo_web_sdk",
         "@types/node-ipc",
-        "@types/zxcvbn",
         "duo_web_sdk",
         "node-ipc",
         "qrious",
@@ -91,6 +93,7 @@
     },
     {
       "matchPackageNames": [
+        "@webcomponents/custom-elements",
         "concurrently",
         "cross-env",
         "del",
@@ -105,6 +108,8 @@
         "prettier",
         "prettier-plugin-tailwindcss",
         "rimraf",
+        "tabbable",
+        "tldts",
         "wait-on"
       ],
       "description": "Autofill owned dependencies",
@@ -208,19 +213,23 @@
       "matchPackageNames": [
         "@electron/notarize",
         "@electron/rebuild",
-        "@microsoft/signalr",
         "@microsoft/signalr-protocol-msgpack",
+        "@microsoft/signalr",
+        "@types/jsdom",
         "@types/papaparse",
-        "electron",
+        "@types/zxcvbn",
         "electron-builder",
         "electron-log",
         "electron-reload",
         "electron-store",
         "electron-updater",
+        "electron",
+        "jsdom",
         "jszip",
+        "oidc-client-ts",
         "papaparse",
-        "tldts",
-        "utf-8-validate"
+        "utf-8-validate",
+        "zxcvbn"
       ],
       "description": "Tools owned dependencies",
       "commitMessagePrefix": "[deps] Tools:",
@@ -231,7 +240,6 @@
         "@koa/multer",
         "@koa/router",
         "@types/inquirer",
-        "@types/jsdom",
         "@types/koa",
         "@types/koa__multer",
         "@types/koa__router",
@@ -247,7 +255,6 @@
         "form-data",
         "https-proxy-agent",
         "inquirer",
-        "jsdom",
         "koa",
         "koa-bodyparser",
         "koa-json",

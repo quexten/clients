@@ -8,14 +8,14 @@ import {
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { ServiceUtils } from "@bitwarden/common/misc/serviceUtils";
-import { TreeNode } from "@bitwarden/common/models/domain/tree-node";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
+import { TreeNode } from "@bitwarden/common/vault/models/domain/tree-node";
 import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
+import { ServiceUtils } from "@bitwarden/common/vault/service-utils";
 
 import { DeprecatedVaultFilterService as DeprecatedVaultFilterServiceAbstraction } from "../../abstractions/deprecated-vault-filter.service";
 import { DynamicTreeNode } from "../models/dynamic-tree-node.model";
@@ -30,7 +30,7 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
     protected folderService: FolderService,
     protected cipherService: CipherService,
     protected collectionService: CollectionService,
-    protected policyService: PolicyService
+    protected policyService: PolicyService,
   ) {}
 
   async storeCollapsedFilterNodes(collapsedFilterNodes: Set<string>): Promise<void> {
@@ -62,7 +62,7 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
         const ciphers = await this.cipherService.getAllDecrypted();
         const orgCiphers = ciphers.filter((c) => c.organizationId == organizationId);
         folders = storedFolders.filter(
-          (f) => orgCiphers.some((oc) => oc.folderId == f.id) || f.id == null
+          (f) => orgCiphers.some((oc) => oc.folderId == f.id) || f.id == null,
         );
       }
 
@@ -74,7 +74,7 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
     };
 
     return this.folderService.folderViews$.pipe(
-      mergeMap((folders) => from(transformation(folders)))
+      mergeMap((folders) => from(transformation(folders))),
     );
   }
 
@@ -95,13 +95,13 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
 
   async checkForSingleOrganizationPolicy(): Promise<boolean> {
     return await firstValueFrom(
-      this.policyService.policyAppliesToActiveUser$(PolicyType.SingleOrg)
+      this.policyService.policyAppliesToActiveUser$(PolicyType.SingleOrg),
     );
   }
 
   async checkForPersonalOwnershipPolicy(): Promise<boolean> {
     return await firstValueFrom(
-      this.policyService.policyAppliesToActiveUser$(PolicyType.PersonalOwnership)
+      this.policyService.policyAppliesToActiveUser$(PolicyType.PersonalOwnership),
     );
   }
 
@@ -119,7 +119,7 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
 
   async getFolderNested(id: string): Promise<TreeNode<FolderView>> {
     const folders = await this.getAllFoldersNested(
-      await firstValueFrom(this.folderService.folderViews$)
+      await firstValueFrom(this.folderService.folderViews$),
     );
     return ServiceUtils.getTreeNodeObjectFromList(folders, id) as TreeNode<FolderView>;
   }

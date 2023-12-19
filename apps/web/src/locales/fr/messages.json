@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Se connecter avec le mot de passe principal"
   },
+  "readingPasskeyLoading": {
+    "message": "Lecture de la Passkey..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Gardez cette fenêtre ouverte et suivez les instructions de votre navigateur."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Utiliser une méthode de connexion différente"
+  },
   "loginWithPasskey": {
     "message": "Se connecter avec la clé d'accès"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Passkey invalide. Veuillez réessayer de nouveau."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "La 2FA pour les Passkey n'est pas pris en charge. Mettez à jour l'application pour vous connecter."
   },
   "loginWithPasskeyInfo": {
     "message": "Utilisez une clé d'accès générée qui vous connectera automatiquement sans mot de passe. Les fonctions biométriques, comme la reconnaissance faciale, l'empreinte digitale, ou une autre méthode de sécurité FIDO2 vérifiera votre identité."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Chiffrement non pris en charge"
   },
-  "encryptionNotEnabled": {
-    "message": "Chiffrement non activé"
+  "enablePasskeyEncryption": {
+    "message": "Configurer le chiffrement"
   },
   "usedForEncryption": {
     "message": "Utilisé pour le chiffrement"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Exporter"
   },
+  "exportFrom": {
+    "message": "Exporter à partir de"
+  },
   "exportVault": {
     "message": "Exporter le coffre"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Longueur"
+  },
+  "passwordMinLength": {
+    "message": "Longueur minimale du mot de passe"
   },
   "uppercase": {
     "message": "Majuscule (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Ce Send est masqué par défaut. Vous pouvez changer sa visibilité en utilisant le bouton ci-dessous.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Télécharger le fichier"
+  "downloadAttachments": {
+    "message": "Télécharger les pièces jointes"
   },
   "sendAccessUnavailable": {
     "message": "Le Send que vous essayez d'accéder n'existe pas ou n'est plus disponible.",
@@ -4609,8 +4630,8 @@
     "message": "pour l'essayer dès aujourd'hui.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "L'utilisateur Bitwarden $USER_IDENTIFIER$ a partagé ce qui suit avec vous",
+  "sendAccessCreatorIdentifier": {
+    "message": "Le membre Bitwarden $USER_IDENTIFIER$ a partagé ce qui suit avec vous",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Suivant"
   },
+  "ssoLoginIsRequired": {
+    "message": "La connexion SSO est requise"
+  },
   "selectedRegionFlag": {
     "message": "Drapeau de la région sélectionnée"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Limiter la création et la suppression de la collection aux propriétaires et administrateurs"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Les propriétaires et les administrateurs peuvent gérer toutes les collections et tous les éléments"
+  },
   "collectionManagementUpdated": {
     "message": "Comportement de gestion de la collection enregistré"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "La passkey ne sera pas copiée à l'item cloné. Voulez-vous continuez à cloner cet élément?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Paramètre de gestion de la collection modifiée $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Consultez les instructions détaillées sur notre site d'aide à",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Accès au projet mis à jour"
+  },
+  "unexpectedErrorSend": {
+    "message": "Une erreur inattendue est survenue lors du chargement de ce Send. Réessayez plus tard."
+  },
+  "seatLimitReached": {
+    "message": "La limite de places a été atteinte"
+  },
+  "contactYourProvider": {
+    "message": "Contactez votre fournisseur pour acheter des places supplémentaires."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "La limite de places a été atteinte. Contactez votre fournisseur pour acheter des places supplémentaires."
+  },
+  "collectionAccessRestricted": {
+    "message": "L'accès à la collection est restreint"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Accès au compte de service mis à jour"
   }
 }

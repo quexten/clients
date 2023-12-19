@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "使用主密碼登入"
   },
+  "readingPasskeyLoading": {
+    "message": "Reading passkey..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "保持此視窗打開，然後按照瀏覽器的提示進行操作。"
+  },
+  "useADifferentLogInMethod": {
+    "message": "Use a different log in method"
+  },
   "loginWithPasskey": {
     "message": "使用密碼金鑰登入"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Invalid Passkey. Please try again."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA for passkeys is not supported. Update the app to log in."
   },
   "loginWithPasskeyInfo": {
     "message": "使用已產生的密碼金輪，無需密碼即可自動登入。生物特徵辨識（例如面部識別或指紋）或其他 FIDO2 安全方式將用於確認您的身分。"
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "加密不支援"
   },
-  "encryptionNotEnabled": {
-    "message": "Encryption not enabled"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
     "message": "Used for encryption"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "匯出"
   },
+  "exportFrom": {
+    "message": "Export from"
+  },
   "exportVault": {
     "message": "匯出密碼庫"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "長度"
+  },
+  "passwordMinLength": {
+    "message": "Minimum password length"
   },
   "uppercase": {
     "message": "大寫 (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "此 Send 預設為隱藏。您可使用下方的按鈕切換其可見度。",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "下載檔案"
+  "downloadAttachments": {
+    "message": "Download attachments"
   },
   "sendAccessUnavailable": {
     "message": "您嘗試存取的 Send 不存在或無法再使用。",
@@ -4609,8 +4630,8 @@
     "message": "現在就試試。",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden 使用者 $USER_IDENTIFIER$ 與您共用了以下內容",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden 成員 $USER_IDENTIFIER$ 與您共用了以下內容",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -5898,7 +5919,7 @@
     "message": "開啟"
   },
   "off": {
-    "message": "Off"
+    "message": "關閉"
   },
   "members": {
     "message": "成員"
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "下一步"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO login is required"
+  },
   "selectedRegionFlag": {
     "message": "選定的區域標記"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "對擁有者和管理員限制集合的建立和刪除"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Owners and admins can manage all collections and items"
+  },
   "collectionManagementUpdated": {
     "message": "集合管理行為已儲存"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "密碼金鑰不會被複製到克隆的項目。您想繼續克隆該項目嗎？"
   },
+  "modifiedCollectionManagement": {
+    "message": "Modified collection management setting $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "請參閱我們的幫助網站上的詳細說明：",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Project access updated"
+  },
+  "unexpectedErrorSend": {
+    "message": "An unexpected error has occurred while loading this Send. Try again later."
+  },
+  "seatLimitReached": {
+    "message": "Seat limit has been reached"
+  },
+  "contactYourProvider": {
+    "message": "Contact your provider to purchase additional seats."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Seat limit has been reached. Contact your provider to purchase additional seats."
+  },
+  "collectionAccessRestricted": {
+    "message": "Collection access is restricted"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Service account access updated"
   }
 }

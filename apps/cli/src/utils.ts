@@ -5,11 +5,11 @@ import * as inquirer from "inquirer";
 import * as JSZip from "jszip";
 
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { NodeUtils } from "@bitwarden/common/misc/nodeUtils";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
+import { NodeUtils } from "@bitwarden/node/node-utils";
 
 import { Response } from "./models/response";
 import { MessageResponse } from "./models/response/message.response";
@@ -69,7 +69,7 @@ export class CliUtils {
           },
           (reason) => {
             reject(reason);
-          }
+          },
         );
       });
     });
@@ -216,7 +216,7 @@ export class CliUtils {
   static async getPassword(
     password: string,
     options: { passwordFile?: string; passwordEnv?: string },
-    logService?: LogService
+    logService?: LogService,
   ): Promise<string | Response> {
     if (Utils.isNullOrEmpty(password)) {
       if (options?.passwordFile) {
@@ -243,7 +243,7 @@ export class CliUtils {
         password = answer.password;
       } else {
         return Response.badRequest(
-          "Master password is required. Try again in interactive mode or provide a password file or environment variable."
+          "Master password is required. Try again in interactive mode or provide a password file or environment variable.",
         );
       }
     }

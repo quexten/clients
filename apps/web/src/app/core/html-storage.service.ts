@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
-import { HtmlStorageLocation } from "@bitwarden/common/enums";
 import {
   AbstractStorageService,
   StorageUpdate,
 } from "@bitwarden/common/platform/abstractions/storage.service";
+import { HtmlStorageLocation } from "@bitwarden/common/platform/enums";
 import { StorageOptions } from "@bitwarden/common/platform/models/domain/storage-options";
 
 @Injectable()
@@ -19,8 +19,10 @@ export class HtmlStorageService implements AbstractStorageService {
   get valuesRequireDeserialization(): boolean {
     return true;
   }
-  get updates$() {
-    return this.updatesSubject.asObservable();
+  updates$;
+
+  constructor() {
+    this.updates$ = this.updatesSubject.asObservable();
   }
 
   get<T>(key: string, options: StorageOptions = this.defaultOptions): Promise<T> {

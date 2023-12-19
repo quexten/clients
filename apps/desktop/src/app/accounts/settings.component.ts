@@ -3,19 +3,20 @@ import { FormBuilder } from "@angular/forms";
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from "rxjs";
 import { concatMap, debounceTime, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 
+import { AbstractThemingService } from "@bitwarden/angular/platform/services/theming/theming.service.abstraction";
 import { ModalService } from "@bitwarden/angular/services/modal.service";
-import { AbstractThemingService } from "@bitwarden/angular/services/theming/theming.service.abstraction";
 import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
 import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { UserVerificationService as UserVerificationServiceAbstraction } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
-import { DeviceType, ThemeType, KeySuffixOptions } from "@bitwarden/common/enums";
+import { DeviceType } from "@bitwarden/common/enums";
 import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { ThemeType, KeySuffixOptions } from "@bitwarden/common/platform/enums";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { DialogService } from "@bitwarden/components";
 
@@ -116,7 +117,7 @@ export class SettingsComponent implements OnInit {
     private themingService: AbstractThemingService,
     private settingsService: SettingsService,
     private dialogService: DialogService,
-    private userVerificationService: UserVerificationServiceAbstraction
+    private userVerificationService: UserVerificationServiceAbstraction,
   ) {
     const isMac = this.platformUtilsService.getDevice() === DeviceType.MacOsDesktop;
 
@@ -204,7 +205,7 @@ export class SettingsComponent implements OnInit {
     this.currentUserEmail = await this.stateService.getEmail();
 
     this.availableVaultTimeoutActions$ = this.refreshTimeoutSettings$.pipe(
-      switchMap(() => this.vaultTimeoutSettingsService.availableVaultTimeoutActions$())
+      switchMap(() => this.vaultTimeoutSettingsService.availableVaultTimeoutActions$()),
     );
 
     // Load timeout policy
@@ -226,7 +227,7 @@ export class SettingsComponent implements OnInit {
         } else {
           this.form.controls.vaultTimeoutAction.enable({ emitEvent: false });
         }
-      })
+      }),
     );
 
     // Load initial values
@@ -236,7 +237,7 @@ export class SettingsComponent implements OnInit {
     const initialValues = {
       vaultTimeout: await this.vaultTimeoutSettingsService.getVaultTimeout(),
       vaultTimeoutAction: await firstValueFrom(
-        this.vaultTimeoutSettingsService.vaultTimeoutAction$()
+        this.vaultTimeoutSettingsService.vaultTimeoutAction$(),
       ),
       pin: this.userHasPinSet,
       biometric: await this.vaultTimeoutSettingsService.isBiometricLockSet(),
@@ -282,7 +283,7 @@ export class SettingsComponent implements OnInit {
     this.refreshTimeoutSettings$
       .pipe(
         switchMap(() => this.vaultTimeoutSettingsService.vaultTimeoutAction$()),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((action) => {
         this.form.controls.vaultTimeoutAction.setValue(action, { emitEvent: false });
@@ -295,7 +296,7 @@ export class SettingsComponent implements OnInit {
         concatMap(async (value) => {
           await this.saveVaultTimeout(value);
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -304,7 +305,7 @@ export class SettingsComponent implements OnInit {
         concatMap(async (action) => {
           await this.saveVaultTimeoutAction(action);
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -314,7 +315,7 @@ export class SettingsComponent implements OnInit {
           await this.updatePin(value);
           this.refreshTimeoutSettings$.next();
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -324,7 +325,7 @@ export class SettingsComponent implements OnInit {
           await this.updateBiometric(enabled);
           this.refreshTimeoutSettings$.next();
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -362,7 +363,7 @@ export class SettingsComponent implements OnInit {
       this.platformUtilsService.showToast(
         "error",
         null,
-        this.i18nService.t("vaultTimeoutTooLarge")
+        this.i18nService.t("vaultTimeoutTooLarge"),
       );
       return;
     }
@@ -371,7 +372,7 @@ export class SettingsComponent implements OnInit {
 
     await this.vaultTimeoutSettingsService.setVaultTimeoutOptions(
       newValue,
-      this.form.value.vaultTimeoutAction
+      this.form.value.vaultTimeoutAction,
     );
   }
 
@@ -395,14 +396,14 @@ export class SettingsComponent implements OnInit {
       this.platformUtilsService.showToast(
         "error",
         null,
-        this.i18nService.t("vaultTimeoutTooLarge")
+        this.i18nService.t("vaultTimeoutTooLarge"),
       );
       return;
     }
 
     await this.vaultTimeoutSettingsService.setVaultTimeoutOptions(
       this.form.value.vaultTimeout,
-      newValue
+      newValue,
     );
   }
 
@@ -572,7 +573,7 @@ export class SettingsComponent implements OnInit {
   async saveOpenAtLogin() {
     this.stateService.setOpenAtLogin(this.form.value.openAtLogin);
     this.messagingService.send(
-      this.form.value.openAtLogin ? "addOpenAtLogin" : "removeOpenAtLogin"
+      this.form.value.openAtLogin ? "addOpenAtLogin" : "removeOpenAtLogin",
     );
   }
 
@@ -616,7 +617,7 @@ export class SettingsComponent implements OnInit {
     this.messagingService.send(
       this.form.value.enableBrowserIntegration
         ? "enableBrowserIntegration"
-        : "disableBrowserIntegration"
+        : "disableBrowserIntegration",
     );
 
     if (!this.form.value.enableBrowserIntegration) {
@@ -627,7 +628,7 @@ export class SettingsComponent implements OnInit {
 
   async saveDdgBrowserIntegration() {
     await this.stateService.setEnableDuckDuckGoBrowserIntegration(
-      this.form.value.enableDuckDuckGoBrowserIntegration
+      this.form.value.enableDuckDuckGoBrowserIntegration,
     );
 
     if (!this.form.value.enableBrowserIntegration) {
@@ -637,13 +638,13 @@ export class SettingsComponent implements OnInit {
     this.messagingService.send(
       this.form.value.enableDuckDuckGoBrowserIntegration
         ? "enableDuckDuckGoBrowserIntegration"
-        : "disableDuckDuckGoBrowserIntegration"
+        : "disableDuckDuckGoBrowserIntegration",
     );
   }
 
   async saveBrowserIntegrationFingerprint() {
     await this.stateService.setEnableBrowserIntegrationFingerprint(
-      this.form.value.enableBrowserIntegrationFingerprint
+      this.form.value.enableBrowserIntegrationFingerprint,
     );
   }
 

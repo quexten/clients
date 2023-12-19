@@ -1,4 +1,4 @@
-import { FileUploadType } from "../../../enums";
+import { FileUploadType } from "../../enums";
 import { EncArrayBuffer } from "../../models/domain/enc-array-buffer";
 import { EncString } from "../../models/domain/enc-string";
 
@@ -7,7 +7,7 @@ export abstract class FileUploadService {
     uploadData: { url: string; fileUploadType: FileUploadType },
     fileName: EncString,
     encryptedFileData: EncArrayBuffer,
-    fileUploadMethods: FileUploadApiMethods
+    fileUploadMethods: FileUploadApiMethods,
   ) => Promise<void>;
 }
 

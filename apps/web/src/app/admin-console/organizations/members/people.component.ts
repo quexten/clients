@@ -37,7 +37,9 @@ import {
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
 import { ProductType } from "@bitwarden/common/enums";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
+import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -123,7 +125,8 @@ export class PeopleComponent
     dialogService: DialogService,
     private router: Router,
     private groupService: GroupService,
-    private collectionService: CollectionService
+    private collectionService: CollectionService,
+    private configService: ConfigServiceAbstraction,
   ) {
     super(
       apiService,
@@ -137,30 +140,30 @@ export class PeopleComponent
       searchPipe,
       userNamePipe,
       stateService,
-      dialogService
+      dialogService,
     );
   }
 
   async ngOnInit() {
     const organization$ = this.route.params.pipe(
       map((params) => this.organizationService.get(params.organizationId)),
-      shareReplay({ refCount: true, bufferSize: 1 })
+      shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
     this.canUseSecretsManager$ = organization$.pipe(
-      map((org) => org.useSecretsManager && flagEnabled("secretsManager"))
+      map((org) => org.useSecretsManager && flagEnabled("secretsManager")),
     );
 
     const policies$ = organization$.pipe(
       switchMap((organization) => {
         if (organization.isProviderUser) {
           return from(this.policyApiService.getPolicies(organization.id)).pipe(
-            map((response) => this.policyService.mapPoliciesFromToken(response))
+            map((response) => this.policyService.mapPoliciesFromToken(response)),
           );
         }
 
         return this.policyService.policies$;
-      })
+      }),
     );
 
     combineLatest([this.route.queryParams, policies$, organization$])
@@ -178,7 +181,7 @@ export class PeopleComponent
             const request = new OrganizationKeysRequest(orgKeys[0], orgKeys[1].encryptedString);
             const response = await this.organizationApiService.updateKeys(
               this.organization.id,
-              request
+              request,
             );
             if (response != null) {
               this.organization.hasPublicAndPrivateKeys =
@@ -204,7 +207,7 @@ export class PeopleComponent
             }
           }
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
   }
@@ -241,8 +244,17 @@ export class PeopleComponent
       collectionsPromise,
     ]);
 
+    const flexibleCollectionsEnabled = await this.configService.getFeatureFlag(
+      FeatureFlag.FlexibleCollections,
+      false,
+    );
+
     return usersResponse.data?.map<OrganizationUserView>((r) => {
       const userView = OrganizationUserView.fromResponse(r);
+
+      if (flexibleCollectionsEnabled) {
+        userView.accessAll = false;
+      }
 
       userView.groupNames = userView.groups
         .map((g) => groupNamesMap.get(g))
@@ -270,7 +282,7 @@ export class PeopleComponent
     const response = await this.apiService.getCollections(this.organization.id);
 
     const collections = response.data.map(
-      (r) => new Collection(new CollectionData(r as CollectionDetailsResponse))
+      (r) => new Collection(new CollectionData(r as CollectionDetailsResponse)),
     );
     const decryptedCollections = await this.collectionService.decryptMany(collections);
 
@@ -303,7 +315,7 @@ export class PeopleComponent
     await this.organizationUserService.postOrganizationUserConfirm(
       this.organization.id,
       user.id,
-      request
+      request,
     );
   }
 
@@ -378,7 +390,7 @@ export class PeopleComponent
   private getDialogContent(): string {
     return this.i18nService.t(
       this.getProductKey(this.organization.planProductType),
-      this.organization.seats
+      this.organization.seats,
     );
   }
 
@@ -399,7 +411,7 @@ export class PeopleComponent
       case ProductType.Free:
         await this.router.navigate(
           ["/organizations", this.organization.id, "billing", "subscription"],
-          { queryParams: { upgrade: true } }
+          { queryParams: { upgrade: true } },
         );
         break;
       case ProductType.TeamsStarter:
@@ -427,6 +439,15 @@ export class PeopleComponent
   }
 
   async edit(user: OrganizationUserView, initialTab: MemberDialogTab = MemberDialogTab.Role) {
+    if (!user && this.organization.hasReseller && this.organization.seats === this.confirmedCount) {
+      this.platformUtilsService.showToast(
+        "error",
+        this.i18nService.t("seatLimitReached"),
+        this.i18nService.t("contactYourProvider"),
+      );
+      return;
+    }
+
     // Invite User: Add Flow
     // Click on user email: Edit Flow
 
@@ -450,6 +471,7 @@ export class PeopleComponent
         allOrganizationUserEmails: this.allUsers?.map((user) => user.email) ?? [],
         usesKeyConnector: user?.usesKeyConnector,
         initialTab: initialTab,
+        numConfirmedMembers: this.confirmedCount,
       },
     });
 
@@ -477,7 +499,7 @@ export class PeopleComponent
       (comp) => {
         comp.organizationId = this.organization.id;
         comp.users = this.getCheckedUsers();
-      }
+      },
     );
 
     await modal.onClosedPromise();
@@ -519,7 +541,7 @@ export class PeopleComponent
       this.platformUtilsService.showToast(
         "error",
         this.i18nService.t("errorOccurred"),
-        this.i18nService.t("noSelectedUsersApplicable")
+        this.i18nService.t("noSelectedUsersApplicable"),
       );
       return;
     }
@@ -527,13 +549,13 @@ export class PeopleComponent
     try {
       const response = this.organizationUserService.postManyOrganizationUserReinvite(
         this.organization.id,
-        filteredUsers.map((user) => user.id)
+        filteredUsers.map((user) => user.id),
       );
       this.showBulkStatus(
         users,
         filteredUsers,
         response,
-        this.i18nService.t("bulkReinviteMessage")
+        this.i18nService.t("bulkReinviteMessage"),
       );
     } catch (e) {
       this.validationService.showError(e);
@@ -552,7 +574,7 @@ export class PeopleComponent
       (comp) => {
         comp.organizationId = this.organization.id;
         comp.users = this.getCheckedUsers();
-      }
+      },
     );
 
     await modal.onClosedPromise();
@@ -565,7 +587,7 @@ export class PeopleComponent
       this.platformUtilsService.showToast(
         "error",
         this.i18nService.t("errorOccurred"),
-        this.i18nService.t("noSelectedUsersApplicable")
+        this.i18nService.t("noSelectedUsersApplicable"),
       );
       return;
     }
@@ -606,7 +628,7 @@ export class PeopleComponent
           modal.close();
           this.load();
         });
-      }
+      },
     );
   }
 
@@ -658,14 +680,14 @@ export class PeopleComponent
     users: OrganizationUserView[],
     filteredUsers: OrganizationUserView[],
     request: Promise<ListResponse<OrganizationUserBulkResponse>>,
-    successfullMessage: string
+    successfullMessage: string,
   ) {
     const [modal, childComponent] = await this.modalService.openViewRef(
       BulkStatusComponent,
       this.bulkStatusModalRef,
       (comp) => {
         comp.loading = true;
-      }
+      },
     );
 
     // Workaround to handle closing the modal shortly after it has been opened

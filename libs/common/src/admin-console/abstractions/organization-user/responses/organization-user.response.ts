@@ -1,5 +1,5 @@
-import { KdfType } from "../../../../enums";
 import { BaseResponse } from "../../../../models/response/base.response";
+import { KdfType } from "../../../../platform/enums";
 import { OrganizationUserStatusType, OrganizationUserType } from "../../../enums";
 import { PermissionsApi } from "../../../models/api/permissions.api";
 import { SelectionReadOnlyResponse } from "../../../models/response/selection-read-only.response";
@@ -10,6 +10,10 @@ export class OrganizationUserResponse extends BaseResponse {
   type: OrganizationUserType;
   status: OrganizationUserStatusType;
   externalId: string;
+  /**
+   * @deprecated
+   * To be removed alongside `FeatureFlag.FlexibleCollections`.
+   **/
   accessAll: boolean;
   accessSecretsManager: boolean;
   permissions: PermissionsApi;

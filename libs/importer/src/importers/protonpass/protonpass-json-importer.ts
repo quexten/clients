@@ -1,6 +1,5 @@
-import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { FieldType, SecureNoteType, CipherType } from "@bitwarden/common/vault/enums";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.view";
 
@@ -57,7 +56,7 @@ export class ProtonPassJsonImporter extends BaseImporter implements Importer {
                 cipher,
                 extraField.fieldName,
                 extraField.type == "totp" ? extraField.data.totpUri : extraField.data.content,
-                extraField.type == "text" ? FieldType.Text : FieldType.Hidden
+                extraField.type == "text" ? FieldType.Text : FieldType.Hidden,
               );
             }
             break;

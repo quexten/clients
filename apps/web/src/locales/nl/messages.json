@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Inloggen met je hoofdwachtwoord"
   },
+  "readingPasskeyLoading": {
+    "message": "Passkey uitlezen..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Houd dit venster open en volg de aanwijzingen van je browser."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Gebruik een andere loginmethode"
+  },
   "loginWithPasskey": {
     "message": "Inloggen met passkey"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Ongeldige passkey. Probeer het opnieuw."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA voor passkeys is niet ondersteund. Werk de app bij om in te loggen."
   },
   "loginWithPasskeyInfo": {
     "message": "Gebruik een gegenereerde passkey die je automatisch inlogt zonder wachtwoord. Biometrie, zoals gezichtsherkenning of vingerafdruk, of een andere FIDO2-beveiligingsmethode controleren je identiteit."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Encryptie niet ondersteund"
   },
-  "encryptionNotEnabled": {
-    "message": "Encryption not enabled"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
     "message": "Used for encryption"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Exporteren"
   },
+  "exportFrom": {
+    "message": "Exporteren vanuit"
+  },
   "exportVault": {
     "message": "Kluis exporteren"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Lengte"
+  },
+  "passwordMinLength": {
+    "message": "Minimale wachtwoordlengte"
   },
   "uppercase": {
     "message": "Hoofdletters (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Deze Send is standaard verborgen. Je kunt de zichtbaarheid ervan in- en uitschakelen met de knop hieronder.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Bestand downloaden"
+  "downloadAttachments": {
+    "message": "Bijlagen downloaden"
   },
   "sendAccessUnavailable": {
     "message": "De Send die je probeert te benaderen is niet (langer) beschikbaar.",
@@ -4609,8 +4630,8 @@
     "message": "om het vandaag te proberen.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden-gebruiker $USER_IDENTIFIER$ heeft het volgende met je gedeeld",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden-lid $USER_IDENTIFIER$ heeft het volgende met je gedeeld",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Volgende"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO login is required"
+  },
   "selectedRegionFlag": {
     "message": "Geselecteerde regionale vlag"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Aanmaken en verwijderen van collecties tot eigenaren en managers beperken"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Eigenaren en beheerders kunnen alle collecties en items beheren"
+  },
   "collectionManagementUpdated": {
     "message": "Collectiebeheergedrag opgeslagen"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "De passkey wordt niet gekopieerd naar het gekloonde item. Wil je doorgaan met het klonen van dit item?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Gewijzigde collectiebeheerinstelling $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "See detailed instructions on our help site at",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Projecttoegang bijgewerkt"
+  },
+  "unexpectedErrorSend": {
+    "message": "Er is een onverwachte fout opgetreden tijdens het laden van deze Send. Probeer het later opnieuw."
+  },
+  "seatLimitReached": {
+    "message": "Seat limit has been reached"
+  },
+  "contactYourProvider": {
+    "message": "Contact your provider to purchase additional seats."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Seat limit has been reached. Contact your provider to purchase additional seats."
+  },
+  "collectionAccessRestricted": {
+    "message": "Collectietoegang is beperkt"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Toegang tot serviceaccount bijgewerkt"
   }
 }

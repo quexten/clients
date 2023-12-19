@@ -30,7 +30,7 @@ export class SettingsService implements SettingsServiceAbstraction {
 
           this._settings.next(data);
           this._disableFavicon.next(disableFavicon);
-        })
+        }),
       )
       .subscribe();
   }
@@ -72,6 +72,14 @@ export class SettingsService implements SettingsServiceAbstraction {
 
   getDisableFavicon(): boolean {
     return this._disableFavicon.getValue();
+  }
+
+  async setAutoFillOverlayVisibility(value: number): Promise<void> {
+    return await this.stateService.setAutoFillOverlayVisibility(value);
+  }
+
+  async getAutoFillOverlayVisibility(): Promise<number> {
+    return await this.stateService.getAutoFillOverlayVisibility();
   }
 
   async clear(userId?: string): Promise<void> {

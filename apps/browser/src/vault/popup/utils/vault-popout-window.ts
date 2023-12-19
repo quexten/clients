@@ -1,12 +1,63 @@
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
 
+import { BrowserApi } from "../../../platform/browser/browser-api";
 import BrowserPopupUtils from "../../../platform/popup/browser-popup-utils";
 
 const VaultPopoutType = {
-  vaultItemPasswordReprompt: "vault_PasswordReprompt",
+  viewVaultItem: "vault_viewVaultItem",
   addEditVaultItem: "vault_AddEditVaultItem",
   fido2Popout: "vault_Fido2Popout",
 } as const;
+
+/**
+ * Opens a popout window that facilitates viewing a vault item.
+ *
+ * @param senderTab - The tab that sent the request.
+ * @param cipherOptions - The cipher id and action to perform.
+ */
+async function openViewVaultItemPopout(
+  senderTab: chrome.tabs.Tab,
+  cipherOptions: {
+    cipherId: string;
+    action: string;
+    forceCloseExistingWindows?: boolean;
+  },
+) {
+  const { cipherId, action, forceCloseExistingWindows } = cipherOptions;
+  let promptWindowPath = "popup/index.html#/view-cipher";
+  let queryParamToken = "?";
+  const formatQueryString = (key: string, value: string) => {
+    const queryString = `${queryParamToken}${key}=${value}`;
+    queryParamToken = "&";
+    return queryString;
+  };
+
+  if (cipherId) {
+    promptWindowPath += formatQueryString("cipherId", cipherId);
+  }
+  if (senderTab.id) {
+    promptWindowPath += formatQueryString("senderTabId", String(senderTab.id));
+  }
+  if (action) {
+    promptWindowPath += formatQueryString("action", action);
+  }
+
+  await BrowserPopupUtils.openPopout(promptWindowPath, {
+    singleActionKey: `${VaultPopoutType.viewVaultItem}_${cipherId}`,
+    senderWindowId: senderTab.windowId,
+    forceCloseExistingWindows,
+  });
+}
+
+/**
+ * Closes the view vault item popout window.
+ *
+ * @param singleActionKey - The single action popout key used to identify the popout.
+ * @param delayClose - The amount of time to wait before closing the popout. Defaults to 0.
+ */
+async function closeViewVaultItemPopout(singleActionKey: string, delayClose = 0) {
+  await BrowserPopupUtils.closeSingleActionPopout(singleActionKey, delayClose);
+}
 
 /**
  * Opens a popout window that facilitates re-prompting for
@@ -20,20 +71,13 @@ async function openVaultItemPasswordRepromptPopout(
   cipherOptions: {
     cipherId: string;
     action: string;
-  }
+  },
 ) {
-  const { cipherId, action } = cipherOptions;
-  const promptWindowPath =
-    "popup/index.html#/view-cipher" +
-    `?cipherId=${cipherId}` +
-    `&senderTabId=${senderTab.id}` +
-    `&action=${action}`;
-
-  await BrowserPopupUtils.openPopout(promptWindowPath, {
-    singleActionKey: `${VaultPopoutType.vaultItemPasswordReprompt}_${cipherId}`,
-    senderWindowId: senderTab.windowId,
+  await openViewVaultItemPopout(senderTab, {
     forceCloseExistingWindows: true,
+    ...cipherOptions,
   });
+  await BrowserApi.tabSendMessageData(senderTab, "bgVaultItemRepromptPopoutOpened");
 }
 
 /**
@@ -44,23 +88,29 @@ async function openVaultItemPasswordRepromptPopout(
  */
 async function openAddEditVaultItemPopout(
   senderTab: chrome.tabs.Tab,
-  cipherOptions: { cipherId?: string; cipherType?: CipherType } = {}
+  cipherOptions: { cipherId?: string; cipherType?: CipherType } = {},
 ) {
   const { cipherId, cipherType } = cipherOptions;
   const { url, windowId } = senderTab;
-
   let singleActionKey = VaultPopoutType.addEditVaultItem;
-  let addEditCipherUrl = "popup/index.html#/edit-cipher?uilocation=popout";
+  let addEditCipherUrl = "popup/index.html#/edit-cipher";
+  let queryParamToken = "?";
+  const formatQueryString = (key: string, value: string) => {
+    const queryString = `${queryParamToken}${key}=${value}`;
+    queryParamToken = "&";
+    return queryString;
+  };
+
   if (cipherId && !cipherType) {
     singleActionKey += `_${cipherId}`;
-    addEditCipherUrl += `&cipherId=${cipherId}`;
+    addEditCipherUrl += formatQueryString("cipherId", cipherId);
   }
   if (cipherType && !cipherId) {
     singleActionKey += `_${cipherType}`;
-    addEditCipherUrl += `&type=${cipherType}`;
+    addEditCipherUrl += formatQueryString("type", String(cipherType));
   }
   if (senderTab.url) {
-    addEditCipherUrl += `&uri=${url}`;
+    addEditCipherUrl += formatQueryString("uri", url);
   }
 
   await BrowserPopupUtils.openPopout(addEditCipherUrl, {
@@ -90,7 +140,7 @@ async function openFido2Popout(
   options: {
     sessionId: string;
     fallbackSupported: boolean;
-  }
+  },
 ): Promise<chrome.windows.Window["id"]> {
   const { sessionId, fallbackSupported } = options;
   const promptWindowPath =
@@ -121,6 +171,8 @@ async function closeFido2Popout(sessionId: string): Promise<void> {
 
 export {
   VaultPopoutType,
+  openViewVaultItemPopout,
+  closeViewVaultItemPopout,
   openVaultItemPasswordRepromptPopout,
   openAddEditVaultItemPopout,
   closeAddEditVaultItemPopout,

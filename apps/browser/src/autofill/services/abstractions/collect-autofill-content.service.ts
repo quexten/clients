@@ -20,8 +20,9 @@ interface CollectAutofillContentService {
   queryAllTreeWalkerNodes(
     rootNode: Node,
     filterCallback: CallableFunction,
-    isObservingShadowRoot?: boolean
+    isObservingShadowRoot?: boolean,
   ): Node[];
+  destroy(): void;
 }
 
 export {

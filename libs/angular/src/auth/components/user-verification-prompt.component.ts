@@ -2,9 +2,9 @@ import { Directive } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
+import { Verification } from "@bitwarden/common/auth/types/verification";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { Verification } from "@bitwarden/common/types/verification";
 
 import { ModalRef } from "../../components/modal/modal.ref";
 import { ModalConfig } from "../../services/modal.service";
@@ -30,7 +30,7 @@ export class UserVerificationPromptComponent {
     protected userVerificationService: UserVerificationService,
     private formBuilder: FormBuilder,
     private platformUtilsService: PlatformUtilsService,
-    private i18nService: I18nService
+    private i18nService: I18nService,
   ) {}
 
   get secret() {

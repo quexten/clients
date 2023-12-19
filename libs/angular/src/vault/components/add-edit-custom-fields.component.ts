@@ -2,10 +2,10 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { EventType, FieldType } from "@bitwarden/common/enums";
+import { EventType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { FieldType, CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FieldView } from "@bitwarden/common/vault/models/view/field.view";
 
@@ -26,7 +26,7 @@ export class AddEditCustomFieldsComponent implements OnChanges {
 
   constructor(
     private i18nService: I18nService,
-    private eventCollectionService: EventCollectionService
+    private eventCollectionService: EventCollectionService,
   ) {
     this.addFieldTypeOptions = [
       { name: i18nService.t("cfTypeText"), value: FieldType.Text },
@@ -78,7 +78,7 @@ export class AddEditCustomFieldsComponent implements OnChanges {
     if (this.editMode && f.showValue) {
       this.eventCollectionService.collect(
         EventType.Cipher_ClientToggledHiddenFieldVisible,
-        this.cipher.id
+        this.cipher.id,
       );
     }
   }
@@ -98,7 +98,7 @@ export class AddEditCustomFieldsComponent implements OnChanges {
 
     const options: any = [];
     this.cipher.linkedFieldOptions.forEach((linkedFieldOption, id) =>
-      options.push({ name: this.i18nService.t(linkedFieldOption.i18nKey), value: id })
+      options.push({ name: this.i18nService.t(linkedFieldOption.i18nKey), value: id }),
     );
     this.linkedFieldOptions = options.sort(Utils.getSortFunction(this.i18nService, "name"));
   }

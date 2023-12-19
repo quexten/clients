@@ -1,20 +1,30 @@
+import { Location } from "@angular/common";
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
-import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { CurrentAccountService } from "./services/current-account.service";
 
 @Component({
   selector: "app-current-account",
   templateUrl: "current-account.component.html",
 })
 export class CurrentAccountComponent {
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(
+    private currentAccountService: CurrentAccountService,
+    private router: Router,
+    private location: Location,
+    private route: ActivatedRoute,
+  ) {}
 
   get currentAccount$() {
-    return this.accountService.activeAccount$;
+    return this.currentAccountService.currentAccount$;
   }
 
-  currentAccountClicked() {
-    this.router.navigate(["/account-switcher"]);
+  async currentAccountClicked() {
+    if (this.route.snapshot.data.state.includes("account-switcher")) {
+      this.location.back();
+    } else {
+      this.router.navigate(["/account-switcher"]);
+    }
   }
 }

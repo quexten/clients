@@ -11,7 +11,6 @@ import { ForceSetPasswordReason } from "../../../auth/models/domain/force-set-pa
 import { KeyConnectorUserDecryptionOption } from "../../../auth/models/domain/user-decryption-options/key-connector-user-decryption-option";
 import { TrustedDeviceUserDecryptionOption } from "../../../auth/models/domain/user-decryption-options/trusted-device-user-decryption-option";
 import { IdentityTokenResponse } from "../../../auth/models/response/identity-token.response";
-import { KdfType, UriMatchType } from "../../../enums";
 import { EventData } from "../../../models/data/event.data";
 import { GeneratorOptions } from "../../../tools/generator/generator-options";
 import {
@@ -22,11 +21,13 @@ import { UsernameGeneratorOptions } from "../../../tools/generator/username/user
 import { SendData } from "../../../tools/send/models/data/send.data";
 import { SendView } from "../../../tools/send/models/view/send.view";
 import { DeepJsonify } from "../../../types/deep-jsonify";
+import { UriMatchType } from "../../../vault/enums";
 import { CipherData } from "../../../vault/models/data/cipher.data";
 import { CollectionData } from "../../../vault/models/data/collection.data";
 import { FolderData } from "../../../vault/models/data/folder.data";
 import { CipherView } from "../../../vault/models/view/cipher.view";
 import { CollectionView } from "../../../vault/models/view/collection.view";
+import { KdfType } from "../../enums";
 import { Utils } from "../../misc/utils";
 import { ServerConfigData } from "../../models/data/server-config.data";
 
@@ -50,7 +51,7 @@ export class EncryptionPair<TEncrypted, TDecrypted> {
   static fromJSON<TEncrypted, TDecrypted>(
     obj: { encrypted?: Jsonify<TEncrypted>; decrypted?: string | Jsonify<TDecrypted> },
     decryptedFromJson?: (decObj: Jsonify<TDecrypted> | string) => TDecrypted,
-    encryptedFromJson?: (encObj: Jsonify<TEncrypted>) => TEncrypted
+    encryptedFromJson?: (encObj: Jsonify<TEncrypted>) => TEncrypted,
   ) {
     if (obj == null) {
       return null;
@@ -158,12 +159,12 @@ export class AccountKeys {
       cryptoMasterKey: SymmetricCryptoKey.fromJSON(obj?.cryptoMasterKey),
       cryptoSymmetricKey: EncryptionPair.fromJSON(
         obj?.cryptoSymmetricKey,
-        SymmetricCryptoKey.fromJSON
+        SymmetricCryptoKey.fromJSON,
       ),
       organizationKeys: AccountKeys.initRecordEncryptionPairsFromJSON(obj?.organizationKeys),
       providerKeys: AccountKeys.initRecordEncryptionPairsFromJSON(obj?.providerKeys),
       privateKey: EncryptionPair.fromJSON<string, Uint8Array>(obj?.privateKey, (decObj: string) =>
-        Utils.fromByteStringToArray(decObj)
+        Utils.fromByteStringToArray(decObj),
       ),
       publicKey: Utils.fromByteStringToArray(obj?.publicKey),
     });
@@ -265,7 +266,7 @@ export class AccountSettings {
       environmentUrls: EnvironmentUrls.fromJSON(obj?.environmentUrls),
       pinProtected: EncryptionPair.fromJSON<string, EncString>(
         obj?.pinProtected,
-        EncString.fromJSON
+        EncString.fromJSON,
       ),
       serverConfig: ServerConfigData.fromJSON(obj?.serverConfig),
     });
@@ -329,13 +330,13 @@ export class AccountDecryptionOptions {
         accountDecryptionOptions.trustedDeviceOption = new TrustedDeviceUserDecryptionOption(
           responseOptions.trustedDeviceOption.hasAdminApproval,
           responseOptions.trustedDeviceOption.hasLoginApprovingDevice,
-          responseOptions.trustedDeviceOption.hasManageResetPasswordPermission
+          responseOptions.trustedDeviceOption.hasManageResetPasswordPermission,
         );
       }
 
       if (responseOptions.keyConnectorOption) {
         accountDecryptionOptions.keyConnectorOption = new KeyConnectorUserDecryptionOption(
-          responseOptions.keyConnectorOption.keyConnectorUrl
+          responseOptions.keyConnectorOption.keyConnectorUrl,
         );
       }
     } else {
@@ -348,7 +349,7 @@ export class AccountDecryptionOptions {
       accountDecryptionOptions.hasMasterPassword = !usingKeyConnector;
       if (usingKeyConnector) {
         accountDecryptionOptions.keyConnectorOption = new KeyConnectorUserDecryptionOption(
-          response.keyConnectorUrl
+          response.keyConnectorUrl,
         );
       }
     }
@@ -366,13 +367,13 @@ export class AccountDecryptionOptions {
       accountDecryptionOptions.trustedDeviceOption = new TrustedDeviceUserDecryptionOption(
         obj.trustedDeviceOption.hasAdminApproval,
         obj.trustedDeviceOption.hasLoginApprovingDevice,
-        obj.trustedDeviceOption.hasManageResetPasswordPermission
+        obj.trustedDeviceOption.hasManageResetPasswordPermission,
       );
     }
 
     if (obj.keyConnectorOption) {
       accountDecryptionOptions.keyConnectorOption = new KeyConnectorUserDecryptionOption(
-        obj.keyConnectorOption.keyConnectorUrl
+        obj.keyConnectorOption.keyConnectorUrl,
       );
     }
 

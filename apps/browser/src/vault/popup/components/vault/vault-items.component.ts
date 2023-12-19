@@ -7,13 +7,13 @@ import { VaultItemsComponent as BaseVaultItemsComponent } from "@bitwarden/angul
 import { VaultFilter } from "@bitwarden/angular/vault/vault-filter/models/vault-filter.model";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { TreeNode } from "@bitwarden/common/models/domain/tree-node";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
+import { TreeNode } from "@bitwarden/common/vault/models/domain/tree-node";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
@@ -64,7 +64,7 @@ export class VaultItemsComponent extends BaseVaultItemsComponent implements OnIn
     private collectionService: CollectionService,
     private platformUtilsService: PlatformUtilsService,
     cipherService: CipherService,
-    private vaultFilterService: VaultFilterService
+    private vaultFilterService: VaultFilterService,
   ) {
     super(searchService, cipherService);
     this.applySavedState =
@@ -143,7 +143,7 @@ export class VaultItemsComponent extends BaseVaultItemsComponent implements OnIn
               : null;
         }
         await this.load(
-          (c) => c.collectionIds != null && c.collectionIds.indexOf(this.collectionId) > -1
+          (c) => c.collectionIds != null && c.collectionIds.indexOf(this.collectionId) > -1,
         );
       } else {
         this.showVaultFilter = true;

@@ -1,8 +1,8 @@
 import { Jsonify } from "type-fest";
 
-import { LoginLinkedId as LinkedId, UriMatchType } from "../../../enums";
-import { linkedFieldOption } from "../../../misc/linkedFieldOption.decorator";
 import { Utils } from "../../../platform/misc/utils";
+import { LoginLinkedId as LinkedId, UriMatchType } from "../../enums";
+import { linkedFieldOption } from "../../linked-field-option.decorator";
 import { Login } from "../domain/login";
 
 import { Fido2CredentialView } from "./fido2-credential.view";
@@ -17,7 +17,7 @@ export class LoginView extends ItemView {
 
   passwordRevisionDate?: Date = null;
   totp: string = null;
-  uris: LoginUriView[] = null;
+  uris: LoginUriView[] = [];
   autofillOnPageLoad: boolean = null;
   fido2Credentials: Fido2CredentialView[] = null;
 
@@ -62,7 +62,7 @@ export class LoginView extends ItemView {
   }
 
   get hasUris(): boolean {
-    return this.uris != null && this.uris.length > 0;
+    return this.uris.length > 0;
   }
 
   get hasFido2Credentials(): boolean {
@@ -72,7 +72,7 @@ export class LoginView extends ItemView {
   matchesUri(
     targetUri: string,
     equivalentDomains: Set<string>,
-    defaultUriMatch: UriMatchType = null
+    defaultUriMatch: UriMatchType = null,
   ): boolean {
     if (this.uris == null) {
       return false;
@@ -84,7 +84,7 @@ export class LoginView extends ItemView {
   static fromJSON(obj: Partial<Jsonify<LoginView>>): LoginView {
     const passwordRevisionDate =
       obj.passwordRevisionDate == null ? null : new Date(obj.passwordRevisionDate);
-    const uris = obj.uris?.map((uri: any) => LoginUriView.fromJSON(uri));
+    const uris = obj.uris.map((uri: any) => LoginUriView.fromJSON(uri));
     const fido2Credentials = obj.fido2Credentials?.map((key) => Fido2CredentialView.fromJSON(key));
 
     return Object.assign(new LoginView(), obj, {

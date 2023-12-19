@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Пријавите се са главном лозинком"
   },
+  "readingPasskeyLoading": {
+    "message": "Читање притупачног кључа..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Држите овај прозор отворен и пратите упутства из прегледача."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Користи други начин пријављивања"
+  },
   "loginWithPasskey": {
     "message": "Пријавите се са приступачним кључем"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Неважећи приступни кључ. Молим вас, покушајте поново."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA за приступни кључ није подржано. Надоградити апликацјиу за пријаву."
   },
   "loginWithPasskeyInfo": {
     "message": "Користите генерисан passkey који ће вас аутоматски пријавити без лозинке. Биометрија, као што је препознавање лица или отисак прста, или неки други FIDO2 метод за проверу идентитета."
@@ -648,22 +663,22 @@
     "message": "Именујте Ваш приступачни кључ за лакшу идентификацију."
   },
   "useForVaultEncryption": {
-    "message": "Use for vault encryption"
+    "message": "Користи се за шифровање сефа"
   },
   "useForVaultEncryptionInfo": {
-    "message": "Log in and unlock on supported devices without your master password. Follow the prompts from your browser to finalize setup."
+    "message": "Пријавите се и откључајте на подржаним уређајима без ваше главне лозинке. Пратите упутства из прегледача да бисте завршили подешавање."
   },
   "useForVaultEncryptionErrorReadingPasskey": {
-    "message": "Error reading passkey. Try again or uncheck this option."
+    "message": "Грешка при читању кључа. Покушајте поново или опозовите избор ове опције."
   },
   "encryptionNotSupported": {
     "message": "Шифровање није подржано"
   },
-  "encryptionNotEnabled": {
-    "message": "Encryption not enabled"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
-    "message": "Used for encryption"
+    "message": "Употребљено за шифровање"
   },
   "loginWithPasskeyEnabled": {
     "message": "Пријављивање са упаљеним приступчним кључем"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Извези"
   },
+  "exportFrom": {
+    "message": "Export from"
+  },
   "exportVault": {
     "message": "Извоз сефа"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Дужина"
+  },
+  "passwordMinLength": {
+    "message": "Минимална дужина лозинке"
   },
   "uppercase": {
     "message": "Велика слова (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Ово Слање је подразумевано скривено. Можете да пребацујете његову видљивост помоћу дугмета испод.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Преузми датотеку"
+  "downloadAttachments": {
+    "message": "Преузмите прилоге"
   },
   "sendAccessUnavailable": {
     "message": "„Send“ које покушавате да приступите не постоји или више није доступан.",
@@ -4609,8 +4630,8 @@
     "message": "да пробаш одмах.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden корисник $USER_IDENTIFIER$ је поделио следеће са тобом",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden члан $USER_IDENTIFIER$ је поделио следеће са тобом",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Следеће"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO пријава је потребна"
+  },
   "selectedRegionFlag": {
     "message": "Одабрана застава"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Ограничите креирање и брисање збирке на власнике и администраторе"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Власници и администратори могу да управљају свим колекцијама и ставкама"
+  },
   "collectionManagementUpdated": {
     "message": "Понашање управљања збирке је сачувано"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Приступачни кључ неће бити копиран на клонирану ставку. Да ли желите да наставите са клонирањем ставке?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Измењено подешавање управљања колекцијом $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Погледајте детаљна упутства на нашој веб локацији за помоћ на",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
-    "message": "Project access updated"
+    "message": "Приступ пројекту је ажуриран"
+  },
+  "unexpectedErrorSend": {
+    "message": "Дошло је до неочекиване грешке при учитавању овога Send. Покушати поново касније."
+  },
+  "seatLimitReached": {
+    "message": "Достигнуто је ограничење броја места"
+  },
+  "contactYourProvider": {
+    "message": "Обратите се свом провајдеру да бисте купили додатна места."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Достигнуто је ограничење броја места. Обратите се свом провајдеру да бисте купили додатна места."
+  },
+  "collectionAccessRestricted": {
+    "message": "Приступ колекцији је ограничен"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Приступ услужног налога ажуриран"
   }
 }

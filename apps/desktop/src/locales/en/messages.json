@@ -403,6 +403,9 @@
   "length": {
     "message": "Length"
   },
+  "passwordMinLength": {
+    "message": "Minimum password length"
+  },
   "uppercase": {
     "message": "Uppercase (A-Z)"
   },
@@ -2423,6 +2426,9 @@
   },
   "submenu": {
     "message": "Submenu"
+  },
+  "skipToContent": {
+    "message": "Skip to content"
   },
   "typePasskey": {
     "message": "Passkey"

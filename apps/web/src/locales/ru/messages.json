@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Войти с мастер-паролем"
   },
+  "readingPasskeyLoading": {
+    "message": "Чтение ключа доступа..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Не закрывайте это окно и следуйте запросам браузера."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Использовать другой способ авторизации"
+  },
   "loginWithPasskey": {
     "message": "Войти с ключом доступа"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Неверный ключ доступа. Попробуйте снова."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA для ключей доступа не поддерживается. Для авторизации обновите приложение."
   },
   "loginWithPasskeyInfo": {
     "message": "Используйте сгенерированный ключ доступа для автоматической авторизации без пароля. Ваша личность будет подтверждена биометрическими данными (распознаванием лица, отпечатком пальца или другим методом безопасности FIDO2)."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Шифрование не поддерживается"
   },
-  "encryptionNotEnabled": {
-    "message": "Шифрование не включено"
+  "enablePasskeyEncryption": {
+    "message": "Настройка шифрования"
   },
   "usedForEncryption": {
     "message": "Используется для шифрования"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Экспорт"
   },
+  "exportFrom": {
+    "message": "Экспорт из"
+  },
   "exportVault": {
     "message": "Экспорт хранилища"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Длина"
+  },
+  "passwordMinLength": {
+    "message": "Минимальная длина пароля"
   },
   "uppercase": {
     "message": "Прописные буквы (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Эта Send по умолчанию скрыта. Вы можете переключить ее видимость с помощью кнопки ниже.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Скачать файл"
+  "downloadAttachments": {
+    "message": "Скачать вложения"
   },
   "sendAccessUnavailable": {
     "message": "Send, к которой вы пытаетесь получить доступ, больше не существует или недоступна.",
@@ -4609,7 +4630,7 @@
     "message": "чтобы попробовать уже сегодня.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
+  "sendAccessCreatorIdentifier": {
     "message": "Пользователь Bitwarden $USER_IDENTIFIER$ поделился с вами следующим",
     "placeholders": {
       "user_identifier": {
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Далее"
   },
+  "ssoLoginIsRequired": {
+    "message": "Требуется логин SSO"
+  },
   "selectedRegionFlag": {
     "message": "Флаг выбранного региона"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Ограничить создание и удаление коллекций владельцам и администраторам"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Владельцы и администраторы могут управлять всеми коллекциями и элементами"
+  },
   "collectionManagementUpdated": {
     "message": "Настройки управления коллекциями сохранены"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Ключ доступа не будет скопирован в клонированный элемент. Продолжить клонирование этого элемента?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Изменена настройка управления коллекцией $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Подробные инструкции см. на нашем справочном сайте по адресу",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Доступ к проекту обновлен"
+  },
+  "unexpectedErrorSend": {
+    "message": "При загрузке этой Send произошла непредвиденная ошибка. Повторите попытку позже."
+  },
+  "seatLimitReached": {
+    "message": "Лимит мест исчерпан"
+  },
+  "contactYourProvider": {
+    "message": "Свяжитесь с вашим провайдером для покупки дополнительных мест."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Лимит мест исчерпан. Свяжитесь с вашим провайдером для покупки дополнительных мест."
+  },
+  "collectionAccessRestricted": {
+    "message": "Доступ к коллекции ограничен"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Доступ сервисного аккаунта изменен"
   }
 }

@@ -16,7 +16,7 @@ export abstract class Fido2AuthenticatorService {
   makeCredential: (
     params: Fido2AuthenticatorMakeCredentialsParams,
     tab: chrome.tabs.Tab,
-    abortController?: AbortController
+    abortController?: AbortController,
   ) => Promise<Fido2AuthenticatorMakeCredentialResult>;
 
   /**
@@ -30,7 +30,7 @@ export abstract class Fido2AuthenticatorService {
   getAssertion: (
     params: Fido2AuthenticatorGetAssertionParams,
     tab: chrome.tabs.Tab,
-    abortController?: AbortController
+    abortController?: AbortController,
   ) => Promise<Fido2AuthenticatorGetAssertionResult>;
 }
 
@@ -109,6 +109,7 @@ export interface Fido2AuthenticatorMakeCredentialResult {
   credentialId: BufferSource;
   attestationObject: BufferSource;
   authData: BufferSource;
+  publicKey: BufferSource;
   publicKeyAlgorithm: number;
 }
 

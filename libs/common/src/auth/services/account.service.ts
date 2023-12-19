@@ -1,50 +1,81 @@
-import {
-  BehaviorSubject,
-  Subject,
-  combineLatestWith,
-  map,
-  distinctUntilChanged,
-  shareReplay,
-} from "rxjs";
+import { Subject, combineLatestWith, map, distinctUntilChanged, shareReplay } from "rxjs";
 
-import { AccountInfo, InternalAccountService } from "../../auth/abstractions/account.service";
+import {
+  AccountInfo,
+  InternalAccountService,
+  accountInfoEqual,
+} from "../../auth/abstractions/account.service";
 import { LogService } from "../../platform/abstractions/log.service";
 import { MessagingService } from "../../platform/abstractions/messaging.service";
+import {
+  ACCOUNT_MEMORY,
+  GlobalState,
+  GlobalStateProvider,
+  KeyDefinition,
+} from "../../platform/state";
 import { UserId } from "../../types/guid";
 import { AuthenticationStatus } from "../enums/authentication-status";
 
+export const ACCOUNT_ACCOUNTS = KeyDefinition.record<AccountInfo, UserId>(
+  ACCOUNT_MEMORY,
+  "accounts",
+  {
+    deserializer: (accountInfo) => accountInfo,
+  },
+);
+
+export const ACCOUNT_ACTIVE_ACCOUNT_ID = new KeyDefinition(ACCOUNT_MEMORY, "activeAccountId", {
+  deserializer: (id: UserId) => id,
+});
+
 export class AccountServiceImplementation implements InternalAccountService {
-  private accounts = new BehaviorSubject<Record<UserId, AccountInfo>>({});
-  private activeAccountId = new BehaviorSubject<UserId | undefined>(undefined);
   private lock = new Subject<UserId>();
   private logout = new Subject<UserId>();
+  private accountsState: GlobalState<Record<UserId, AccountInfo>>;
+  private activeAccountIdState: GlobalState<UserId | undefined>;
 
-  accounts$ = this.accounts.asObservable();
-  activeAccount$ = this.activeAccountId.pipe(
-    combineLatestWith(this.accounts$),
-    map(([id, accounts]) => (id ? { id, ...accounts[id] } : undefined)),
-    distinctUntilChanged(),
-    shareReplay({ bufferSize: 1, refCount: false })
-  );
+  accounts$;
+  activeAccount$;
   accountLock$ = this.lock.asObservable();
   accountLogout$ = this.logout.asObservable();
-  constructor(private messagingService: MessagingService, private logService: LogService) {}
 
-  addAccount(userId: UserId, accountData: AccountInfo): void {
-    this.accounts.value[userId] = accountData;
-    this.accounts.next(this.accounts.value);
+  constructor(
+    private messagingService: MessagingService,
+    private logService: LogService,
+    private globalStateProvider: GlobalStateProvider,
+  ) {
+    this.accountsState = this.globalStateProvider.get(ACCOUNT_ACCOUNTS);
+    this.activeAccountIdState = this.globalStateProvider.get(ACCOUNT_ACTIVE_ACCOUNT_ID);
+
+    this.accounts$ = this.accountsState.state$.pipe(
+      map((accounts) => (accounts == null ? {} : accounts)),
+    );
+    this.activeAccount$ = this.activeAccountIdState.state$.pipe(
+      combineLatestWith(this.accounts$),
+      map(([id, accounts]) => (id ? { id, ...accounts[id] } : undefined)),
+      distinctUntilChanged((a, b) => a?.id === b?.id && accountInfoEqual(a, b)),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
   }
 
-  setAccountName(userId: UserId, name: string): void {
-    this.setAccountInfo(userId, { ...this.accounts.value[userId], name });
+  async addAccount(userId: UserId, accountData: AccountInfo): Promise<void> {
+    await this.accountsState.update((accounts) => {
+      accounts ||= {};
+      accounts[userId] = accountData;
+      return accounts;
+    });
   }
 
-  setAccountEmail(userId: UserId, email: string): void {
-    this.setAccountInfo(userId, { ...this.accounts.value[userId], email });
+  async setAccountName(userId: UserId, name: string): Promise<void> {
+    await this.setAccountInfo(userId, { name });
   }
 
-  setAccountStatus(userId: UserId, status: AuthenticationStatus): void {
-    this.setAccountInfo(userId, { ...this.accounts.value[userId], status });
+  async setAccountEmail(userId: UserId, email: string): Promise<void> {
+    await this.setAccountInfo(userId, { email });
+  }
+
+  async setAccountStatus(userId: UserId, status: AuthenticationStatus): Promise<void> {
+    await this.setAccountInfo(userId, { status });
 
     if (status === AuthenticationStatus.LoggedOut) {
       this.logout.next(userId);
@@ -53,17 +84,27 @@ export class AccountServiceImplementation implements InternalAccountService {
     }
   }
 
-  switchAccount(userId: UserId) {
-    if (userId == null) {
-      // indicates no account is active
-      this.activeAccountId.next(undefined);
-      return;
-    }
+  async switchAccount(userId: UserId): Promise<void> {
+    await this.activeAccountIdState.update(
+      (_, accounts) => {
+        if (userId == null) {
+          // indicates no account is active
+          return null;
+        }
 
-    if (this.accounts.value[userId] == null) {
-      throw new Error("Account does not exist");
-    }
-    this.activeAccountId.next(userId);
+        if (accounts?.[userId] == null) {
+          throw new Error("Account does not exist");
+        }
+        return userId;
+      },
+      {
+        combineLatestWith: this.accounts$,
+        shouldUpdate: (id) => {
+          // update only if userId changes
+          return id !== userId;
+        },
+      },
+    );
   }
 
   // TODO: update to use our own account status settings. Requires inverting direction of state service accounts flow
@@ -76,18 +117,26 @@ export class AccountServiceImplementation implements InternalAccountService {
     }
   }
 
-  private setAccountInfo(userId: UserId, accountInfo: AccountInfo) {
-    if (this.accounts.value[userId] == null) {
-      throw new Error("Account does not exist");
+  private async setAccountInfo(userId: UserId, update: Partial<AccountInfo>): Promise<void> {
+    function newAccountInfo(oldAccountInfo: AccountInfo): AccountInfo {
+      return { ...oldAccountInfo, ...update };
     }
+    await this.accountsState.update(
+      (accounts) => {
+        accounts[userId] = newAccountInfo(accounts[userId]);
+        return accounts;
+      },
+      {
+        // Avoid unnecessary updates
+        // TODO: Faster comparison, maybe include a hash on the objects?
+        shouldUpdate: (accounts) => {
+          if (accounts?.[userId] == null) {
+            throw new Error("Account does not exist");
+          }
 
-    // Avoid unnecessary updates
-    // TODO: Faster comparison, maybe include a hash on the objects?
-    if (JSON.stringify(this.accounts.value[userId]) === JSON.stringify(accountInfo)) {
-      return;
-    }
-
-    this.accounts.value[userId] = accountInfo;
-    this.accounts.next(this.accounts.value);
+          return !accountInfoEqual(accounts[userId], newAccountInfo(accounts[userId]));
+        },
+      },
+    );
   }
 }

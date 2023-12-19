@@ -206,7 +206,7 @@
     "description": "URI match detection for auto-fill."
   },
   "defaultMatchDetection": {
-    "message": "Tunnistuksen oletustapa",
+    "message": "Oletusarvoinen tunnistustapa",
     "description": "Default URI match detection for auto-fill."
   },
   "never": {
@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Kirjaudu pääsalasanalla"
   },
+  "readingPasskeyLoading": {
+    "message": "Luetaan suojausavainta..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Pidä tämä ikkuna avoinna ja seuraa selaimesi opasteita."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Käytä eri kirjautumistapaa"
+  },
   "loginWithPasskey": {
     "message": "Kirjaudu suojausavaimella"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Suojausavain ei kelpaa. Yritä uudelleen."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "Kaksivaiheista salausavainkirjautumista ei tueta. Päivitä sovellus kirjautuaksesi sisään."
   },
   "loginWithPasskeyInfo": {
     "message": "Käytä generoitua suojausavainta, joka kirjaa sinut automaattisesti sisään ilman salasanaa. Henkilöllisyytesi vahvistetaan kasvojen tunnistuksen tai sormenjäljen kataisilla biometrisillä tiedoilla, tai jollakin muulla FIDO2-suojausratkaisulla."
@@ -659,14 +674,14 @@
   "encryptionNotSupported": {
     "message": "Salausta ei tueta"
   },
-  "encryptionNotEnabled": {
-    "message": "Salaus ei ole käytössä"
+  "enablePasskeyEncryption": {
+    "message": "Määritä salaus"
   },
   "usedForEncryption": {
     "message": "Käytetään salaukseen"
   },
   "loginWithPasskeyEnabled": {
-    "message": "Kirjautuminen suojausavaimella on käytössä"
+    "message": "Suojausavainkirjautuminen on käytössä"
   },
   "passkeySaved": {
     "message": "$NAME$ tallennettiin",
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Vie"
   },
+  "exportFrom": {
+    "message": "Vie lähteestä"
+  },
   "exportVault": {
     "message": "Vie holvi"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Pituus"
+  },
+  "passwordMinLength": {
+    "message": "Salasanan vähimmäispituus"
   },
   "uppercase": {
     "message": "Isot kirjaimet (A-Z)",
@@ -2763,7 +2784,7 @@
     "message": "Verkkoholvi"
   },
   "cli": {
-    "message": "komentoliittymä"
+    "message": "komentorivi"
   },
   "bitWebVault": {
     "message": "Bitwarden Verkkoholvi"
@@ -2937,7 +2958,7 @@
     }
   },
   "autofilledItemId": {
-    "message": "Kohde $ID$ täytetty automaattisesti.",
+    "message": " Automaattitäytettiin $ID$.",
     "placeholders": {
       "id": {
         "content": "$1",
@@ -3582,7 +3603,7 @@
     "message": "Päivitä salausavain"
   },
   "updateEncryptionSchemeDesc": {
-    "message": "Olemme muuttaneet salausmallia tarjotaksemme paremman tietoturvan. Päivitä salausavaimesi syöttämällä alle pääsalasanasi."
+    "message": "Olemme muuttaneet salausmallia tietoturvan tehostamiseksi. Päivitä salausavaimesi syöttämällä pääsalasanasi alle."
   },
   "updateEncryptionKeyWarning": {
     "message": "Salausavaimesi päivityksen jälkeen, sinun tulee kirjautua ulos ja sitten takaisin sisään kaikissa Bitwarden-sovelluksissa, jotka ovat käytössäsi (esim. mobiilisovellus ja selainlaajennukset). Uudelleenkirjautumisen (joka lataa uuden salausavaimen) suorittamatta jättäminen saattaa johtaa tietojen vaurioitumiseen. Yritämme kirjata sinut ulos autmaattisesti, mutta tämä voi tapahtua vasta jonkin ajan kuluttua."
@@ -4218,8 +4239,8 @@
     "message": "Send on oletusarvoisesti piilotettu. Voit vaihtaa sen näkyvyyttä alla olevalla painikkeella.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Lataa tiedosto"
+  "downloadAttachments": {
+    "message": "Lataa liitteet"
   },
   "sendAccessUnavailable": {
     "message": "Sendiä, jota yrität avata, ei ole olemassa tai se ei ole enää käytettävissä.",
@@ -4609,8 +4630,8 @@
     "message": "kokeillaksesi sitä tänään.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden-käyttäjä $USER_IDENTIFIER$ jakoi kanssasi seuraavat",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden-jäsen $USER_IDENTIFIER$ jakoi sinulle seuraavat",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -5072,16 +5093,16 @@
     "message": "Yksi tai useampi organisaatiokäytäntö estää yksityisen holvisi viennin."
   },
   "activateAutofill": {
-    "message": "Aktivoi automaattinen täyttö"
+    "message": "Aktivoi automaattitäyttö"
   },
   "activateAutofillPolicyDesc": {
-    "message": "Aktivoi selainlaajennuksen \"Automaattinen täyttö sivun avautuessa\" -asetus kaikille nykyisille ja uusille jäsenille."
+    "message": "Aktivoi selainlaajennuksen \"Automaattitäyttö sivun avautuessa\" -asetus kaikille nykyisille ja uusille jäsenille."
   },
   "experimentalFeature": {
-    "message": "Vaarantuneet tai epäluotettavat sivustot voivat väärinkäyttää sivun avautuessa suoritettavaa automaattista täyttöä."
+    "message": "Vaarantuneet tai epäluotettavat sivustot voivat väärinkäyttää sivun avautuessa suoritettavaa automaattitäyttöä."
   },
   "learnMoreAboutAutofill": {
-    "message": "Lue lisää automaattisesta täytöstä"
+    "message": "Lue lisää automaattitäytöstä"
   },
   "selectType": {
     "message": "Valitse kertakirjautumisen tyyppi"
@@ -5735,7 +5756,7 @@
     "message": "Luo sähköpostialias ulkoisella ohjauspalvelulla."
   },
   "hostname": {
-    "message": "Osoite",
+    "message": "Isäntä",
     "description": "Part of a URL."
   },
   "apiAccessToken": {
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Seuraava"
   },
+  "ssoLoginIsRequired": {
+    "message": "Kertakirjautuminen vaaditaan"
+  },
   "selectedRegionFlag": {
     "message": "Valitun alueen lippu"
   },
@@ -7299,13 +7323,16 @@
     "message": "Kokoelmien hallinta"
   },
   "collectionManagementDesc": {
-    "message": "Hallinnoi organisaation kokoelmien käyttäytymistä."
+    "message": "Hallitse organisaation kokoelmien toimintaa."
   },
   "limitCollectionCreationDeletionDesc": {
     "message": "Rajoita kokoelmien luonti ja poisto omistajille ja ylläpitäjille."
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Omistajat ja ylläpitäjät voivat hallita kaikkia kokoelmia ja kohteita."
+  },
   "collectionManagementUpdated": {
-    "message": "Kokoelmien hallintakäyttäytyminen tallennettiin"
+    "message": "Kokoelmien hallinnan määritykset tallennettiin"
   },
   "passwordManagerPlanPrice": {
     "message": "Salasanahallinnan tilauksen hinta"
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Suojausavain ei kopioidu kloonattuun kohteeseen. Haluatko jatkaa kloonausta?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Muokkasi kokoelman hallinta-asetusta $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Katso tarkemmat ohjeet tukisivustoltamme osoitteesta",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
-    "message": "Project access updated"
+    "message": "Projektin käyttöoikeudet on muutettu"
+  },
+  "unexpectedErrorSend": {
+    "message": "Odottamaton virhe ladattaessa Sendiä. Yritä myöhemmin uudelleen."
+  },
+  "seatLimitReached": {
+    "message": "Käyttäjäpaikkojen enimmäismäärä on saavutettu"
+  },
+  "contactYourProvider": {
+    "message": "Ole lisäpaikkojen hankinnasta yhteydessä palveluntarjoajaasi."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Käyttäjäpaikkojen enimmäismäärä on saavutettu. Ole lisäpaikoista yhteydessä palveluntarjoajaasi."
+  },
+  "collectionAccessRestricted": {
+    "message": "Kokoelman käyttöä on rajoitettu"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Palvelutilin oikeuksia muutettiin"
   }
 }

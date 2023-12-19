@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { EventType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { PasswordRepromptService } from "@bitwarden/vault";
 
@@ -30,7 +30,7 @@ export class ActionButtonsComponent {
     private eventCollectionService: EventCollectionService,
     private totpService: TotpService,
     private stateService: StateService,
-    private passwordRepromptService: PasswordRepromptService
+    private passwordRepromptService: PasswordRepromptService,
   ) {}
 
   async ngOnInit() {
@@ -64,7 +64,7 @@ export class ActionButtonsComponent {
     this.platformUtilsService.showToast(
       "info",
       null,
-      this.i18nService.t("valueCopied", this.i18nService.t(typeI18nKey))
+      this.i18nService.t("valueCopied", this.i18nService.t(typeI18nKey)),
     );
 
     if (typeI18nKey === "password") {

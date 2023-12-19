@@ -268,6 +268,9 @@
   "length": {
     "message": "Dĺžka"
   },
+  "passwordMinLength": {
+    "message": "Minimálna dĺžka hesla"
+  },
   "uppercase": {
     "message": "Veľké písmená (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Nastavte metódu odomknutia, aby ste zmenili akciu pri vypršaní času trezoru."
   },
+  "unlockMethodNeeded": {
+    "message": "Nastavte metódu odomknutia v Nastaveniach"
+  },
   "rateExtension": {
     "message": "Ohodnotiť rozšírenie"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Uzamknúť teraz"
+  },
+  "lockAll": {
+    "message": "Uzamknúť všetky"
   },
   "immediately": {
     "message": "Okamžite"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Opýtať sa na pridanie prihlasovacích údajov ak ich ešte nemáte v trezore."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Požiada o pridanie položky, ak sa v trezore nenachádza. Platí pre všetky prihlásené účty."
+  },
   "showCardsCurrentTab": {
     "message": "Zobraziť karty na stránke \"Aktuálna karta\""
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Požiadať o aktualizáciu prihlasovacieho hesla, ak sa zistí zmena na stránke."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Požiada o aktualizáciu hesla na prihlásenie, keď sa zistí zmena na webe. Platí pre všetky prihlásené účty."
+  },
+  "enableUsePasskeys": {
+    "message": "Požiadať o uloženie a používanie prístupových kľúčov"
+  },
+  "usePasskeysDesc": {
+    "message": "Požiadať o uloženie nových prístupových kľúčov alebo prihlásenie s prístupovými kľúčmi uloženými v trezore. Platí pre všetky prihlásené účty."
+  },
   "notificationChangeDesc": {
     "message": "Chcete aktualizovať toto heslo v Bitwarden?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Sekundárnym kliknutím získate prístup k vygenerovaniu hesiel a zodpovedajúcim prihláseniam pre webovú stránku. "
   },
+  "contextMenuItemDescAlt": {
+    "message": "Sekundárnym kliknutím získate prístup k vygenerovaniu hesiel a zodpovedajúcim prihláseniam pre webovú stránku. Platí pre všetky prihlásené účty."
+  },
   "defaultUriMatchDetection": {
     "message": "Predvolené mapovanie",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Zmeniť motív aplikácie."
+  },
+  "themeDescAlt": {
+    "message": "Zmení farebný motív aplikácie. Platí pre všetky prihlásené účty."
   },
   "dark": {
     "message": "Tmavý",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "URL prostredia boli uložené."
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Zobraziť ponuku automatického vypĺňania na poliach formulára",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Platí pre všetky prihlásené účty."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Aby sa predišlo konfliktom, vypnite vstavaného správcu hesiel."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Upraviť nastavenia prehliadača."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Vypnuté",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Keď je vybrané pole (zamerané)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Keď je vybratá ikona automatického vypĺňania",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Povoliť automatické vypĺňanie pri načítaní stránky"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Pri každom prihlásení zobrazí rozpoznateľný obrázok."
+  },
+  "faviconDescAlt": {
+    "message": "Vedľa každého účtu zobraziť rozpoznateľný obrázok. Použije sa na všetky prihlásené účty."
   },
   "enableBadgeCounter": {
     "message": "Zobraziť počítadlo na ikone"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identita"
-  },
-  "typePasskey": {
-    "message": "Prístupový kľúč"
   },
   "passwordHistory": {
     "message": "História hesla"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden nebude požadovať ukladanie prihlasovacích údajov pre tieto domény. Aby sa zmeny prejavili, musíte stránku obnoviť."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden nebude požadovať ukladanie prihlasovacích údajov pre tieto domény pre všetky prihlásené účty. Aby sa zmeny prejavili, musíte stránku obnoviť."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ nie je platná doména",
@@ -2227,7 +2282,7 @@
     "message": "Ako používať automatické vypĺňanie"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Vyberte položku z tejto stránky, alebo použite skratku: $COMMAND$",
+    "message": "Vyberte položku z ponuky, použite klávesovú skratku $COMMAND$, alebo preskúmajte ďalšie možnosti nastavenia.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Vyberte položku z tejto stránky, alebo nastavte skratku v nastaveniach."
+    "message": "Vyberte položku z ponuky alebo preskúmajte ďalšie možnosti nastavenia."
   },
   "gotIt": {
     "message": "Chápem"
@@ -2457,6 +2512,56 @@
     "message": "Vypnite výzvu na opätovné zadanie hlavného hesla na úpravu tohto poľa",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Tlačidlo ponuky automatického vypĺňania Bitwardenu",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Prepnúť ponuku automatického vypĺňania Bitwardenu",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Ponuka automatického vypĺňania Bitwardenu",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Odomknite svoj účet na zobrazenie zodpovedajúcich prihlasovacích údajov",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Odomknúť účet",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Vyplňte prihlasovacie údaje pre",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Čiastočné používateľské meno",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Žiadne položky na zobrazenie",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Nová položka",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Pridať novú položku trezoru",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "K dispozícii je ponuka automatického vyplňovania Bitwardenu. Stlačte tlačidlo so šípkou nadol a vyberte.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Zapnúť"
+  },
+  "ignore": {
+    "message": "Ignorovať"
+  },
   "importData": {
     "message": "Import údajov",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Potvrdiť heslo súboru"
+  },
+  "typePasskey": {
+    "message": "Prístupový kľúč"
   },
   "passkeyNotCopied": {
     "message": "Prístupový kód sa neskopíruje"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Vložte kľúč YubiKey priradený k vášmu účtu LastPass do USB portu počítača a potom sa dotknite jeho tlačidla."
+  },
+  "switchAccount": {
+    "message": "Prepnúť účet"
+  },
+  "switchAccounts": {
+    "message": "Prepnúť účty"
+  },
+  "switchToAccount": {
+    "message": "Prepnúť na účet"
+  },
+  "activeAccount": {
+    "message": "Aktívny účet"
+  },
+  "accountLimitReached": {
+    "message": "Dosiahnutý limit účtu. Odhláste sa z účtu, ak chcete pridať ďalší."
+  },
+  "active": {
+    "message": "aktívne"
+  },
+  "locked": {
+    "message": "zamknuté"
+  },
+  "unlocked": {
+    "message": "odomknuté"
+  },
+  "server": {
+    "message": "server"
+  },
+  "hostedAt": {
+    "message": "hotované na"
   }
 }

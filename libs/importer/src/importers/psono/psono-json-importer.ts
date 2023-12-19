@@ -1,5 +1,4 @@
-import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { FieldType, SecureNoteType, CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.view";
 
@@ -132,7 +131,7 @@ export class PsonoJsonImporter extends BaseImporter implements Importer {
       cipher,
       "website_password_auto_submit",
       entry.website_password_auto_submit?.toString(),
-      FieldType.Boolean
+      FieldType.Boolean,
     );
 
     this.processKvp(cipher, "website_password_url_filter", entry.website_password_url_filter);
@@ -261,7 +260,7 @@ export class PsonoJsonImporter extends BaseImporter implements Importer {
       cipher,
       "mail_gpg_own_key_private",
       entry.mail_gpg_own_key_private,
-      FieldType.Hidden
+      FieldType.Hidden,
     );
 
     this.importUnmappedFields(cipher, entry, this.GPG_mappedValues);
@@ -270,7 +269,7 @@ export class PsonoJsonImporter extends BaseImporter implements Importer {
   private importUnmappedFields(
     cipher: CipherView,
     entry: PsonoItemTypes,
-    mappedValues: Set<string>
+    mappedValues: Set<string>,
   ) {
     const unmappedFields = Object.keys(entry).filter((x) => !mappedValues.has(x));
     unmappedFields.forEach((key) => {

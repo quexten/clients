@@ -1,0 +1,256 @@
+---
+name: Deploy Web Vault
+run-name: Deploy Web Vault to ${{ inputs.environment }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        default: 'QA'
+        type: choice
+        options:
+          - USQA
+          - EUQA
+          - USPROD
+          - EUPROD
+      branch-or-tag:
+        description: "Branch or Tag name to deploy (examples: 'main', 'feature/sm', 'web-v2023.12.0')"
+        type: string
+        default: main
+
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment'
+        default: 'USQA'
+        type: string
+      branch-or-tag:
+        description: "Branch or Tag name to deploy (examples: 'main', 'feature/sm', 'web-v2023.12.0')"
+        type: string
+        default: main
+
+permissions:
+  deployments: write
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-20.04
+    outputs:
+      environment: ${{ steps.config.outputs.environment }}
+      environment-url: ${{ steps.config.outputs.environment-url }}
+      environment-name: ${{ steps.config.outputs.environment-name }}
+      environment-artifact: ${{ steps.config.outputs.environment-artifact }}
+      azure-login-creds: ${{ steps.config.outputs.azure-login-creds }}
+      retrieve-secrets-keyvault: ${{ steps.config.outputs.retrieve-secrets-keyvault }}
+    steps:
+      - name: Configure
+        id: config
+        run: |
+          ENV_NAME_LOWER=$(echo "${{ inputs.environment }}" | awk '{print tolower($0)}')
+          echo "configuring the Web deploy for ${{ inputs.environment }}"
+          echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          case ${{ inputs.environment }} in
+            "USQA")
+              echo "azure-login-creds=AZURE_KV_US_QA_SERVICE_PRINCIPAL" >> $GITHUB_OUTPUT
+              echo "retrieve-secrets-keyvault=bw-webvault-rlktusqa-kv" >> $GITHUB_OUTPUT
+              echo "environment-artifact=web-*-cloud-QA.zip" >> $GITHUB_OUTPUT
+              echo "environment-name=Web Vault - US QA Cloud" >> $GITHUB_OUTPUT
+              echo "environment-url=http://vault.$ENV_NAME_LOWER.bitwarden.pw" >> $GITHUB_OUTPUT
+              ;;
+            "EUQA")
+              echo "azure-login-creds=AZURE_KV_EU_QA_SERVICE_PRINCIPAL" >> $GITHUB_OUTPUT
+              echo "retrieve-secrets-keyvault=webvaulteu-westeurope-qa" >> $GITHUB_OUTPUT
+              echo "environment-artifact=web-*-cloud-euqa.zip" >> $GITHUB_OUTPUT
+              echo "environment-name=Web Vault - EU QA Cloud" >> $GITHUB_OUTPUT
+              echo "environment-url=http://vault.$ENV_NAME_LOWER.bitwarden.pw" >> $GITHUB_OUTPUT
+              ;;
+            "USPROD")
+              echo "azure-login-creds=AZURE_KV_US_PROD_SERVICE_PRINCIPAL" >> $GITHUB_OUTPUT
+              echo "retrieve-secrets-keyvault=bw-webvault-klrt-kv" >> $GITHUB_OUTPUT
+              echo "environment-artifact=web-*-cloud-COMMERCIAL.zip" >> $GITHUB_OUTPUT
+              echo "environment-name=Web Vault - US Production Cloud" >> $GITHUB_OUTPUT
+              echo "environment-url=http://vault.bitwarden.com" >> $GITHUB_OUTPUT
+              ;;
+            "EUPROD")
+              echo "azure-login-creds=AZURE_KV_EU_PRD_SERVICE_PRINCIPAL" >> $GITHUB_OUTPUT
+              echo "retrieve-secrets-keyvault=webvault-westeurope-prod" >> $GITHUB_OUTPUT
+              echo "environment-artifact=web-*-cloud-euprd.zip" >> $GITHUB_OUTPUT
+              echo "environment-name=Web Vault - EU Production Cloud" >> $GITHUB_OUTPUT
+              echo "environment-url=http://vault.bitwarden.eu" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+  approval:
+    name: Approval for Deployment to ${{ needs.setup.outputs.environment-name }}
+    needs: setup
+    runs-on: ubuntu-22.04
+    environment: ${{ needs.setup.outputs.environment-name }}
+    steps:
+      - name: Success Code
+        run: exit 0
+
+  notify-start:
+    name: Notify Slack with start message
+    needs:
+      - approval
+      - setup
+    runs-on: ubuntu-22.04
+    if: always()
+    steps:
+      - uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
+        with:
+          project: Clients
+          environment: ${{ needs.setup.outputs.environment-name }}
+          tag: ${{ inputs.branch-or-tag }}
+          slack-channel: team-eng-qa-devops
+          event: 'start'
+          url: https://github.com/bitwarden/clients/actions/runs/${{ github.run_id }}
+          AZURE_KV_CI_SERVICE_PRINCIPAL: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+
+  artifact-check:
+    name: Check if Web artifact is present
+    runs-on: ubuntu-22.04
+    needs: setup
+    env:
+      _ENVIRONMENT_ARTIFACT: ${{ needs.setup.outputs.environment-artifact }}
+    steps:
+      - name: 'Download latest cloud asset from branch/tag: ${{ inputs.branch-or-tag }}'
+        uses: bitwarden/gh-actions/download-artifacts@main
+        id: download-artifacts
+        continue-on-error: true
+        with:
+          workflow: build-web.yml
+          path: apps/web
+          workflow_conclusion: success
+          branch: ${{ inputs.branch-or-tag }}
+          artifacts: ${{ env._ENVIRONMENT_ARTIFACT }}
+
+      - name: Login to Azure
+        if: ${{ steps.download-artifacts.outcome == 'failure' }}
+        uses: Azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
+        with:
+          creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+
+      - name: Retrieve secrets for Build trigger
+        if: ${{ steps.download-artifacts.outcome == 'failure' }}
+        id: retrieve-secret
+        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        with:
+          keyvault: "bitwarden-ci"
+          secrets: "github-pat-bitwarden-devops-bot-repo-scope"
+
+      - name: 'Trigger build web for missing branch/tag ${{ inputs.branch-or-tag }}'
+        if: ${{ steps.download-artifacts.outcome == 'failure' }}
+        uses: convictional/trigger-workflow-and-wait@f69fa9eedd3c62a599220f4d5745230e237904be # v1.6.5
+        with:
+          owner: bitwarden
+          repo: clients
+          github_token: ${{ steps.retrieve-secret.outputs.github-pat-bitwarden-devops-bot-repo-scope }}
+          workflow_file_name: build-web.yml
+          ref: ${{ inputs.branch-or-tag }}
+          wait_interval: 100
+
+  azure-deploy:
+    name: Deploy Web Vault to ${{ inputs.environment }} Storage Account
+    needs:
+      - setup
+      - artifact-check
+      - approval
+      - notify-start
+    runs-on: ubuntu-22.04
+    env:
+      _ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      _ENVIRONMENT_URL: ${{ needs.setup.outputs.environment-url }}
+      _ENVIRONMENT_NAME: ${{ needs.setup.outputs.environment-name }}
+      _ENVIRONMENT_ARTIFACT: ${{ needs.setup.outputs.environment-artifact }}
+    steps:
+      - name: Create GitHub deployment
+        uses: chrnorm/deployment-action@d42cde7132fcec920de534fffc3be83794335c00 # v2.0.5
+        id: deployment
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          initial-status: 'in_progress'
+          environment-url: ${{ env._ENVIRONMENT_URL }}
+          environment: ${{ env._ENVIRONMENT_NAME }}
+          task: 'deploy'
+          description: 'Deployment from branch/tag: ${{ inputs.branch-or-tag }}'
+
+      - name: Login to Azure
+        uses: Azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
+        with:
+          creds: ${{ secrets[needs.setup.outputs.azure-login-creds] }}
+
+      - name: Retrieve Storage Account connection string
+        id: retrieve-secrets
+        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        with:
+          keyvault: ${{ needs.setup.outputs.retrieve-secrets-keyvault }}
+          secrets: "sa-bitwarden-web-vault-dev-key-temp"
+
+      - name: 'Download cloud asset from branch/tag: ${{ inputs.branch-or-tag }}'
+        uses: bitwarden/gh-actions/download-artifacts@main
+        with:
+          workflow: build-web.yml
+          path: apps/web
+          workflow_conclusion: success
+          branch: ${{ inputs.branch-or-tag }}
+          artifacts: ${{ env._ENVIRONMENT_ARTIFACT }}
+
+      - name: Unzip build asset
+        working-directory: apps/web
+        run: unzip ${{ env._ENVIRONMENT_ARTIFACT }}
+
+      - name: Empty container in Storage Account
+        run: |
+          az storage blob delete-batch \
+            --source '$web' \
+            --pattern '*' \
+            --connection-string "${{ steps.retrieve-secrets.outputs.sa-bitwarden-web-vault-dev-key-temp }}"
+
+      - name: Deploy to Azure Storage Account
+        working-directory: apps/web
+        run: |
+          az storage blob upload-batch \
+            --source "./build" \
+            --destination '$web' \
+            --connection-string "${{ steps.retrieve-secrets.outputs.sa-bitwarden-web-vault-dev-key-temp }}" \
+            --overwrite \
+            --no-progress
+
+      - name: Update deployment status to Success
+        if: success()
+        uses: chrnorm/deployment-status@2afb7d27101260f4a764219439564d954d10b5b0 # v2.0.1
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          environment-url: ${{ env._ENVIRONMENT_URL }}
+          state: 'success'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status to Failure
+        if: failure()
+        uses: chrnorm/deployment-status@2afb7d27101260f4a764219439564d954d10b5b0 # v2.0.1
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          environment-url: ${{ env._ENVIRONMENT_URL }}
+          state: 'failure'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+  notify:
+    name: Notify Slack with result
+    runs-on: ubuntu-22.04
+    if: always()
+    needs:
+      - azure-deploy
+      - setup
+    steps:
+      - uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
+        with:
+          project: Clients
+          environment: ${{ needs.setup.outputs.environment-name }}
+          tag: ${{ inputs.branch-or-tag }}
+          slack-channel: team-eng-qa-devops
+          event: ${{ needs.azure-deploy.result }}
+          url: https://github.com/bitwarden/clients/actions/runs/${{ github.run_id }}
+          AZURE_KV_CI_SERVICE_PRINCIPAL: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}

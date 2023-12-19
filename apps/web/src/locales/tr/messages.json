@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Ana parola ile giriş yap"
   },
+  "readingPasskeyLoading": {
+    "message": "Geçiş anahtarı okunuyor..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Bu pencereyi açık tutun ve tarayıcınızdan gelen talimatları uygulayın."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Başka bir giriş yöntemi kullan"
+  },
   "loginWithPasskey": {
     "message": "Geçiş anahtarıyla giriş yap"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Geçersiz geçiş anahtarı. Lütfen tekrar deneyin."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "Geçiş anahtarları için 2FA desteklebmiyor. Giriş yapmak için uygulamayı güncelleyin."
   },
   "loginWithPasskeyInfo": {
     "message": "Parola kullanmadan otomatik olarak giriş yapmanızı sağlayacak bir geçiş anahtarı kullanabilirsiniz. Kimliğinizi doğrulamak için yüz tanıma veya parmak izi gibi biyometri özellikleri ya da başka bir FIDO2 güvenlik yöntemi kullanılacaktır."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Şifreleme desteklenmiyor"
   },
-  "encryptionNotEnabled": {
-    "message": "Şifreleme etkin değil"
+  "enablePasskeyEncryption": {
+    "message": "Şifreleme ayarla"
   },
   "usedForEncryption": {
     "message": "Şifreleme için kullanılır"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Dışarı aktar"
   },
+  "exportFrom": {
+    "message": "Dışa aktarılacak konum"
+  },
   "exportVault": {
     "message": "Kasayı dışa aktar"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Uzunluk"
+  },
+  "passwordMinLength": {
+    "message": "Minimum parola uzunluğu"
   },
   "uppercase": {
     "message": "Büyük harf (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Bu Send varsayılan olarak gizlidir. Aşağıdaki düğmeyi kullanarak görünürlüğünü değiştirebilirsiniz.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Dosyayı indir"
+  "downloadAttachments": {
+    "message": "Ekleri indir"
   },
   "sendAccessUnavailable": {
     "message": "Erişmeye çalıştığınız Send yok veya artık mevcut değil.",
@@ -4609,8 +4630,8 @@
     "message": "hemen deneyin.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden kullanıcısı $USER_IDENTIFIER$ aşağıdakileri sizinle paylaştı",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden üyesi $USER_IDENTIFIER$ aşağıdakileri sizinle paylaştı",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "İleri"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO girişi gereklidir"
+  },
   "selectedRegionFlag": {
     "message": "Seçilen bölgenin bayrağı"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Koleksiyon oluşturma ve silme işlemlerini sahipler ve yöneticilerle sınırlandırın"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Sahipler ve yöneticiler tüm koleksiyonları ve öğeleri yönetebilir"
+  },
   "collectionManagementUpdated": {
     "message": "Collection management behavior saved"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Geçiş anahtarı klonlanan öğeye kopyalanmayacaktır. Bu öğeyi klonlamaya devam etmek istiyor musunuz?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Koleksiyon yönetimi ayarı $ID$ değiştirildi.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Ayrıntılı talimatları yardım sitemizde bulabilirsiniz:",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Proje erişimi güncellendi"
+  },
+  "unexpectedErrorSend": {
+    "message": "Bu Gönderim yüklenirken beklenmeyen bir hata oluştu. Daha sonra tekrar deneyin."
+  },
+  "seatLimitReached": {
+    "message": "Seat limit has been reached"
+  },
+  "contactYourProvider": {
+    "message": "Contact your provider to purchase additional seats."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Seat limit has been reached. Contact your provider to purchase additional seats."
+  },
+  "collectionAccessRestricted": {
+    "message": "Koleksiyona erişim kısıtlı"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Hizmet hesabı erişimi güncellendi"
   }
 }

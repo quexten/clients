@@ -8,8 +8,6 @@ import { StateService } from "@bitwarden/common/platform/abstractions/state.serv
   templateUrl: "export-scope-callout.component.html",
 })
 export class ExportScopeCalloutComponent implements OnInit {
-  @Input() organizationId: string = null;
-
   show = false;
   scopeConfig: {
     title: string;
@@ -17,27 +15,43 @@ export class ExportScopeCalloutComponent implements OnInit {
     scopeIdentifier: string;
   };
 
+  private _organizationId: string;
+
+  get organizationId(): string {
+    return this._organizationId;
+  }
+
+  @Input() set organizationId(value: string) {
+    this._organizationId = value;
+    this.getScopeMessage(this._organizationId);
+  }
+
   constructor(
     protected organizationService: OrganizationService,
-    protected stateService: StateService
+    protected stateService: StateService,
   ) {}
 
   async ngOnInit(): Promise<void> {
     if (!this.organizationService.hasOrganizations()) {
       return;
     }
+
+    await this.getScopeMessage(this.organizationId);
+    this.show = true;
+  }
+
+  private async getScopeMessage(organizationId: string) {
     this.scopeConfig =
-      this.organizationId != null
+      organizationId != null
         ? {
             title: "exportingOrganizationVaultTitle",
             description: "exportingOrganizationVaultDesc",
-            scopeIdentifier: this.organizationService.get(this.organizationId).name,
+            scopeIdentifier: this.organizationService.get(organizationId).name,
           }
         : {
             title: "exportingPersonalVaultTitle",
             description: "exportingIndividualVaultDescription",
             scopeIdentifier: await this.stateService.getEmail(),
           };
-    this.show = true;
   }
 }

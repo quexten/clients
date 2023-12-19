@@ -268,6 +268,9 @@
   "length": {
     "message": "Довжина"
   },
+  "passwordMinLength": {
+    "message": "Мінімальна довжина пароля"
+  },
   "uppercase": {
     "message": "Верхній регістр (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Налаштуйте спосіб розблокування, щоб змінити час очікування сховища."
   },
+  "unlockMethodNeeded": {
+    "message": "Встановіть спосіб розблокування в налаштуваннях"
+  },
   "rateExtension": {
     "message": "Оцінити розширення"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Блокувати зараз"
+  },
+  "lockAll": {
+    "message": "Заблокувати все"
   },
   "immediately": {
     "message": "Негайно"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Запитувати про додавання запису, якщо його немає у вашому сховищі."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Запитувати про додавання запису, якщо такого не знайдено у вашому сховищі. Застосовується для всіх облікових записів, до яких виконано вхід."
+  },
   "showCardsCurrentTab": {
     "message": "Показувати картки на вкладці"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Запитувати про оновлення пароля запису, якщо на вебсайті виявлено його зміну."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Запитувати про оновлення пароля для запису, якщо виявлено його зміну на вебсайті. Застосовується для всіх облікових записів, до яких виконано вхід."
+  },
+  "enableUsePasskeys": {
+    "message": "Запитувати про збереження та використання ключів доступу"
+  },
+  "usePasskeysDesc": {
+    "message": "Запитувати про збереження нових ключів доступу та використання збережених ключів доступу. Застосовується для всіх облікових записів, до яких виконано вхід."
+  },
   "notificationChangeDesc": {
     "message": "Ви хочете оновити цей пароль в Bitwarden?"
   },
@@ -667,7 +688,10 @@
     "message": "Показувати в контекстному меню"
   },
   "contextMenuItemDesc": {
-    "message": "Використовувати доступ до генератора паролів та відповідних записів для вебсайту через контекстне меню."
+    "message": "Використовувати контекстне меню для доступу до генератора паролів та відповідних записів для вебсайту."
+  },
+  "contextMenuItemDescAlt": {
+    "message": "Використовувати контекстне меню для доступу до генератора паролів та відповідних записів для вебсайту. Застосовується для всіх облікових записів, до яких виконано вхід."
   },
   "defaultUriMatchDetection": {
     "message": "Типове виявлення збігів URI",
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Змінити колірну тему додатка."
+  },
+  "themeDescAlt": {
+    "message": "Змінити колірну тему програми. Застосовується для всіх облікових записів, до яких виконано вхід."
   },
   "dark": {
     "message": "Темна",
@@ -973,7 +1000,7 @@
     "message": "Середовище власного хостингу"
   },
   "selfHostedEnvironmentFooter": {
-    "message": "Вкажіть основну URL-адресу Bitwarden на вашому сервері."
+    "message": "Вкажіть основну URL-адресу Bitwarden, встановленого на локальному хостингу."
   },
   "customEnvironment": {
     "message": "Власне середовище"
@@ -1001,6 +1028,31 @@
   },
   "environmentSaved": {
     "message": "URL-адреси середовища збережено"
+  },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Меню автозаповнення на полях форм",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Застосовується для всіх облікових записів, до яких виконано вхід."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Для уникнення конфліктів вимкніть вбудований у браузер менеджер паролів."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Зміна налаштувань браузера."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Вимк",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Якщо вибрано поле (у фокусі)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Якщо вибрано піктограму автозаповнення",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
   },
   "enableAutoFillOnPageLoad": {
     "message": "Автозаповнення на сторінці"
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Показувати впізнаване зображення біля кожного запису."
+  },
+  "faviconDescAlt": {
+    "message": "Показати впізнаване зображення поруч з кожним записом. Застосовується для всіх облікових записів, до яких виконано вхід."
   },
   "enableBadgeCounter": {
     "message": "Показувати лічильник"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Особисті дані"
-  },
-  "typePasskey": {
-    "message": "Ключ доступу"
   },
   "passwordHistory": {
     "message": "Історія паролів"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden не запитуватиме про збереження даних входу для цих доменів. Потрібно оновити сторінку для застосування змін."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden не запитуватиме про збереження даних входу для цих доменів для всіх облікових записів, до яких виконано вхід. Потрібно оновити сторінку для застосування змін."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ не є дійсним доменом",
@@ -2227,7 +2282,7 @@
     "message": "Як працює автозаповнення"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Виберіть елемент із цієї сторінки або використайте комбінацію клавіш: $COMMAND$",
+    "message": "Виберіть елемент із цього екрану, скористайтеся комбінацією клавіш $COMMAND$, або дізнайтеся про інші можливості в налаштуваннях.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Виберіть елемент із цієї сторінки або встановіть комбінацію клавіш у налаштуваннях."
+    "message": "Виберіть елемент із цього екрану або дізнайтеся про інші можливості в налаштуваннях."
   },
   "gotIt": {
     "message": "Зрозуміло"
@@ -2457,6 +2512,56 @@
     "message": "Вимкніть повторний запит головного пароля, щоб редагувати це поле",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Кнопка меню автозаповнення Bitwarden",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Перемкнути меню автозаповнення Bitwarden",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Меню автозаповнення Bitwarden",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Розблокуйте обліковий запис, щоб побачити відповідні записи",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Розблокувати обліковий запис",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Заповнити облікові дані для",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Часткове ім'я користувача",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Немає записів для показу",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Новий запис",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Додати новий запис сховища",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Доступне меню автозаповнення Bitwarden. Натисніть клавішу стрілки для вибору.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Увімкнути"
+  },
+  "ignore": {
+    "message": "Ігнорувати"
+  },
   "importData": {
     "message": "Імпортувати дані",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Підтвердьте пароль файлу"
+  },
+  "typePasskey": {
+    "message": "Ключ доступу"
   },
   "passkeyNotCopied": {
     "message": "Ключ доступу не буде скопійовано"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Вставте YubiKey пов'язаний з обліковим записом LastPass в USB порт вашого комп'ютера, потім торкніться його кнопки."
+  },
+  "switchAccount": {
+    "message": "Перемкнути обліковий запис"
+  },
+  "switchAccounts": {
+    "message": "Перемкнути облікові записи"
+  },
+  "switchToAccount": {
+    "message": "Перемкнути на обліковий запис"
+  },
+  "activeAccount": {
+    "message": "Активний обліковий запис"
+  },
+  "accountLimitReached": {
+    "message": "Досягнуто обмеження облікового запису. Вийдіть, щоб додати інший обліковий запис."
+  },
+  "active": {
+    "message": "активний"
+  },
+  "locked": {
+    "message": "заблокований"
+  },
+  "unlocked": {
+    "message": "розблокований"
+  },
+  "server": {
+    "message": "сервер"
+  },
+  "hostedAt": {
+    "message": "розміщений на"
   }
 }

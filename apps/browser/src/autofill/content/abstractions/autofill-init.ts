@@ -1,3 +1,5 @@
+import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
+
 import AutofillScript from "../../models/autofill-script";
 
 type AutofillExtensionMessage = {
@@ -7,17 +9,38 @@ type AutofillExtensionMessage = {
   fillScript?: AutofillScript;
   url?: string;
   pageDetailsUrl?: string;
+  ciphers?: any;
+  data?: {
+    authStatus?: AuthenticationStatus;
+    isFocusingFieldElement?: boolean;
+    isOverlayCiphersPopulated?: boolean;
+    direction?: "previous" | "next";
+    isOpeningFullOverlay?: boolean;
+    forceCloseOverlay?: boolean;
+    autofillOverlayVisibility?: number;
+  };
 };
+
+type AutofillExtensionMessageParam = { message: AutofillExtensionMessage };
 
 type AutofillExtensionMessageHandlers = {
   [key: string]: CallableFunction;
-  collectPageDetails: (message: { message: AutofillExtensionMessage }) => void;
-  collectPageDetailsImmediately: (message: { message: AutofillExtensionMessage }) => void;
-  fillForm: (message: { message: AutofillExtensionMessage }) => void;
+  collectPageDetails: ({ message }: AutofillExtensionMessageParam) => void;
+  collectPageDetailsImmediately: ({ message }: AutofillExtensionMessageParam) => void;
+  fillForm: ({ message }: AutofillExtensionMessageParam) => void;
+  openAutofillOverlay: ({ message }: AutofillExtensionMessageParam) => void;
+  closeAutofillOverlay: ({ message }: AutofillExtensionMessageParam) => void;
+  addNewVaultItemFromOverlay: () => void;
+  redirectOverlayFocusOut: ({ message }: AutofillExtensionMessageParam) => void;
+  updateIsOverlayCiphersPopulated: ({ message }: AutofillExtensionMessageParam) => void;
+  bgUnlockPopoutOpened: () => void;
+  bgVaultItemRepromptPopoutOpened: () => void;
+  updateAutofillOverlayVisibility: ({ message }: AutofillExtensionMessageParam) => void;
 };
 
 interface AutofillInit {
   init(): void;
+  destroy(): void;
 }
 
 export { AutofillExtensionMessage, AutofillExtensionMessageHandlers, AutofillInit };

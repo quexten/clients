@@ -1,10 +1,10 @@
 import * as lunr from "lunr";
 
 import { SearchService as SearchServiceAbstraction } from "../abstractions/search.service";
-import { FieldType, UriMatchType } from "../enums";
 import { I18nService } from "../platform/abstractions/i18n.service";
 import { LogService } from "../platform/abstractions/log.service";
 import { SendView } from "../tools/send/models/view/send.view";
+import { FieldType, UriMatchType } from "../vault/enums";
 import { CipherType } from "../vault/enums/cipher-type";
 import { CipherView } from "../vault/models/view/cipher.view";
 
@@ -18,7 +18,10 @@ export class SearchService implements SearchServiceAbstraction {
   private readonly defaultSearchableMinLength: number = 2;
   private searchableMinLength: number = this.defaultSearchableMinLength;
 
-  constructor(private logService: LogService, private i18nService: I18nService) {
+  constructor(
+    private logService: LogService,
+    private i18nService: I18nService,
+  ) {
     this.i18nService.locale$.subscribe((locale) => {
       if (this.immediateSearchLocales.indexOf(locale) !== -1) {
         this.searchableMinLength = 1;
@@ -101,7 +104,7 @@ export class SearchService implements SearchServiceAbstraction {
   async searchCiphers(
     query: string,
     filter: ((cipher: CipherView) => boolean) | ((cipher: CipherView) => boolean)[] = null,
-    ciphers: CipherView[]
+    ciphers: CipherView[],
   ): Promise<CipherView[]> {
     const results: CipherView[] = [];
     if (query != null) {

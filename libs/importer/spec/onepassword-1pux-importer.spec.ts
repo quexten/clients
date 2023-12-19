@@ -1,6 +1,5 @@
-import { FieldType, SecureNoteType } from "@bitwarden/common/enums";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { FieldType, SecureNoteType, CipherType } from "@bitwarden/common/vault/enums";
 import { FieldView } from "@bitwarden/common/vault/models/view/field.view";
 
 import { OnePassword1PuxImporter } from "../src/importers";
@@ -300,7 +299,7 @@ describe("1Password 1Pux Importer", () => {
     validateCustomField(
       cipher.fields,
       "download_link",
-      "https://limuxcompany.nullvalue.test/5.10.1000/isos"
+      "https://limuxcompany.nullvalue.test/5.10.1000/isos",
     );
     validateCustomField(cipher.fields, "publisher_name", "Limux Software and Hardware");
     validateCustomField(cipher.fields, "publisher_website", "https://limuxcompany.nullvalue.test/");
@@ -549,7 +548,7 @@ describe("1Password 1Pux Importer", () => {
     validateCustomField(
       cipher.fields,
       "admin_console_url",
-      "https://coolserver.nullvalue.test/admin"
+      "https://coolserver.nullvalue.test/admin",
     );
     validateCustomField(cipher.fields, "admin_console_username", "frankly-idontknowwhatimdoing");
     validateCustomField(cipher.fields, "admin_console_password", "^%RY&^YUiju8iUYHJI(U");
@@ -558,7 +557,7 @@ describe("1Password 1Pux Importer", () => {
     validateCustomField(
       cipher.fields,
       "support_contact_url",
-      "https://phpi.nullvalue.test/support"
+      "https://phpi.nullvalue.test/support",
     );
     validateCustomField(cipher.fields, "support_contact_phone", "8882569382");
   });
@@ -624,7 +623,7 @@ describe("1Password 1Pux Importer", () => {
 
     expect(cipher.name).toEqual("Secure Note #1");
     expect(cipher.notes).toEqual(
-      "This is my secure note. \n\nLorem ipsum expecto patronum. \nThe quick brown fox jumped over the lazy dog."
+      "This is my secure note. \n\nLorem ipsum expecto patronum. \nThe quick brown fox jumped over the lazy dog.",
     );
     expect(cipher.secureNote.type).toEqual(SecureNoteType.Generic);
   });

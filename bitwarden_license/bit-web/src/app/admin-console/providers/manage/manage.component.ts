@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
-import { Provider } from "@bitwarden/common/models/domain/provider";
+import { Provider } from "@bitwarden/common/admin-console/models/domain/provider";
 
 @Component({
   selector: "provider-manage",
@@ -13,7 +13,10 @@ export class ManageComponent implements OnInit {
   provider: Provider;
   accessEvents = false;
 
-  constructor(private route: ActivatedRoute, private providerService: ProviderService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private providerService: ProviderService,
+  ) {}
 
   ngOnInit() {
     // eslint-disable-next-line rxjs-angular/prefer-takeuntil, rxjs/no-async-subscribe

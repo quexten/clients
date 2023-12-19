@@ -268,6 +268,9 @@
   "length": {
     "message": "長さ"
   },
+  "passwordMinLength": {
+    "message": "パスワードの最低文字数"
+  },
   "uppercase": {
     "message": "大文字（A-Z）"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "保管庫のタイムアウト動作を変更するには、ロック解除方法を設定してください。"
   },
+  "unlockMethodNeeded": {
+    "message": "設定でロック解除方法をセットアップ"
+  },
   "rateExtension": {
     "message": "拡張機能の評価"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "今すぐロック"
+  },
+  "lockAll": {
+    "message": "すべてロック"
   },
   "immediately": {
     "message": "すぐに"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "初めてログインしたとき保管庫にログイン情報を保存するよう「ログイン情報を追加」通知を自動的に表示します。"
   },
+  "addLoginNotificationDescAlt": {
+    "message": "保管庫にアイテムが見つからない場合は、アイテムを追加するよう要求します。ログインしているすべてのアカウントに適用されます。"
+  },
   "showCardsCurrentTab": {
     "message": "タブページにカードを表示"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "ウェブサイトで変更があったとき、ログイン情報のパスワードを更新するか尋ねます"
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "ウェブサイトで変更が検出された場合、ログインパスワードを更新するように求めます。ログインしているすべてのアカウントに適用されます。"
+  },
+  "enableUsePasskeys": {
+    "message": "パスキーの保存と使用を尋ねる"
+  },
+  "usePasskeysDesc": {
+    "message": "新しいパスキーを保存するか、保管庫に保存されているパスキーでログインするよう要求します。ログインしているすべてのアカウントに適用されます。"
+  },
   "notificationChangeDesc": {
     "message": "Bitwarden でこのパスワードを更新しますか？"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "コンテキストメニューでパスワード生成やログイン情報の入力をできるようにします"
   },
+  "contextMenuItemDescAlt": {
+    "message": "コンテキストメニューを使用して、ウェブサイトのパスワード生成と一致するログインにアクセスします。ログインしているすべてのアカウントに適用されます。"
+  },
   "defaultUriMatchDetection": {
     "message": "デフォルトの URI 一致検出方法",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "アプリのテーマカラーを変更します。"
+  },
+  "themeDescAlt": {
+    "message": "アプリのカラーテーマを変更します。ログインしているすべてのアカウントに適用されます。"
   },
   "dark": {
     "message": "ダーク",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "環境 URL を保存しました。"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "フォーム項目に自動入力メニューを表示",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "ログインしているすべてのアカウントに適用されます。"
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "競合を避けるために、ブラウザーのパスワード管理設定をオフにしてください。"
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "ブラウザーの設定を編集してください。"
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "オフ",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "項目を選択しているとき (on focus)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "自動入力アイコンを選択しているとき",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "ページ読み込み時の自動入力を有効化"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "ログイン情報の隣にアイコン画像を表示します"
+  },
+  "faviconDescAlt": {
+    "message": "各ログインの横に認識可能な画像を表示します。すべてのログイン済みアカウントに適用されます。"
   },
   "enableBadgeCounter": {
     "message": "バッジカウンターを表示"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "ID"
-  },
-  "typePasskey": {
-    "message": "パスキー"
   },
   "passwordHistory": {
     "message": "パスワードの履歴"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden はこれらのドメインのログイン情報を保存するよう尋ねません。変更を有効にするにはページを更新する必要があります。"
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden はログインしているすべてのアカウントで、これらのドメインのログイン情報を保存するよう要求しません。 変更を有効にするにはページを更新する必要があります。"
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ は有効なドメインではありません",
@@ -2227,7 +2282,7 @@
     "message": "自動入力する方法"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "このページからアイテムを選択するか、ショートカットを使用してください: $COMMAND$",
+    "message": "Select an item from this screen, use the shortcut $COMMAND$, or explore other options in settings.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "このページからアイテムを選択するか、設定でショートカットを設定してください。"
+    "message": "Select an item from this screen, or explore other options in settings."
   },
   "gotIt": {
     "message": "了解"
@@ -2457,6 +2512,56 @@
     "message": "このフィールドを編集するには、マスターパスワードの再入力をオフにしてください",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Bitwarden 自動入力メニューボタン",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Bitwarden 自動入力メニューの切り替え",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Bitwarden 自動入力メニュー",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "一致するログイン情報を表示するには、アカウントのロックを解除してください",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "アカウントのロックを解除",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "資格情報を入力：",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "部分的なユーザー名",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "表示するアイテムがありません",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "新しいアイテム",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "新しい保管庫アイテムを追加",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Bitwarden 自動入力メニューがあります。下矢印キーを押すと選択できます。",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "オンにする"
+  },
+  "ignore": {
+    "message": "無視"
+  },
   "importData": {
     "message": "データのインポート",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "ファイルパスワードの確認"
+  },
+  "typePasskey": {
+    "message": "パスキー"
   },
   "passkeyNotCopied": {
     "message": "パスキーはコピーされません"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "LastPass アカウントに関連付けられた YubiKey を USB ポートに挿入し、ボタンをタッチしてください。"
+  },
+  "switchAccount": {
+    "message": "アカウントの切り替え"
+  },
+  "switchAccounts": {
+    "message": "アカウントの切り替え"
+  },
+  "switchToAccount": {
+    "message": "アカウントに切り替え"
+  },
+  "activeAccount": {
+    "message": "アクティブなアカウント"
+  },
+  "accountLimitReached": {
+    "message": "アカウントの制限に達しました。別のアカウントを追加するにはまずログアウトしてください。"
+  },
+  "active": {
+    "message": "アクティブ"
+  },
+  "locked": {
+    "message": "ロック中"
+  },
+  "unlocked": {
+    "message": "ロック解除済み"
+  },
+  "server": {
+    "message": "サーバー"
+  },
+  "hostedAt": {
+    "message": "ホスト"
   }
 }

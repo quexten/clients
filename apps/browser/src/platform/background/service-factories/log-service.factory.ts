@@ -1,5 +1,5 @@
-import { LogLevelType } from "@bitwarden/common/enums";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { LogLevelType } from "@bitwarden/common/platform/enums/log-level-type.enum";
 import { ConsoleLogService } from "@bitwarden/common/platform/services/console-log.service";
 
 import { FactoryOptions, CachedServices, factory } from "./factory-options";
@@ -15,12 +15,12 @@ export type LogServiceInitOptions = LogServiceFactoryOptions;
 
 export function logServiceFactory(
   cache: { logService?: LogService } & CachedServices,
-  opts: LogServiceInitOptions
+  opts: LogServiceInitOptions,
 ): Promise<LogService> {
   return factory(
     cache,
     "logService",
     opts,
-    () => new ConsoleLogService(opts.logServiceOptions.isDev, opts.logServiceOptions.filter)
+    () => new ConsoleLogService(opts.logServiceOptions.isDev, opts.logServiceOptions.filter),
   );
 }

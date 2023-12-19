@@ -6,24 +6,29 @@ import {
   OrganizationUserUpdateRequest,
 } from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
 import { OrganizationUserDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-user/responses";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ConfigServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config.service.abstraction";
 
 import { CoreOrganizationModule } from "../core-organization.module";
 import { OrganizationUserAdminView } from "../views/organization-user-admin-view";
 
 @Injectable({ providedIn: CoreOrganizationModule })
 export class UserAdminService {
-  constructor(private organizationUserService: OrganizationUserService) {}
+  constructor(
+    private configService: ConfigServiceAbstraction,
+    private organizationUserService: OrganizationUserService,
+  ) {}
 
   async get(
     organizationId: string,
-    organizationUserId: string
+    organizationUserId: string,
   ): Promise<OrganizationUserAdminView | undefined> {
     const userResponse = await this.organizationUserService.getOrganizationUser(
       organizationId,
       organizationUserId,
       {
         includeGroups: true,
-      }
+      },
     );
 
     if (userResponse == null) {
@@ -62,7 +67,7 @@ export class UserAdminService {
 
   private async decryptMany(
     organizationId: string,
-    users: OrganizationUserDetailsResponse[]
+    users: OrganizationUserDetailsResponse[],
   ): Promise<OrganizationUserAdminView[]> {
     const promises = users.map(async (u) => {
       const view = new OrganizationUserAdminView();
@@ -73,7 +78,12 @@ export class UserAdminService {
       view.type = u.type;
       view.status = u.status;
       view.externalId = u.externalId;
-      view.accessAll = u.accessAll;
+      view.accessAll = (await this.configService.getFeatureFlag(
+        FeatureFlag.FlexibleCollections,
+        false,
+      ))
+        ? false
+        : u.accessAll;
       view.permissions = u.permissions;
       view.resetPasswordEnrolled = u.resetPasswordEnrolled;
       view.collections = u.collections.map((c) => ({

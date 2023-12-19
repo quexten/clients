@@ -1,5 +1,5 @@
-import { KdfType } from "../../../enums";
 import { BaseResponse } from "../../../models/response/base.response";
+import { KdfType } from "../../../platform/enums";
 
 import { MasterPasswordPolicyResponse } from "./master-password-policy.response";
 import { UserDecryptionOptionsResponse } from "./user-decryption-options/user-decryption-options.response";
@@ -44,12 +44,12 @@ export class IdentityTokenResponse extends BaseResponse {
     this.apiUseKeyConnector = this.getResponseProperty("ApiUseKeyConnector");
     this.keyConnectorUrl = this.getResponseProperty("KeyConnectorUrl");
     this.masterPasswordPolicy = new MasterPasswordPolicyResponse(
-      this.getResponseProperty("MasterPasswordPolicy")
+      this.getResponseProperty("MasterPasswordPolicy"),
     );
 
     if (response.UserDecryptionOptions) {
       this.userDecryptionOptions = new UserDecryptionOptionsResponse(
-        this.getResponseProperty("UserDecryptionOptions")
+        this.getResponseProperty("UserDecryptionOptions"),
       );
     }
   }

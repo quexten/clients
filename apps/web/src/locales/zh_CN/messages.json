@@ -494,7 +494,7 @@
     "message": "附件已删除"
   },
   "deleteAttachmentConfirmation": {
-    "message": "您确定要删除此附件吗？"
+    "message": "确定要删除此附件吗？"
   },
   "attachmentSaved": {
     "message": "附件已保存"
@@ -558,7 +558,7 @@
     "message": "项目已移动"
   },
   "overwritePasswordConfirmation": {
-    "message": "您确定要覆盖当前密码吗？"
+    "message": "确定要覆盖当前密码吗？"
   },
   "editedFolder": {
     "message": "文件夹已保存"
@@ -567,7 +567,7 @@
     "message": "文件夹已添加"
   },
   "deleteFolderConfirmation": {
-    "message": "您确定要删除此文件夹吗？"
+    "message": "确定要删除此文件夹吗？"
   },
   "deletedFolder": {
     "message": "文件夹已删除"
@@ -585,7 +585,7 @@
     "message": "您的登录会话已过期。"
   },
   "logOutConfirmation": {
-    "message": "您确定要注销吗？"
+    "message": "确定要注销吗？"
   },
   "logOut": {
     "message": "注销"
@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "使用主密码登录"
   },
+  "readingPasskeyLoading": {
+    "message": "正在读取通行密钥..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "保持此窗口打开然后按照浏览器的提示操作。"
+  },
+  "useADifferentLogInMethod": {
+    "message": "使用不同的登录方式"
+  },
   "loginWithPasskey": {
     "message": "使用通行密钥登录"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "通行密钥无效。请重试。"
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "不支持通行密钥 2FA。请更新 App 以登录。"
   },
   "loginWithPasskeyInfo": {
     "message": "使用已生成的通行密钥，无需密码即可自动登录。生物识别（例如面部识别或指纹）或其他 FIDO2 安全方法将用于验证您的身份。"
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "不支持加密"
   },
-  "encryptionNotEnabled": {
-    "message": "未启用加密"
+  "enablePasskeyEncryption": {
+    "message": "设置加密"
   },
   "usedForEncryption": {
     "message": "用于加密"
@@ -998,7 +1013,7 @@
     }
   },
   "deleteSelectedConfirmation": {
-    "message": "您确定要继续吗？"
+    "message": "确定要继续吗？"
   },
   "moveSelectedItemsDesc": {
     "message": "选择要将这 $COUNT$ 个项目移动到的文件夹。",
@@ -1058,6 +1073,9 @@
   },
   "export": {
     "message": "导出"
+  },
+  "exportFrom": {
+    "message": "导出自"
   },
   "exportVault": {
     "message": "导出密码库"
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "长度"
+  },
+  "passwordMinLength": {
+    "message": "最小密码长度"
   },
   "uppercase": {
     "message": "大写 (A-Z)",
@@ -1384,7 +1405,7 @@
     "message": "选择一个集合"
   },
   "importTargetHint": {
-    "message": "如果您希望将导入的文件内容移动到 $DESTINATION$，请选择此选项",
+    "message": "如果您希望将导入的文件内容移动到某个 $DESTINATION$，请选择此选项",
     "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
     "placeholders": {
       "destination": {
@@ -1609,7 +1630,7 @@
     "message": "如果您要把它添加到其他设备，下面是您的验证器 App 所需要的二维码（或密钥）。"
   },
   "twoStepDisableDesc": {
-    "message": "您确定要停用此两步登录提供程序吗？"
+    "message": "确定要停用此两步登录提供程序吗？"
   },
   "twoStepDisabled": {
     "message": "此两步登录提供程序已停用。"
@@ -1708,7 +1729,7 @@
     "message": "添加一个 FIDO U2F 安全钥匙到您的帐户"
   },
   "removeU2fConfirmation": {
-    "message": "您确认要删除这个安全钥匙吗？"
+    "message": "确认要删除此安全钥匙吗？"
   },
   "twoFactorWebAuthnAdd": {
     "message": "添加一个 WebAuthn 安全钥匙到您的账户"
@@ -2164,13 +2185,13 @@
     "message": "恢复订阅"
   },
   "reinstateConfirmation": {
-    "message": "您确定要撤销请求并恢复订阅吗？"
+    "message": "确定要移除待处理的取消请求并恢复订阅吗？"
   },
   "reinstated": {
     "message": "您的订阅已恢复。"
   },
   "cancelConfirmation": {
-    "message": "您确定要取消吗？在本次计费周期结束后，您将无法使用此订阅的所有功能。"
+    "message": "确定要取消吗？在本次计费周期结束后，您将无法使用此订阅的所有功能。"
   },
   "canceledSubscription": {
     "message": "订阅已取消"
@@ -2550,7 +2571,7 @@
     "message": "退出"
   },
   "leaveOrganizationConfirmation": {
-    "message": "您确定要退出这个组织吗？"
+    "message": "确定要退出该组织吗？"
   },
   "leftOrganization": {
     "message": "您已经退出该组织。"
@@ -2595,10 +2616,10 @@
     "message": "编辑群组"
   },
   "deleteGroupConfirmation": {
-    "message": "您确定要删除此群组吗？"
+    "message": "确定要删除此群组吗？"
   },
   "deleteMultipleGroupsConfirmation": {
-    "message": "您确定要删除如下 $QUANTITY$ 个群组吗？",
+    "message": "确定要删除如下 $QUANTITY$ 个群组吗？",
     "placeholders": {
       "quantity": {
         "content": "$1",
@@ -2607,7 +2628,7 @@
     }
   },
   "removeUserConfirmation": {
-    "message": "您确实要移除此用户吗？"
+    "message": "确实要移除此用户吗？"
   },
   "removeOrgUserConfirmation": {
     "message": "移除成员后，他们将不再具有对组织数据的访问权限，并且此操作是不可逆的。要将此成员添加回组织，必须再次邀请他们并加入。"
@@ -3727,7 +3748,7 @@
     "message": "脆弱的主密码"
   },
   "weakMasterPasswordDesc": {
-    "message": "识别到弱密码。请使用一个强密码以保护你的账户。你确定你要使用弱密码吗？"
+    "message": "识别到弱密码。请使用一个强密码以保护你的账户。确定要使用弱密码吗？"
   },
   "rotateAccountEncKey": {
     "message": "同时轮换账户的加密密钥"
@@ -3736,7 +3757,7 @@
     "message": "轮换加密密钥"
   },
   "rotateEncKeyConfirmation": {
-    "message": "您确定要轮换账户的加密密钥吗？"
+    "message": "确定要轮换账户的加密密钥吗？"
   },
   "attachmentsNeedFix": {
     "message": "此项目有需要修复的旧文件附件。"
@@ -3927,7 +3948,7 @@
     "message": "永久删除项目"
   },
   "permanentlyDeleteItemConfirmation": {
-    "message": "您确定要永久删除此项目吗？"
+    "message": "确定要永久删除此项目吗？"
   },
   "permanentlyDeletedItem": {
     "message": "项目已永久删除"
@@ -4054,7 +4075,7 @@
     "message": "取消链接 SSO"
   },
   "unlinkSsoConfirmation": {
-    "message": "您确定要断开该组织的 SSO 链接吗？"
+    "message": "确定要取消该组织的 SSO 链接吗？"
   },
   "linkSso": {
     "message": "链接 SSO"
@@ -4218,8 +4239,8 @@
     "message": "此 Send 默认隐藏。您可使用下方的按钮切换其可见性。",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "下载文件"
+  "downloadAttachments": {
+    "message": "下载附件"
   },
   "sendAccessUnavailable": {
     "message": "您尝试访问的 Send 不存在或不再可用。",
@@ -4324,7 +4345,7 @@
     "message": "请求访问权限"
   },
   "requestAccessConfirmation": {
-    "message": "您确定要申请紧急访问吗？这将在 $WAITTIME$ 天后或当用户手动批准请求时获得访问权限。",
+    "message": "确定要申请紧急访问吗？这将在 $WAITTIME$ 天后或当用户手动批准请求时获得访问权限。",
     "placeholders": {
       "waittime": {
         "content": "$1",
@@ -4348,7 +4369,7 @@
     "message": "拒绝"
   },
   "approveAccessConfirmation": {
-    "message": "您确定要批准紧急访问吗？这将允许 $USER$  $ACTION$ 您的账户。",
+    "message": "确定要批准紧急访问吗？这将允许 $USER$ $ACTION$ 您的账户。",
     "placeholders": {
       "user": {
         "content": "$1",
@@ -4609,8 +4630,8 @@
     "message": "来马上尝试。",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden 用户 $USER_IDENTIFIER$ 与您分享了以下内容",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden 成员 $USER_IDENTIFIER$ 与您分享了以下内容",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -4788,7 +4809,7 @@
     "message": "此操作不适用于所选用户。"
   },
   "removeUsersWarning": {
-    "message": "您确定要移除以下用户吗？该过程可能需要几秒钟才能完成，并且不能中断或取消。"
+    "message": "确定要移除以下用户吗？该过程可能需要几秒钟才能完成，并且不能中断或取消。"
   },
   "removeOrgUsersConfirmation": {
     "message": "移除成员后，他们将不再具有对组织数据的访问权限，并且此操作是不可逆的。要将成员添加回组织，必须再次邀请他们并加入。该过程可能需要几秒钟才能完成，并且不能被中断或取消。"
@@ -4921,7 +4942,7 @@
     "message": "我的提供商"
   },
   "addOrganizationConfirmation": {
-    "message": "您确定要将 $ORGANIZATION$ 添加为 $PROVIDER$ 的客户吗？",
+    "message": "确定要将 $ORGANIZATION$ 添加为 $PROVIDER$ 的客户吗？",
     "placeholders": {
       "organization": {
         "content": "$1",
@@ -4970,7 +4991,7 @@
     }
   },
   "detachOrganizationConfirmation": {
-    "message": "您确定要分离这个组织吗？该组织将继续存在，但不再由此提供商管理。"
+    "message": "确定要分离这个组织吗？该组织将继续存在，但不再由此提供商管理。"
   },
   "add": {
     "message": "添加"
@@ -5297,7 +5318,7 @@
     "message": "移除赞助"
   },
   "removeSponsorshipConfirmation": {
-    "message": "移除赞助后，将由您自己负责此订阅及其相关的账单。您确定要继续吗？"
+    "message": "移除赞助后，将由您自己负责此订阅及其相关的账单。确定要继续吗？"
   },
   "sponsorshipCreated": {
     "message": "赞助已创建"
@@ -5306,7 +5327,7 @@
     "message": "电子邮件已发送"
   },
   "revokeSponsorshipConfirmation": {
-    "message": "移除该账户后，家庭计划赞助将在计费周期结束时到期。在现有的赞助到期之前您将无法兑换新的赞助邀请。您确定要继续吗？"
+    "message": "移除该账户后，家庭计划赞助将在计费周期结束时到期。在现有的赞助到期之前您将无法兑换新的赞助邀请。确定要继续吗？"
   },
   "removeSponsorshipSuccess": {
     "message": "赞助已移除"
@@ -5754,7 +5775,7 @@
     "message": "已更新设备验证"
   },
   "areYouSureYouWantToEnableDeviceVerificationTheVerificationCodeEmailsWillArriveAtX": {
-    "message": "您确定要开启设备验证吗？验证码邮件将发送到 $EMAIL$",
+    "message": "确定要开启设备验证吗？验证码邮件将发送到 $EMAIL$",
     "placeholders": {
       "email": {
         "content": "$1",
@@ -6189,10 +6210,10 @@
     "description": "Notifies that the selected secrets have been moved to the trash"
   },
   "hardDeleteSecretConfirmation": {
-    "message": "您确定要永久删除此机密吗？"
+    "message": "确定要永久删除此机密吗？"
   },
   "hardDeleteSecretsConfirmation": {
-    "message": "您确定要永久删除这些机密吗？"
+    "message": "确定要永久删除这些机密吗？"
   },
   "hardDeletesSuccessToast": {
     "message": "机密已永久删除"
@@ -6500,7 +6521,7 @@
     "message": "移除域名"
   },
   "removeDomainWarning": {
-    "message": "移除域名不能撤消。您确定要继续吗？"
+    "message": "移除域名不能撤消。确定要继续吗？"
   },
   "domainRemoved": {
     "message": "域名已移除"
@@ -6891,10 +6912,10 @@
     "message": "恢复机密"
   },
   "restoreSecretPrompt": {
-    "message": "您确定要恢复此机密吗？"
+    "message": "确定要恢复此机密吗？"
   },
   "restoreSecretsPrompt": {
-    "message": "您确定要恢复这些密机密吗？"
+    "message": "确定要恢复这些密机密吗？"
   },
   "secretRestoredSuccessToast": {
     "message": "机密已恢复"
@@ -6970,7 +6991,7 @@
     "description": "Notification to inform the user that a form's input can't contain only whitespace."
   },
   "dismiss": {
-    "message": "取消"
+    "message": "忽略"
   },
   "notAvailableForFreeOrganization": {
     "message": "免费组织不能使用此功能。请联系您的组织所有者寻求升级。"
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "下一步"
   },
+  "ssoLoginIsRequired": {
+    "message": "要求 SSO 登录"
+  },
   "selectedRegionFlag": {
     "message": "选择的区域旗帜"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "对所有者和管理员限制集合的创建和删除"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "所有者和管理员可以管理所有集合和项目"
+  },
   "collectionManagementUpdated": {
     "message": "集合管理行为已保存"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "通行密钥将不会被复制到克隆的项目。要继续克隆这个项目吗？"
   },
+  "modifiedCollectionManagement": {
+    "message": "修改了集合管理设置 $ID$。",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "请参阅我们的帮助网站上的详细说明：",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "工程访问权限已更新"
+  },
+  "unexpectedErrorSend": {
+    "message": "加载此 Send 时发生意外错误。请稍后再试。"
+  },
+  "seatLimitReached": {
+    "message": "已达到席位限制"
+  },
+  "contactYourProvider": {
+    "message": "请联系您的供应商购买更多席位。"
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "已达到席位限制。请联系您的供应商购买更多席位。"
+  },
+  "collectionAccessRestricted": {
+    "message": "集合访问受限"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "服务账户访问权限已更新"
   }
 }

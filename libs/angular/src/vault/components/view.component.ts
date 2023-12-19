@@ -13,9 +13,8 @@ import { firstValueFrom } from "rxjs";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { TokenService } from "@bitwarden/common/auth/abstractions/token.service";
-import { EventType, FieldType } from "@bitwarden/common/enums";
+import { EventType } from "@bitwarden/common/enums";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
@@ -27,8 +26,9 @@ import { StateService } from "@bitwarden/common/platform/abstractions/state.serv
 import { EncArrayBuffer } from "@bitwarden/common/platform/models/domain/enc-array-buffer";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
+import { FieldType, CipherType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { Launchable } from "@bitwarden/common/vault/interfaces/launchable";
 import { AttachmentView } from "@bitwarden/common/vault/models/view/attachment.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -87,7 +87,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     private logService: LogService,
     protected stateService: StateService,
     protected fileDownloadService: FileDownloadService,
-    protected dialogService: DialogService
+    protected dialogService: DialogService,
   ) {}
 
   ngOnInit() {
@@ -115,7 +115,7 @@ export class ViewComponent implements OnDestroy, OnInit {
 
     const cipher = await this.cipherService.get(this.cipherId);
     this.cipher = await cipher.decrypt(
-      await this.cipherService.getKeyForCipherKeyDecryption(cipher)
+      await this.cipherService.getKeyForCipherKeyDecryption(cipher),
     );
     this.canAccessPremium = await this.stateService.getCanAccessPremium();
     this.showPremiumRequiredTotp =
@@ -208,7 +208,7 @@ export class ViewComponent implements OnDestroy, OnInit {
       this.platformUtilsService.showToast(
         "success",
         null,
-        this.i18nService.t(this.cipher.isDeleted ? "permanentlyDeletedItem" : "deletedItem")
+        this.i18nService.t(this.cipher.isDeleted ? "permanentlyDeletedItem" : "deletedItem"),
       );
       this.onDeletedCipher.emit(this.cipher);
     } catch (e) {
@@ -244,7 +244,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     if (this.showPassword) {
       this.eventCollectionService.collect(
         EventType.Cipher_ClientToggledPasswordVisible,
-        this.cipherId
+        this.cipherId,
       );
     }
   }
@@ -266,7 +266,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     if (this.showCardNumber) {
       this.eventCollectionService.collect(
         EventType.Cipher_ClientToggledCardNumberVisible,
-        this.cipherId
+        this.cipherId,
       );
     }
   }
@@ -280,7 +280,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     if (this.showCardCode) {
       this.eventCollectionService.collect(
         EventType.Cipher_ClientToggledCardCodeVisible,
-        this.cipherId
+        this.cipherId,
       );
     }
   }
@@ -301,7 +301,7 @@ export class ViewComponent implements OnDestroy, OnInit {
       this.platformUtilsService.showToast(
         "warning",
         null,
-        this.i18nService.t("passwordExposed", matches.toString())
+        this.i18nService.t("passwordExposed", matches.toString()),
       );
     } else {
       this.platformUtilsService.showToast("success", null, this.i18nService.t("passwordSafe"));
@@ -337,7 +337,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     this.platformUtilsService.showToast(
       "info",
       null,
-      this.i18nService.t("valueCopied", this.i18nService.t(typeI18nKey))
+      this.i18nService.t("valueCopied", this.i18nService.t(typeI18nKey)),
     );
 
     if (typeI18nKey === "password") {
@@ -368,7 +368,7 @@ export class ViewComponent implements OnDestroy, OnInit {
       this.platformUtilsService.showToast(
         "error",
         this.i18nService.t("premiumRequired"),
-        this.i18nService.t("premiumRequiredDesc")
+        this.i18nService.t("premiumRequiredDesc"),
       );
       return;
     }
@@ -377,7 +377,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     try {
       const attachmentDownloadResponse = await this.apiService.getAttachmentData(
         this.cipher.id,
-        attachment.id
+        attachment.id,
       );
       url = attachmentDownloadResponse.url;
     } catch (e) {

@@ -19,7 +19,7 @@ import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.s
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
 import { DialogService } from "@bitwarden/components";
 import { PasswordRepromptService } from "@bitwarden/vault";
@@ -66,7 +66,7 @@ export class AddEditComponent extends BaseAddEditComponent {
     passwordRepromptService: PasswordRepromptService,
     logService: LogService,
     sendApiService: SendApiService,
-    dialogService: DialogService
+    dialogService: DialogService,
   ) {
     super(
       cipherService,
@@ -184,12 +184,13 @@ export class AddEditComponent extends BaseAddEditComponent {
       BrowserFido2UserInterfaceSession.confirmNewCredentialResponse(
         sessionId,
         this.cipher.id,
-        userVerification
+        userVerification,
       );
       return true;
     }
 
     if (this.inAddEditPopoutWindow()) {
+      this.messagingService.send("addEditCipherSubmitted");
       await closeAddEditVaultItemPopout(1000);
       return true;
     }
@@ -306,7 +307,7 @@ export class AddEditComponent extends BaseAddEditComponent {
 
   private async handleFido2UserVerification(
     sessionId: string,
-    userVerification: boolean
+    userVerification: boolean,
   ): Promise<boolean> {
     // We are bypassing user verification pending implementation of PIN and biometric support.
     return true;
@@ -323,7 +324,7 @@ export class AddEditComponent extends BaseAddEditComponent {
       this.platformUtilsService.showToast(
         "info",
         null,
-        this.i18nService.t("passwordRepromptDisabledAutofillOnPageLoad")
+        this.i18nService.t("passwordRepromptDisabledAutofillOnPageLoad"),
       );
       return;
     }
@@ -331,14 +332,14 @@ export class AddEditComponent extends BaseAddEditComponent {
     this.platformUtilsService.showToast(
       "info",
       null,
-      this.i18nService.t("autofillOnPageLoadSetToDefault")
+      this.i18nService.t("autofillOnPageLoadSetToDefault"),
     );
   }
 
   private inAddEditPopoutWindow() {
     return BrowserPopupUtils.inSingleActionPopout(
       window,
-      this.singleActionKey || VaultPopoutType.addEditVaultItem
+      this.singleActionKey || VaultPopoutType.addEditVaultItem,
     );
   }
 

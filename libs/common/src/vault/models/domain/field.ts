@@ -1,9 +1,9 @@
 import { Jsonify } from "type-fest";
 
-import { FieldType, LinkedIdType } from "../../../enums";
 import Domain from "../../../platform/models/domain/domain-base";
 import { EncString } from "../../../platform/models/domain/enc-string";
 import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
+import { FieldType, LinkedIdType } from "../../enums";
 import { FieldData } from "../data/field.data";
 import { FieldView } from "../view/field.view";
 
@@ -28,7 +28,7 @@ export class Field extends Domain {
         name: null,
         value: null,
       },
-      []
+      [],
     );
   }
 
@@ -40,7 +40,7 @@ export class Field extends Domain {
         value: null,
       },
       orgId,
-      encKey
+      encKey,
     );
   }
 
@@ -55,7 +55,7 @@ export class Field extends Domain {
         type: null,
         linkedId: null,
       },
-      ["type", "linkedId"]
+      ["type", "linkedId"],
     );
     return f;
   }

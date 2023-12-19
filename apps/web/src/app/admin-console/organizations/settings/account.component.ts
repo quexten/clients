@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewContainerRef } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { combineLatest, lastValueFrom, Subject, switchMap, takeUntil, from, of } from "rxjs";
+import { combineLatest, from, lastValueFrom, of, Subject, switchMap, takeUntil } from "rxjs";
 
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
@@ -18,8 +18,8 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { DialogService } from "@bitwarden/components";
 
-import { ApiKeyComponent } from "../../../settings/api-key.component";
-import { PurgeVaultComponent } from "../../../settings/purge-vault.component";
+import { ApiKeyComponent } from "../../../auth/settings/security/api-key.component";
+import { PurgeVaultComponent } from "../../../vault/settings/purge-vault.component";
 
 import { DeleteOrganizationDialogResult, openDeleteOrganizationDialog } from "./components";
 
@@ -41,9 +41,13 @@ export class AccountComponent {
   canUseApi = false;
   org: OrganizationResponse;
   taxFormPromise: Promise<unknown>;
-  showCollectionManagementSettings$ = this.configService.getFeatureFlag$(
+  flexibleCollectionsEnabled$ = this.configService.getFeatureFlag$(
     FeatureFlag.FlexibleCollections,
-    false
+    false,
+  );
+  flexibleCollectionsV1Enabled$ = this.configService.getFeatureFlag$(
+    FeatureFlag.FlexibleCollectionsV1,
+    false,
   );
 
   // FormGroup validators taken from server Organization domain object
@@ -53,20 +57,24 @@ export class AccountComponent {
       {
         validators: [Validators.required, Validators.maxLength(50)],
         updateOn: "change",
-      }
+      },
     ),
     billingEmail: this.formBuilder.control(
       { value: "", disabled: true },
-      { validators: [Validators.required, Validators.email, Validators.maxLength(256)] }
+      { validators: [Validators.required, Validators.email, Validators.maxLength(256)] },
     ),
     businessName: this.formBuilder.control(
       { value: "", disabled: true },
-      { validators: [Validators.maxLength(50)] }
+      { validators: [Validators.maxLength(50)] },
     ),
   });
 
   protected collectionManagementFormGroup = this.formBuilder.group({
-    limitCollectionCreationDeletion: [false],
+    limitCollectionCreationDeletion: this.formBuilder.control({ value: false, disabled: true }),
+    allowAdminAccessToAllCollectionItems: this.formBuilder.control({
+      value: false,
+      disabled: true,
+    }),
   });
 
   protected organizationId: string;
@@ -85,7 +93,7 @@ export class AccountComponent {
     private organizationApiService: OrganizationApiServiceAbstraction,
     private dialogService: DialogService,
     private formBuilder: FormBuilder,
-    private configService: ConfigServiceAbstraction
+    private configService: ConfigServiceAbstraction,
   ) {}
 
   async ngOnInit() {
@@ -103,7 +111,7 @@ export class AccountComponent {
             from(this.organizationApiService.getKeys(organization.id)),
           ]);
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe(([organization, orgResponse, orgKeys]) => {
         // Set domain level organization variables
@@ -114,11 +122,13 @@ export class AccountComponent {
         // Update disabled states - reactive forms prefers not using disabled attribute
         if (!this.selfHosted) {
           this.formGroup.get("orgName").enable();
+          this.formGroup.get("businessName").enable();
+          this.collectionManagementFormGroup.get("limitCollectionCreationDeletion").enable();
+          this.collectionManagementFormGroup.get("allowAdminAccessToAllCollectionItems").enable();
         }
 
-        if (!this.selfHosted || this.canEditSubscription) {
+        if (!this.selfHosted && this.canEditSubscription) {
           this.formGroup.get("billingEmail").enable();
-          this.formGroup.get("businessName").enable();
         }
 
         // Org Response
@@ -135,6 +145,7 @@ export class AccountComponent {
         });
         this.collectionManagementFormGroup.patchValue({
           limitCollectionCreationDeletion: this.org.limitCollectionCreationDeletion,
+          allowAdminAccessToAllCollectionItems: this.org.allowAdminAccessToAllCollectionItems,
         });
 
         this.loading = false;
@@ -171,16 +182,23 @@ export class AccountComponent {
   };
 
   submitCollectionManagement = async () => {
+    // Early exit if self-hosted
+    if (this.selfHosted) {
+      return;
+    }
+
     const request = new OrganizationCollectionManagementUpdateRequest();
     request.limitCreateDeleteOwnerAdmin =
       this.collectionManagementFormGroup.value.limitCollectionCreationDeletion;
+    request.allowAdminAccessToAllCollectionItems =
+      this.collectionManagementFormGroup.value.allowAdminAccessToAllCollectionItems;
 
     await this.organizationApiService.updateCollectionManagement(this.organizationId, request);
 
     this.platformUtilsService.showToast(
       "success",
       null,
-      this.i18nService.t("collectionManagementUpdated")
+      this.i18nService.t("collectionManagementUpdated"),
     );
   };
 
@@ -210,7 +228,7 @@ export class AccountComponent {
       comp.keyType = "organization";
       comp.entityId = this.organizationId;
       comp.postKey = this.organizationApiService.getOrCreateApiKey.bind(
-        this.organizationApiService
+        this.organizationApiService,
       );
       comp.scope = "api.organization";
       comp.grantType = "client_credentials";

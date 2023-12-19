@@ -52,7 +52,7 @@ export class BrowserApi {
     return new Promise((resolve) =>
       chrome.windows.create(options, (window) => {
         resolve(window);
-      })
+      }),
     );
   }
 
@@ -73,12 +73,12 @@ export class BrowserApi {
    */
   static async updateWindowProperties(
     windowId: number,
-    options: chrome.windows.UpdateInfo
+    options: chrome.windows.UpdateInfo,
   ): Promise<void> {
     return new Promise((resolve) =>
       chrome.windows.update(windowId, options, () => {
         resolve();
-      })
+      }),
     );
   }
 
@@ -110,7 +110,7 @@ export class BrowserApi {
     return new Promise((resolve) =>
       chrome.tabs.get(tabId, (tab) => {
         resolve(tab);
-      })
+      }),
     );
   }
 
@@ -147,7 +147,7 @@ export class BrowserApi {
   static tabSendMessageData(
     tab: chrome.tabs.Tab,
     command: string,
-    data: any = null
+    data: any = null,
   ): Promise<void> {
     const obj: any = {
       command: command,
@@ -163,7 +163,7 @@ export class BrowserApi {
   static async tabSendMessage<T>(
     tab: chrome.tabs.Tab,
     obj: T,
-    options: chrome.tabs.MessageSendOptions = null
+    options: chrome.tabs.MessageSendOptions = null,
   ): Promise<void> {
     if (!tab || !tab.id) {
       return;
@@ -183,7 +183,7 @@ export class BrowserApi {
     tabId: number,
     message: TabMessage,
     options?: chrome.tabs.MessageSendOptions,
-    responseCallback?: (response: T) => void
+    responseCallback?: (response: T) => void,
   ) {
     chrome.tabs.sendMessage<TabMessage, T>(tabId, message, options, responseCallback);
   }
@@ -217,7 +217,7 @@ export class BrowserApi {
 
   static createNewTab(url: string, active = true): Promise<chrome.tabs.Tab> {
     return new Promise((resolve) =>
-      chrome.tabs.create({ url: url, active: active }, (tab) => resolve(tab))
+      chrome.tabs.create({ url: url, active: active }, (tab) => resolve(tab)),
     );
   }
 
@@ -225,7 +225,7 @@ export class BrowserApi {
   // them when the popup gets unloaded, otherwise we cause a memory leak
   private static trackedChromeEventListeners: [
     event: chrome.events.Event<(...args: unknown[]) => unknown>,
-    callback: (...args: unknown[]) => unknown
+    callback: (...args: unknown[]) => unknown,
   ][] = [];
 
   static messageListener(
@@ -233,8 +233,8 @@ export class BrowserApi {
     callback: (
       message: any,
       sender: chrome.runtime.MessageSender,
-      sendResponse: any
-    ) => boolean | void
+      sendResponse: any,
+    ) => boolean | void,
   ) {
     BrowserApi.addListener(chrome.runtime.onMessage, callback);
   }
@@ -252,7 +252,7 @@ export class BrowserApi {
   }
 
   static storageChangeListener(
-    callback: Parameters<typeof chrome.storage.onChanged.addListener>[0]
+    callback: Parameters<typeof chrome.storage.onChanged.addListener>[0],
   ) {
     BrowserApi.addListener(chrome.storage.onChanged, callback);
   }
@@ -268,7 +268,7 @@ export class BrowserApi {
    */
   static addListener<T extends (...args: readonly unknown[]) => unknown>(
     event: chrome.events.Event<T>,
-    callback: T
+    callback: T,
   ) {
     event.addListener(callback);
 
@@ -285,7 +285,7 @@ export class BrowserApi {
    */
   static removeListener<T extends (...args: readonly unknown[]) => unknown>(
     event: chrome.events.Event<T>,
-    callback: T
+    callback: T,
   ) {
     event.removeListener(callback);
 
@@ -315,6 +315,11 @@ export class BrowserApi {
     return chrome.runtime.sendMessage(message);
   }
 
+  static sendMessageWithResponse<TResponse>(subscriber: string, arg: any = {}) {
+    const message = Object.assign({}, { command: subscriber }, arg);
+    return new Promise<TResponse>((resolve) => chrome.runtime.sendMessage(message, resolve));
+  }
+
   static async focusTab(tabId: number) {
     chrome.tabs.update(tabId, { active: true, highlighted: true });
   }
@@ -334,7 +339,7 @@ export class BrowserApi {
     return process.env.ENV !== "production";
   }
 
-  static getUILanguage(win: Window) {
+  static getUILanguage() {
     return chrome.i18n.getUILanguage();
   }
 
@@ -369,9 +374,20 @@ export class BrowserApi {
     if (BrowserApi.isWebExtensionsApi) {
       return browser.permissions.request(permission);
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       chrome.permissions.request(permission, resolve);
     });
+  }
+
+  /**
+   * Checks if the user has provided the given permissions to the extension.
+   *
+   * @param permissions - The permissions to check.
+   */
+  static async permissionsGranted(permissions: string[]): Promise<boolean> {
+    return new Promise((resolve) =>
+      chrome.permissions.contains({ permissions }, (result) => resolve(result)),
+    );
   }
 
   static getPlatformInfo(): Promise<browser.runtime.PlatformInfo | chrome.runtime.PlatformInfo> {
@@ -388,7 +404,7 @@ export class BrowserApi {
   }
 
   static getSidebarAction(
-    win: Window & typeof globalThis
+    win: Window & typeof globalThis,
   ): OperaSidebarAction | FirefoxSidebarAction | null {
     const deviceType = BrowserPlatformUtilsService.getDevice(win);
     if (deviceType !== DeviceType.FirefoxExtension && deviceType !== DeviceType.OperaExtension) {

@@ -2,16 +2,10 @@
 import { BehaviorSubject } from "rxjs";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
-import { OrganizationUserResetPasswordEnrollmentRequest } from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
-import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { OrganizationKeysResponse } from "@bitwarden/common/admin-console/models/response/organization-keys.response";
-import { OrganizationApiService } from "@bitwarden/common/admin-console/services/organization/organization-api.service";
-import { EncryptionType, KdfType } from "@bitwarden/common/enums";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { EncryptionType, KdfType } from "@bitwarden/common/platform/enums";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import {
   MasterKey,
@@ -29,6 +23,7 @@ import { Folder } from "@bitwarden/common/vault/models/domain/folder";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 
+import { AccountRecoveryService } from "../../admin-console/organizations/members/services/account-recovery/account-recovery.service";
 import { EmergencyAccessService } from "../emergency-access";
 
 import { MigrateFromLegacyEncryptionService } from "./migrate-legacy-encryption.service";
@@ -36,10 +31,8 @@ import { MigrateFromLegacyEncryptionService } from "./migrate-legacy-encryption.
 describe("migrateFromLegacyEncryptionService", () => {
   let migrateFromLegacyEncryptionService: MigrateFromLegacyEncryptionService;
 
-  const organizationService = mock<OrganizationService>();
-  const organizationApiService = mock<OrganizationApiService>();
-  const organizationUserService = mock<OrganizationUserService>();
   const emergencyAccessService = mock<EmergencyAccessService>();
+  const accountRecoveryService = mock<AccountRecoveryService>();
   const apiService = mock<ApiService>();
   const encryptService = mock<EncryptService>();
   const cryptoService = mock<CryptoService>();
@@ -55,10 +48,8 @@ describe("migrateFromLegacyEncryptionService", () => {
     jest.clearAllMocks();
 
     migrateFromLegacyEncryptionService = new MigrateFromLegacyEncryptionService(
-      organizationService,
-      organizationApiService,
-      organizationUserService,
       emergencyAccessService,
+      accountRecoveryService,
       apiService,
       cryptoService,
       encryptService,
@@ -66,7 +57,7 @@ describe("migrateFromLegacyEncryptionService", () => {
       cipherService,
       folderService,
       sendService,
-      stateService
+      stateService,
     );
   });
 
@@ -86,7 +77,7 @@ describe("migrateFromLegacyEncryptionService", () => {
       cryptoService.isLegacyUser.mockResolvedValue(false);
 
       await expect(
-        migrateFromLegacyEncryptionService.createNewUserKey(mockMasterPassword)
+        migrateFromLegacyEncryptionService.createNewUserKey(mockMasterPassword),
       ).rejects.toThrowError("Invalid master password or user may not be legacy");
     });
   });
@@ -109,7 +100,7 @@ describe("migrateFromLegacyEncryptionService", () => {
 
       cryptoService.getPrivateKey.mockResolvedValue(new Uint8Array(64) as CsprngArray);
       cryptoService.rsaEncrypt.mockResolvedValue(
-        new EncString(EncryptionType.AesCbc256_HmacSha256_B64, "Encrypted")
+        new EncString(EncryptionType.AesCbc256_HmacSha256_B64, "Encrypted"),
       );
 
       folderViews = new BehaviorSubject<FolderView[]>(mockFolders);
@@ -122,7 +113,7 @@ describe("migrateFromLegacyEncryptionService", () => {
 
       encryptService.encrypt.mockImplementation((plainValue, userKey) => {
         return Promise.resolve(
-          new EncString(EncryptionType.AesCbc256_HmacSha256_B64, "Encrypted: " + plainValue)
+          new EncString(EncryptionType.AesCbc256_HmacSha256_B64, "Encrypted: " + plainValue),
         );
       });
 
@@ -131,7 +122,7 @@ describe("migrateFromLegacyEncryptionService", () => {
         encryptedFolder.id = folder.id;
         encryptedFolder.name = new EncString(
           EncryptionType.AesCbc256_HmacSha256_B64,
-          "Encrypted: " + folder.name
+          "Encrypted: " + folder.name,
         );
         return Promise.resolve(encryptedFolder);
       });
@@ -141,7 +132,7 @@ describe("migrateFromLegacyEncryptionService", () => {
         encryptedCipher.id = cipher.id;
         encryptedCipher.name = new EncString(
           EncryptionType.AesCbc256_HmacSha256_B64,
-          "Encrypted: " + cipher.name
+          "Encrypted: " + cipher.name,
         );
         return Promise.resolve(encryptedCipher);
       });
@@ -151,7 +142,7 @@ describe("migrateFromLegacyEncryptionService", () => {
       await migrateFromLegacyEncryptionService.updateKeysAndEncryptedData(
         mockMasterPassword,
         mockUserKey,
-        mockEncUserKey
+        mockEncUserKey,
       );
 
       expect(cryptoService.getOrDeriveMasterKey).toHaveBeenCalled();
@@ -161,7 +152,7 @@ describe("migrateFromLegacyEncryptionService", () => {
       await migrateFromLegacyEncryptionService.updateKeysAndEncryptedData(
         mockMasterPassword,
         mockUserKey,
-        mockEncUserKey
+        mockEncUserKey,
       );
       expect(syncService.fullSync).toHaveBeenCalledWith(true);
     });
@@ -173,8 +164,8 @@ describe("migrateFromLegacyEncryptionService", () => {
         migrateFromLegacyEncryptionService.updateKeysAndEncryptedData(
           mockMasterPassword,
           mockUserKey,
-          mockEncUserKey
-        )
+          mockEncUserKey,
+        ),
       ).rejects.toThrowError("sync failed");
 
       expect(apiService.postAccountKey).not.toHaveBeenCalled();
@@ -189,8 +180,8 @@ describe("migrateFromLegacyEncryptionService", () => {
         migrateFromLegacyEncryptionService.updateKeysAndEncryptedData(
           mockMasterPassword,
           mockUserKey,
-          mockEncUserKey
-        )
+          mockEncUserKey,
+        ),
       ).rejects.toThrowError("Ciphers failed to be retrieved");
 
       expect(apiService.postAccountKey).not.toHaveBeenCalled();
@@ -209,68 +200,6 @@ describe("migrateFromLegacyEncryptionService", () => {
       await migrateFromLegacyEncryptionService.updateEmergencyAccesses(mockUserKey);
 
       expect(emergencyAccessService.rotate).toHaveBeenCalled();
-    });
-  });
-
-  describe("updateAllAdminRecoveryKeys", () => {
-    let mockMasterPassword: string;
-    let mockUserKey: UserKey;
-
-    beforeEach(() => {
-      mockMasterPassword = "mockMasterPassword";
-
-      const mockRandomBytes = new Uint8Array(64) as CsprngArray;
-      mockUserKey = new SymmetricCryptoKey(mockRandomBytes) as UserKey;
-
-      organizationService.getAll.mockResolvedValue([
-        createOrganization("1", "Org 1", true),
-        createOrganization("2", "Org 2", true),
-        createOrganization("3", "Org 3", false),
-        createOrganization("4", "Org 4", false),
-      ]);
-
-      organizationApiService.getKeys.mockImplementation((orgId) => {
-        return Promise.resolve({
-          publicKey: orgId + "mockPublicKey",
-          privateKey: orgId + "mockPrivateKey",
-        } as OrganizationKeysResponse);
-      });
-    });
-
-    it("Only updates organizations that are enrolled in admin recovery", async () => {
-      await migrateFromLegacyEncryptionService.updateAllAdminRecoveryKeys(
-        mockMasterPassword,
-        mockUserKey
-      );
-
-      expect(
-        organizationUserService.putOrganizationUserResetPasswordEnrollment
-      ).toHaveBeenCalledWith(
-        "1",
-        expect.any(String),
-        expect.any(OrganizationUserResetPasswordEnrollmentRequest)
-      );
-      expect(
-        organizationUserService.putOrganizationUserResetPasswordEnrollment
-      ).toHaveBeenCalledWith(
-        "2",
-        expect.any(String),
-        expect.any(OrganizationUserResetPasswordEnrollmentRequest)
-      );
-      expect(
-        organizationUserService.putOrganizationUserResetPasswordEnrollment
-      ).not.toHaveBeenCalledWith(
-        "3",
-        expect.any(String),
-        expect.any(OrganizationUserResetPasswordEnrollmentRequest)
-      );
-      expect(
-        organizationUserService.putOrganizationUserResetPasswordEnrollment
-      ).not.toHaveBeenCalledWith(
-        "4",
-        expect.any(String),
-        expect.any(OrganizationUserResetPasswordEnrollmentRequest)
-      );
     });
   });
 });
@@ -294,13 +223,4 @@ function createMockSend(id: string, name: string): Send {
   send.id = id;
   send.name = new EncString(EncryptionType.AesCbc256_HmacSha256_B64, name);
   return send;
-}
-
-function createOrganization(id: string, name: string, resetPasswordEnrolled: boolean) {
-  const org = new Organization();
-  org.id = id;
-  org.name = name;
-  org.resetPasswordEnrolled = resetPasswordEnrolled;
-  org.userId = "mockUserID";
-  return org;
 }

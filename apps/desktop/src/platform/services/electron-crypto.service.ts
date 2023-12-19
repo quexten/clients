@@ -1,8 +1,8 @@
-import { KeySuffixOptions } from "@bitwarden/common/enums";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { KeySuffixOptions } from "@bitwarden/common/platform/enums";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import {
@@ -21,7 +21,7 @@ export class ElectronCryptoService extends CryptoService {
     encryptService: EncryptService,
     platformUtilsService: PlatformUtilsService,
     logService: LogService,
-    protected override stateService: ElectronStateService
+    protected override stateService: ElectronStateService,
   ) {
     super(cryptoFunctionService, encryptService, platformUtilsService, logService, stateService);
   }
@@ -59,7 +59,7 @@ export class ElectronCryptoService extends CryptoService {
 
   protected override async getKeyFromStorage(
     keySuffix: KeySuffixOptions,
-    userId?: string
+    userId?: string,
   ): Promise<UserKey> {
     if (keySuffix === KeySuffixOptions.Biometric) {
       await this.migrateBiometricKeyIfNeeded(userId);
@@ -76,7 +76,7 @@ export class ElectronCryptoService extends CryptoService {
     }
     await this.stateService.setUserKeyBiometric(
       { key: key.keyB64, clientEncKeyHalf },
-      { userId: userId }
+      { userId: userId },
     );
   }
 

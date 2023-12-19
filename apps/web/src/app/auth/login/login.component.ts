@@ -15,6 +15,7 @@ import { PolicyResponse } from "@bitwarden/common/admin-console/models/response/
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { DevicesApiServiceAbstraction } from "@bitwarden/common/auth/abstractions/devices-api.service.abstraction";
 import { LoginService } from "@bitwarden/common/auth/abstractions/login.service";
+import { WebAuthnLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/webauthn/webauthn-login.service.abstraction";
 import { AuthResult } from "@bitwarden/common/auth/models/domain/auth-result";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
@@ -62,7 +63,8 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
     private routerService: RouterService,
     formBuilder: FormBuilder,
     formValidationErrorService: FormValidationErrorsService,
-    loginService: LoginService
+    loginService: LoginService,
+    webAuthnLoginService: WebAuthnLoginServiceAbstraction,
   ) {
     super(
       devicesApiService,
@@ -80,7 +82,8 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
       formBuilder,
       formValidationErrorService,
       route,
-      loginService
+      loginService,
+      webAuthnLoginService,
     );
     this.onSuccessfulLogin = async () => {
       this.messagingService.send("setFullWidth");
@@ -119,7 +122,7 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
           invite.organizationId,
           invite.token,
           invite.email,
-          invite.organizationUserId
+          invite.organizationUserId,
         );
         policyList = this.policyService.mapPoliciesFromToken(this.policies);
       } catch (e) {
@@ -129,7 +132,7 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
       if (policyList != null) {
         const resetPasswordPolicy = this.policyService.getResetPasswordPolicyOptions(
           policyList,
-          invite.organizationId
+          invite.organizationId,
         );
         // Set to true if policy enabled and auto-enroll enabled
         this.showResetPasswordAutoEnrollWarning =
@@ -152,7 +155,7 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
     if (this.enforcedPasswordPolicyOptions != null) {
       const strengthResult = this.passwordStrengthService.getPasswordStrength(
         masterPassword,
-        this.formGroup.value.email
+        this.formGroup.value.email,
       );
       const masterPasswordScore = strengthResult == null ? null : strengthResult.score;
 
@@ -161,7 +164,7 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
         !this.policyService.evaluateMasterPassword(
           masterPasswordScore,
           masterPassword,
-          this.enforcedPasswordPolicyOptions
+          this.enforcedPasswordPolicyOptions,
         )
       ) {
         const policiesData: { [id: string]: PolicyData } = {};
@@ -172,13 +175,8 @@ export class LoginComponent extends BaseLoginComponent implements OnInit {
       }
     }
 
-    const previousUrl = this.routerService.getPreviousUrl();
-    if (previousUrl) {
-      this.router.navigateByUrl(previousUrl);
-    } else {
-      this.loginService.clearValues();
-      this.router.navigate([this.successRoute]);
-    }
+    this.loginService.clearValues();
+    this.router.navigate([this.successRoute]);
   }
 
   goToHint() {

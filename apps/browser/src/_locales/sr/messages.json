@@ -268,6 +268,9 @@
   "length": {
     "message": "Дужина"
   },
+  "passwordMinLength": {
+    "message": "Минимална дужина лозинке"
+  },
   "uppercase": {
     "message": "Велика слова (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Подесите метод откључавања да бисте променили радњу временског ограничења сефа."
   },
+  "unlockMethodNeeded": {
+    "message": "Подесите метод откључавања у подешавањима"
+  },
   "rateExtension": {
     "message": "Оцени овај додатак"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Закључај одмах"
+  },
+  "lockAll": {
+    "message": "Закључај све"
   },
   "immediately": {
     "message": "Одмах"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "„Нотификације Додај Лозинку“ аутоматски тражи да сачувате нове пријаве у сефу кад год се први пут пријавите на њих."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Затражите да додате ставку ако она није пронађена у вашем сефу. Односи се на све пријављене налоге."
+  },
   "showCardsCurrentTab": {
     "message": "Прикажи кредитне картице на страници картице"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Прикажи потврду за ажурирање тренутне лозинке за пријаву када се промена препозна на Web страници."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Затражите ажурирање лозинке за пријаву када се открије промена на веб локацији. Односи се на све пријављене налоге."
+  },
+  "enableUsePasskeys": {
+    "message": "Затражите за сачувавање и коришћење приступне кључеве"
+  },
+  "usePasskeysDesc": {
+    "message": "Затражите да сачувате нове приступне кључеве или се пријавите са приступним кључевима ускладиштеним у вашем сефу. Односи се на све пријављене налоге."
+  },
   "notificationChangeDesc": {
     "message": "Да ли желите да ажурирате ову лозинку за Bitwarden?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Користите други клик за приступање генерисању лозинки и пријавама за тренутну web страницу. "
   },
+  "contextMenuItemDescAlt": {
+    "message": "Користите други клик за приступање генерисању лозинки и пријавама за тренутну web страницу. Односи се на све пријављене налоге."
+  },
   "defaultUriMatchDetection": {
     "message": "Стандардно налажење УРЛ",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Промени боје апликације"
+  },
+  "themeDescAlt": {
+    "message": "Промените тему боје апликације. Односи се на све пријављене налоге."
   },
   "dark": {
     "message": "Тамна",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "УРЛ адресе окружења су сачуване."
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Прикажи мени за ауто-попуњавање на пољима обрасца",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Односи се на све пријављене налоге."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Искључите уграђен менаџер лозинки вашег претраживача да бисте избегли сукобе."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Измените подешавања претраживача."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Искључено",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Када је поље изабрано (у фокусу)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Када је изабрана икона ауто-попуњавања",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Омогући аутоматско попуњавање након учитавања странице"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Прикажи препознатљиву слику поред сваке ставке за пријаву."
+  },
+  "faviconDescAlt": {
+    "message": "Приказује препознатљиву слику поред сваке пријаве. Важи за све пријављене налоге."
   },
   "enableBadgeCounter": {
     "message": "Прикажи бедж са бројачем"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Идентитет"
-  },
-  "typePasskey": {
-    "message": "Приступачни кључ"
   },
   "passwordHistory": {
     "message": "Историја Лозинке"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden неће тражити да сачува податке за пријављивање за ове домене. Морате освежити страницу да би промене ступиле на снагу."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden неће тражити да сачува податке за пријављивање за ове домене за све пријављене налоге. Морате освежити страницу да би промене ступиле на снагу."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ није важећи домен",
@@ -2227,7 +2282,7 @@
     "message": "Како ауто-попуњавати"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Изаберите ставку са ове странице или користите пречицу: $COMMAND$",
+    "message": "Select an item from this screen, use the shortcut $COMMAND$, or explore other options in settings.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Изаберите ставку са ове странице или поставите пречицу у подешавањима."
+    "message": "Select an item from this screen, or explore other options in settings."
   },
   "gotIt": {
     "message": "Разумем"
@@ -2457,6 +2512,56 @@
     "message": "Искључите поновни упит главне лозинке да бисте уредили ово поље",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Bitwarden мени дугмета ауто-попуњавања",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Пребаци мени ауто-попуњавања Bitwarden-а",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Bitwarden мени ауто-попуњавања",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Откључајте налог да бисте видели подударне пријаве",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Откључај налог",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Попунити акредитиве за",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Делимично корисничко име",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Нема ставки за приказивање",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Нова ставке",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Додајте нову ставку сефу",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Мени ауто-попуњавања Bitwarden-а је доступан. Притисните тастер са стрелицом надоле да бисте изабрали.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Укључи"
+  },
+  "ignore": {
+    "message": "Игнориши"
+  },
   "importData": {
     "message": "Увези податке",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Потврдити лозинку датотеке"
+  },
+  "typePasskey": {
+    "message": "Приступачни кључ"
   },
   "passkeyNotCopied": {
     "message": "Приступачни кључ неће бити копиран"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Унети YubiKey који је асоциран са LastPass налогом у УСБ порт вашег рачунара, и затим додирните његово дугме."
+  },
+  "switchAccount": {
+    "message": "Промени налог"
+  },
+  "switchAccounts": {
+    "message": "Промени налог"
+  },
+  "switchToAccount": {
+    "message": "Пребаците се на налог"
+  },
+  "activeAccount": {
+    "message": "Активан налог"
+  },
+  "accountLimitReached": {
+    "message": "Граница налога достигнута. Одјавите се од једног налога да би додали други."
+  },
+  "active": {
+    "message": "активан"
+  },
+  "locked": {
+    "message": "закључан"
+  },
+  "unlocked": {
+    "message": "деблокиран"
+  },
+  "server": {
+    "message": "сервер"
+  },
+  "hostedAt": {
+    "message": "hosted at"
   }
 }

@@ -2,13 +2,13 @@ import { mock } from "jest-mock-extended";
 import { Jsonify } from "type-fest";
 
 import { makeStaticByteArray, mockEnc, mockFromJson } from "../../../../spec/utils";
-import { FieldType, SecureNoteType, UriMatchType } from "../../../enums";
 import { CryptoService } from "../../../platform/abstractions/crypto.service";
 import { EncryptService } from "../../../platform/abstractions/encrypt.service";
 import { EncString } from "../../../platform/models/domain/enc-string";
 import { ContainerService } from "../../../platform/services/container.service";
 import { InitializerKey } from "../../../platform/services/cryptography/initializer-key";
 import { CipherService } from "../../abstractions/cipher.service";
+import { FieldType, SecureNoteType, UriMatchType } from "../../enums";
 import { CipherRepromptType } from "../../enums/cipher-reprompt-type";
 import { CipherType } from "../../enums/cipher-type";
 import { CipherData } from "../../models/data/cipher.data";
@@ -230,11 +230,11 @@ describe("Cipher DTO", () => {
 
       (window as any).bitwardenContainerService = new ContainerService(
         cryptoService,
-        encryptService
+        encryptService,
       );
 
       const cipherView = await cipher.decrypt(
-        await cipherService.getKeyForCipherKeyDecryption(cipher)
+        await cipherService.getKeyForCipherKeyDecryption(cipher),
       );
 
       expect(cipherView).toMatchObject({
@@ -350,11 +350,11 @@ describe("Cipher DTO", () => {
 
       (window as any).bitwardenContainerService = new ContainerService(
         cryptoService,
-        encryptService
+        encryptService,
       );
 
       const cipherView = await cipher.decrypt(
-        await cipherService.getKeyForCipherKeyDecryption(cipher)
+        await cipherService.getKeyForCipherKeyDecryption(cipher),
       );
 
       expect(cipherView).toMatchObject({
@@ -488,11 +488,11 @@ describe("Cipher DTO", () => {
 
       (window as any).bitwardenContainerService = new ContainerService(
         cryptoService,
-        encryptService
+        encryptService,
       );
 
       const cipherView = await cipher.decrypt(
-        await cipherService.getKeyForCipherKeyDecryption(cipher)
+        await cipherService.getKeyForCipherKeyDecryption(cipher),
       );
 
       expect(cipherView).toMatchObject({
@@ -650,11 +650,11 @@ describe("Cipher DTO", () => {
 
       (window as any).bitwardenContainerService = new ContainerService(
         cryptoService,
-        encryptService
+        encryptService,
       );
 
       const cipherView = await cipher.decrypt(
-        await cipherService.getKeyForCipherKeyDecryption(cipher)
+        await cipherService.getKeyForCipherKeyDecryption(cipher),
       );
 
       expect(cipherView).toMatchObject({

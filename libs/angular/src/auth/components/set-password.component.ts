@@ -13,13 +13,17 @@ import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/mod
 import { OrganizationAutoEnrollStatusResponse } from "@bitwarden/common/admin-console/models/response/organization-auto-enroll-status.response";
 import { ForceSetPasswordReason } from "@bitwarden/common/auth/models/domain/force-set-password-reason";
 import { SetPasswordRequest } from "@bitwarden/common/auth/models/request/set-password.request";
-import { HashPurpose, DEFAULT_KDF_TYPE, DEFAULT_KDF_CONFIG } from "@bitwarden/common/enums";
 import { KeysRequest } from "@bitwarden/common/models/request/keys.request";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import {
+  HashPurpose,
+  DEFAULT_KDF_TYPE,
+  DEFAULT_KDF_CONFIG,
+} from "@bitwarden/common/platform/enums";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { AccountDecryptionOptions } from "@bitwarden/common/platform/models/domain/account";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
@@ -59,7 +63,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
     stateService: StateService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private organizationUserService: OrganizationUserService,
-    dialogService: DialogService
+    dialogService: DialogService,
   ) {
     super(
       i18nService,
@@ -69,7 +73,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
       platformUtilsService,
       policyService,
       stateService,
-      dialogService
+      dialogService,
     );
   }
 
@@ -105,12 +109,12 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
         switchMap((orgAutoEnrollStatusResponse: OrganizationAutoEnrollStatusResponse) =>
           // Must get org id from response to get master password policy options
           this.policyApiService.getMasterPasswordPolicyOptsForOrgUser(
-            orgAutoEnrollStatusResponse.id
-          )
+            orgAutoEnrollStatusResponse.id,
+          ),
         ),
         tap((masterPasswordPolicyOptions: MasterPasswordPolicyOptions) => {
           this.enforcedPolicyOptions = masterPasswordPolicyOptions;
-        })
+        }),
       )
       .subscribe({
         error: () => {
@@ -128,7 +132,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
   async performSubmitActions(
     masterPasswordHash: string,
     masterKey: MasterKey,
-    userKey: [UserKey, EncString]
+    userKey: [UserKey, EncString],
   ) {
     let keysRequest: KeysRequest | null = null;
     let newKeyPair: [string, EncString] | null = null;
@@ -153,7 +157,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
       this.kdf,
       this.kdfConfig.iterations,
       this.kdfConfig.memory,
-      this.kdfConfig.parallelism
+      this.kdfConfig.parallelism,
     );
     try {
       if (this.resetPasswordAutoEnroll) {
@@ -181,7 +185,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
             return this.organizationUserService.putOrganizationUserResetPasswordEnrollment(
               this.orgId,
               userId,
-              resetRequest
+              resetRequest,
             );
           });
       } else {
@@ -210,7 +214,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
   protected async onSetPasswordSuccess(
     masterKey: MasterKey,
     userKey: [UserKey, EncString],
-    keyPair: [string, EncString] | null
+    keyPair: [string, EncString] | null,
   ) {
     // Clear force set password reason to allow navigation back to vault.
     await this.stateService.setForceSetPasswordReason(ForceSetPasswordReason.None);
@@ -240,7 +244,7 @@ export class SetPasswordComponent extends BaseChangePasswordComponent {
     const localMasterKeyHash = await this.cryptoService.hashMasterKey(
       this.masterPassword,
       masterKey,
-      HashPurpose.LocalAuthorization
+      HashPurpose.LocalAuthorization,
     );
     await this.cryptoService.setMasterKeyHash(localMasterKeyHash);
   }

@@ -1,18 +1,19 @@
 import {
-  CreateCredentialParams,
   CreateCredentialResult,
-  AssertCredentialParams,
   AssertCredentialResult,
 } from "@bitwarden/common/vault/abstractions/fido2/fido2-client.service.abstraction";
 import { Fido2Utils } from "@bitwarden/common/vault/services/fido2/fido2-utils";
 
+import {
+  InsecureAssertCredentialParams,
+  InsecureCreateCredentialParams,
+} from "./content/messaging/message";
+
 export class WebauthnUtils {
   static mapCredentialCreationOptions(
     options: CredentialCreationOptions,
-    origin: string,
-    sameOriginWithAncestors: boolean,
-    fallbackSupported: boolean
-  ): CreateCredentialParams {
+    fallbackSupported: boolean,
+  ): InsecureCreateCredentialParams {
     const keyOptions = options.publicKey;
 
     if (keyOptions == undefined) {
@@ -20,7 +21,6 @@ export class WebauthnUtils {
     }
 
     return {
-      origin,
       attestation: keyOptions.attestation,
       authenticatorSelection: {
         requireResidentKey: keyOptions.authenticatorSelection?.requireResidentKey,
@@ -45,9 +45,9 @@ export class WebauthnUtils {
       user: {
         id: Fido2Utils.bufferToString(keyOptions.user.id),
         displayName: keyOptions.user.displayName,
+        name: keyOptions.user.name,
       },
       timeout: keyOptions.timeout,
-      sameOriginWithAncestors,
       fallbackSupported,
     };
   }
@@ -67,7 +67,7 @@ export class WebauthnUtils {
         },
 
         getPublicKey(): ArrayBuffer {
-          return null;
+          return Fido2Utils.stringToBuffer(result.publicKey);
         },
 
         getPublicKeyAlgorithm(): number {
@@ -92,10 +92,8 @@ export class WebauthnUtils {
 
   static mapCredentialRequestOptions(
     options: CredentialRequestOptions,
-    origin: string,
-    sameOriginWithAncestors: boolean,
-    fallbackSupported: boolean
-  ): AssertCredentialParams {
+    fallbackSupported: boolean,
+  ): InsecureAssertCredentialParams {
     const keyOptions = options.publicKey;
 
     if (keyOptions == undefined) {
@@ -103,14 +101,12 @@ export class WebauthnUtils {
     }
 
     return {
-      origin,
       allowedCredentialIds:
         keyOptions.allowCredentials?.map((c) => Fido2Utils.bufferToString(c.id)) ?? [],
       challenge: Fido2Utils.bufferToString(keyOptions.challenge),
       rpId: keyOptions.rpId,
       userVerification: keyOptions.userVerification,
       timeout: keyOptions.timeout,
-      sameOriginWithAncestors,
       fallbackSupported,
     };
   }

@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Entrar com senha mestra"
   },
+  "readingPasskeyLoading": {
+    "message": "Lendo a senha..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Mantenha esta janela aberta e siga as instruções do seu navegador."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Use um método de login diferente"
+  },
   "loginWithPasskey": {
     "message": "Iniciar sessão com a chave de acesso"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Invalid Passkey. Please try again."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA for passkeys is not supported. Update the app to log in."
   },
   "loginWithPasskeyInfo": {
     "message": "Use uma senha gerada que fará o login automaticamente sem uma senha. Biometrias como reconhecimento facial ou impressão digital, ou outro método de segurança FIDO2 verificarão sua identidade."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Criptografia não suportada"
   },
-  "encryptionNotEnabled": {
-    "message": "Criptografia não habilitada"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
     "message": "Usado para criptografia"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Exportar"
   },
+  "exportFrom": {
+    "message": "Export from"
+  },
   "exportVault": {
     "message": "Exportar Cofre"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Comprimento"
+  },
+  "passwordMinLength": {
+    "message": "Minimum password length"
   },
   "uppercase": {
     "message": "Maiúsculas (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Este Send é oculto por padrão. Você pode alternar a visibilidade usando o botão abaixo.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Baixar Arquivo"
+  "downloadAttachments": {
+    "message": "Baixar anexos"
   },
   "sendAccessUnavailable": {
     "message": "O Send que você está tentando acessar não existe ou não está mais disponível.",
@@ -4609,7 +4630,7 @@
     "message": "para testar hoje mesmo.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
+  "sendAccessCreatorIdentifier": {
     "message": "O usuário $USER_IDENTIFIER$ do Bitwarden compartilhou o seguinte com você",
     "placeholders": {
       "user_identifier": {
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Avançar"
   },
+  "ssoLoginIsRequired": {
+    "message": "Login SSO é obrigatório"
+  },
   "selectedRegionFlag": {
     "message": "Sinalização de região selecionada"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Limitar criação de coleção e exclusão a proprietários e administradores"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Proprietários e administradores podem gerenciar todas as coleções e itens"
+  },
   "collectionManagementUpdated": {
     "message": "Comportamento de Gerenciamento de Coleção salvo"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "The passkey will not be copied to the cloned item. Do you want to continue cloning this item?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Definição de gerenciamento da coleção $ID$ modificada.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Veja instruções detalhadas no nosso site de ajuda em",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Project access updated"
+  },
+  "unexpectedErrorSend": {
+    "message": "Ocorreu um erro inesperado ao carregar este Envio. Tente novamente mais tarde."
+  },
+  "seatLimitReached": {
+    "message": "Limite de lugares foi atingido"
+  },
+  "contactYourProvider": {
+    "message": "Entre em contato com seu provedor para comprar lugares adicionais."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "O limite de lugares foi atingido. Entre em contato com seu provedor para comprar lugares adicionais."
+  },
+  "collectionAccessRestricted": {
+    "message": "O acesso à coleção está restrito"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Acesso à conta de serviço atualizado"
   }
 }

@@ -26,7 +26,7 @@
   </app-callout>
   <ng-container *ngIf="ciphers.length">
     <app-callout type="danger" title="{{ 'unsecuredWebsitesFound' | i18n }}">
-      {{ "unsecuredWebsitesFoundDesc" | i18n : (ciphers.length | number) }}
+      {{ "unsecuredWebsitesFoundDesc" | i18n: (ciphers.length | number) }}
     </app-callout>
     <table class="table table-hover table-list table-ciphers">
       <tbody>
@@ -58,6 +58,16 @@
             </ng-container>
             <br />
             <small>{{ c.subTitle }}</small>
+          </td>
+          <td>
+            <app-org-badge
+              *ngIf="!organization"
+              [disabled]="disabled"
+              [organizationId]="c.organizationId"
+              [organizationName]="c.organizationId | orgNameFromId: (organizations$ | async)"
+              appStopProp
+            >
+            </app-org-badge>
           </td>
         </tr>
       </tbody>

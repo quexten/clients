@@ -1,12 +1,12 @@
 import { CryptoService } from "../../../platform/abstractions/crypto.service";
 import { I18nService } from "../../../platform/abstractions/i18n.service";
 import { StateService } from "../../../platform/abstractions/state.service";
-import { Verification } from "../../../types/verification";
 import { UserVerificationApiServiceAbstraction } from "../../abstractions/user-verification/user-verification-api.service.abstraction";
 import { UserVerificationService as UserVerificationServiceAbstraction } from "../../abstractions/user-verification/user-verification.service.abstraction";
 import { VerificationType } from "../../enums/verification-type";
 import { SecretVerificationRequest } from "../../models/request/secret-verification.request";
 import { VerifyOTPRequest } from "../../models/request/verify-otp.request";
+import { Verification } from "../../types/verification";
 
 /**
  * Used for general-purpose user verification throughout the app.
@@ -17,7 +17,7 @@ export class UserVerificationService implements UserVerificationServiceAbstracti
     private stateService: StateService,
     private cryptoService: CryptoService,
     private i18nService: I18nService,
-    private userVerificationApiService: UserVerificationApiServiceAbstraction
+    private userVerificationApiService: UserVerificationApiServiceAbstraction,
   ) {}
 
   /**
@@ -29,7 +29,7 @@ export class UserVerificationService implements UserVerificationServiceAbstracti
   async buildRequest<T extends SecretVerificationRequest>(
     verification: Verification,
     requestClass?: new () => T,
-    alreadyHashed?: boolean
+    alreadyHashed?: boolean,
   ) {
     this.validateInput(verification);
 
@@ -45,7 +45,7 @@ export class UserVerificationService implements UserVerificationServiceAbstracti
           verification.secret,
           await this.stateService.getEmail(),
           await this.stateService.getKdfType(),
-          await this.stateService.getKdfConfig()
+          await this.stateService.getKdfConfig(),
         );
       }
       request.masterPasswordHash = alreadyHashed
@@ -78,12 +78,12 @@ export class UserVerificationService implements UserVerificationServiceAbstracti
           verification.secret,
           await this.stateService.getEmail(),
           await this.stateService.getKdfType(),
-          await this.stateService.getKdfConfig()
+          await this.stateService.getKdfConfig(),
         );
       }
       const passwordValid = await this.cryptoService.compareAndUpdateKeyHash(
         verification.secret,
-        masterKey
+        masterKey,
       );
       if (!passwordValid) {
         throw new Error(this.i18nService.t("invalidMasterPassword"));

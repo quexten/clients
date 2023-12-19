@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "マスターパスワードでログイン"
   },
+  "readingPasskeyLoading": {
+    "message": "パスキーを読み込み中..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "このウィンドウを開いたままにして、ブラウザの指示に従ってください。"
+  },
+  "useADifferentLogInMethod": {
+    "message": "別のログイン方法を使用する"
+  },
   "loginWithPasskey": {
     "message": "パスキー でログイン"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "無効なパスキーです。もう一度やり直してください。"
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "パスキーの2段階認証はサポートされていません。ログインするにはアプリを更新してください。"
   },
   "loginWithPasskeyInfo": {
     "message": "パスワードなしで自動的にログインできる、生成されたパスキーを使用します。顔や指紋などの生体認証、または他の FIDO2 認証方式で本人確認を行います。"
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "暗号化はサポートされていません"
   },
-  "encryptionNotEnabled": {
-    "message": "暗号化が有効ではありません"
+  "enablePasskeyEncryption": {
+    "message": "暗号化の設定"
   },
   "usedForEncryption": {
     "message": "暗号化に使用中"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "エクスポート"
   },
+  "exportFrom": {
+    "message": "エクスポート元"
+  },
   "exportVault": {
     "message": "保管庫のエクスポート"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "長さ"
+  },
+  "passwordMinLength": {
+    "message": "パスワードの最低文字数"
   },
   "uppercase": {
     "message": "大文字（A-Z）",
@@ -4218,8 +4239,8 @@
     "message": "このSendはデフォルトでは非表示になっています。下のボタンで表示・非表示が切り替え可能です。",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "ファイルをダウンロード"
+  "downloadAttachments": {
+    "message": "添付ファイルをダウンロード"
   },
   "sendAccessUnavailable": {
     "message": "アクセスしようとしているSendは存在しないか、利用できません。",
@@ -4609,8 +4630,8 @@
     "message": "試してみてください",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden ユーザー $USER_IDENTIFIER$ が共有しました",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden メンバー $USER_IDENTIFIER$ が共有しました",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "次へ"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO ログインが必要です"
+  },
   "selectedRegionFlag": {
     "message": "リージョン選択"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "コレクションの作成・削除を所有者と管理者のみに制限"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "所有者と管理者はすべてのコレクションとアイテムを管理できます"
+  },
   "collectionManagementUpdated": {
     "message": "コレクション管理の挙動を保存しました"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "パスキーは複製されたアイテムにコピーされません。このアイテムを複製しますか？"
   },
+  "modifiedCollectionManagement": {
+    "message": "コレクション管理設定 $ID$ を変更しました。",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "詳細な手順はこちらをご覧ください：",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "プロジェクトへのアクセスを更新しました"
+  },
+  "unexpectedErrorSend": {
+    "message": "この Send の読み込み中に予期しないエラーが発生しました。後でもう一度お試しください。"
+  },
+  "seatLimitReached": {
+    "message": "シート数の上限に達しました"
+  },
+  "contactYourProvider": {
+    "message": "追加のシートを購入するには、プロバイダに連絡してください。"
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "シート数の上限に達しました。追加のシートを購入するには、プロバイダに連絡してください。"
+  },
+  "collectionAccessRestricted": {
+    "message": "コレクションへのアクセスが制限されています"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "サービスアカウントへのアクセスが更新されました"
   }
 }

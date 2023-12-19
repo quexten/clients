@@ -44,7 +44,7 @@ export class DialogService extends Dialog implements OnDestroy {
     @Optional() router: Router,
     @Optional() authService: AuthService,
 
-    protected i18nService: I18nService
+    protected i18nService: I18nService,
   ) {
     super(_overlay, _injector, _defaultOptions, _parentDialog, _overlayContainer, scrollStrategy);
 
@@ -55,7 +55,7 @@ export class DialogService extends Dialog implements OnDestroy {
           filter((event) => event instanceof NavigationEnd),
           switchMap(() => authService.getAuthStatus()),
           filter((v) => v !== AuthenticationStatus.Unlocked),
-          takeUntil(this._destroy$)
+          takeUntil(this._destroy$),
         )
         .subscribe(() => this.closeAll());
     }
@@ -69,7 +69,7 @@ export class DialogService extends Dialog implements OnDestroy {
 
   override open<R = unknown, D = unknown, C = unknown>(
     componentOrTemplateRef: ComponentType<C> | TemplateRef<C>,
-    config?: DialogConfig<D, DialogRef<R, C>>
+    config?: DialogConfig<D, DialogRef<R, C>>,
   ): DialogRef<R, C> {
     config = {
       backdropClass: this.backDropClasses,
@@ -86,10 +86,7 @@ export class DialogService extends Dialog implements OnDestroy {
    * @returns `boolean` - True if the user accepted the dialog, false otherwise.
    */
   async openSimpleDialog(simpleDialogOptions: SimpleDialogOptions): Promise<boolean> {
-    const dialogRef = this.open<boolean>(SimpleConfigurableDialogComponent, {
-      data: simpleDialogOptions,
-      disableClose: simpleDialogOptions.disableClose,
-    });
+    const dialogRef = this.openSimpleDialogRef(simpleDialogOptions);
 
     return firstValueFrom(dialogRef.closed);
   }
@@ -97,16 +94,15 @@ export class DialogService extends Dialog implements OnDestroy {
   /**
    * Opens a simple dialog.
    *
-   * @deprecated Use `openSimpleDialog` instead. If you find a use case for the `dialogRef`
-   * please let #wg-component-library know and we can un-deprecate this method.
+   * You should probably use `openSimpleDialog` instead, unless you need to programmatically close the dialog.
    *
    * @param {SimpleDialogOptions} simpleDialogOptions - An object containing options for the dialog.
    * @returns `DialogRef` - The reference to the opened dialog.
    * Contains a closed observable which can be subscribed to for determining which button
    * a user pressed
    */
-  openSimpleDialogRef(simpleDialogOptions: SimpleDialogOptions): DialogRef {
-    return this.open(SimpleConfigurableDialogComponent, {
+  openSimpleDialogRef(simpleDialogOptions: SimpleDialogOptions): DialogRef<boolean> {
+    return this.open<boolean, SimpleDialogOptions>(SimpleConfigurableDialogComponent, {
       data: simpleDialogOptions,
       disableClose: simpleDialogOptions.disableClose,
     });

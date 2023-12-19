@@ -1,5 +1,4 @@
-import { SecureNoteType } from "@bitwarden/common/enums";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { SecureNoteType, CipherType } from "@bitwarden/common/vault/enums";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { IdentityView } from "@bitwarden/common/vault/models/view/identity.view";
@@ -68,7 +67,7 @@ export class DashlaneJsonImporter extends BaseImporter implements Importer {
 
       cipher.login.username = this.getValueOrDefault(
         credential.login,
-        this.getValueOrDefault(credential.secondaryLogin)
+        this.getValueOrDefault(credential.secondaryLogin),
       );
       if (this.isNullOrWhitespace(cipher.login.username)) {
         cipher.login.username = this.getValueOrDefault(credential.email);

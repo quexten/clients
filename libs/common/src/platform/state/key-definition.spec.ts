@@ -18,6 +18,37 @@ describe("KeyDefinition", () => {
     });
   });
 
+  describe("cleanupDelayMs", () => {
+    it("defaults to 1000ms", () => {
+      const keyDefinition = new KeyDefinition<boolean>(fakeStateDefinition, "fake", {
+        deserializer: (value) => value,
+      });
+
+      expect(keyDefinition).toBeTruthy();
+      expect(keyDefinition.cleanupDelayMs).toBe(1000);
+    });
+
+    it("can be overridden", () => {
+      const keyDefinition = new KeyDefinition<boolean>(fakeStateDefinition, "fake", {
+        deserializer: (value) => value,
+        cleanupDelayMs: 500,
+      });
+
+      expect(keyDefinition).toBeTruthy();
+      expect(keyDefinition.cleanupDelayMs).toBe(500);
+    });
+
+    it.each([0, -1])("throws on 0 or negative (%s)", (testValue: number) => {
+      expect(
+        () =>
+          new KeyDefinition<boolean>(fakeStateDefinition, "fake", {
+            deserializer: (value) => value,
+            cleanupDelayMs: testValue,
+          }),
+      ).toThrow();
+    });
+  });
+
   describe("record", () => {
     it("runs custom deserializer for each record value", () => {
       const recordDefinition = KeyDefinition.record<boolean>(fakeStateDefinition, "fake", {
@@ -47,11 +78,11 @@ describe("KeyDefinition", () => {
         "fake",
         {
           deserializer: (value) => !value,
-        }
+        },
       );
 
       const fancyRecord = recordDefinition.deserializer(
-        JSON.parse(`{ "myKey": false, "mySecondKey": true }`)
+        JSON.parse(`{ "myKey": false, "mySecondKey": true }`),
       );
 
       expect(fancyRecord).toBeTruthy();

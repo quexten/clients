@@ -45,7 +45,7 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
     private organizationApiService: OrganizationApiServiceAbstraction,
     private organizationUserService: OrganizationUserService,
     private messagingService: MessagingService,
-    private apiService: ApiService
+    private apiService: ApiService,
   ) {
     super(router, platformUtilsService, i18nService, route, stateService);
   }
@@ -77,13 +77,17 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
       initOrganization
         ? this.i18nService.t("inviteInitAcceptedDesc")
         : this.i18nService.t("inviteAcceptedDesc"),
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     this.router.navigate(["/vault"]);
   }
 
   async unauthedHandler(qParams: Params): Promise<void> {
     await this.prepareOrganizationInvitation(qParams);
+
+    // In certain scenarios, we want to accelerate the user through the accept org invite process
+    // For example, if the user has a BW account already, we want them to be taken to login instead of creation.
+    await this.accelerateInviteAcceptIfPossible(qParams);
   }
 
   private async acceptInitOrganizationFlow(qParams: Params): Promise<any> {
@@ -91,8 +95,8 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
       this.organizationUserService.postOrganizationUserAcceptInit(
         qParams.organizationId,
         qParams.organizationUserId,
-        request
-      )
+        request,
+      ),
     );
   }
 
@@ -101,13 +105,13 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
       this.organizationUserService.postOrganizationUserAccept(
         qParams.organizationId,
         qParams.organizationUserId,
-        request
-      )
+        request,
+      ),
     );
   }
 
   private async prepareAcceptInitRequest(
-    qParams: Params
+    qParams: Params,
   ): Promise<OrganizationUserAcceptInitRequest> {
     const request = new OrganizationUserAcceptInitRequest();
     request.token = qParams.token;
@@ -116,13 +120,13 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
     const [orgPublicKey, encryptedOrgPrivateKey] = await this.cryptoService.makeKeyPair(orgKey);
     const collection = await this.cryptoService.encrypt(
       this.i18nService.t("defaultCollection"),
-      orgKey
+      orgKey,
     );
 
     request.key = encryptedOrgKey.encryptedString;
     request.keys = new OrganizationKeysRequest(
       orgPublicKey,
-      encryptedOrgPrivateKey.encryptedString
+      encryptedOrgPrivateKey.encryptedString,
     );
     request.collectionName = collection.encryptedString;
 
@@ -159,7 +163,7 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
         qParams.organizationId,
         qParams.token,
         qParams.email,
-        qParams.organizationUserId
+        qParams.organizationUserId,
       );
       policyList = this.policyService.mapPoliciesFromToken(policies);
     } catch (e) {
@@ -169,7 +173,7 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
     if (policyList != null) {
       const result = this.policyService.getResetPasswordPolicyOptions(
         policyList,
-        qParams.organizationId
+        qParams.organizationId,
       );
       // Return true if policy enabled and auto-enroll enabled
       return result[1] && result[0].autoEnrollEnabled;
@@ -185,5 +189,48 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
       this.orgName = this.orgName.replace(/\+/g, " ");
     }
     await this.stateService.setOrganizationInvitation(qParams);
+  }
+
+  private async accelerateInviteAcceptIfPossible(qParams: Params): Promise<void> {
+    // Extract the query params we need to make routing acceleration decisions
+    const orgSsoIdentifier = qParams.orgSsoIdentifier;
+    const orgUserHasExistingUser = this.stringToNullOrBool(qParams.orgUserHasExistingUser);
+
+    // if orgUserHasExistingUser is null, short circuit for backwards compatibility w/ older servers
+    if (orgUserHasExistingUser == null) {
+      return;
+    }
+
+    // if user exists, send user to login
+    if (orgUserHasExistingUser) {
+      this.router.navigate(["/login"], {
+        queryParams: { email: qParams.email },
+      });
+      return;
+    }
+
+    // no user exists; so either sign in via SSO and JIT provision one or simply register.
+
+    if (orgSsoIdentifier) {
+      // We only send sso org identifier if the org has SSO enabled and the SSO policy required.
+      this.router.navigate(["/sso"], {
+        queryParams: { email: qParams.email, identifier: orgSsoIdentifier },
+      });
+      return;
+    }
+
+    // if SSO is disabled OR if sso is enabled but the SSO login required policy is not enabled
+    // then send user to create account
+    this.router.navigate(["/register"], {
+      queryParams: { email: qParams.email, fromOrgInvite: true },
+    });
+    return;
+  }
+
+  private stringToNullOrBool(s: string | undefined): boolean | null {
+    if (s === undefined) {
+      return null;
+    }
+    return s.toLowerCase() === "true";
   }
 }

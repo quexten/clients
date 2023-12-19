@@ -268,6 +268,9 @@
   "length": {
     "message": "Comprimento"
   },
+  "passwordMinLength": {
+    "message": "Comprimento mínimo da palavra-passe"
+  },
   "uppercase": {
     "message": "Maiúsculas (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Configure um método de desbloqueio para alterar a ação de tempo limite do seu cofre."
   },
+  "unlockMethodNeeded": {
+    "message": "Definir um método de desbloqueio nas Definições"
+  },
   "rateExtension": {
     "message": "Avaliar a extensão"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Bloquear agora"
+  },
+  "lockAll": {
+    "message": "Bloquear tudo"
   },
   "immediately": {
     "message": "Imediatamente"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Pedir para adicionar um item se não o encontrar no seu cofre."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Pedir para adicionar um item se não for encontrado um no seu cofre. Aplica-se a todas as contas com sessão iniciada."
+  },
   "showCardsCurrentTab": {
     "message": "Mostrar cartões na página Separador"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Pedir para atualizar a palavra-passe de uma credencial quando for detetada uma alteração num site."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Pedir para atualizar a palavra-passe de um início de sessão quando for detetada uma alteração num site. Aplica-se a todas as contas com sessão iniciada."
+  },
+  "enableUsePasskeys": {
+    "message": "Pedir para guardar e utilizar chaves de acesso"
+  },
+  "usePasskeysDesc": {
+    "message": "Pedir para guardar novas chaves de acesso ou iniciar sessão com chaves de acesso armazenadas no seu cofre. Aplica-se a todas as contas com sessão iniciada."
+  },
   "notificationChangeDesc": {
     "message": "Pretende atualizar esta palavra-passe no Bitwarden?"
   },
@@ -667,7 +688,10 @@
     "message": "Mostrar opções do menu de contexto"
   },
   "contextMenuItemDesc": {
-    "message": "Utilize um clique secundário para aceder à geração de palavras-passe e às credenciais correspondentes do site. "
+    "message": "Utilize um clique secundário para aceder à geração de palavras-passe e às credenciais correspondentes do site."
+  },
+  "contextMenuItemDescAlt": {
+    "message": "Utilize um clique secundário para aceder ao gerador de palavras-passe e aos inícios de sessão correspondentes para o site. Aplica-se a todas as contas com sessão iniciada."
   },
   "defaultUriMatchDetection": {
     "message": "Deteção de correspondência de URI predefinida",
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Alterar o tema de cores da aplicação."
+  },
+  "themeDescAlt": {
+    "message": "Altere o tema de cores da aplicação. Aplica-se a todas as contas com sessão iniciada."
   },
   "dark": {
     "message": "Escuro",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "URLs de ambiente guardados"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Mostrar menu de preenchimento automático nos campos do formulário",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Aplica-se a todas as contas com sessão iniciada."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Desative as definições do gestor de palavras-passe incorporado do seu navegador para evitar conflitos."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Editar as definições do navegador."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Desligado",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Se um campo estiver selecionado (em destaque)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Quando o ícone de preenchimento automático está selecionado",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Preencher automaticamente ao carregar a página"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Mostrar uma imagem reconhecível junto a cada credencial."
+  },
+  "faviconDescAlt": {
+    "message": "Mostrar uma imagem reconhecível junto a cada credencial. Aplica-se a todas as contas com sessão iniciada."
   },
   "enableBadgeCounter": {
     "message": "Mostrar distintivo de contador"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identidade"
-  },
-  "typePasskey": {
-    "message": "Chave de acesso"
   },
   "passwordHistory": {
     "message": "Histórico de palavras-passe"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "O Bitwarden não pedirá para guardar os detalhes de início de sessão destes domínios. É necessário atualizar a página para que as alterações tenham efeito."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "O Bitwarden não pedirá para guardar os detalhes de início de sessão destes domínios para todas as contas com sessão iniciada. É necessário atualizar a página para que as alterações tenham efeito."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ não é um domínio válido",
@@ -2227,7 +2282,7 @@
     "message": "Como preencher automaticamente"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Selecione um item desta página ou utilize o atalho: $COMMAND$",
+    "message": "Selecione um item a partir deste ecrã, utilize o atalho $COMMAND$ ou explore outras opções nas definições.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Selecione um item desta página ou defina um atalho nas definições."
+    "message": "Selecione um item a partir deste ecrã ou explore outras opções nas definições."
   },
   "gotIt": {
     "message": "Percebido"
@@ -2457,6 +2512,56 @@
     "message": "Desativar o pedido para reintroduzir a palavra-passe mestra para editar este campo",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Botão de menu de preenchimento automático Bitwarden",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Alternar o menu de preenchimento automático do Bitwarden",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Menu de preenchimento automático do Bitwarden",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Desbloqueie a sua conta para ver as credenciais correspondentes",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Desbloquear a conta",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Preencher as credenciais para",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Nome de utilizador parcial",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Nenhum item para mostrar",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Novo item",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Adicionar novo item do cofre",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Menu de preenchimento automático Bitwarden disponível. Prima a tecla de seta para baixo para selecionar.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Ativar"
+  },
+  "ignore": {
+    "message": "Ignorar"
+  },
   "importData": {
     "message": "Importar dados",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Confirmar a palavra-passe do ficheiro"
+  },
+  "typePasskey": {
+    "message": "Chave de acesso"
   },
   "passkeyNotCopied": {
     "message": "A chave de acesso não será copiada"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Insira a YubiKey associada à sua conta LastPass na porta USB do seu computador e, em seguida, toque no respetivo botão."
+  },
+  "switchAccount": {
+    "message": "Mudar de conta"
+  },
+  "switchAccounts": {
+    "message": "Mudar de contas"
+  },
+  "switchToAccount": {
+    "message": "Mudar para conta"
+  },
+  "activeAccount": {
+    "message": "Conta ativa"
+  },
+  "accountLimitReached": {
+    "message": "Limite de contas atingido. Termine a sessão de uma das contas para adicionar outra."
+  },
+  "active": {
+    "message": "ativa"
+  },
+  "locked": {
+    "message": "bloqueado"
+  },
+  "unlocked": {
+    "message": "desbloqueado"
+  },
+  "server": {
+    "message": "servidor"
+  },
+  "hostedAt": {
+    "message": "hospedado em"
   }
 }

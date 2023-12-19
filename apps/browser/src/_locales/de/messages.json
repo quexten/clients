@@ -268,6 +268,9 @@
   "length": {
     "message": "Länge"
   },
+  "passwordMinLength": {
+    "message": "Minimale Passwortlänge"
+  },
   "uppercase": {
     "message": "Großbuchstaben (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Richte eine Entsperrmethode ein, um deine Aktion bei Timeout-Timeout zu ändern."
   },
+  "unlockMethodNeeded": {
+    "message": "Lege eine Entsperrmethode in den Einstellungen fest"
+  },
   "rateExtension": {
     "message": "Erweiterung bewerten"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Jetzt sperren"
+  },
+  "lockAll": {
+    "message": "Alles sperren"
   },
   "immediately": {
     "message": "Sofort"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Nach dem Hinzufügen eines Eintrags fragen, wenn dieser nicht in deinem Tresor gefunden wurde."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Nach dem Hinzufügen eines Eintrags fragen, wenn er nicht in deinem Tresor gefunden wurde. Gilt für alle angemeldeten Konten."
+  },
   "showCardsCurrentTab": {
     "message": "Karten auf Tab Seite anzeigen"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Nach dem Aktualisieren eines Passworts fragen, wenn eine Änderung auf einer Website erkannt wird."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Nach dem Aktualisieren des Passworts von Zugangsdaten fragen, wenn eine Änderung auf einer Website erkannt wird. Gilt für alle angemeldeten Konten."
+  },
+  "enableUsePasskeys": {
+    "message": "Nach dem Speichern und Verwenden von Passkeys fragen"
+  },
+  "usePasskeysDesc": {
+    "message": "Danach fragen neue Passkeys zu speichern oder sich mit in deinem Tresor gespeicherten Passkeys anmelden. Gilt für alle angemeldeten Konten."
+  },
   "notificationChangeDesc": {
     "message": "Möchtest du dieses Passwort in Bitwarden aktualisieren?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Greife über einen Rechtsklick auf die Erstellung von Passwörtern und passende Zugangsdaten für die Website zu."
   },
+  "contextMenuItemDescAlt": {
+    "message": "Verwende einen Rechtsklick, um auf die Passwortgenerierung und die passenden Zugangsdaten für die Website zuzugreifen. Gilt für alle angemeldeten Konten."
+  },
   "defaultUriMatchDetection": {
     "message": "Standard URI-Übereinstimmungserkennung",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Ändere das Farbschema der Anwendung."
+  },
+  "themeDescAlt": {
+    "message": "Ändere das Farbschema der Anwendung. Gilt für alle angemeldeten Konten."
   },
   "dark": {
     "message": "Dunkel",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "URLs der Umgebung gespeichert"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Auto-Ausfüllen Menü in Formularfeldern anzeigen",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Gilt für alle angemeldeten Konten."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Deaktiviere die Einstellungen des eingebauten Passwort-Managers deines Browsers, um Konflikte zu vermeiden."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Browsereinstellungen bearbeiten."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Aus",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Wenn Feld ausgewählt ist (im Fokus)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Wenn das Auto-Ausfüllen Symbol ausgewählt ist",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Auto-Ausfüllen beim Laden einer Seite aktivieren"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Ein wiedererkennbares Bild neben jeden Zugangsdaten anzeigen."
+  },
+  "faviconDescAlt": {
+    "message": "Ein wiedererkennbares Bild neben jeden Zugangsdaten anzeigen. Gilt für alle angemeldeten Konten."
   },
   "enableBadgeCounter": {
     "message": "Badge-Zähler anzeigen"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identität"
-  },
-  "typePasskey": {
-    "message": "Passkey"
   },
   "passwordHistory": {
     "message": "Passwortverlauf"
@@ -1665,6 +1717,9 @@
   "excludedDomainsDesc": {
     "message": "Bitwarden wird keine Login-Daten für diese Domäne speichern. Du musst die Seite aktualisieren, damit die Änderungen wirksam werden."
   },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden wird für alle angemeldeten Konten nicht danach fragen Zugangsdaten für diese Domains speichern. Du musst die Seite neu laden, damit die Änderungen wirksam werden."
+  },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ ist keine gültige Domain",
     "placeholders": {
@@ -1926,11 +1981,11 @@
     "message": "Ordner auswählen..."
   },
   "orgPermissionsUpdatedMustSetPassword": {
-    "message": "Your organization permissions were updated, requiring you to set a master password.",
+    "message": "Deine Organisationsberechtigungen wurden aktualisiert und verlangen, dass du ein Master-Passwort festlegen musst.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "orgRequiresYouToSetPassword": {
-    "message": "Your organization requires you to set a master password.",
+    "message": "Deine Organisation verlangt, dass du ein Master-Passwort festlegen musst.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
   },
   "hours": {
@@ -2227,7 +2282,7 @@
     "message": "So funktioniert Auto-Ausfüllen"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Wähle einen Eintrag von dieser Seite aus oder verwende das Tastaturkürzel: $COMMAND$",
+    "message": "Wähle einen Eintrag von dieser Bildschirmseite, verwende das Tastaturkürzel $COMMAND$ oder entdecke andere Optionen in den Einstellungen.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Wähle einen Eintrag von dieser Seite aus oder lege ein Tastaturkürzel in den Einstellungen fest."
+    "message": "Wähle einen Eintrag von dieser Bildschirmseite oder entdecke andere Optionen in den Einstellungen."
   },
   "gotIt": {
     "message": "Verstanden"
@@ -2457,6 +2512,56 @@
     "message": "Deaktiviere die erneute Abfrage des Master-Passworts, um dieses Feld zu bearbeiten",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Bitwarden Auto-Ausfüllen Menütaste",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Bitwarden Auto-Ausfüllen Menü umschalten",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Bitwarden Auto-Ausfüllen Menü",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Entsperre dein Konto, um passende Zugangsdaten anzuzeigen",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Konto entsperren",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Zugangsdaten ausfüllen für",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Teil-Benutzername",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Kein Eintrag zum Anzeigen",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Neuer Eintrag",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Neuen Tresor-Eintrag hinzufügen",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Bitwarden Auto-Ausfüllen Menü verfügbar. Drücke die Pfeiltaste nach unten zum Auswählen.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Einschalten"
+  },
+  "ignore": {
+    "message": "Ignorieren"
+  },
   "importData": {
     "message": "Daten importieren",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Dateipasswort bestätigen"
+  },
+  "typePasskey": {
+    "message": "Passkey"
   },
   "passkeyNotCopied": {
     "message": "Passkey wird nicht kopiert"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Stecke den YubiKey, der mit deinem LastPass Konto verknüpft ist, in den USB-Port deines Computers und drücke dann den Knopf des YubiKey."
+  },
+  "switchAccount": {
+    "message": "Konto wechseln"
+  },
+  "switchAccounts": {
+    "message": "Konten wechseln"
+  },
+  "switchToAccount": {
+    "message": "Zum Konto wechseln"
+  },
+  "activeAccount": {
+    "message": "Aktives Konto"
+  },
+  "accountLimitReached": {
+    "message": "Kontolimit erreicht. Von einem Konto abmelden, um ein anderes hinzuzufügen."
+  },
+  "active": {
+    "message": "aktiv"
+  },
+  "locked": {
+    "message": "gesperrt"
+  },
+  "unlocked": {
+    "message": "entsperrt"
+  },
+  "server": {
+    "message": "Server"
+  },
+  "hostedAt": {
+    "message": "gehostet in"
   }
 }

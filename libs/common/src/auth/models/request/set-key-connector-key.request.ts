@@ -1,5 +1,5 @@
-import { KdfType } from "../../../enums";
 import { KeysRequest } from "../../../models/request/keys.request";
+import { KdfType } from "../../../platform/enums";
 import { KdfConfig } from "../domain/kdf-config";
 
 export class SetKeyConnectorKeyRequest {
@@ -16,7 +16,7 @@ export class SetKeyConnectorKeyRequest {
     kdf: KdfType,
     kdfConfig: KdfConfig,
     orgIdentifier: string,
-    keys: KeysRequest
+    keys: KeysRequest,
   ) {
     this.key = key;
     this.kdf = kdf;

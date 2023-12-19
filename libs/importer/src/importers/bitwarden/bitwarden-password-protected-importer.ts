@@ -1,7 +1,7 @@
 import { KdfConfig } from "@bitwarden/common/auth/models/domain/kdf-config";
-import { KdfType } from "@bitwarden/common/enums";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { KdfType } from "@bitwarden/common/platform/enums";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
@@ -19,7 +19,7 @@ export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter im
     cryptoService: CryptoService,
     i18nService: I18nService,
     cipherService: CipherService,
-    private promptForPassword_callback: () => Promise<string>
+    private promptForPassword_callback: () => Promise<string>,
   ) {
     super(cryptoService, i18nService, cipherService);
   }
@@ -63,7 +63,7 @@ export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter im
 
   private async checkPassword(
     jdoc: BitwardenPasswordProtectedFileFormat,
-    password: string
+    password: string,
   ): Promise<boolean> {
     if (this.isNullOrWhitespace(password)) {
       return false;
@@ -73,14 +73,14 @@ export class BitwardenPasswordProtectedImporter extends BitwardenJsonImporter im
       password,
       jdoc.salt,
       jdoc.kdfType,
-      new KdfConfig(jdoc.kdfIterations, jdoc.kdfMemory, jdoc.kdfParallelism)
+      new KdfConfig(jdoc.kdfIterations, jdoc.kdfMemory, jdoc.kdfParallelism),
     );
 
     const encKeyValidation = new EncString(jdoc.encKeyValidation_DO_NOT_EDIT);
 
     const encKeyValidationDecrypt = await this.cryptoService.decryptToUtf8(
       encKeyValidation,
-      this.key
+      this.key,
     );
     if (encKeyValidationDecrypt === null) {
       return false;

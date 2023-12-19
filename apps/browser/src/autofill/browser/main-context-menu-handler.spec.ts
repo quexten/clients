@@ -2,7 +2,7 @@ import { mock, MockProxy } from "jest-mock-extended";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
@@ -88,7 +88,7 @@ describe("context-menu", () => {
           id: id ?? "1",
           type: CipherType.Login,
           viewPassword: viewPassword ?? true,
-        } as any)
+        } as any),
       );
       cipherView.login.username = username ?? "USERNAME";
       cipherView.login.password = password ?? "PASSWORD";
@@ -113,7 +113,7 @@ describe("context-menu", () => {
           username: "",
           totp: "",
           viewPassword: false,
-        })
+        }),
       );
 
       expect(createSpy).toHaveBeenCalledTimes(1);

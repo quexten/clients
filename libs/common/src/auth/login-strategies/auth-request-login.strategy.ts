@@ -42,7 +42,7 @@ export class AuthRequestLoginStrategy extends LoginStrategy {
     logService: LogService,
     stateService: StateService,
     twoFactorService: TwoFactorService,
-    private deviceTrustCryptoService: DeviceTrustCryptoServiceAbstraction
+    private deviceTrustCryptoService: DeviceTrustCryptoServiceAbstraction,
   ) {
     super(
       cryptoService,
@@ -53,19 +53,21 @@ export class AuthRequestLoginStrategy extends LoginStrategy {
       messagingService,
       logService,
       stateService,
-      twoFactorService
+      twoFactorService,
     );
   }
 
   override async logIn(credentials: AuthRequestLoginCredentials) {
-    this.authRequestCredentials = credentials;
+    // NOTE: To avoid DeadObject references on Firefox, do not set the credentials object directly
+    // Use deep copy in future if objects are added that were created in popup
+    this.authRequestCredentials = { ...credentials };
 
     this.tokenRequest = new PasswordTokenRequest(
       credentials.email,
       credentials.accessCode,
       null,
       await this.buildTwoFactor(credentials.twoFactor),
-      await this.buildDeviceRequest()
+      await this.buildDeviceRequest(),
     );
 
     this.tokenRequest.setAuthRequestAccessCode(credentials.authRequestId);
@@ -75,7 +77,7 @@ export class AuthRequestLoginStrategy extends LoginStrategy {
 
   override async logInTwoFactor(
     twoFactor: TokenTwoFactorRequest,
-    captchaResponse: string
+    captchaResponse: string,
   ): Promise<AuthResult> {
     this.tokenRequest.captchaResponse = captchaResponse ?? this.captchaBypassToken;
     return super.logInTwoFactor(twoFactor);
@@ -115,7 +117,7 @@ export class AuthRequestLoginStrategy extends LoginStrategy {
 
   protected override async setPrivateKey(response: IdentityTokenResponse): Promise<void> {
     await this.cryptoService.setPrivateKey(
-      response.privateKey ?? (await this.createKeyPairForOldAccount())
+      response.privateKey ?? (await this.createKeyPairForOldAccount()),
     );
   }
 }

@@ -268,6 +268,9 @@
   "length": {
     "message": "Longitud"
   },
+  "passwordMinLength": {
+    "message": "Longitud mínima de la contrasenya"
+  },
   "uppercase": {
     "message": "Majúscula (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Configura un mètode de desbloqueig per canviar l'acció del temps d'espera de la caixa forta."
   },
+  "unlockMethodNeeded": {
+    "message": "Configura un mètode de desbloqueig a Configuració"
+  },
   "rateExtension": {
     "message": "Valora aquesta extensió"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Bloqueja ara"
+  },
+  "lockAll": {
+    "message": "Bloqueja-ho tot"
   },
   "immediately": {
     "message": "Immediatament"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "La \"Notificació per afegir inicis de sessió\" demana automàticament que guardeu els nous inicis de sessió a la vostra caixa forta quan inicieu la sessió per primera vegada."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Demana afegir un element si no se'n troba cap a la caixa forta. S'aplica a tots els comptes connectats."
+  },
   "showCardsCurrentTab": {
     "message": "Mostra les targetes a la pàgina de pestanya"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Demana actualitzar la contrasenya d'inici de sessió quan es detecte un canvi en un lloc web."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Demana actualitzar la contrasenya d'inici de sessió quan es detecte un canvi en un lloc web. S'aplica a tots els comptes connectats."
+  },
+  "enableUsePasskeys": {
+    "message": "Demana guardar i utilitzar claus de pas"
+  },
+  "usePasskeysDesc": {
+    "message": "Demana que guardeu les contrasenyes noves o inicieu sessió amb les claus emmagatzemades a la vostra caixa forta. S'aplica a tots els comptes connectats."
+  },
   "notificationChangeDesc": {
     "message": "Voleu actualitzar aquesta contrasenya a Bitwarden?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Utilitza un clic secundari per accedir a la generació de contrasenyes i als inicis de sessió coincidents per al lloc web. "
   },
+  "contextMenuItemDescAlt": {
+    "message": "Fa servir un clic secundari per accedir a la generació de contrasenyes i als inicis de sessió coincidents per al lloc web. S'aplica a tots els comptes connectats."
+  },
   "defaultUriMatchDetection": {
     "message": "Detecció de coincidències URI per defecte",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Canvia el color del tema de l'aplicació."
+  },
+  "themeDescAlt": {
+    "message": "Canvia el tema de color de l'aplicació. S'aplica a tots els comptes connectats."
   },
   "dark": {
     "message": "Fosc",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "S'han guardat les URL de l'entorn"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Mostra el menú d'emplenament automàtic als camps del formulari",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "S'aplica a tots els comptes connectats."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Desactiveu la configuració integrada del gestor de contrasenyes del vostre navegador per evitar conflictes."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Edita la configuració del navegador."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Desactivat",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Quan el camp està seleccionat (en el focus)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Quan la icona d'emplenament automàtic està seleccionada",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Habilita l'emplenament automàtic en carregar la pàgina"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Mostra una imatge reconeixible al costat de cada inici de sessió."
+  },
+  "faviconDescAlt": {
+    "message": "Mostra una imatge reconeixible al costat de cada sessió. S'aplica a tots els comptes connectats."
   },
   "enableBadgeCounter": {
     "message": "Mostra el comptador insígnia"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identitat"
-  },
-  "typePasskey": {
-    "message": "Clau de pas"
   },
   "passwordHistory": {
     "message": "Historial de les contrasenyes"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden no demanarà que es guarden les dades d’inici de sessió d’aquests dominis. Heu d'actualitzar la pàgina perquè els canvis tinguen efecte."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden no demanarà que es guarden les dades d'inici de sessió d'aquests dominis per a tots els comptes iniciats. Heu d'actualitzar la pàgina perquè els canvis tinguen efecte."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ no és un domini vàlid",
@@ -2227,7 +2282,7 @@
     "message": "Com emplenar automàticament"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Seleccioneu un element d'aquesta pàgina o utilitzeu la drecera: $COMMAND$",
+    "message": "Seleccioneu un element d'aquesta pantalla, utilitzeu la drecera $COMMAND$ o exploreu altres opcions a la configuració.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Seleccioneu un element d'aquesta pàgina o definiu una drecera a la configuració."
+    "message": "Seleccioneu un element d'aquesta pantalla, o exploreu altres opcions a la configuració."
   },
   "gotIt": {
     "message": "D'acord"
@@ -2457,6 +2512,56 @@
     "message": "Desactiveu la sol·licitud de nova contrasenya mestra per editar aquest camp",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Botó de menú d'emplenament automàtic de Bitwarden",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Commuta el menú d'emplenament automàtic de Bitwarden",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Menú d'emplenament automàtic de Bitwarden",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Desbloqueja el compte per veure els inicis de sessió coincidents",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Desbloqueja el compte",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Ompliu les credencials per a",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Nom d'usuari parcial",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "No hi ha cap element per mostrar",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Element nou",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Afegeix un nou element a la caixa forta",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "El menú d'emplenament automàtic de Bitwarden està disponible. Premeu la tecla de fletxa avall per seleccionar-lo.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Activa"
+  },
+  "ignore": {
+    "message": "Ignora"
+  },
   "importData": {
     "message": "Importa dades",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Confirma la contrasenya del fitxer"
+  },
+  "typePasskey": {
+    "message": "Clau de pas"
   },
   "passkeyNotCopied": {
     "message": "La clau de pas no es copiarà"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Inseriu la YubiKey associada al compte del LastPass al port USB de l'ordinador i, després, toqueu-ne el botó."
+  },
+  "switchAccount": {
+    "message": "Canvia de compte"
+  },
+  "switchAccounts": {
+    "message": "Canvia de comptes"
+  },
+  "switchToAccount": {
+    "message": "Canvia al compte"
+  },
+  "activeAccount": {
+    "message": "Activa el compte"
+  },
+  "accountLimitReached": {
+    "message": "S'ha arribat al límit del compte. Tanqueu la sessió d'un compte per afegir-ne un altre."
+  },
+  "active": {
+    "message": "activa"
+  },
+  "locked": {
+    "message": "bloquejat"
+  },
+  "unlocked": {
+    "message": "desbloquejat"
+  },
+  "server": {
+    "message": "servidor"
+  },
+  "hostedAt": {
+    "message": "allotjat a"
   }
 }

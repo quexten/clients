@@ -12,15 +12,18 @@ import {
   shell,
 } from "electron";
 
-import { ThemeType } from "@bitwarden/common/enums";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { ThemeType } from "@bitwarden/common/platform/enums";
 import { SafeUrls } from "@bitwarden/common/platform/misc/safe-urls";
 
 import { WindowMain } from "../main/window.main";
 import { RendererMenuItem } from "../utils";
 
 export class ElectronMainMessagingService implements MessagingService {
-  constructor(private windowMain: WindowMain, private onMessage: (message: any) => void) {
+  constructor(
+    private windowMain: WindowMain,
+    private onMessage: (message: any) => void,
+  ) {
     ipcMain.handle("appVersion", () => {
       return app.getVersion();
     });
@@ -44,7 +47,7 @@ export class ElectronMainMessagingService implements MessagingService {
               click: () => {
                 resolve(index);
               },
-            })
+            }),
           );
         });
         menu.popup({
@@ -88,7 +91,7 @@ export class ElectronMainMessagingService implements MessagingService {
     nativeTheme.on("updated", () => {
       windowMain.win?.webContents.send(
         "systemThemeUpdated",
-        nativeTheme.shouldUseDarkColors ? ThemeType.Dark : ThemeType.Light
+        nativeTheme.shouldUseDarkColors ? ThemeType.Dark : ThemeType.Light,
       );
     });
   }

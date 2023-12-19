@@ -268,6 +268,9 @@
   "length": {
     "message": "长度"
   },
+  "passwordMinLength": {
+    "message": "最小密码长度"
+  },
   "uppercase": {
     "message": "大写 (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "设置一个解锁方式以更改您的密码库超时动作。"
   },
+  "unlockMethodNeeded": {
+    "message": "在设置中设置解锁方法"
+  },
   "rateExtension": {
     "message": "为本扩展打分"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "立即锁定"
+  },
+  "lockAll": {
+    "message": "全部锁定"
   },
   "immediately": {
     "message": "立即"
@@ -510,7 +519,7 @@
     "message": "您的登录会话已过期。"
   },
   "logOutConfirmation": {
-    "message": "您确定要注销吗？"
+    "message": "确定要注销吗？"
   },
   "yes": {
     "message": "是"
@@ -540,7 +549,7 @@
     "message": "文件夹已保存"
   },
   "deleteFolderConfirmation": {
-    "message": "您确定要删除此文件夹吗？"
+    "message": "确定要删除此文件夹吗？"
   },
   "deletedFolder": {
     "message": "文件夹已删除"
@@ -592,13 +601,13 @@
     "message": "覆盖密码"
   },
   "overwritePasswordConfirmation": {
-    "message": "您确定要覆盖当前密码吗？"
+    "message": "确定要覆盖当前密码吗？"
   },
   "overwriteUsername": {
     "message": "覆盖用户名"
   },
   "overwriteUsernameConfirmation": {
-    "message": "您确定要覆盖当前用户名吗？"
+    "message": "确定要覆盖当前用户名吗？"
   },
   "searchFolder": {
     "message": "搜索文件夹"
@@ -618,6 +627,9 @@
   },
   "addLoginNotificationDesc": {
     "message": "在密码库中找不到匹配项目时询问添加一个。"
+  },
+  "addLoginNotificationDescAlt": {
+    "message": "如果在密码库中找不到项目，询问添加一个。适用于所有已登录的账户。"
   },
   "showCardsCurrentTab": {
     "message": "在标签页上显示支付卡"
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "在网站上检测到更改时询问更新登录密码。"
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "当在网站上检测到更改时，询问更新登录项目的密码。适用于所有已登录的账户。"
+  },
+  "enableUsePasskeys": {
+    "message": "询问保存和使用通行密钥"
+  },
+  "usePasskeysDesc": {
+    "message": "询问保存新的通行密钥或使用存储在密码库中的通行密钥登录。适用于所有已登录的账户。"
+  },
   "notificationChangeDesc": {
     "message": "是否要在 Bitwarden 中更新此密码？"
   },
@@ -667,7 +688,10 @@
     "message": "显示上下文菜单选项"
   },
   "contextMenuItemDesc": {
-    "message": "使用辅助点击来访问密码生成和匹配的网站登录项目。 "
+    "message": "使用辅助点击来访问密码生成和匹配的网站登录项目。"
+  },
+  "contextMenuItemDescAlt": {
+    "message": "使用辅助点击来访问密码生成和匹配的网站登录项目。适用于所有已登录的账户。"
   },
   "defaultUriMatchDetection": {
     "message": "默认 URI 匹配检测",
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "更改本应用程序的颜色主题。"
+  },
+  "themeDescAlt": {
+    "message": "更改应用程序的颜色主题。适用于所有已登录的账户。"
   },
   "dark": {
     "message": "深色",
@@ -769,7 +796,7 @@
     "message": "删除附件"
   },
   "deleteAttachmentConfirmation": {
-    "message": "您确定要删除此附件吗？"
+    "message": "确定要删除此附件吗？"
   },
   "deletedAttachment": {
     "message": "附件已删除"
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "环境 URL 已保存"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "在表单字段上显示自动填充菜单",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "适用于所有已登录的账户。"
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "关闭您浏览器自带的密码管理器设置以免冲突"
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "编辑浏览器设置。"
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "关闭",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "选中字段时（焦点上）",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "选中自动填充图标时",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "页面加载时自动填充"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "在每个登录项目旁边显示一个可识别的图像。"
+  },
+  "faviconDescAlt": {
+    "message": "在每个登录的旁边显示一个可识别的图像。适用于所有已登录的账户。"
   },
   "enableBadgeCounter": {
     "message": "显示角标计数器"
@@ -1253,9 +1308,6 @@
   "typeIdentity": {
     "message": "身份"
   },
-  "typePasskey": {
-    "message": "通行密钥"
-  },
   "passwordHistory": {
     "message": "密码历史记录"
   },
@@ -1378,7 +1430,7 @@
     "description": "ex. Date this password was updated"
   },
   "neverLockWarning": {
-    "message": "您确定要使用「从不」选项吗？将锁定选项设置为「从不」会将密码库的加密密钥存储在您的设备上。如果使用此选项，您必须确保您的设备安全。"
+    "message": "确定要使用「从不」选项吗？将锁定选项设置为「从不」会将密码库的加密密钥存储在您的设备上。如果使用此选项，您必须确保您的设备安全。"
   },
   "noOrganizationsList": {
     "message": "您没有加入任何组织。组织允许您与其他用户安全地共享项目。"
@@ -1468,7 +1520,7 @@
     "message": "永久删除项目"
   },
   "permanentlyDeleteItemConfirmation": {
-    "message": "您确定要永久删除此项目吗？"
+    "message": "确定要永久删除此项目吗？"
   },
   "permanentlyDeletedItem": {
     "message": "项目已永久删除"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden 将不会询问是否为这些域名保存登录信息。您必须刷新页面才能使更改生效。"
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden 不会询问保存所有已登录的账户的这些域名的登录信息。您必须刷新页面才能使更改生效。"
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ 不是一个有效的域名",
@@ -2012,7 +2067,7 @@
     "message": "主密码已移除"
   },
   "leaveOrganizationConfirmation": {
-    "message": "您确定要退出该组织吗？"
+    "message": "确定要退出该组织吗？"
   },
   "leftOrganization": {
     "message": "您已经退出该组织。"
@@ -2227,7 +2282,7 @@
     "message": "如何自动填充"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "从此页面选择一个项目，或使用快捷方式：$COMMAND$",
+    "message": "从此界面选择一个项目，使用快捷方式 $COMMAND$，或探索设置中的其他选项。",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "从此页面选择一个项目，或者在设置中设置一个快捷方式。"
+    "message": "从此界面选择一个项目，或探索设置中的其他选项。"
   },
   "gotIt": {
     "message": "明白了"
@@ -2457,6 +2512,56 @@
     "message": "关闭主密码重新提示以编辑此字段",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Bitwarden 自动填充菜单按钮",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "切换 Bitwarden 自动填充菜单",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Bitwarden 自动填充菜单",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "解锁您的账户以查看匹配的登录",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "解锁账户",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "填写凭据",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "部分用户名",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "没有可显示的项目",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "新增项目",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "添加新的密码库项目",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Bitwarden 自动填充菜单可用。按向下箭头键进行选择。",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "开启"
+  },
+  "ignore": {
+    "message": "忽略"
+  },
   "importData": {
     "message": "导入数据",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2522,7 +2627,7 @@
     "message": "选择一个集合"
   },
   "importTargetHint": {
-    "message": "如果您希望将导入的文件内容移动到 $DESTINATION$，请选择此选项",
+    "message": "如果您希望将导入的文件内容移动到某个 $DESTINATION$，请选择此选项",
     "description": "Located as a hint under the import target. Will be appended by either folder or collection, depending if the user is importing into an individual or an organizational vault.",
     "placeholders": {
       "destination": {
@@ -2568,6 +2673,9 @@
   "confirmFilePassword": {
     "message": "确认文件密码"
   },
+  "typePasskey": {
+    "message": "通行密钥"
+  },
   "passkeyNotCopied": {
     "message": "通行密钥不会被复制"
   },
@@ -2608,7 +2716,7 @@
     "message": "覆盖通行密钥吗？"
   },
   "overwritePasskeyAlert": {
-    "message": "此项目已包含一个通行密钥。您确定要覆盖当前的通行密钥吗？"
+    "message": "此项目已包含一个通行密钥。确定要覆盖当前的通行密钥吗？"
   },
   "featureNotSupported": {
     "message": "功能尚不被支持"
@@ -2632,7 +2740,7 @@
     "message": "多重身份验证失败"
   },
   "includeSharedFolders": {
-    "message": "包含已共享的文件夹"
+    "message": "包含共享的文件夹"
   },
   "lastPassEmail": {
     "message": "LastPass Email"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "将与您的 LastPass 账户关联的 YubiKey 插入计算机的 USB 端口，然后触摸其按钮。"
+  },
+  "switchAccount": {
+    "message": "切换账户"
+  },
+  "switchAccounts": {
+    "message": "切换账户"
+  },
+  "switchToAccount": {
+    "message": "切换到账户"
+  },
+  "activeAccount": {
+    "message": "活动账户"
+  },
+  "accountLimitReached": {
+    "message": "已达到账户上限。请注销一个账户后再添加其他账户。"
+  },
+  "active": {
+    "message": "已生效"
+  },
+  "locked": {
+    "message": "已锁定"
+  },
+  "unlocked": {
+    "message": "已解锁"
+  },
+  "server": {
+    "message": "服务器"
+  },
+  "hostedAt": {
+    "message": "托管于"
   }
 }

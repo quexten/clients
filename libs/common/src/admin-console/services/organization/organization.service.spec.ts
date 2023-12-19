@@ -14,7 +14,7 @@ describe("Organization Service", () => {
   let activeAccountUnlocked: BehaviorSubject<boolean>;
 
   const resetStateService = async (
-    customizeStateService: (stateService: MockProxy<StateService>) => void
+    customizeStateService: (stateService: MockProxy<StateService>) => void,
   ) => {
     mockClear(stateService);
     stateService = mock<StateService>();
@@ -110,7 +110,7 @@ describe("Organization Service", () => {
   });
 
   it("upsert", async () => {
-    await organizationService.upsert(organizationData("2", "Test 2"));
+    await organizationService.upsert(organizationData("2", "Test 2"), false);
 
     expect(await firstValueFrom(organizationService.organizations$)).toEqual([
       {
@@ -146,7 +146,7 @@ describe("Organization Service", () => {
 
   describe("delete", () => {
     it("exists", async () => {
-      await organizationService.delete("1");
+      await organizationService.delete("1", false);
 
       expect(stateService.getOrganizations).toHaveBeenCalledTimes(2);
 
@@ -154,7 +154,7 @@ describe("Organization Service", () => {
     });
 
     it("does not exist", async () => {
-      organizationService.delete("1");
+      organizationService.delete("1", false);
 
       expect(stateService.getOrganizations).toHaveBeenCalledTimes(2);
     });

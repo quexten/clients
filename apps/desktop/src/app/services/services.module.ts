@@ -1,5 +1,6 @@
 import { APP_INITIALIZER, InjectionToken, NgModule } from "@angular/core";
 
+import { AbstractThemingService } from "@bitwarden/angular/platform/services/theming/theming.service.abstraction";
 import {
   SECURE_STORAGE,
   STATE_FACTORY,
@@ -7,9 +8,11 @@ import {
   LOCALES_DIRECTORY,
   SYSTEM_LANGUAGE,
   MEMORY_STORAGE,
+  OBSERVABLE_MEMORY_STORAGE,
+  OBSERVABLE_DISK_STORAGE,
 } from "@bitwarden/angular/services/injection-tokens";
 import { JslibServicesModule } from "@bitwarden/angular/services/jslib-services.module";
-import { AbstractThemingService } from "@bitwarden/angular/services/theming/theming.service.abstraction";
+import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
 import { PolicyService as PolicyServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService as AccountServiceAbstraction } from "@bitwarden/common/auth/abstractions/account.service";
 import { AuthService as AuthServiceAbstraction } from "@bitwarden/common/auth/abstractions/auth.service";
@@ -102,6 +105,8 @@ const RELOAD_CALLBACK = new InjectionToken<() => any>("RELOAD_CALLBACK");
     { provide: AbstractStorageService, useClass: ElectronRendererStorageService },
     { provide: SECURE_STORAGE, useClass: ElectronRendererSecureStorageService },
     { provide: MEMORY_STORAGE, useClass: MemoryStorageService },
+    { provide: OBSERVABLE_MEMORY_STORAGE, useExisting: MEMORY_STORAGE },
+    { provide: OBSERVABLE_DISK_STORAGE, useExisting: AbstractStorageService },
     {
       provide: SystemServiceAbstraction,
       useClass: SystemService,
@@ -110,6 +115,7 @@ const RELOAD_CALLBACK = new InjectionToken<() => any>("RELOAD_CALLBACK");
         PlatformUtilsServiceAbstraction,
         RELOAD_CALLBACK,
         StateServiceAbstraction,
+        VaultTimeoutSettingsService,
       ],
     },
     {

@@ -15,7 +15,7 @@ on:
       - '.github/workflows/build-desktop.yml'
   push:
     branches:
-      - 'master'
+      - 'main'
       - 'rc'
       - 'hotfix-rc-desktop'
     paths:
@@ -162,11 +162,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Set up environment
         run: |
           sudo apt-get update
@@ -279,13 +274,8 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Install AST
-        uses: bitwarden/gh-actions/install-ast@main
+        run: dotnet tool install --global AzureSignTool --version 4.0.1
 
       - name: Set up environmentF
         run: choco install checksum --no-progress
@@ -493,11 +483,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Rust
         shell: pwsh
         run: rustup target install aarch64-apple-darwin
@@ -645,11 +630,6 @@ jobs:
 
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
-
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
 
       - name: Rust
         shell: pwsh
@@ -844,11 +824,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Rust
         shell: pwsh
         run: rustup target install aarch64-apple-darwin
@@ -998,7 +973,7 @@ jobs:
           APPLE_ID_USERNAME: ${{ secrets.APPLE_ID_USERNAME }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
         if: |
-            (github.ref == 'refs/heads/master'
+            (github.ref == 'refs/heads/main'
               && needs.setup.outputs.rc_branch_exists == 0
               && needs.setup.outputs.hotfix_branch_exists == 0)
             || (github.ref == 'refs/heads/rc' && needs.setup.outputs.hotfix_branch_exists == 0)
@@ -1033,11 +1008,6 @@ jobs:
 
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
-
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
 
       - name: Print environment
         run: |
@@ -1184,7 +1154,7 @@ jobs:
 
   crowdin-push:
     name: Crowdin Push
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs:
       - linux
       - windows
@@ -1215,7 +1185,7 @@ jobs:
           CROWDIN_PROJECT_ID: "299360"
         with:
           config: apps/desktop/crowdin.yml
-          crowdin_branch_name: master
+          crowdin_branch_name: main
           upload_sources: true
           upload_translations: false
 
@@ -1237,7 +1207,7 @@ jobs:
       - crowdin-push
     steps:
       - name: Check if any job failed
-        if: ${{ (github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/rc') }}
+        if: ${{ (github.ref == 'refs/heads/main') || (github.ref == 'refs/heads/rc') }}
         env:
           CLOC_STATUS: ${{ needs.cloc.result }}
           ELECTRON_VERIFY_STATUS: ${{ needs.electron-verify.result }}

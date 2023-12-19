@@ -1,13 +1,13 @@
 import { mock } from "jest-mock-extended";
 
 import { mockEnc, mockFromJson } from "../../../../spec";
-import { UriMatchType } from "../../../enums";
 import { EncryptedString, EncString } from "../../../platform/models/domain/enc-string";
-import { Fido2CredentialApi } from "../../api/fido2-credential.api";
+import { UriMatchType } from "../../enums";
 import { LoginData } from "../../models/data/login.data";
 import { Login } from "../../models/domain/login";
 import { LoginUri } from "../../models/domain/login-uri";
 import { LoginUriView } from "../../models/view/login-uri.view";
+import { Fido2CredentialApi } from "../api/fido2-credential.api";
 import { Fido2CredentialData } from "../data/fido2-credential.data";
 import { Fido2CredentialView } from "../view/fido2-credential.view";
 
@@ -135,6 +135,7 @@ describe("Login DTO", () => {
             keyValue: "keyValue" as EncryptedString,
             rpId: "rpId" as EncryptedString,
             userHandle: "userHandle" as EncryptedString,
+            userName: "userName" as EncryptedString,
             counter: "counter" as EncryptedString,
             rpName: "rpName" as EncryptedString,
             userDisplayName: "userDisplayName" as EncryptedString,
@@ -159,6 +160,7 @@ describe("Login DTO", () => {
             keyValue: "keyValue_fromJSON",
             rpId: "rpId_fromJSON",
             userHandle: "userHandle_fromJSON",
+            userName: "userName_fromJSON",
             counter: "counter_fromJSON",
             rpName: "rpName_fromJSON",
             userDisplayName: "userDisplayName_fromJSON",
@@ -185,6 +187,7 @@ function initializeFido2Credential<T extends Fido2CredentialLike>(key: T): T {
   key.keyValue = "keyValue";
   key.rpId = "rpId";
   key.userHandle = "userHandle";
+  key.userName = "userName";
   key.counter = "counter";
   key.rpName = "rpName";
   key.userDisplayName = "userDisplayName";
@@ -202,6 +205,7 @@ function encryptFido2Credential(key: Fido2CredentialLike): Fido2Credential {
   encrypted.keyValue = { encryptedString: key.keyValue, encryptionType: 0 } as EncString;
   encrypted.rpId = { encryptedString: key.rpId, encryptionType: 0 } as EncString;
   encrypted.userHandle = { encryptedString: key.userHandle, encryptionType: 0 } as EncString;
+  encrypted.userName = { encryptedString: key.userName, encryptionType: 0 } as EncString;
   encrypted.counter = { encryptedString: key.counter, encryptionType: 0 } as EncString;
   encrypted.rpName = { encryptedString: key.rpName, encryptionType: 0 } as EncString;
   encrypted.userDisplayName = {

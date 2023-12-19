@@ -1,10 +1,15 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from "@angular/core";
 
 import { UnauthGuard as BaseUnauthGuardService } from "@bitwarden/angular/auth/guards";
-import { MEMORY_STORAGE, SECURE_STORAGE } from "@bitwarden/angular/services/injection-tokens";
+import { ThemingService } from "@bitwarden/angular/platform/services/theming/theming.service";
+import { AbstractThemingService } from "@bitwarden/angular/platform/services/theming/theming.service.abstraction";
+import {
+  MEMORY_STORAGE,
+  SECURE_STORAGE,
+  OBSERVABLE_DISK_STORAGE,
+  OBSERVABLE_MEMORY_STORAGE,
+} from "@bitwarden/angular/services/injection-tokens";
 import { JslibServicesModule } from "@bitwarden/angular/services/jslib-services.module";
-import { ThemingService } from "@bitwarden/angular/services/theming/theming.service";
-import { AbstractThemingService } from "@bitwarden/angular/services/theming/theming.service.abstraction";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
@@ -12,7 +17,6 @@ import { EventUploadService } from "@bitwarden/common/abstractions/event/event-u
 import { NotificationsService } from "@bitwarden/common/abstractions/notifications.service";
 import { SearchService as SearchServiceAbstraction } from "@bitwarden/common/abstractions/search.service";
 import { SettingsService } from "@bitwarden/common/abstractions/settings.service";
-import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
 import { VaultTimeoutService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
@@ -82,6 +86,7 @@ import {
   InternalFolderService,
 } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { FolderApiService } from "@bitwarden/common/vault/services/folder/folder-api.service";
 import { DialogService } from "@bitwarden/components";
 import { VaultExportServiceAbstraction } from "@bitwarden/exporter/vault-export";
@@ -100,16 +105,18 @@ import { BrowserConfigService } from "../../platform/services/browser-config.ser
 import { BrowserEnvironmentService } from "../../platform/services/browser-environment.service";
 import { BrowserFileDownloadService } from "../../platform/services/browser-file-download.service";
 import { BrowserI18nService } from "../../platform/services/browser-i18n.service";
+import BrowserLocalStorageService from "../../platform/services/browser-local-storage.service";
 import BrowserMessagingPrivateModePopupService from "../../platform/services/browser-messaging-private-mode-popup.service";
 import BrowserMessagingService from "../../platform/services/browser-messaging.service";
 import { BrowserStateService } from "../../platform/services/browser-state.service";
+import { ForegroundMemoryStorageService } from "../../platform/storage/foreground-memory-storage.service";
 import { BrowserSendService } from "../../services/browser-send.service";
 import { BrowserSettingsService } from "../../services/browser-settings.service";
 import { FilePopoutUtilsService } from "../../tools/popup/services/file-popout-utils.service";
 import { BrowserFolderService } from "../../vault/services/browser-folder.service";
 import { VaultFilterService } from "../../vault/services/vault-filter.service";
 
-import { DebounceNavigationService } from "./debounceNavigationService";
+import { DebounceNavigationService } from "./debounce-navigation.service";
 import { InitService } from "./init.service";
 import { PopupCloseWarningService } from "./popup-close-warning.service";
 import { PopupSearchService } from "./popup-search.service";
@@ -176,7 +183,7 @@ function getBgService<T>(service: keyof MainBackground) {
         return new PopupSearchService(
           getBgService<SearchService>("searchService")(),
           logService,
-          i18nService
+          i18nService,
         );
       },
       deps: [LogServiceAbstraction, I18nServiceAbstraction],
@@ -203,7 +210,7 @@ function getBgService<T>(service: keyof MainBackground) {
         cryptoService: CryptoService,
         i18nService: I18nServiceAbstraction,
         cipherService: CipherService,
-        stateService: StateServiceAbstraction
+        stateService: StateServiceAbstraction,
       ) => {
         return new BrowserFolderService(cryptoService, i18nService, cipherService, stateService);
       },
@@ -244,7 +251,7 @@ function getBgService<T>(service: keyof MainBackground) {
     {
       provide: I18nServiceAbstraction,
       useFactory: (stateService: BrowserStateService) => {
-        return new BrowserI18nService(BrowserApi.getUILanguage(window), stateService);
+        return new BrowserI18nService(BrowserApi.getUILanguage(), stateService);
       },
       deps: [StateService],
     },
@@ -286,7 +293,7 @@ function getBgService<T>(service: keyof MainBackground) {
       provide: PolicyService,
       useFactory: (
         stateService: StateServiceAbstraction,
-        organizationService: OrganizationService
+        organizationService: OrganizationService,
       ) => {
         return new BrowserPolicyService(stateService, organizationService);
       },
@@ -297,7 +304,7 @@ function getBgService<T>(service: keyof MainBackground) {
       useFactory: (
         policyService: InternalPolicyService,
         apiService: ApiService,
-        stateService: StateService
+        stateService: StateService,
       ) => {
         return new PolicyApiService(policyService, apiService, stateService);
       },
@@ -325,13 +332,13 @@ function getBgService<T>(service: keyof MainBackground) {
         cryptoService: CryptoService,
         i18nService: I18nServiceAbstraction,
         cryptoFunctionService: CryptoFunctionService,
-        stateServiceAbstraction: StateServiceAbstraction
+        stateServiceAbstraction: StateServiceAbstraction,
       ) => {
         return new BrowserSendService(
           cryptoService,
           i18nService,
           cryptoFunctionService,
-          stateServiceAbstraction
+          stateServiceAbstraction,
         );
       },
       deps: [CryptoService, I18nServiceAbstraction, CryptoFunctionService, StateServiceAbstraction],
@@ -345,7 +352,7 @@ function getBgService<T>(service: keyof MainBackground) {
       useFactory: (
         apiService: ApiService,
         fileUploadService: FileUploadService,
-        sendService: InternalSendServiceAbstraction
+        sendService: InternalSendServiceAbstraction,
       ) => {
         return new SendApiService(apiService, fileUploadService, sendService);
       },
@@ -361,7 +368,7 @@ function getBgService<T>(service: keyof MainBackground) {
     },
     {
       provide: AbstractStorageService,
-      useFactory: getBgService<AbstractStorageService>("storageService"),
+      useClass: BrowserLocalStorageService,
       deps: [],
     },
     { provide: AppIdService, useFactory: getBgService<AppIdService>("appIdService"), deps: [] },
@@ -423,7 +430,8 @@ function getBgService<T>(service: keyof MainBackground) {
         stateService: StateServiceAbstraction,
         organizationService: OrganizationService,
         folderService: FolderService,
-        policyService: PolicyService
+        policyService: PolicyService,
+        accountService: AccountServiceAbstraction,
       ) => {
         return new VaultFilterService(
           stateService,
@@ -431,10 +439,17 @@ function getBgService<T>(service: keyof MainBackground) {
           folderService,
           getBgService<CipherService>("cipherService")(),
           getBgService<CollectionService>("collectionService")(),
-          policyService
+          policyService,
+          accountService,
         );
       },
-      deps: [StateServiceAbstraction, OrganizationService, FolderService, PolicyService],
+      deps: [
+        StateServiceAbstraction,
+        OrganizationService,
+        FolderService,
+        PolicyService,
+        AccountServiceAbstraction,
+      ],
     },
     {
       provide: ProviderService,
@@ -444,11 +459,19 @@ function getBgService<T>(service: keyof MainBackground) {
     {
       provide: SECURE_STORAGE,
       useFactory: getBgService<AbstractStorageService>("secureStorageService"),
-      deps: [],
     },
     {
       provide: MEMORY_STORAGE,
       useFactory: getBgService<AbstractStorageService>("memoryStorageService"),
+    },
+    {
+      provide: OBSERVABLE_MEMORY_STORAGE,
+      useClass: ForegroundMemoryStorageService,
+      deps: [],
+    },
+    {
+      provide: OBSERVABLE_DISK_STORAGE,
+      useExisting: AbstractStorageService,
     },
     {
       provide: StateServiceAbstraction,
@@ -457,7 +480,7 @@ function getBgService<T>(service: keyof MainBackground) {
         secureStorageService: AbstractStorageService,
         memoryStorageService: AbstractMemoryStorageService,
         logService: LogServiceAbstraction,
-        accountService: AccountServiceAbstraction
+        accountService: AccountServiceAbstraction,
       ) => {
         return new BrowserStateService(
           storageService,
@@ -465,7 +488,7 @@ function getBgService<T>(service: keyof MainBackground) {
           memoryStorageService,
           logService,
           new StateFactory(GlobalState, Account),
-          accountService
+          accountService,
         );
       },
       deps: [
@@ -499,14 +522,14 @@ function getBgService<T>(service: keyof MainBackground) {
       provide: AbstractThemingService,
       useFactory: (
         stateService: StateServiceAbstraction,
-        platformUtilsService: PlatformUtilsService
+        platformUtilsService: PlatformUtilsService,
       ) => {
         return new ThemingService(
           stateService,
           // Safari doesn't properly handle the (prefers-color-scheme) media query in the popup window, it always returns light.
           // In Safari we have to use the background page instead, which comes with limitations like not dynamically changing the extension theme when the system theme is changed.
           platformUtilsService.isSafari() ? getBgService<Window>("backgroundWindow")() : window,
-          document
+          document,
         );
       },
       deps: [StateServiceAbstraction, PlatformUtilsService],

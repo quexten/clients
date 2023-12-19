@@ -36,6 +36,7 @@ import { DialogService } from "@bitwarden/components";
 import { SetPinComponent } from "../../auth/popup/components/set-pin.component";
 import { BiometricErrors, BiometricErrorTypes } from "../../models/biometricErrors";
 import { BrowserApi } from "../../platform/browser/browser-api";
+import { flagEnabled } from "../../platform/flags";
 import BrowserPopupUtils from "../../platform/popup/browser-popup-utils";
 
 import { AboutComponent } from "./about.component";
@@ -71,6 +72,7 @@ export class SettingsComponent implements OnInit {
   }>;
   supportsBiometric: boolean;
   showChangeMasterPass = true;
+  accountSwitcherEnabled = false;
 
   form = this.formBuilder.group({
     vaultTimeout: [null as number | null],
@@ -98,8 +100,10 @@ export class SettingsComponent implements OnInit {
     private modalService: ModalService,
     private userVerificationService: UserVerificationService,
     private dialogService: DialogService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
+    this.accountSwitcherEnabled = flagEnabled("accountSwitching");
+  }
 
   async ngOnInit() {
     const maximumVaultTimeoutPolicy = this.policyService.get$(PolicyType.MaximumVaultTimeout);
@@ -114,7 +118,7 @@ export class SettingsComponent implements OnInit {
           };
         }
         return { timeout: timeout, action: policy.data?.action };
-      })
+      }),
     );
 
     const showOnLocked =
@@ -151,7 +155,7 @@ export class SettingsComponent implements OnInit {
         concatMap(async ([previousValue, newValue]) => {
           await this.saveVaultTimeout(previousValue, newValue);
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -161,14 +165,14 @@ export class SettingsComponent implements OnInit {
         concatMap(async ([previousValue, newValue]) => {
           await this.saveVaultTimeoutAction(previousValue, newValue);
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
     const initialValues = {
       vaultTimeout: timeout,
       vaultTimeoutAction: await firstValueFrom(
-        this.vaultTimeoutSettingsService.vaultTimeoutAction$()
+        this.vaultTimeoutSettingsService.vaultTimeoutAction$(),
       ),
       pin: pinStatus !== "DISABLED",
       biometric: await this.vaultTimeoutSettingsService.isBiometricLockSet(),
@@ -185,7 +189,7 @@ export class SettingsComponent implements OnInit {
           await this.updatePin(value);
           this.refreshTimeoutSettings$.next();
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -201,7 +205,7 @@ export class SettingsComponent implements OnInit {
           }
           this.refreshTimeoutSettings$.next();
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -211,9 +215,9 @@ export class SettingsComponent implements OnInit {
           combineLatest([
             this.vaultTimeoutSettingsService.availableVaultTimeoutActions$(),
             this.vaultTimeoutSettingsService.vaultTimeoutAction$(),
-          ])
+          ]),
         ),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe(([availableActions, action]) => {
         this.availableVaultTimeoutActions = availableActions;
@@ -231,9 +235,9 @@ export class SettingsComponent implements OnInit {
           combineLatest([
             this.vaultTimeoutSettingsService.availableVaultTimeoutActions$(),
             maximumVaultTimeoutPolicy,
-          ])
+          ]),
         ),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe(([availableActions, policy]) => {
         if (policy?.data?.action || availableActions.length <= 1) {
@@ -264,14 +268,14 @@ export class SettingsComponent implements OnInit {
       this.platformUtilsService.showToast(
         "error",
         null,
-        this.i18nService.t("vaultTimeoutTooLarge")
+        this.i18nService.t("vaultTimeoutTooLarge"),
       );
       return;
     }
 
     await this.vaultTimeoutSettingsService.setVaultTimeoutOptions(
       newValue,
-      await firstValueFrom(this.vaultTimeoutSettingsService.vaultTimeoutAction$())
+      await firstValueFrom(this.vaultTimeoutSettingsService.vaultTimeoutAction$()),
     );
     if (newValue == null) {
       this.messagingService.send("bgReseedStorage");
@@ -298,14 +302,14 @@ export class SettingsComponent implements OnInit {
       this.platformUtilsService.showToast(
         "error",
         null,
-        this.i18nService.t("vaultTimeoutTooLarge")
+        this.i18nService.t("vaultTimeoutTooLarge"),
       );
       return;
     }
 
     await this.vaultTimeoutSettingsService.setVaultTimeoutOptions(
       this.form.value.vaultTimeout,
-      newValue
+      newValue,
     );
     this.refreshTimeoutSettings$.next();
   }
@@ -382,7 +386,7 @@ export class SettingsComponent implements OnInit {
               this.platformUtilsService.showToast(
                 "error",
                 this.i18nService.t("errorEnableBiometricTitle"),
-                this.i18nService.t("errorEnableBiometricDesc")
+                this.i18nService.t("errorEnableBiometricDesc"),
               );
             }
           })
@@ -412,7 +416,7 @@ export class SettingsComponent implements OnInit {
 
   async updateAutoBiometricsPrompt() {
     await this.stateService.setDisableAutoBiometricsPrompt(
-      !this.form.value.enableAutoBiometricsPrompt
+      !this.form.value.enableAutoBiometricsPrompt,
     );
   }
 
@@ -487,7 +491,7 @@ export class SettingsComponent implements OnInit {
 
   async fingerprint() {
     const fingerprint = await this.cryptoService.getFingerprint(
-      await this.stateService.getUserId()
+      await this.stateService.getUserId(),
     );
 
     const dialogRef = FingerprintDialogComponent.open(this.dialogService, {

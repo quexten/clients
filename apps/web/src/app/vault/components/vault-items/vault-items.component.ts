@@ -75,7 +75,7 @@ export class VaultItemsComponent {
 
   async ngOnInit() {
     this.flexibleCollectionsEnabled = await this.configService.getFeatureFlag(
-      FeatureFlag.FlexibleCollections
+      FeatureFlag.FlexibleCollections,
     );
   }
 
@@ -106,7 +106,7 @@ export class VaultItemsComponent {
     }
 
     const organization = this.allOrganizations.find((o) => o.id === collection.organizationId);
-    return collection.canEdit(organization);
+    return collection.canEdit(organization, this.flexibleCollectionsEnabled);
   }
 
   protected canDeleteCollection(collection: CollectionView): boolean {
@@ -179,7 +179,7 @@ export class VaultItemsComponent {
     this.editableItems = items.filter(
       (item) =>
         item.cipher !== undefined ||
-        (item.collection !== undefined && this.canDeleteCollection(item.collection))
+        (item.collection !== undefined && this.canDeleteCollection(item.collection)),
     );
     this.dataSource.data = items;
   }

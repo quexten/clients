@@ -1,13 +1,13 @@
 import { mock, MockProxy } from "jest-mock-extended";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
@@ -15,7 +15,7 @@ import {
   AUTOFILL_ID,
   COPY_PASSWORD_ID,
   COPY_USERNAME_ID,
-  COPY_VERIFICATIONCODE_ID,
+  COPY_VERIFICATION_CODE_ID,
   GENERATE_PASSWORD_ID,
   NOOP_COMMAND_SUFFIX,
 } from "../constants";
@@ -31,7 +31,7 @@ import {
 describe("ContextMenuClickedHandler", () => {
   const createData = (
     menuItemId: chrome.contextMenus.OnClickData["menuItemId"],
-    parentMenuItemId?: chrome.contextMenus.OnClickData["parentMenuItemId"]
+    parentMenuItemId?: chrome.contextMenus.OnClickData["parentMenuItemId"],
   ): chrome.contextMenus.OnClickData => {
     return {
       menuItemId: menuItemId,
@@ -52,7 +52,7 @@ describe("ContextMenuClickedHandler", () => {
       new Cipher({
         id: id ?? "1",
         type: CipherType.Login,
-      } as any)
+      } as any),
     );
 
     cipherView.login.username = username ?? "USERNAME";
@@ -92,7 +92,7 @@ describe("ContextMenuClickedHandler", () => {
       stateService,
       totpService,
       eventCollectionService,
-      userVerificationService
+      userVerificationService,
     );
   });
 
@@ -165,7 +165,7 @@ describe("ContextMenuClickedHandler", () => {
         return Promise.resolve("654321");
       });
 
-      await sut.run(createData(`${COPY_VERIFICATIONCODE_ID}_1`, COPY_VERIFICATIONCODE_ID), {
+      await sut.run(createData(`${COPY_VERIFICATION_CODE_ID}_1`, COPY_VERIFICATION_CODE_ID), {
         url: "https://test.com",
       } as any);
 

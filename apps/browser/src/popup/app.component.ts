@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private platformUtilsService: PlatformUtilsService,
     private dialogService: DialogService,
-    private browserMessagingApi: ZonedMessageListenerService
+    private browserMessagingApi: ZonedMessageListenerService,
   ) {}
 
   async ngOnInit() {
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
         concatMap(async () => {
           await this.recordActivity();
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe();
 
@@ -93,14 +93,15 @@ export class AppComponent implements OnInit, OnDestroy {
             });
           }
 
-          if (this.activeUserId === null) {
-            this.router.navigate(["home"]);
-          }
+          this.router.navigate(["home"]);
         });
         this.changeDetectorRef.detectChanges();
       } else if (msg.command === "authBlocked") {
         this.router.navigate(["home"]);
-      } else if (msg.command === "locked" && msg.userId == null) {
+      } else if (
+        msg.command === "locked" &&
+        (msg.userId === null || msg.userId == this.activeUserId)
+      ) {
         this.router.navigate(["lock"]);
       } else if (msg.command === "showDialog") {
         this.showDialog(msg);
@@ -117,12 +118,17 @@ export class AppComponent implements OnInit, OnDestroy {
         // Wait to make sure background has reloaded first.
         window.setTimeout(
           () => BrowserApi.reloadExtension(forceWindowReload ? window : null),
-          2000
+          2000,
         );
       } else if (msg.command === "reloadPopup") {
         this.router.navigate(["/"]);
       } else if (msg.command === "convertAccountToKeyConnector") {
         this.router.navigate(["/remove-password"]);
+      } else if (msg.command === "switchAccountFinish") {
+        // TODO: unset loading?
+        // this.loading = false;
+      } else if (msg.command == "update-temp-password") {
+        this.router.navigate(["/update-temp-password"]);
       } else {
         msg.webExtSender = sender;
         this.broadcasterService.send(msg);
@@ -206,7 +212,7 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       msg.text.forEach(
         (t: string) =>
-          (message += "<p>" + this.sanitizer.sanitize(SecurityContext.HTML, t) + "</p>")
+          (message += "<p>" + this.sanitizer.sanitize(SecurityContext.HTML, t) + "</p>"),
       );
       options.enableHtml = true;
     }

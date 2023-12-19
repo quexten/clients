@@ -11,13 +11,25 @@ export enum MessageType {
   CredentialGetRequest,
   CredentialGetResponse,
   AbortRequest,
+  DisconnectRequest,
+  ReconnectRequest,
   AbortResponse,
   ErrorResponse,
 }
 
+/**
+ * The params provided by the page-script are created in an insecure environemnt and
+ * should not be trusted. This type is used to ensure that the content-script does not
+ * trust the `origin` or `sameOriginWithAncestors` params.
+ */
+export type InsecureCreateCredentialParams = Omit<
+  CreateCredentialParams,
+  "origin" | "sameOriginWithAncestors"
+>;
+
 export type CredentialCreationRequest = {
   type: MessageType.CredentialCreationRequest;
-  data: CreateCredentialParams;
+  data: InsecureCreateCredentialParams;
 };
 
 export type CredentialCreationResponse = {
@@ -25,9 +37,19 @@ export type CredentialCreationResponse = {
   result?: CreateCredentialResult;
 };
 
+/**
+ * The params provided by the page-script are created in an insecure environemnt and
+ * should not be trusted. This type is used to ensure that the content-script does not
+ * trust the `origin` or `sameOriginWithAncestors` params.
+ */
+export type InsecureAssertCredentialParams = Omit<
+  AssertCredentialParams,
+  "origin" | "sameOriginWithAncestors"
+>;
+
 export type CredentialGetRequest = {
   type: MessageType.CredentialGetRequest;
-  data: AssertCredentialParams;
+  data: InsecureAssertCredentialParams;
 };
 
 export type CredentialGetResponse = {
@@ -38,6 +60,14 @@ export type CredentialGetResponse = {
 export type AbortRequest = {
   type: MessageType.AbortRequest;
   abortedRequestId: string;
+};
+
+export type DisconnectRequest = {
+  type: MessageType.DisconnectRequest;
+};
+
+export type ReconnectRequest = {
+  type: MessageType.ReconnectRequest;
 };
 
 export type ErrorResponse = {
@@ -56,5 +86,7 @@ export type Message =
   | CredentialGetRequest
   | CredentialGetResponse
   | AbortRequest
+  | DisconnectRequest
+  | ReconnectRequest
   | AbortResponse
   | ErrorResponse;

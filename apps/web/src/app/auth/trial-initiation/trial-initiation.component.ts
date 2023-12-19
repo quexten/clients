@@ -52,6 +52,7 @@ enum ValidLayoutParams {
 })
 export class TrialInitiationComponent implements OnInit, OnDestroy {
   email = "";
+  fromOrgInvite = false;
   org = "";
   orgInfoSubLabel = "";
   orgId = "";
@@ -119,7 +120,7 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
     private policyApiService: PolicyApiServiceAbstraction,
     private policyService: PolicyService,
     private i18nService: I18nService,
-    private routerService: RouterService
+    private routerService: RouterService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -127,6 +128,7 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
       this.referenceData = new ReferenceEventRequest();
       if (qParams.email != null && qParams.email.indexOf("@") > -1) {
         this.email = qParams.email;
+        this.fromOrgInvite = qParams.fromOrgInvite === "true";
       }
 
       this.referenceDataId = qParams.reference;
@@ -175,7 +177,7 @@ export class TrialInitiationComponent implements OnInit, OnDestroy {
           invite.organizationId,
           invite.token,
           invite.email,
-          invite.organizationUserId
+          invite.organizationUserId,
         );
         if (policies.data != null) {
           const policiesData = policies.data.map((p) => new PolicyData(p));

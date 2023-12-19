@@ -1,12 +1,13 @@
 import { Directive, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { take, takeUntil } from "rxjs/operators";
 
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { DevicesApiServiceAbstraction } from "@bitwarden/common/auth/abstractions/devices-api.service.abstraction";
 import { LoginService } from "@bitwarden/common/auth/abstractions/login.service";
+import { WebAuthnLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/webauthn/webauthn-login.service.abstraction";
 import { AuthResult } from "@bitwarden/common/auth/models/domain/auth-result";
 import { ForceSetPasswordReason } from "@bitwarden/common/auth/models/domain/force-set-password-reason";
 import { PasswordLoginCredentials } from "@bitwarden/common/auth/models/domain/login-credentials";
@@ -53,6 +54,7 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
   protected twoFactorRoute = "2fa";
   protected successRoute = "vault";
   protected forcePasswordResetRoute = "update-temp-password";
+  protected showWebauthnLogin$: Observable<boolean>;
 
   protected destroy$ = new Subject<void>();
 
@@ -76,7 +78,8 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
     protected formBuilder: FormBuilder,
     protected formValidationErrorService: FormValidationErrorsService,
     protected route: ActivatedRoute,
-    protected loginService: LoginService
+    protected loginService: LoginService,
+    protected webAuthnLoginService: WebAuthnLoginServiceAbstraction,
   ) {
     super(environmentService, i18nService, platformUtilsService);
   }
@@ -86,6 +89,8 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
   }
 
   async ngOnInit() {
+    this.showWebauthnLogin$ = this.webAuthnLoginService.enabled$;
+
     this.route?.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       if (!params) {
         return;
@@ -144,7 +149,7 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
         data.email,
         data.masterPassword,
         this.captchaToken,
-        null
+        null,
       );
       this.formPromise = this.authService.logIn(credentials);
       const response = await this.formPromise;
@@ -239,7 +244,7 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
         "&codeChallenge=" +
         codeChallenge +
         "&email=" +
-        encodeURIComponent(this.formGroup.controls.email.value)
+        encodeURIComponent(this.formGroup.controls.email.value),
     );
   }
 
@@ -295,7 +300,7 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
     this.platformUtilsService.showToast(
       "error",
       this.i18nService.t("errorOccured"),
-      this.i18nService.t("encryptionKeyMigrationRequired")
+      this.i18nService.t("encryptionKeyMigrationRequired"),
     );
     return true;
   }
@@ -329,7 +334,7 @@ export class LoginComponent extends CaptchaProtectedComponent implements OnInit,
       const deviceIdentifier = await this.appIdService.getAppId();
       this.showLoginWithDevice = await this.devicesApiService.getKnownDevice(
         email,
-        deviceIdentifier
+        deviceIdentifier,
       );
     } catch (e) {
       this.showLoginWithDevice = false;

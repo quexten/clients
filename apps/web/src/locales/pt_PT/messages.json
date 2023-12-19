@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Iniciar sessão com a palavra-passe mestra"
   },
+  "readingPasskeyLoading": {
+    "message": "A ler chave de acesso..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Mantenha esta janela aberta e siga as indicações do seu navegador."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Utilizar um método de início de sessão diferente"
+  },
   "loginWithPasskey": {
     "message": "Iniciar sessão com a chave de acesso"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Chave de acesso inválida. Por favor, tente novamente."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "A 2FA para chaves de acesso não é suportada. Atualize a aplicação para iniciar sessão."
   },
   "loginWithPasskeyInfo": {
     "message": "Utilize uma chave de acesso gerada que lhe permitirá iniciar sessão automaticamente sem uma palavra-passe. A biometria, como o reconhecimento facial ou a impressão digital ou outro método de segurança FIDO2, verificará a sua identidade."
@@ -648,7 +663,7 @@
     "message": "Dê um nome à sua chave de acesso para o ajudar a identificá-la."
   },
   "useForVaultEncryption": {
-    "message": "Utilização para encriptação de cofre"
+    "message": "Utilizar para encriptação de cofre"
   },
   "useForVaultEncryptionInfo": {
     "message": "Inicie sessão e desbloqueie em dispositivos suportados sem a sua palavra-passe mestra. Siga as instruções do seu navegador para finalizar a configuração."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Encriptação não suportada"
   },
-  "encryptionNotEnabled": {
-    "message": "Encriptação não ativada"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
     "message": "Utilizado para encriptação"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Exportar"
   },
+  "exportFrom": {
+    "message": "Exportar de"
+  },
   "exportVault": {
     "message": "Exportar cofre"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Comprimento"
+  },
+  "passwordMinLength": {
+    "message": "Comprimento mínimo da palavra-passe"
   },
   "uppercase": {
     "message": "Maiúsculas (A-Z)",
@@ -1273,7 +1294,7 @@
     "message": "Zona de perigo"
   },
   "dangerZoneDesc": {
-    "message": "Cuidado, estas ações não são reversíveis!"
+    "message": "Cuidado, estas ações são irreversíveis!"
   },
   "deauthorizeSessions": {
     "message": "Desautorizar sessões"
@@ -4218,8 +4239,8 @@
     "message": "Este Send está oculto por defeito. Pode alternar a sua visibilidade utilizando o botão abaixo.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Transferir ficheiro"
+  "downloadAttachments": {
+    "message": "Transferir anexos"
   },
   "sendAccessUnavailable": {
     "message": "O Send a que está a tentar aceder não existe ou já não está disponível.",
@@ -4609,8 +4630,8 @@
     "message": "para o experimentar hoje.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "O utilizador $USER_IDENTIFIER$ do Bitwarden partilhou o seguinte consigo",
+  "sendAccessCreatorIdentifier": {
+    "message": "O membro $USER_IDENTIFIER$ do Bitwarden partilhou consigo o seguinte",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Avançar"
   },
+  "ssoLoginIsRequired": {
+    "message": "É necessário um início de sessão SSO"
+  },
   "selectedRegionFlag": {
     "message": "Bandeira da região selecionada"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Limitar a criação e eliminação de coleções aos proprietários e administradores"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Os proprietários e administradores podem gerir todas as coleções e itens"
+  },
   "collectionManagementUpdated": {
     "message": "Comportamento de gestão de coleções guardado"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "A chave de acesso não será copiada para o item duplicado. Pretende ainda assim duplicar este item?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Definição de gestão de coleções modificada $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Consulte as instruções detalhadas no nosso site de ajuda em",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Acesso ao projeto atualizado"
+  },
+  "unexpectedErrorSend": {
+    "message": "Ocorreu um erro inesperado ao carregar este Send. Tente novamente mais tarde."
+  },
+  "seatLimitReached": {
+    "message": "O limite de lugares foi atingido"
+  },
+  "contactYourProvider": {
+    "message": "Contacte o seu fornecedor para adquirir lugares adicionais."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "O limite de lugares foi atingido. Contacte o seu fornecedor para adquirir lugares adicionais."
+  },
+  "collectionAccessRestricted": {
+    "message": "O acesso à coleção é restrito"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Acesso à conta de serviço atualizado"
   }
 }

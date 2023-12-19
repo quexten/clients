@@ -268,6 +268,9 @@
   "length": {
     "message": "Længde"
   },
+  "passwordMinLength": {
+    "message": "Minimumslængde på adgangskode"
+  },
   "uppercase": {
     "message": "Store bogstaver (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Opsæt en oplåsningsmetode til at ændre bokstimeouthandlingen."
   },
+  "unlockMethodNeeded": {
+    "message": "Opsæt en oplåsningsmetode i Indstillinger"
+  },
   "rateExtension": {
     "message": "Bedøm udvidelsen"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Lås nu"
+  },
+  "lockAll": {
+    "message": "Lås alle"
   },
   "immediately": {
     "message": "Straks"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Spørg om at tilføje et element, hvis et ikke findes i din boks."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Anmod om at tilføje et emne, hvis intet ikke findes i boksen. Gælder alle indloggede konti."
+  },
   "showCardsCurrentTab": {
     "message": "Vis kort på fanebladet"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Bed om at opdatere et logins adgangskode, når der registreres en ændring på en hjemmeside."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Anmod om at opdatere en login-adgangskode ved registreret ændring på et websted. Gælder alle indloggede konti."
+  },
+  "enableUsePasskeys": {
+    "message": "Spørg om at gemme og bruge adgangsnøgler"
+  },
+  "usePasskeysDesc": {
+    "message": "Spørg om at gemme nye adgangsnøgler eller logge ind med adgangsnøgler gemt i Boksen. Gælder for alle indloggede konti."
+  },
   "notificationChangeDesc": {
     "message": "Vil du opdatere denne adgangskode i Bitwarden?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Brug et sekundært klik for at få adgang til adgangskodegenerering og matchende logins til hjemmesiden."
   },
+  "contextMenuItemDescAlt": {
+    "message": "Brug et sekundært klik for at få adgang til adgangskodegenerering og matchende logins til webstedet. Gælder alle indloggede konti."
+  },
   "defaultUriMatchDetection": {
     "message": "Standard URI matchmetode",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Skift applikationens farvetema."
+  },
+  "themeDescAlt": {
+    "message": "Skift applikationens farvetema. Gælder for alle indloggede konti."
   },
   "dark": {
     "message": "Mørk",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "Miljøets URLs er blevet gemt."
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Vis autoudfyld-menu i formularfelter",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Gælder for alle indloggede konti."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Slå indstillingerne til webbrowsers indbyggede adgangskodehåndtering fra for at undgå konflikter."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Redigér webbrowserindstillinger."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "Fra",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Når felt er valgt (i fokus)",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Når autoudfyld-ikon vælges",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Auto-udfyld ved sideindlæsning"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Vis et genkendeligt billede ud for hvert login."
+  },
+  "faviconDescAlt": {
+    "message": "Vis et genkendeligt billede ved siden af hvert login. Gælder for alle indloggede konti."
   },
   "enableBadgeCounter": {
     "message": "Vis badge-tæller"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identitet"
-  },
-  "typePasskey": {
-    "message": "Adgangsnøgle"
   },
   "passwordHistory": {
     "message": "Adgangskodehistorik"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden vil ikke bede om at gemme login-detaljer for disse domæner. Du skal opdatere siden for at ændringerne kan træde i kraft."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden vil ikke anmode om at gemme login-detaljer for disse domæner for alle indloggede konti. Siden skal opfriskes for at effektuere ændringerne."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ er ikke et gyldigt domæne",
@@ -2227,7 +2282,7 @@
     "message": "Sådan autoudfyldes"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Vælg et element fra denne side eller brug genvejen: $COMMAND$",
+    "message": "Select an item from this screen, use the shortcut $COMMAND$, or explore other options in settings.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Vælg et element fra denne side eller opret en genvej i Indstillinger."
+    "message": "Select an item from this screen, or explore other options in settings."
   },
   "gotIt": {
     "message": "Forstået"
@@ -2457,6 +2512,56 @@
     "message": "Slå anmodning om hovedadgangskode igen fra for at redigere dette felt",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Bitwarden autoudfyld-menuknap",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Slå Bitwarden autoudfyld--menu til/fra",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Bitwarden autoudfyld-menu",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Oplås kontoen for at se matchende logins",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Oplås konto",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Angiv legitimationsoplysninger for",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Delvis brugernavn",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Ingen emner at vise",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Nyt emne",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Tilføj nyt Boks-emne",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Bitwarden autoudfyld-menu tilgængelig. Tryk på pil ned-tasten for at vælge.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Slå til"
+  },
+  "ignore": {
+    "message": "Ignorér"
+  },
   "importData": {
     "message": "Importér data",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Bekræft filadgangskode"
+  },
+  "typePasskey": {
+    "message": "Adgangsnøgle"
   },
   "passkeyNotCopied": {
     "message": "Adgangsnøglen kopieres ikke"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Indsæt den til LastPass-kontoen tilknyttede YubiKey i computers USB-port, og tryk dernæst på dens knap."
+  },
+  "switchAccount": {
+    "message": "Skift konto"
+  },
+  "switchAccounts": {
+    "message": "Skift konti"
+  },
+  "switchToAccount": {
+    "message": "Skift til konto"
+  },
+  "activeAccount": {
+    "message": "Aktiv konto"
+  },
+  "accountLimitReached": {
+    "message": "Kontokvote nået. Log ud af en konto for at tilføje en anden."
+  },
+  "active": {
+    "message": "aktiv"
+  },
+  "locked": {
+    "message": "låst"
+  },
+  "unlocked": {
+    "message": "oplåst"
+  },
+  "server": {
+    "message": "server"
+  },
+  "hostedAt": {
+    "message": "hostet hos"
   }
 }

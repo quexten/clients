@@ -8,9 +8,9 @@ import {
 } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { ProviderService } from "@bitwarden/common/admin-console/abstractions/provider.service";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { Provider } from "@bitwarden/common/admin-console/models/domain/provider";
 import { TokenService } from "@bitwarden/common/auth/abstractions/token.service";
 import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
-import { Provider } from "@bitwarden/common/models/domain/provider";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
     private syncService: SyncService,
     private organizationService: OrganizationService,
     private vaultTimeoutSettingsService: VaultTimeoutSettingsService,
-    private i18nService: I18nService
+    private i18nService: I18nService,
   ) {
     this.selfHosted = this.platformUtilsService.isSelfHost();
   }
@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
     this.providers = await this.providerService.getAll();
 
     this.organizations$ = this.organizationService.memberOrganizations$.pipe(
-      canAccessAdmin(this.i18nService)
+      canAccessAdmin(this.i18nService),
     );
     this.canLock$ = this.vaultTimeoutSettingsService
       .availableVaultTimeoutActions$()

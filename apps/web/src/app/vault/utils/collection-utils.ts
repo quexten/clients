@@ -1,18 +1,18 @@
-import { ServiceUtils } from "@bitwarden/common/misc/serviceUtils";
-import { TreeNode } from "@bitwarden/common/models/domain/tree-node";
+import { TreeNode } from "@bitwarden/common/vault/models/domain/tree-node";
 import {
   CollectionView,
   NestingDelimiter,
 } from "@bitwarden/common/vault/models/view/collection.view";
+import { ServiceUtils } from "@bitwarden/common/vault/service-utils";
 
 import { CollectionAdminView } from "../../vault/core/views/collection-admin.view";
 
 export function getNestedCollectionTree(
-  collections: CollectionAdminView[]
+  collections: CollectionAdminView[],
 ): TreeNode<CollectionAdminView>[];
 export function getNestedCollectionTree(collections: CollectionView[]): TreeNode<CollectionView>[];
 export function getNestedCollectionTree(
-  collections: (CollectionView | CollectionAdminView)[]
+  collections: (CollectionView | CollectionAdminView)[],
 ): TreeNode<CollectionView | CollectionAdminView>[] {
   // Collections need to be cloned because ServiceUtils.nestedTraverse actively
   // modifies the names of collections.
@@ -35,7 +35,7 @@ export function getNestedCollectionTree(
 function cloneCollection(collection: CollectionView): CollectionView;
 function cloneCollection(collection: CollectionAdminView): CollectionAdminView;
 function cloneCollection(
-  collection: CollectionView | CollectionAdminView
+  collection: CollectionView | CollectionAdminView,
 ): CollectionView | CollectionAdminView {
   let cloned;
 

@@ -20,7 +20,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
 
   constructor(
     protected stateService: StateService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
   ) {
     this.stateService.activeAccountUnlocked$
       .pipe(
@@ -37,16 +37,11 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
           const data = await this.stateService.getEncryptedPolicies();
 
           await this.updateObservables(data);
-        })
+        }),
       )
       .subscribe();
   }
 
-  /**
-   * Returns the first policy found that applies to the active user
-   * @param policyType Policy type to search for
-   * @param policyFilter Additional filter to apply to the policy
-   */
   get$(policyType: PolicyType, policyFilter?: (policy: Policy) => boolean): Observable<Policy> {
     return this.policies$.pipe(
       concatMap(async (policies) => {
@@ -55,18 +50,15 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
           policies,
           policyType,
           policyFilter,
-          userId
+          userId,
         );
         if (appliesToCurrentUser) {
           return policies.find((policy) => policy.type === policyType && policy.enabled);
         }
-      })
+      }),
     );
   }
 
-  /**
-   * @deprecated Do not call this, use the policies$ observable collection
-   */
   async getAll(type?: PolicyType, userId?: string): Promise<Policy[]> {
     let response: Policy[] = [];
     const decryptedPolicies = await this.stateService.getDecryptedPolicies({ userId: userId });
@@ -144,7 +136,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
         });
 
         return enforcedOptions;
-      })
+      }),
     );
   }
 
@@ -153,14 +145,14 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
       concatMap(async (policies) => {
         const userId = await this.stateService.getUserId();
         return await this.checkPoliciesThatApplyToUser(policies, policyType, policyFilter, userId);
-      })
+      }),
     );
   }
 
   evaluateMasterPassword(
     passwordStrength: number,
     newPassword: string,
-    enforcedPolicyOptions: MasterPasswordPolicyOptions
+    enforcedPolicyOptions: MasterPasswordPolicyOptions,
   ): boolean {
     if (enforcedPolicyOptions == null) {
       return true;
@@ -202,7 +194,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
 
   getResetPasswordPolicyOptions(
     policies: Policy[],
-    orgId: string
+    orgId: string,
   ): [ResetPasswordPolicyOptions, boolean] {
     const resetPasswordPolicyOptions = new ResetPasswordPolicyOptions();
 
@@ -211,7 +203,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
     }
 
     const policy = policies.find(
-      (p) => p.organizationId === orgId && p.type === PolicyType.ResetPassword && p.enabled
+      (p) => p.organizationId === orgId && p.type === PolicyType.ResetPassword && p.enabled,
     );
     resetPasswordPolicyOptions.autoEnrollEnabled = policy?.data?.autoEnrollEnabled ?? false;
 
@@ -234,7 +226,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
   async policyAppliesToUser(
     policyType: PolicyType,
     policyFilter?: (policy: Policy) => boolean,
-    userId?: string
+    userId?: string,
   ) {
     const policies = await this.getAll(policyType, userId);
 
@@ -286,11 +278,11 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
     policies: Policy[],
     policyType: PolicyType,
     policyFilter?: (policy: Policy) => boolean,
-    userId?: string
+    userId?: string,
   ) {
     const organizations = await this.organizationService.getAll(userId);
     const filteredPolicies = policies.filter(
-      (p) => p.type === policyType && p.enabled && (policyFilter == null || policyFilter(p))
+      (p) => p.type === policyType && p.enabled && (policyFilter == null || policyFilter(p)),
     );
     const policySet = new Set(filteredPolicies.map((p) => p.organizationId));
 
@@ -299,7 +291,7 @@ export class PolicyService implements InternalPolicyServiceAbstraction {
         o.status >= OrganizationUserStatusType.Accepted &&
         o.usePolicies &&
         policySet.has(o.id) &&
-        !this.isExemptFromPolicies(o, policyType)
+        !this.isExemptFromPolicies(o, policyType),
     );
   }
 }

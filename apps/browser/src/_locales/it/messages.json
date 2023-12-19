@@ -268,6 +268,9 @@
   "length": {
     "message": "Lunghezza"
   },
+  "passwordMinLength": {
+    "message": "Lunghezza minima della password"
+  },
   "uppercase": {
     "message": "Maiuscole (A-Z)"
   },
@@ -365,6 +368,9 @@
   "unlockMethodNeededToChangeTimeoutActionDesc": {
     "message": "Imposta un metodo di sblocco per modificare l'azione timeout cassaforte."
   },
+  "unlockMethodNeeded": {
+    "message": "Imposta un metodo di sblocco in Impostazioni"
+  },
   "rateExtension": {
     "message": "Valuta l'estensione"
   },
@@ -404,6 +410,9 @@
   },
   "lockNow": {
     "message": "Blocca ora"
+  },
+  "lockAll": {
+    "message": "Blocca tutto"
   },
   "immediately": {
     "message": "Immediatamente"
@@ -619,6 +628,9 @@
   "addLoginNotificationDesc": {
     "message": "Chiedi di aggiungere un nuovo elemento se non ce n'è uno nella tua cassaforte."
   },
+  "addLoginNotificationDescAlt": {
+    "message": "Chiedi di aggiungere un elemento se non è stato trovato nella tua cassaforte. Si applica a tutti i profili connessi."
+  },
   "showCardsCurrentTab": {
     "message": "Mostra le carte nella sezione Scheda"
   },
@@ -651,6 +663,15 @@
   "changedPasswordNotificationDesc": {
     "message": "Chiedi di aggiornare la password di un login quando rileviamo che è cambiata su un sito web."
   },
+  "changedPasswordNotificationDescAlt": {
+    "message": "Chiedi di aggiornare la password di un accesso quando una modifica è rilevata su un sito web. Si applica a tutti i profili connessi."
+  },
+  "enableUsePasskeys": {
+    "message": "Chiedi di salvare e usare le passkey"
+  },
+  "usePasskeysDesc": {
+    "message": "Chiedi di salvare nuove passkey o accedere con passkey salvate nella tua cassaforte. Si applica a tutti gli account connessi."
+  },
   "notificationChangeDesc": {
     "message": "Vuoi aggiornare questa password in Bitwarden?"
   },
@@ -669,6 +690,9 @@
   "contextMenuItemDesc": {
     "message": "Utilizza un secondo clic per accedere alla generazione di password e login corrispondenti per il sito web. "
   },
+  "contextMenuItemDescAlt": {
+    "message": "Utilizza un click secondario per accedere alla generazione della password e agli accessi corrispondenti per il sito web. Si applica a tutti i profili connessi."
+  },
   "defaultUriMatchDetection": {
     "message": "Rilevamento corrispondenza URI predefinito",
     "description": "Default URI match detection for auto-fill."
@@ -681,6 +705,9 @@
   },
   "themeDesc": {
     "message": "Cambia lo schema di colori dell'app."
+  },
+  "themeDescAlt": {
+    "message": "Modifica il tema del colore dell'applicazione. Si applica a tutti i profili connessi."
   },
   "dark": {
     "message": "Scuro",
@@ -1002,6 +1029,31 @@
   "environmentSaved": {
     "message": "URL dell'ambiente salvati"
   },
+  "showAutoFillMenuOnFormFields": {
+    "message": "Mostra il menu di riempimento automatico nei campi di modulo",
+    "description": "Represents the message for allowing the user to enable the auto-fill overlay"
+  },
+  "showAutoFillMenuOnFormFieldsDescAlt": {
+    "message": "Si applica a tutti i profili connessi."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettings": {
+    "message": "Disattiva il password manager del tuo browser per evitare conflitti con Bitwarden."
+  },
+  "turnOffBrowserBuiltInPasswordManagerSettingsLink": {
+    "message": "Modifica le impostazioni del browser."
+  },
+  "autofillOverlayVisibilityOff": {
+    "message": "No",
+    "description": "Overlay setting select option for disabling autofill overlay"
+  },
+  "autofillOverlayVisibilityOnFieldFocus": {
+    "message": "Quando il campo è selezionato",
+    "description": "Overlay appearance select option for showing the field on focus of the input element"
+  },
+  "autofillOverlayVisibilityOnButtonClick": {
+    "message": "Quando l'icona di riempimento automatico è selezionata",
+    "description": "Overlay appearance select option for showing the field on click of the overlay icon"
+  },
   "enableAutoFillOnPageLoad": {
     "message": "Riempi automaticamente al caricamento della pagina"
   },
@@ -1093,6 +1145,9 @@
   },
   "faviconDesc": {
     "message": "Mostra un piccolo logo riconoscibile accanto a ogni login."
+  },
+  "faviconDescAlt": {
+    "message": "Mostra un piccolo logo riconoscibile accanto a ogni login. Si applica a tutti gli account connessi."
   },
   "enableBadgeCounter": {
     "message": "Mostra badge contatore"
@@ -1252,9 +1307,6 @@
   },
   "typeIdentity": {
     "message": "Identità"
-  },
-  "typePasskey": {
-    "message": "Passkey"
   },
   "passwordHistory": {
     "message": "Cronologia delle password"
@@ -1664,6 +1716,9 @@
   },
   "excludedDomainsDesc": {
     "message": "Bitwarden non ti chiederà di aggiungere nuovi login per questi domini. Ricorda di ricaricare la pagina perché le modifiche abbiano effetto."
+  },
+  "excludedDomainsDescAlt": {
+    "message": "Bitwarden non chiederà di salvare i dettagli di accesso per questi domini per tutti i profili connessi. Devi aggiornare la pagina perché le modifiche diventino effettive."
   },
   "excludedDomainsInvalidDomain": {
     "message": "$DOMAIN$ non è un dominio valido",
@@ -2227,7 +2282,7 @@
     "message": "Come riempire automaticamente"
   },
   "autofillSelectInfoWithCommand": {
-    "message": "Seleziona un elemento da questa pagina o usa la scorciatoia: $COMMAND$",
+    "message": "Seleziona un elemento da questa schermata, utilizza la scorciatoia $COMMAND$ o esplora altre opzioni nelle impostazioni.",
     "placeholders": {
       "command": {
         "content": "$1",
@@ -2236,7 +2291,7 @@
     }
   },
   "autofillSelectInfoWithoutCommand": {
-    "message": "Seleziona un elemento da questa pagina o imposta una scorciatoia nelle impostazioni."
+    "message": "Seleziona un elemento da questa schermata, o esplora altre opzioni nelle impostazioni."
   },
   "gotIt": {
     "message": "Ok"
@@ -2457,6 +2512,56 @@
     "message": "Disattiva l'inserimento della password principale di nuovo per modificare questo campo",
     "description": "Message appearing below the autofill on load message when master password reprompt is set for a vault item."
   },
+  "bitwardenOverlayButton": {
+    "message": "Pulsante del menu di riempimento automatico di Bitwarden",
+    "description": "Page title for the iframe containing the overlay button"
+  },
+  "toggleBitwardenVaultOverlay": {
+    "message": "Attiva/disattiva il menu di riempimento automatico di Bitwarden",
+    "description": "Screen reader and tool tip label for the overlay button"
+  },
+  "bitwardenVault": {
+    "message": "Menu di riempimento automatico di Bitwarden",
+    "description": "Page title in overlay"
+  },
+  "unlockYourAccountToViewMatchingLogins": {
+    "message": "Sblocca il tuo account per visualizzare i login corrispondenti",
+    "description": "Text to display in overlay when the account is locked."
+  },
+  "unlockAccount": {
+    "message": "Sblocca account",
+    "description": "Button text to display in overlay when the account is locked."
+  },
+  "fillCredentialsFor": {
+    "message": "Riempi le credenziali per",
+    "description": "Screen reader text for when overlay item is in focused"
+  },
+  "partialUsername": {
+    "message": "Nome utente parziale",
+    "description": "Screen reader text for when a login item is focused where a partial username is displayed. SR will announce this phrase before reading the text of the partial username"
+  },
+  "noItemsToShow": {
+    "message": "Nessun elemento trovato",
+    "description": "Text to show in overlay if there are no matching items"
+  },
+  "newItem": {
+    "message": "Nuovo elemento",
+    "description": "Button text to display in overlay when there are no matching items"
+  },
+  "addNewVaultItem": {
+    "message": "Aggiungi un nuovo elemento alla cassaforte",
+    "description": "Screen reader text (aria-label) for new item button in overlay"
+  },
+  "bitwardenOverlayMenuAvailable": {
+    "message": "Il menu di riempimento automatico di Bitwarden è disponibile. Premi il tasto freccia giù per selezionare.",
+    "description": "Screen reader text for announcing when the overlay opens on the page"
+  },
+  "turnOn": {
+    "message": "Attiva"
+  },
+  "ignore": {
+    "message": "Ignora"
+  },
   "importData": {
     "message": "Importa dati",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
@@ -2567,6 +2672,9 @@
   },
   "confirmFilePassword": {
     "message": "Conferma password del file"
+  },
+  "typePasskey": {
+    "message": "Passkey"
   },
   "passkeyNotCopied": {
     "message": "La passkey non sarà copiata"
@@ -2682,5 +2790,35 @@
   },
   "lastPassYubikeyDesc": {
     "message": "Inserisci la tua YubiKey associata al tuo account LastPass nella porta USB del computer, poi premi il suo bottone."
+  },
+  "switchAccount": {
+    "message": "Cambia account"
+  },
+  "switchAccounts": {
+    "message": "Cambia account"
+  },
+  "switchToAccount": {
+    "message": "Passa all'account"
+  },
+  "activeAccount": {
+    "message": "Account attivo"
+  },
+  "accountLimitReached": {
+    "message": "Limite di account raggiunto. Esci da un account per aggiungerne un altro."
+  },
+  "active": {
+    "message": "attivo"
+  },
+  "locked": {
+    "message": "bloccato"
+  },
+  "unlocked": {
+    "message": "sbloccato"
+  },
+  "server": {
+    "message": "server"
+  },
+  "hostedAt": {
+    "message": "hosted in"
   }
 }

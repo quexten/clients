@@ -1,9 +1,9 @@
-<sm-header></sm-header>
+<app-header></app-header>
 
 <form [formGroup]="formGroup" [bitSubmit]="submit">
   <div class="tw-my-4 tw-max-w-xl">
     <app-callout type="info" title="{{ 'exportingOrganizationSecretDataTitle' | i18n }}">
-      {{ "exportingOrganizationSecretDataDescription" | i18n : orgName }}
+      {{ "exportingOrganizationSecretDataDescription" | i18n: orgName }}
     </app-callout>
   </div>
 

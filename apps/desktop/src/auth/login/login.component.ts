@@ -10,6 +10,7 @@ import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { DevicesApiServiceAbstraction } from "@bitwarden/common/auth/abstractions/devices-api.service.abstraction";
 import { LoginService } from "@bitwarden/common/auth/abstractions/login.service";
+import { WebAuthnLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/webauthn/webauthn-login.service.abstraction";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
@@ -71,7 +72,8 @@ export class LoginComponent extends BaseLoginComponent implements OnDestroy {
     formBuilder: FormBuilder,
     formValidationErrorService: FormValidationErrorsService,
     route: ActivatedRoute,
-    loginService: LoginService
+    loginService: LoginService,
+    webAuthnLoginService: WebAuthnLoginServiceAbstraction,
   ) {
     super(
       devicesApiService,
@@ -89,7 +91,8 @@ export class LoginComponent extends BaseLoginComponent implements OnDestroy {
       formBuilder,
       formValidationErrorService,
       route,
-      loginService
+      loginService,
+      webAuthnLoginService,
     );
     super.onSuccessfulLogin = () => {
       return syncService.fullSync(true);
@@ -132,7 +135,7 @@ export class LoginComponent extends BaseLoginComponent implements OnDestroy {
   async settings() {
     const [modal, childComponent] = await this.modalService.openViewRef(
       EnvironmentComponent,
-      this.environmentModal
+      this.environmentModal,
     );
 
     modal.onShown.pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
@@ -161,7 +164,7 @@ export class LoginComponent extends BaseLoginComponent implements OnDestroy {
       this.platformUtilsService.showToast(
         "error",
         this.i18nService.t("errorOccured"),
-        this.i18nService.t("invalidEmail")
+        this.i18nService.t("invalidEmail"),
       );
       return;
     }

@@ -28,7 +28,7 @@ export class AcceptEmergencyComponent extends BaseAcceptComponent {
     i18nService: I18nService,
     route: ActivatedRoute,
     stateService: StateService,
-    private emergencyAccessService: EmergencyAccessService
+    private emergencyAccessService: EmergencyAccessService,
   ) {
     super(router, platformUtilsService, i18nService, route, stateService);
   }
@@ -36,12 +36,11 @@ export class AcceptEmergencyComponent extends BaseAcceptComponent {
   async authedHandler(qParams: Params): Promise<void> {
     this.actionPromise = this.emergencyAccessService.accept(qParams.id, qParams.token);
     await this.actionPromise;
-    await this.stateService.setEmergencyAccessInvitation(null);
     this.platformUtilService.showToast(
       "success",
       this.i18nService.t("inviteAccepted"),
       this.i18nService.t("emergencyInviteAcceptedDesc"),
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     this.router.navigate(["/vault"]);
   }
@@ -52,8 +51,5 @@ export class AcceptEmergencyComponent extends BaseAcceptComponent {
       // Fix URL encoding of space issue with Angular
       this.name = this.name.replace(/\+/g, " ");
     }
-
-    // save the invitation to state so sso logins can find it later
-    await this.stateService.setEmergencyAccessInvitation(qParams);
   }
 }

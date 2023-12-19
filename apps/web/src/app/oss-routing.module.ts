@@ -8,7 +8,7 @@ import {
   tdeDecryptionRequiredGuard,
   UnauthGuard,
 } from "@bitwarden/angular/auth/guards";
-import { canAccessFeature } from "@bitwarden/angular/guard/feature-flag.guard";
+import { canAccessFeature } from "@bitwarden/angular/platform/guard/feature-flag.guard";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 
 import { flagEnabled, Flags } from "../utils/flags";
@@ -18,17 +18,21 @@ import { FamiliesForEnterpriseSetupComponent } from "./admin-console/organizatio
 import { CreateOrganizationComponent } from "./admin-console/settings/create-organization.component";
 import { SponsoredFamiliesComponent } from "./admin-console/settings/sponsored-families.component";
 import { AcceptOrganizationComponent } from "./auth/accept-organization.component";
+import { deepLinkGuard } from "./auth/guards/deep-link.guard";
 import { HintComponent } from "./auth/hint.component";
 import { LockComponent } from "./auth/lock.component";
 import { LoginDecryptionOptionsComponent } from "./auth/login/login-decryption-options/login-decryption-options.component";
 import { LoginViaAuthRequestComponent } from "./auth/login/login-via-auth-request.component";
+import { LoginViaWebAuthnComponent } from "./auth/login/login-via-webauthn/login-via-webauthn.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { RecoverDeleteComponent } from "./auth/recover-delete.component";
 import { RecoverTwoFactorComponent } from "./auth/recover-two-factor.component";
 import { RemovePasswordComponent } from "./auth/remove-password.component";
 import { SetPasswordComponent } from "./auth/set-password.component";
+import { AccountComponent } from "./auth/settings/account/account.component";
 import { EmergencyAccessComponent } from "./auth/settings/emergency-access/emergency-access.component";
 import { EmergencyAccessViewComponent } from "./auth/settings/emergency-access/view/emergency-access-view.component";
+import { SecurityRoutingModule } from "./auth/settings/security/security-routing.module";
 import { SsoComponent } from "./auth/sso.component";
 import { TrialInitiationComponent } from "./auth/trial-initiation/trial-initiation.component";
 import { TwoFactorComponent } from "./auth/two-factor.component";
@@ -39,10 +43,8 @@ import { VerifyRecoverDeleteComponent } from "./auth/verify-recover-delete.compo
 import { FrontendLayoutComponent } from "./layouts/frontend-layout.component";
 import { UserLayoutComponent } from "./layouts/user-layout.component";
 import { ReportsModule } from "./reports";
-import { AccountComponent } from "./settings/account.component";
 import { DomainRulesComponent } from "./settings/domain-rules.component";
 import { PreferencesComponent } from "./settings/preferences.component";
-import { SecurityRoutingModule } from "./settings/security-routing.module";
 import { SettingsComponent } from "./settings/settings.component";
 import { GeneratorComponent } from "./tools/generator.component";
 import { AccessComponent } from "./tools/send/access.component";
@@ -67,6 +69,11 @@ const routes: Routes = [
         path: "login-with-device",
         component: LoginViaAuthRequestComponent,
         data: { titleId: "loginWithDevice" },
+      },
+      {
+        path: "login-with-passkey",
+        component: LoginViaWebAuthnComponent,
+        data: { titleId: "loginWithPasskey" },
       },
       {
         path: "admin-approval-requested",
@@ -113,25 +120,28 @@ const routes: Routes = [
       {
         path: "lock",
         component: LockComponent,
-        canActivate: [lockGuard()],
+        canActivate: [deepLinkGuard(), lockGuard()],
       },
       { path: "verify-email", component: VerifyEmailTokenComponent },
       {
         path: "accept-organization",
         component: AcceptOrganizationComponent,
+        canActivate: [deepLinkGuard()],
         data: { titleId: "joinOrganization", doNotSaveUrl: false },
       },
       {
         path: "accept-emergency",
+        canActivate: [deepLinkGuard()],
         data: { titleId: "acceptEmergency", doNotSaveUrl: false },
         loadComponent: () =>
           import("./auth/emergency-access/accept/accept-emergency.component").then(
-            (mod) => mod.AcceptEmergencyComponent
+            (mod) => mod.AcceptEmergencyComponent,
           ),
       },
       {
         path: "accept-families-for-enterprise",
         component: AcceptFamilySponsorshipComponent,
+        canActivate: [deepLinkGuard()],
         data: { titleId: "acceptFamilySponsorship", doNotSaveUrl: false },
       },
       { path: "recover", pathMatch: "full", redirectTo: "recover-2fa" },
@@ -180,7 +190,7 @@ const routes: Routes = [
         path: "migrate-legacy-encryption",
         loadComponent: () =>
           import("./auth/migrate-encryption/migrate-legacy-encryption.component").then(
-            (mod) => mod.MigrateFromLegacyEncryptionComponent
+            (mod) => mod.MigrateFromLegacyEncryptionComponent,
           ),
       },
     ],
@@ -188,7 +198,7 @@ const routes: Routes = [
   {
     path: "",
     component: UserLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [deepLinkGuard(), AuthGuard],
     children: [
       {
         path: "vault",
@@ -224,7 +234,7 @@ const routes: Routes = [
             path: "subscription",
             loadChildren: () =>
               import("./billing/individual/individual-billing.module").then(
-                (m) => m.IndividualBillingModule
+                (m) => m.IndividualBillingModule,
               ),
           },
           {

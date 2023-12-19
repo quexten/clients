@@ -1,4 +1,4 @@
-<header>
+<app-header>
   <div class="left">
     <app-pop-out></app-pop-out>
   </div>
@@ -6,7 +6,7 @@
     <span class="title">{{ "settings" | i18n }}</span>
   </h1>
   <div class="right"></div>
-</header>
+</app-header>
 <main tabindex="-1" [formGroup]="form">
   <div class="box list">
     <h2 class="box-header">{{ "manage" | i18n }}</h2>
@@ -52,14 +52,14 @@
         <span *ngIf="policy.timeout && policy.action">
           {{
             "vaultTimeoutPolicyWithActionInEffect"
-              | i18n : policy.timeout.hours : policy.timeout.minutes : (policy.action | i18n)
+              | i18n: policy.timeout.hours : policy.timeout.minutes : (policy.action | i18n)
           }}
         </span>
         <span *ngIf="policy.timeout && !policy.action">
-          {{ "vaultTimeoutPolicyInEffect" | i18n : policy.timeout.hours : policy.timeout.minutes }}
+          {{ "vaultTimeoutPolicyInEffect" | i18n: policy.timeout.hours : policy.timeout.minutes }}
         </span>
         <span *ngIf="!policy.timeout && policy.action">
-          {{ "vaultTimeoutActionPolicyInEffect" | i18n : (policy.action | i18n) }}
+          {{ "vaultTimeoutActionPolicyInEffect" | i18n: (policy.action | i18n) }}
         </span>
       </app-callout>
       <app-vault-timeout-input
@@ -109,7 +109,9 @@
         />
       </div>
       <button
-        *ngIf="availableVaultTimeoutActions.includes(VaultTimeoutAction.Lock)"
+        *ngIf="
+          !accountSwitcherEnabled && availableVaultTimeoutActions.includes(VaultTimeoutAction.Lock)
+        "
         type="button"
         class="box-content-row box-content-row-flex text-default"
         appStopClick
@@ -163,6 +165,7 @@
         <i class="bwi bwi-angle-right bwi-lg row-sub-icon" aria-hidden="true"></i>
       </button>
       <button
+        *ngIf="!accountSwitcherEnabled"
         type="button"
         class="box-content-row box-content-row-flex text-default"
         appStopClick

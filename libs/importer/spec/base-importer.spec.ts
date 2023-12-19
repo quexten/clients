@@ -1,4 +1,4 @@
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
@@ -11,6 +11,10 @@ class FakeBaseImporter extends BaseImporter {
 
   setCardExpiration(cipher: CipherView, expiration: string): boolean {
     return super.setCardExpiration(cipher, expiration);
+  }
+
+  parseXml(data: string): Document {
+    return super.parseXml(data);
   }
 }
 
@@ -36,7 +40,7 @@ describe("BaseImporter class", () => {
         expect(cipher.card.expMonth).toBe(expectedMonth);
         expect(cipher.card.expYear).toBe(expectedYear);
         expect(result).toBe(true);
-      }
+      },
     );
 
     it.each([
@@ -69,7 +73,7 @@ describe("BaseImporter class", () => {
         expect(cipher.card.expMonth).toBe("1");
         expect(cipher.card.expYear).toBe("2025");
         expect(result).toBe(true);
-      }
+      },
     );
 
     it.each([[""], ["  "], [null]])(
@@ -77,7 +81,7 @@ describe("BaseImporter class", () => {
       (expiration) => {
         const result = importer.setCardExpiration(cipher, expiration);
         expect(result).toBe(false);
-      }
+      },
     );
 
     it.each([["0123"], ["01/03/23"]])(
@@ -85,7 +89,7 @@ describe("BaseImporter class", () => {
       (expiration) => {
         const result = importer.setCardExpiration(cipher, expiration);
         expect(result).toBe(false);
-      }
+      },
     );
 
     it.each([["5/"], ["03/231"], ["12/1"], ["2/20221"]])(
@@ -93,7 +97,7 @@ describe("BaseImporter class", () => {
       (expiration) => {
         const result = importer.setCardExpiration(cipher, expiration);
         expect(result).toBe(false);
-      }
+      },
     );
 
     it.each([["/2023"], ["003/2023"], ["111/32"]])(
@@ -101,7 +105,20 @@ describe("BaseImporter class", () => {
       (expiration) => {
         const result = importer.setCardExpiration(cipher, expiration);
         expect(result).toBe(false);
-      }
+      },
     );
+
+    it("parse XML should reject xml with external entities", async () => {
+      const xml = `<?xml version="1.0" encoding="ISO-8859-1"?>
+        <!DOCTYPE replace [
+        <!ELEMENT replace ANY>
+        <!ENTITY xxe "External entity">
+        ]>
+        <passwordsafe delimiter=";">
+        <entry><title>PoC XXE</title><username>&xxe;</username></entry>
+        </passwordsafe>`;
+      const result = importer.parseXml(xml);
+      expect(result).toBe(null);
+    });
   });
 });

@@ -81,7 +81,7 @@ export class AppComponent implements OnDestroy, OnInit {
     protected policyListService: PolicyListService,
     private keyConnectorService: KeyConnectorService,
     private configService: ConfigServiceAbstraction,
-    private dialogService: DialogService
+    private dialogService: DialogService,
   ) {}
 
   ngOnInit() {
@@ -111,14 +111,12 @@ export class AppComponent implements OnDestroy, OnInit {
             this.notificationsService.updateConnection(false);
             break;
           case "loggedOut":
-            this.routerService.setPreviousUrl(null);
             this.notificationsService.updateConnection(false);
             break;
           case "unlocked":
             this.notificationsService.updateConnection(false);
             break;
           case "authBlocked":
-            this.routerService.setPreviousUrl(message.url);
             this.router.navigate(["/"]);
             break;
           case "logout":
@@ -132,12 +130,13 @@ export class AppComponent implements OnDestroy, OnInit {
             this.router.navigate(["lock"]);
             break;
           case "lockedUrl":
-            this.routerService.setPreviousUrl(message.url);
             break;
           case "syncStarted":
             break;
           case "syncCompleted":
-            this.configService.triggerServerConfigFetch();
+            if (message.successfully) {
+              this.configService.triggerServerConfigFetch();
+            }
             break;
           case "upgradeOrganization": {
             const upgradeConfirmed = await this.dialogService.openSimpleDialog({
@@ -177,7 +176,7 @@ export class AppComponent implements OnDestroy, OnInit {
             });
             if (emailVerificationConfirmed) {
               this.platformUtilsService.launchUri(
-                "https://bitwarden.com/help/create-bitwarden-account/"
+                "https://bitwarden.com/help/create-bitwarden-account/",
               );
             }
             break;
@@ -248,7 +247,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.platformUtilsService.showToast(
           "warning",
           this.i18nService.t("loggedOut"),
-          this.i18nService.t("loginExpired")
+          this.i18nService.t("loginExpired"),
         );
       }
 
@@ -296,7 +295,7 @@ export class AppComponent implements OnDestroy, OnInit {
     } else {
       msg.text.forEach(
         (t: string) =>
-          (message += "<p>" + this.sanitizer.sanitize(SecurityContext.HTML, t) + "</p>")
+          (message += "<p>" + this.sanitizer.sanitize(SecurityContext.HTML, t) + "</p>"),
       );
       options.enableHtml = true;
     }

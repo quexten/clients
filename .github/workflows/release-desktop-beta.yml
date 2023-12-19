@@ -28,9 +28,9 @@ jobs:
 
       - name: Branch check
         run: |
-          if [[ "$GITHUB_REF" != "refs/heads/master" ]] && [[ "$GITHUB_REF" != "refs/heads/rc" ]] && [[ "$GITHUB_REF" != "refs/heads/hotfix-rc" ]]; then
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]] && [[ "$GITHUB_REF" != "refs/heads/rc" ]] && [[ "$GITHUB_REF" != "refs/heads/hotfix-rc" ]]; then
             echo "==================================="
-            echo "[!] Can only release from the 'master', 'rc' or 'hotfix-rc' branches"
+            echo "[!] Can only release from the 'main', 'rc' or 'hotfix-rc' branches"
             echo "==================================="
             exit 1
           fi
@@ -138,11 +138,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Set up environment
         run: |
           sudo apt-get update
@@ -235,13 +230,8 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Install AST
-        uses: bitwarden/gh-actions/install-ast@main
+        run: dotnet tool install --global AzureSignTool --version 4.0.1
 
       - name: Set up environment
         run: choco install checksum --no-progress
@@ -431,11 +421,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Print environment
         run: |
           node --version
@@ -561,11 +546,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Print environment
         run: |
           node --version
@@ -681,13 +661,13 @@ jobs:
           branch: rc
           path: ${{ github.workspace }}/browser-build-artifacts
 
-      - name: Download artifact from master
+      - name: Download artifacts from main
         if: ${{ github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/hotfix-rc' }}
         uses: dawidd6/action-download-artifact@246dbf436b23d7c49e21a7ab8204ca9ecd1fe615 # v2.27.0
         with:
           workflow: build-browser.yml
           workflow_conclusion: success
-          branch: master
+          branch: main
           path: ${{ github.workspace }}/browser-build-artifacts
 
       - name: Unzip Safari artifact
@@ -764,11 +744,6 @@ jobs:
       - name: Set Node options
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
 
-      - name: Install node-gyp
-        run: |
-          npm install -g node-gyp
-          node-gyp install $(node -v)
-
       - name: Print environment
         run: |
           node --version
@@ -884,13 +859,13 @@ jobs:
           branch: rc
           path: ${{ github.workspace }}/browser-build-artifacts
 
-      - name: Download artifact from master
+      - name: Download artifact from main
         if: ${{ github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/hotfix-rc' }}
         uses: dawidd6/action-download-artifact@246dbf436b23d7c49e21a7ab8204ca9ecd1fe615 # v2.27.0
         with:
           workflow: build-browser.yml
           workflow_conclusion: success
-          branch: master
+          branch: main
           path: ${{ github.workspace }}/browser-build-artifacts
 
       - name: Unzip Safari artifact

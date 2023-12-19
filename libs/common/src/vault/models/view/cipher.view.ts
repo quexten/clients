@@ -1,9 +1,9 @@
 import { Jsonify } from "type-fest";
 
-import { LinkedIdType } from "../../../enums";
 import { View } from "../../../models/view/view";
 import { InitializerMetadata } from "../../../platform/interfaces/initializer-metadata.interface";
 import { InitializerKey } from "../../../platform/services/cryptography/initializer-key";
+import { LinkedIdType } from "../../enums";
 import { CipherRepromptType } from "../../enums/cipher-reprompt-type";
 import { CipherType } from "../../enums/cipher-type";
 import { LocalData } from "../data/local.data";
@@ -84,7 +84,7 @@ export class CipherView implements View, InitializerMetadata {
   }
 
   get subTitle(): string {
-    return this.item.subTitle;
+    return this.item?.subTitle;
   }
 
   get hasPasswordHistory(): boolean {
@@ -124,7 +124,7 @@ export class CipherView implements View, InitializerMetadata {
   }
 
   get linkedFieldOptions() {
-    return this.item.linkedFieldOptions;
+    return this.item?.linkedFieldOptions;
   }
 
   linkedFieldValue(id: LinkedIdType) {

@@ -402,7 +402,7 @@
     "message": "Vienums"
   },
   "ex": {
-    "message": "piem.",
+    "message": "piem.,",
     "description": "Short abbreviation for 'example'."
   },
   "other": {
@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Pieteikties ar galveno paroli"
   },
+  "readingPasskeyLoading": {
+    "message": "Nolasa piekļuves atslēgu…"
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Šis logs ir jāpatur atvērts un jāseko uzvednēm pārlūkā."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Jāizmanto cits pieteikšanās veids"
+  },
   "loginWithPasskey": {
     "message": "Pieteikties ar piekļuves atslēgu"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Nederīga piekļuves atslēga. Lūgums mēģināt vēlreiz."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "Divpakāpju pieteikšanās netiek atbalstīta piekļuves atslēgām. Jāatjaunina lietotne, lai pieteiktos."
   },
   "loginWithPasskeyInfo": {
     "message": "Piekļuves atslēga ir izmantojama, lai automātiski pieteiktos bez paroles. Biometrija, piemēram, sejas atpazīšana vai pirkstu nospiedums, vai cits FIDO2 drošības veids apstiprinās identitāti."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "Šifrēšana nav atbalstīta"
   },
-  "encryptionNotEnabled": {
-    "message": "Šifrēšana nav iespējota"
+  "enablePasskeyEncryption": {
+    "message": "Uzstādīt šifrēšanu"
   },
   "usedForEncryption": {
     "message": "Izmantota šifrēšanai"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Izgūšana"
   },
+  "exportFrom": {
+    "message": "Izgūt no"
+  },
   "exportVault": {
     "message": "Izgūt glabātavas saturu"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Garums"
+  },
+  "passwordMinLength": {
+    "message": "Mazākais pieļaujamais paroles garums"
   },
   "uppercase": {
     "message": "Lielie burti (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Šis Send ir paslēpts pēc noklusējuma. Tā redzamību var pārslēgt ar zemāk esošo pogu.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Lejupielādēt datni"
+  "downloadAttachments": {
+    "message": "Lejupielādēt pielikumus"
   },
   "sendAccessUnavailable": {
     "message": "Send, kuram mēģini piekļūt, nepastāv vai vairs nav pieejams.",
@@ -4609,8 +4630,8 @@
     "message": "izmēģinātu šodien.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Bitwarden lietotājs $USER_IDENTIFIER$ kopīgoja sekojošo",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden dalībnieks $USER_IDENTIFIER$ kopīgoja sekojošo",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -4937,7 +4958,7 @@
     "message": "Apvienība tika veiksmīgi pievienota sniedzējam"
   },
   "accessingUsingProvider": {
-    "message": "Piekļūst apvienībai ar sniedzēju $PROVIDER$",
+    "message": "Piekļūst apvienībai ar nodrošinātāju $PROVIDER$",
     "placeholders": {
       "provider": {
         "content": "$1",
@@ -4946,7 +4967,7 @@
     }
   },
   "providerIsDisabled": {
-    "message": "Sniedzējs ir atspējots."
+    "message": "Sniedzējs ir atspējots"
   },
   "providerUpdated": {
     "message": "Sniedzējs atjaunināts"
@@ -5657,7 +5678,7 @@
     "description": "Username generator option that appends a random sub-address to the username. For example: address+subaddress@email.com"
   },
   "plusAddressedEmailDesc": {
-    "message": "Izmantot e-pasta pakalpojuma nodrošinātāja apakšadresēšanas spējas."
+    "message": "Izmantot e-pasta nodrošinātāja apakšadresēšanas spējas."
   },
   "catchallEmail": {
     "message": "Visu tveroša e-pasta adrese"
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Turpināt"
   },
+  "ssoLoginIsRequired": {
+    "message": "Vienotā pieteikšanās ir nepieciešama"
+  },
   "selectedRegionFlag": {
     "message": "Atlasītā apgabala karogs"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Ļaut krājumu izveidošanu un izdzēšanu tikai īpašniekiem un pārvaldniekiem"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Īpašnieki un pārvaldnieki var pārvaldīt visus krājumus un vienumus"
+  },
   "collectionManagementUpdated": {
     "message": "Krājumu pārvaldības uzvedība saglabāta"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Piekļuves atslēga netiks ievietota klonētajā vienumā. Vai turpināt šī vienuma klonēšanu?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Mainīts krājuma pārvaldības iestatījums $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Izvērstas norādes ir aplūkojamas mūsu palīdzības vietnē",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Projekta piekļuve ir atjaunināta"
+  },
+  "unexpectedErrorSend": {
+    "message": "Atgadījās neparedzēta kļūda šī Send ielādēšanas laikā. Vēlāk jāmēģina vēlreiz."
+  },
+  "seatLimitReached": {
+    "message": "Ir sasniegts vietu ierobežojums"
+  },
+  "contactYourProvider": {
+    "message": "Jāsazinās ar nodrošinātāju, lai iegādātos papildu vietas."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Ir sasniegts vietu ierobežojums. Jāsazinās ar savu nodrošinātāju, lai iegādātos papildu vietas."
+  },
+  "collectionAccessRestricted": {
+    "message": "Piekļuve krājumam ir ierobežota"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Pakalpojuma konta piekļuve ir atjaunināta"
   }
 }

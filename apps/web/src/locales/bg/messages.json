@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Вписване с главната парола"
   },
+  "readingPasskeyLoading": {
+    "message": "Прочитане на секретния ключ…"
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Дръжте този прозорец отворен и следвайте инструкциите в браузъра си."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Използване на друг метод на вписване"
+  },
   "loginWithPasskey": {
     "message": "Вписване със секретен ключ"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Грешен секретен ключ. Опитайте отново."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "Двустепенното удостоверяване не се поддържа за секретни ключове. Обновете приложението, за да се впишете."
   },
   "loginWithPasskeyInfo": {
     "message": "Използвайте автоматично създаден секретен ключ, чрез който ще се вписвате без нуждата от парола. За удостоверяване на самоличността Ви, ще се ползват биометрични данни, лицево разпознаване, пръстов отпечатък или друг метод за защита от тип FIDO2."
@@ -642,7 +657,7 @@
     "message": "Секретният ключ е създаден успешно!"
   },
   "customName": {
-    "message": "Custom name"
+    "message": "Персонализирано име"
   },
   "customPasskeyNameInfo": {
     "message": "Изберете име за секретния си ключ, за да го разпознавате по-лесно."
@@ -657,10 +672,10 @@
     "message": "Грешка при прочитането на секретния ключ. Опитайте отново или махнете тази отметка."
   },
   "encryptionNotSupported": {
-    "message": "Encryption not supported"
+    "message": "Шифроването не се поддържа"
   },
-  "encryptionNotEnabled": {
-    "message": "Шифроването не е включено"
+  "enablePasskeyEncryption": {
+    "message": "Настройване на шифроването"
   },
   "usedForEncryption": {
     "message": "Използва се за шифроване"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Изнасяне"
   },
+  "exportFrom": {
+    "message": "Изнасяне от"
+  },
   "exportVault": {
     "message": "Изнасяне на трезора"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Дължина"
+  },
+  "passwordMinLength": {
+    "message": "Минимална дължина на паролата"
   },
   "uppercase": {
     "message": "Главни букви (A-Z)",
@@ -2763,7 +2784,7 @@
     "message": "Трезор по уеб"
   },
   "cli": {
-    "message": "CLI"
+    "message": "ИКР"
   },
   "bitWebVault": {
     "message": "Трезор по уеб"
@@ -4218,8 +4239,8 @@
     "message": "Стандартно изпращането е скрито. Може да промените това като натиснете бутона по-долу.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Изтеглете файл"
+  "downloadAttachments": {
+    "message": "Сваляне на прикачените файлове"
   },
   "sendAccessUnavailable": {
     "message": "Изпращането, което се опитвате да достъпите, е изтрито или вече не е налично.",
@@ -4609,8 +4630,8 @@
     "message": "за да го пробвате още днес.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "Потребителят на Битуорден — $USER_IDENTIFIER$, сподели следното с вас",
+  "sendAccessCreatorIdentifier": {
+    "message": "Членът на Битуорден — $USER_IDENTIFIER$, сподели следното с вас",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -5820,7 +5841,7 @@
     "description": "the text, 'SCIM', is an acronymn and should not be translated."
   },
   "inputRequired": {
-    "message": "Полето е задължтелно да бъде попълнено."
+    "message": "Полето е задължително да бъде попълнено."
   },
   "inputEmail": {
     "message": "Въведеният в полето текст не е адрес на е-поща."
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Next"
   },
+  "ssoLoginIsRequired": {
+    "message": "Необходимо е вписване чрез еднократно удостоверяване"
+  },
   "selectedRegionFlag": {
     "message": "Знаме на избрания регион"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Ограничаване на създаването и изтриването на колекции, така че да може да се извършва само от собствениците и администраторите"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Собствениците и администраторите могат да управляват всички колекции и елементи"
+  },
   "collectionManagementUpdated": {
     "message": "Поведението за управлението на колекциите е запазено"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "Секретният ключ няма да бъде копиран в клонирания елемент. Искате ли да продължите с клонирането на елемента?"
   },
+  "modifiedCollectionManagement": {
+    "message": "Настройката за управление на колекции е променена: $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Може да намерите подробни инструкции в помощния ни уеб сайт на адрес",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Достъпът до проекта е актуализиран"
+  },
+  "unexpectedErrorSend": {
+    "message": "Възникна неочаквана грешка при зареждането на това изпращане. Опитайте отново по-късно."
+  },
+  "seatLimitReached": {
+    "message": "Достигнат е максималният брой потребители"
+  },
+  "contactYourProvider": {
+    "message": "Свържете се с доставчика си, за да закупи допълнителни места."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Достигнат е максималният брой потребители. Свържете се с доставчика си, за да закупи допълнителни места."
+  },
+  "collectionAccessRestricted": {
+    "message": "Достъпът до колекцията е ограничен"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Достъпът на сервизния акаунт е променен"
   }
 }

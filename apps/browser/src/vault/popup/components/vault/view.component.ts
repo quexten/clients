@@ -8,7 +8,6 @@ import { ViewComponent as BaseViewComponent } from "@bitwarden/angular/vault/com
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { TotpService } from "@bitwarden/common/abstractions/totp.service";
 import { TokenService } from "@bitwarden/common/auth/abstractions/token.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
@@ -20,7 +19,8 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
 import { DialogService } from "@bitwarden/components";
@@ -33,19 +33,21 @@ import {
   BrowserFido2UserInterfaceSession,
   fido2PopoutSessionData$,
 } from "../../../fido2/browser-fido2-user-interface.service";
+import { closeViewVaultItemPopout, VaultPopoutType } from "../../utils/vault-popout-window";
 
 const BroadcasterSubscriptionId = "ChildViewComponent";
 
 export const AUTOFILL_ID = "autofill";
+export const SHOW_AUTOFILL_BUTTON = "show-autofill-button";
 export const COPY_USERNAME_ID = "copy-username";
 export const COPY_PASSWORD_ID = "copy-password";
-export const COPY_VERIFICATIONCODE_ID = "copy-totp";
+export const COPY_VERIFICATION_CODE_ID = "copy-totp";
 
-type LoadAction =
-  | typeof AUTOFILL_ID
+type CopyAction =
   | typeof COPY_USERNAME_ID
   | typeof COPY_PASSWORD_ID
-  | typeof COPY_VERIFICATIONCODE_ID;
+  | typeof COPY_VERIFICATION_CODE_ID;
+type LoadAction = typeof AUTOFILL_ID | typeof SHOW_AUTOFILL_BUTTON | CopyAction;
 
 @Component({
   selector: "app-vault-view",
@@ -57,6 +59,11 @@ export class ViewComponent extends BaseViewComponent {
   tab: any;
   senderTabId?: number;
   loadAction?: LoadAction;
+  private static readonly copyActions = new Set([
+    COPY_USERNAME_ID,
+    COPY_PASSWORD_ID,
+    COPY_VERIFICATION_CODE_ID,
+  ]);
   uilocation?: "popout" | "popup" | "sidebar" | "tab";
   loadPageDetailsTimeout: number;
   inPopout = false;
@@ -88,7 +95,7 @@ export class ViewComponent extends BaseViewComponent {
     passwordRepromptService: PasswordRepromptService,
     logService: LogService,
     fileDownloadService: FileDownloadService,
-    dialogService: DialogService
+    dialogService: DialogService,
   ) {
     super(
       cipherService,
@@ -109,7 +116,7 @@ export class ViewComponent extends BaseViewComponent {
       logService,
       stateService,
       fileDownloadService,
-      dialogService
+      dialogService,
     );
   }
 
@@ -171,27 +178,7 @@ export class ViewComponent extends BaseViewComponent {
   async load() {
     await super.load();
     await this.loadPageDetails();
-
-    switch (this.loadAction) {
-      case AUTOFILL_ID:
-        await this.fillCipher();
-        break;
-      case COPY_USERNAME_ID:
-        await this.copy(this.cipher.login.username, "username", "Username");
-        break;
-      case COPY_PASSWORD_ID:
-        await this.copy(this.cipher.login.password, "password", "Password");
-        break;
-      case COPY_VERIFICATIONCODE_ID:
-        await this.copy(this.totpCode, "verificationCodeTotp", "TOTP");
-        break;
-      default:
-        break;
-    }
-
-    if (this.inPopout && this.loadAction) {
-      setTimeout(() => this.close(), 1000);
-    }
+    await this.handleLoadAction();
   }
 
   async edit() {
@@ -243,6 +230,8 @@ export class ViewComponent extends BaseViewComponent {
     if (didAutofill) {
       this.platformUtilsService.showToast("success", null, this.i18nService.t("autoFillSuccess"));
     }
+
+    return didAutofill;
   }
 
   async fillCipherAndSave() {
@@ -260,7 +249,7 @@ export class ViewComponent extends BaseViewComponent {
           this.platformUtilsService.showToast(
             "success",
             null,
-            this.i18nService.t("autoFillSuccessAndSavedUri")
+            this.i18nService.t("autoFillSuccessAndSavedUri"),
           );
           return;
         }
@@ -276,7 +265,7 @@ export class ViewComponent extends BaseViewComponent {
         this.platformUtilsService.showToast(
           "success",
           null,
-          this.i18nService.t("autoFillSuccessAndSavedUri")
+          this.i18nService.t("autoFillSuccessAndSavedUri"),
         );
         this.messagingService.send("editedCipher");
       } catch {
@@ -306,16 +295,18 @@ export class ViewComponent extends BaseViewComponent {
   }
 
   async close() {
-    // Would be refactored after rework is done on the windows popout service
     const sessionData = await firstValueFrom(this.fido2PopoutSessionData$);
     if (this.inPopout && sessionData.isFido2Session) {
       BrowserFido2UserInterfaceSession.abortPopout(sessionData.sessionId);
       return;
     }
 
-    if (this.inPopout && this.senderTabId) {
+    if (
+      BrowserPopupUtils.inSingleActionPopout(window, VaultPopoutType.viewVaultItem) &&
+      this.senderTabId
+    ) {
       BrowserApi.focusTab(this.senderTabId);
-      window.close();
+      closeViewVaultItemPopout(`${VaultPopoutType.viewVaultItem}_${this.cipher.id}`);
       return;
     }
 
@@ -324,11 +315,9 @@ export class ViewComponent extends BaseViewComponent {
 
   private async loadPageDetails() {
     this.pageDetails = [];
-    this.tab = await BrowserApi.getTabFromCurrentWindow();
-
-    if (this.senderTabId) {
-      this.tab = await BrowserApi.getTab(this.senderTabId);
-    }
+    this.tab = this.senderTabId
+      ? await BrowserApi.getTab(this.senderTabId)
+      : await BrowserApi.getTabFromCurrentWindow();
 
     if (!this.tab) {
       return;
@@ -380,5 +369,35 @@ export class ViewComponent extends BaseViewComponent {
     }
 
     return true;
+  }
+
+  private async handleLoadAction() {
+    if (!this.loadAction || this.loadAction === SHOW_AUTOFILL_BUTTON) {
+      return;
+    }
+
+    let loadActionSuccess = false;
+    if (this.loadAction === AUTOFILL_ID) {
+      loadActionSuccess = await this.fillCipher();
+    }
+
+    if (ViewComponent.copyActions.has(this.loadAction)) {
+      const { username, password } = this.cipher.login;
+      const copyParams: Record<CopyAction, Record<string, string>> = {
+        [COPY_USERNAME_ID]: { value: username, type: "username", name: "Username" },
+        [COPY_PASSWORD_ID]: { value: password, type: "password", name: "Password" },
+        [COPY_VERIFICATION_CODE_ID]: {
+          value: this.totpCode,
+          type: "verificationCodeTotp",
+          name: "TOTP",
+        },
+      };
+      const { value, type, name } = copyParams[this.loadAction as CopyAction];
+      loadActionSuccess = await this.copy(value, type, name);
+    }
+
+    if (this.inPopout) {
+      setTimeout(() => this.close(), loadActionSuccess ? 1000 : 0);
+    }
   }
 }

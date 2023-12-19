@@ -2,7 +2,6 @@ import { Observable, Subject } from "rxjs";
 
 import { ApiService } from "../../abstractions/api.service";
 import { PolicyService } from "../../admin-console/abstractions/policy/policy.service.abstraction";
-import { KdfType, KeySuffixOptions } from "../../enums";
 import { PreloginRequest } from "../../models/request/prelogin.request";
 import { ErrorResponse } from "../../models/response/error.response";
 import { AuthRequestPushNotification } from "../../models/response/notification.response";
@@ -15,6 +14,7 @@ import { LogService } from "../../platform/abstractions/log.service";
 import { MessagingService } from "../../platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { StateService } from "../../platform/abstractions/state.service";
+import { KdfType, KeySuffixOptions } from "../../platform/enums";
 import { Utils } from "../../platform/misc/utils";
 import { MasterKey } from "../../platform/models/domain/symmetric-crypto-key";
 import { PasswordStrengthServiceAbstraction } from "../../tools/password-strength";
@@ -30,6 +30,7 @@ import { AuthRequestLoginStrategy } from "../login-strategies/auth-request-login
 import { PasswordLoginStrategy } from "../login-strategies/password-login.strategy";
 import { SsoLoginStrategy } from "../login-strategies/sso-login.strategy";
 import { UserApiLoginStrategy } from "../login-strategies/user-api-login.strategy";
+import { WebAuthnLoginStrategy } from "../login-strategies/webauthn-login.strategy";
 import { AuthResult } from "../models/domain/auth-result";
 import { KdfConfig } from "../models/domain/kdf-config";
 import {
@@ -37,6 +38,7 @@ import {
   PasswordLoginCredentials,
   SsoLoginCredentials,
   UserApiLoginCredentials,
+  WebAuthnLoginCredentials,
 } from "../models/domain/login-credentials";
 import { TokenTwoFactorRequest } from "../models/request/identity-token/token-two-factor.request";
 import { PasswordlessAuthRequest } from "../models/request/passwordless-auth.request";
@@ -85,7 +87,8 @@ export class AuthService implements AuthServiceAbstraction {
     | UserApiLoginStrategy
     | PasswordLoginStrategy
     | SsoLoginStrategy
-    | AuthRequestLoginStrategy;
+    | AuthRequestLoginStrategy
+    | WebAuthnLoginStrategy;
   private sessionTimeout: any;
 
   private pushNotificationSubject = new Subject<string>();
@@ -107,7 +110,7 @@ export class AuthService implements AuthServiceAbstraction {
     protected passwordStrengthService: PasswordStrengthServiceAbstraction,
     protected policyService: PolicyService,
     protected deviceTrustCryptoService: DeviceTrustCryptoServiceAbstraction,
-    protected authReqCryptoService: AuthRequestCryptoServiceAbstraction
+    protected authReqCryptoService: AuthRequestCryptoServiceAbstraction,
   ) {}
 
   async logIn(
@@ -116,6 +119,7 @@ export class AuthService implements AuthServiceAbstraction {
       | PasswordLoginCredentials
       | SsoLoginCredentials
       | AuthRequestLoginCredentials
+      | WebAuthnLoginCredentials,
   ): Promise<AuthResult> {
     this.clearState();
 
@@ -123,7 +127,8 @@ export class AuthService implements AuthServiceAbstraction {
       | UserApiLoginStrategy
       | PasswordLoginStrategy
       | SsoLoginStrategy
-      | AuthRequestLoginStrategy;
+      | AuthRequestLoginStrategy
+      | WebAuthnLoginStrategy;
 
     switch (credentials.type) {
       case AuthenticationType.Password:
@@ -139,7 +144,7 @@ export class AuthService implements AuthServiceAbstraction {
           this.twoFactorService,
           this.passwordStrengthService,
           this.policyService,
-          this
+          this,
         );
         break;
       case AuthenticationType.Sso:
@@ -156,7 +161,7 @@ export class AuthService implements AuthServiceAbstraction {
           this.keyConnectorService,
           this.deviceTrustCryptoService,
           this.authReqCryptoService,
-          this.i18nService
+          this.i18nService,
         );
         break;
       case AuthenticationType.UserApi:
@@ -171,7 +176,7 @@ export class AuthService implements AuthServiceAbstraction {
           this.stateService,
           this.twoFactorService,
           this.environmentService,
-          this.keyConnectorService
+          this.keyConnectorService,
         );
         break;
       case AuthenticationType.AuthRequest:
@@ -185,11 +190,26 @@ export class AuthService implements AuthServiceAbstraction {
           this.logService,
           this.stateService,
           this.twoFactorService,
-          this.deviceTrustCryptoService
+          this.deviceTrustCryptoService,
+        );
+        break;
+      case AuthenticationType.WebAuthn:
+        strategy = new WebAuthnLoginStrategy(
+          this.cryptoService,
+          this.apiService,
+          this.tokenService,
+          this.appIdService,
+          this.platformUtilsService,
+          this.messagingService,
+          this.logService,
+          this.stateService,
+          this.twoFactorService,
         );
         break;
     }
 
+    // Note: Do not set the credentials object directly on the strategy. They are
+    // created in the popup and can cause DeadObject references on Firefox.
     const result = await strategy.logIn(credentials as any);
 
     if (result?.requiresTwoFactor) {
@@ -200,7 +220,7 @@ export class AuthService implements AuthServiceAbstraction {
 
   async logInTwoFactor(
     twoFactor: TokenTwoFactorRequest,
-    captchaResponse: string
+    captchaResponse: string,
   ): Promise<AuthResult> {
     if (this.logInStrategy == null) {
       throw new Error(this.i18nService.t("sessionTimeout"));
@@ -263,7 +283,7 @@ export class AuthService implements AuthServiceAbstraction {
         // Attempt to get the key from storage and set it in memory
         const userKey = await this.cryptoService.getUserKeyFromStorage(
           KeySuffixOptions.Auto,
-          userId
+          userId,
         );
         await this.cryptoService.setUserKey(userKey, userId);
       }
@@ -289,7 +309,7 @@ export class AuthService implements AuthServiceAbstraction {
         kdfConfig = new KdfConfig(
           preloginResponse.kdfIterations,
           preloginResponse.kdfMemory,
-          preloginResponse.kdfParallelism
+          preloginResponse.kdfParallelism,
         );
       }
     } catch (e) {
@@ -311,7 +331,7 @@ export class AuthService implements AuthServiceAbstraction {
   async passwordlessLogin(
     id: string,
     key: string,
-    requestApproved: boolean
+    requestApproved: boolean,
   ): Promise<AuthRequestResponse> {
     const pubKey = Utils.fromB64ToArray(key);
 
@@ -328,7 +348,7 @@ export class AuthService implements AuthServiceAbstraction {
       if (masterKeyHash != null) {
         encryptedMasterKeyHash = await this.cryptoService.rsaEncrypt(
           Utils.fromUtf8ToArray(masterKeyHash),
-          pubKey
+          pubKey,
         );
       }
     } else {
@@ -342,7 +362,7 @@ export class AuthService implements AuthServiceAbstraction {
       encryptedKey.encryptedString,
       encryptedMasterKeyHash?.encryptedString,
       await this.appIdService.getAppId(),
-      requestApproved
+      requestApproved,
     );
     return await this.apiService.putAuthRequest(id, request);
   }
@@ -353,6 +373,7 @@ export class AuthService implements AuthServiceAbstraction {
       | PasswordLoginStrategy
       | SsoLoginStrategy
       | AuthRequestLoginStrategy
+      | WebAuthnLoginStrategy,
   ) {
     this.logInStrategy = strategy;
     this.startSessionTimeout();

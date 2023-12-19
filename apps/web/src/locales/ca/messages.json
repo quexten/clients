@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "Inici de sessió amb contrasenya mestra"
   },
+  "readingPasskeyLoading": {
+    "message": "S'està llegint la clau de pas..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Utilitzeu un mètode d'inici de sessió diferent"
+  },
   "loginWithPasskey": {
     "message": "Inicieu sessió amb la clau de pas"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Clau d'accés no vàlida. Torneu-ho a provar."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "No és compatible 2FA per a claus de pas. Actualitza l'aplicació per iniciar sessió."
   },
   "loginWithPasskeyInfo": {
     "message": "Utilitzeu una contrasenya generada que us iniciarà automàticament sense contrasenya. La biometria, com ara el reconeixement facial o l'empremta digital, o un altre mètode de seguretat FIDO2 verificarà la vostra identitat."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "El xifratge no és compatible"
   },
-  "encryptionNotEnabled": {
-    "message": "Xifratge no habilitat"
+  "enablePasskeyEncryption": {
+    "message": "Configura el xifratge"
   },
   "usedForEncryption": {
     "message": "S'utilitza per al xifratge"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "Exporta"
   },
+  "exportFrom": {
+    "message": "Export from"
+  },
   "exportVault": {
     "message": "Exporta la caixa forta"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "Longitud"
+  },
+  "passwordMinLength": {
+    "message": "Longitud mínima de la contrasenya"
   },
   "uppercase": {
     "message": "Majúscula (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "Aquest Send està ocult per defecte. Podeu canviar la seua visibilitat mitjançant el botó següent.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "Baixa el fitxer"
+  "downloadAttachments": {
+    "message": "Baixa els fitxers adjunts"
   },
   "sendAccessUnavailable": {
     "message": "L'enviament al qual intenteu accedir no existeix o ja no està disponible.",
@@ -4609,8 +4630,8 @@
     "message": "per provar-ho hui.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "L'usuari bitwarden $USER_IDENTIFIER$ ha compartit el següent amb vosaltres",
+  "sendAccessCreatorIdentifier": {
+    "message": "El membre de Bitwarden $USER_IDENTIFIER$ us ha compartit això",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "Següent"
   },
+  "ssoLoginIsRequired": {
+    "message": "Inici de sessió SSO necessari"
+  },
   "selectedRegionFlag": {
     "message": "Bandera de la regió seleccionada"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Limita la creació i la supressió de col·leccions als propietaris i administradors"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Els propietaris i els administradors poden gestionar totes les col·leccions i articles"
+  },
   "collectionManagementUpdated": {
     "message": "S'ha guardat el comportament d'administració de la col·lecció"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "La clau de pas no es copiarà a l'element clonat. Voleu continuar clonant aquest element?"
   },
+  "modifiedCollectionManagement": {
+    "message": "S'ha modificat la configuració de gestió de col·leccions $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "Consulteu les instruccions detallades al nostre lloc d'ajuda a",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "S'ha actualitzat l'accés al projecte"
+  },
+  "unexpectedErrorSend": {
+    "message": "S'ha produït un error inesperat en carregar aquest enviament. Torneu a provar-ho més tard."
+  },
+  "seatLimitReached": {
+    "message": "S'ha arribat al límit de places"
+  },
+  "contactYourProvider": {
+    "message": "Contacta amb el teu proveïdor per comprar places addicionals."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "S'ha arribat al límit de places. Contacta amb el teu proveïdor per comprar places addicionals."
+  },
+  "collectionAccessRestricted": {
+    "message": "L'accés a la col·lecció està restringit"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Accés al compte del servei actualitzat"
   }
 }

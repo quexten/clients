@@ -1,5 +1,4 @@
-import { SecureNoteType } from "@bitwarden/common/enums";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { SecureNoteType, CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { IdentityView } from "@bitwarden/common/vault/models/view/identity.view";
 
@@ -136,7 +135,7 @@ describe("NordPass CSV Importer", () => {
 
   it("should parse identity records", async () => {
     const result = await importer.parse(
-      identityData.replace("#fullName", "MyFirstName MyMiddleName MyLastName")
+      identityData.replace("#fullName", "MyFirstName MyMiddleName MyLastName"),
     );
 
     expect(result).not.toBeNull();

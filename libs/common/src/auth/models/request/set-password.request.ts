@@ -1,5 +1,5 @@
-import { KdfType } from "../../../enums";
 import { KeysRequest } from "../../../models/request/keys.request";
+import { KdfType } from "../../../platform/enums";
 
 export class SetPasswordRequest {
   masterPasswordHash: string;
@@ -21,7 +21,7 @@ export class SetPasswordRequest {
     kdf: KdfType,
     kdfIterations: number,
     kdfMemory?: number,
-    kdfParallelism?: number
+    kdfParallelism?: number,
   ) {
     this.masterPasswordHash = masterPasswordHash;
     this.key = key;

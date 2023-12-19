@@ -1,5 +1,5 @@
-import { EncryptionType } from "../../../enums";
 import { Utils } from "../../../platform/misc/utils";
+import { EncryptionType } from "../../enums";
 import { Encrypted } from "../../interfaces/encrypted";
 
 const ENC_TYPE_LENGTH = 1;
@@ -28,7 +28,7 @@ export class EncArrayBuffer implements Encrypted {
         this.ivBytes = encBytes.slice(ENC_TYPE_LENGTH, ENC_TYPE_LENGTH + IV_LENGTH);
         this.macBytes = encBytes.slice(
           ENC_TYPE_LENGTH + IV_LENGTH,
-          ENC_TYPE_LENGTH + IV_LENGTH + MAC_LENGTH
+          ENC_TYPE_LENGTH + IV_LENGTH + MAC_LENGTH,
         );
         this.dataBytes = encBytes.slice(ENC_TYPE_LENGTH + IV_LENGTH + MAC_LENGTH);
         break;
@@ -52,7 +52,7 @@ export class EncArrayBuffer implements Encrypted {
 
   private throwDecryptionError() {
     throw new Error(
-      "Error parsing encrypted ArrayBuffer: data is corrupted or has an invalid format."
+      "Error parsing encrypted ArrayBuffer: data is corrupted or has an invalid format.",
     );
   }
 

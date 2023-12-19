@@ -7,6 +7,7 @@ import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/mod
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { VerificationType } from "@bitwarden/common/auth/enums/verification-type";
 import { PasswordRequest } from "@bitwarden/common/auth/models/request/password.request";
+import { Verification } from "@bitwarden/common/auth/types/verification";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -16,7 +17,6 @@ import { StateService } from "@bitwarden/common/platform/abstractions/state.serv
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { MasterKey, UserKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/common/tools/generator/password";
-import { Verification } from "@bitwarden/common/types/verification";
 import { DialogService } from "@bitwarden/components";
 
 import { ChangePasswordComponent as BaseChangePasswordComponent } from "./change-password.component";
@@ -43,7 +43,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
     stateService: StateService,
     private userVerificationService: UserVerificationService,
     private logService: LogService,
-    dialogService: DialogService
+    dialogService: DialogService,
   ) {
     super(
       i18nService,
@@ -53,7 +53,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
       platformUtilsService,
       policyService,
       stateService,
-      dialogService
+      dialogService,
     );
   }
 
@@ -72,7 +72,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
       this.platformUtilsService.showToast(
         "error",
         this.i18nService.t("errorOccurred"),
-        this.i18nService.t("masterPasswordRequired")
+        this.i18nService.t("masterPasswordRequired"),
       );
       return false;
     }
@@ -96,14 +96,14 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
   async performSubmitActions(
     newMasterKeyHash: string,
     newMasterKey: MasterKey,
-    newUserKey: [UserKey, EncString]
+    newUserKey: [UserKey, EncString],
   ) {
     try {
       // Create Request
       const request = new PasswordRequest();
       request.masterPasswordHash = await this.cryptoService.hashMasterKey(
         this.currentMasterPassword,
-        await this.cryptoService.getOrDeriveMasterKey(this.currentMasterPassword)
+        await this.cryptoService.getOrDeriveMasterKey(this.currentMasterPassword),
       );
       request.newMasterPasswordHash = newMasterKeyHash;
       request.key = newUserKey[1].encryptedString;
@@ -114,7 +114,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
       this.platformUtilsService.showToast(
         "success",
         this.i18nService.t("masterPasswordChanged"),
-        this.i18nService.t("logBackIn")
+        this.i18nService.t("logBackIn"),
       );
 
       if (this.onSuccessfulChangePassword != null) {

@@ -19,6 +19,11 @@ type KeyDefinitionOptions<T> = {
    * @returns The fully typed version of your state.
    */
   readonly deserializer: (jsonValue: Jsonify<T>) => T;
+  /**
+   * The number of milliseconds to wait before cleaning up the state after the last subscriber has unsubscribed.
+   * Defaults to 1000ms.
+   */
+  readonly cleanupDelayMs?: number;
 };
 
 /**
@@ -39,11 +44,15 @@ export class KeyDefinition<T> {
   constructor(
     readonly stateDefinition: StateDefinition,
     readonly key: string,
-    private readonly options: KeyDefinitionOptions<T>
+    private readonly options: KeyDefinitionOptions<T>,
   ) {
     if (options.deserializer == null) {
+      throw new Error(`'deserializer' is a required property on key ${this.errorKeyName}`);
+    }
+
+    if (options.cleanupDelayMs <= 0) {
       throw new Error(
-        `'deserializer' is a required property on key ${stateDefinition.name} > ${key}`
+        `'cleanupDelayMs' must be greater than 0. Value of ${options.cleanupDelayMs} passed to key ${this.errorKeyName} `,
       );
     }
   }
@@ -53,6 +62,13 @@ export class KeyDefinition<T> {
    */
   get deserializer() {
     return this.options.deserializer;
+  }
+
+  /**
+   * Gets the number of milliseconds to wait before cleaning up the state after the last subscriber has unsubscribed.
+   */
+  get cleanupDelayMs() {
+    return this.options.cleanupDelayMs < 0 ? 0 : this.options.cleanupDelayMs ?? 1000;
   }
 
   /**
@@ -75,7 +91,7 @@ export class KeyDefinition<T> {
     stateDefinition: StateDefinition,
     key: string,
     // We have them provide options for the element of the array, depending on future options we add, this could get a little weird.
-    options: KeyDefinitionOptions<T> // The array helper forces  an initialValue of an empty array
+    options: KeyDefinitionOptions<T>, // The array helper forces  an initialValue of an empty array
   ) {
     return new KeyDefinition<T[]>(stateDefinition, key, {
       ...options,
@@ -107,7 +123,7 @@ export class KeyDefinition<T> {
     stateDefinition: StateDefinition,
     key: string,
     // We have them provide options for the value of the record, depending on future options we add, this could get a little weird.
-    options: KeyDefinitionOptions<T> // The array helper forces an initialValue of an empty record
+    options: KeyDefinitionOptions<T>, // The array helper forces an initialValue of an empty record
   ) {
     return new KeyDefinition<Record<TKey, T>>(stateDefinition, key, {
       ...options,
@@ -129,8 +145,17 @@ export class KeyDefinition<T> {
    * Create a string that should be unique across the entire application.
    * @returns A string that can be used to cache instances created via this key.
    */
-  buildCacheKey(): string {
-    return `${this.stateDefinition.storageLocation}_${this.stateDefinition.name}_${this.key}`;
+  buildCacheKey(scope: "user" | "global", userId?: "active" | UserId): string {
+    if (scope === "user" && userId == null) {
+      throw new Error("You must provide a userId when building a user scoped cache key.");
+    }
+    return userId === null
+      ? `${scope}_${userId}_${this.stateDefinition.name}_${this.key}`
+      : `${scope}_${this.stateDefinition.name}_${this.key}`;
+  }
+
+  private get errorKeyName() {
+    return `${this.stateDefinition.name} > ${this.key}`;
   }
 }
 

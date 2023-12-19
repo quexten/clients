@@ -1,5 +1,5 @@
-import { TreeNode } from "@bitwarden/common/models/domain/tree-node";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
+import { TreeNode } from "@bitwarden/common/vault/models/domain/tree-node";
 
 import { RoutedVaultFilterBridgeService } from "../../services/routed-vault-filter-bridge.service";
 
@@ -33,7 +33,7 @@ export class RoutedVaultFilterBridge implements VaultFilter {
   constructor(
     private routedFilter: RoutedVaultFilterModel,
     private legacyFilter: VaultFilter,
-    private bridgeService: RoutedVaultFilterBridgeService
+    private bridgeService: RoutedVaultFilterBridgeService,
   ) {}
   get collectionBreadcrumbs(): TreeNode<CollectionFilter>[] {
     return this.legacyFilter.collectionBreadcrumbs;

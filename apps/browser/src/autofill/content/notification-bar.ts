@@ -1,9 +1,10 @@
-import AddLoginRuntimeMessage from "../../background/models/addLoginRuntimeMessage";
-import ChangePasswordRuntimeMessage from "../../background/models/changePasswordRuntimeMessage";
 import AutofillField from "../models/autofill-field";
 import { WatchedForm } from "../models/watched-form";
+import AddLoginRuntimeMessage from "../notification/models/add-login-runtime-message";
+import ChangePasswordRuntimeMessage from "../notification/models/change-password-runtime-message";
 import { FormData } from "../services/abstractions/autofill.service";
 import { GlobalSettings, UserSettings } from "../types";
+import { getFromLocalStorage, setupExtensionDisconnectAction } from "../utils";
 
 interface HTMLElementWithFormOpId extends HTMLElement {
   formOpId: string;
@@ -86,6 +87,7 @@ async function loadNotificationBar() {
 
   // Look up the active user id from storage
   const activeUserIdKey = "activeUserId";
+  const globalStorageKey = "global";
   let activeUserId: string;
 
   const activeUserStorageValue = await getFromLocalStorage(activeUserIdKey);
@@ -97,7 +99,9 @@ async function loadNotificationBar() {
   const userSettingsStorageValue = await getFromLocalStorage(activeUserId);
   if (userSettingsStorageValue[activeUserId]) {
     const userSettings: UserSettings = userSettingsStorageValue[activeUserId].settings;
-    const globalSettings: GlobalSettings = await getFromLocalStorage("global");
+    const globalSettings: GlobalSettings = (await getFromLocalStorage(globalStorageKey))[
+      globalStorageKey
+    ];
 
     // Do not show the notification bar on the Bitwarden vault
     // because they can add logins and change passwords there
@@ -121,6 +125,8 @@ async function loadNotificationBar() {
       }
     }
   }
+
+  setupExtensionDisconnectAction(handleExtensionDisconnection);
 
   if (!showNotificationBar) {
     return;
@@ -445,7 +451,7 @@ async function loadNotificationBar() {
     // know what type of form we are watching
     const submitButton = getSubmitButton(
       form,
-      unionSets(logInButtonNames, changePasswordButtonNames)
+      unionSets(logInButtonNames, changePasswordButtonNames),
     );
 
     if (submitButton != null) {
@@ -475,7 +481,7 @@ async function loadNotificationBar() {
         watchedForm.formEl,
         watchedForm.data.password,
         inputs,
-        true // Only do fallback if we have expect to find a single password field
+        true, // Only do fallback if we have expect to find a single password field
       );
     } else if (watchedForm.data.passwords != null) {
       // if we didn't find a username field, try to locate multiple password fields
@@ -499,7 +505,7 @@ async function loadNotificationBar() {
     form: HTMLFormElement,
     passwordData: AutofillField,
     inputs: HTMLInputElement[],
-    doLastFallback: boolean
+    doLastFallback: boolean,
   ): HTMLInputElement {
     let el = locateField(form, passwordData, inputs);
     if (el != null && el.type !== "password") {
@@ -521,7 +527,7 @@ async function loadNotificationBar() {
   function locateField(
     form: HTMLFormElement,
     fieldData: AutofillField,
-    inputs: HTMLInputElement[]
+    inputs: HTMLInputElement[],
   ): HTMLInputElement | null {
     // If we have no field data, we cannot locate the field
     if (fieldData == null) {
@@ -667,7 +673,7 @@ async function loadNotificationBar() {
             // Check if the submit button contains any of the change password button names as a safeguard
             const buttonText = getButtonText(getSubmitButton(form, changePasswordButtonNames));
             const matches = Array.from(changePasswordButtonContainsNames).filter(
-              (n) => buttonText.indexOf(n) > -1
+              (n) => buttonText.indexOf(n) > -1,
             );
 
             if (matches.length > 0) {
@@ -744,8 +750,8 @@ async function loadNotificationBar() {
     if (submitButton == null) {
       const possibleSubmitButtons = Array.from(
         wrappingEl.querySelectorAll(
-          'a, span, button[type="button"], ' + 'input[type="button"], button:not([type])'
-        )
+          'a, span, button[type="button"], ' + 'input[type="button"], button:not([type])',
+        ),
       ) as HTMLElement[];
       let typelessButton: HTMLElement = null;
       // Loop through all possible submit buttons and find the first one that matches a submit button name
@@ -999,11 +1005,23 @@ async function loadNotificationBar() {
     return theEl === document;
   }
 
-  // End Helper Functions
-}
+  function handleExtensionDisconnection(port: chrome.runtime.Port) {
+    closeBar(false);
+    clearTimeout(domObservationCollectTimeoutId);
+    clearTimeout(collectPageDetailsTimeoutId);
+    clearTimeout(handlePageChangeTimeoutId);
+    observer?.disconnect();
+    observer = null;
+    watchedForms.forEach((wf: WatchedForm) => {
+      const form = wf.formEl;
+      form.removeEventListener("submit", formSubmitted, false);
+      const submitButton = getSubmitButton(
+        form,
+        unionSets(logInButtonNames, changePasswordButtonNames),
+      );
+      submitButton?.removeEventListener("click", formSubmitted, false);
+    });
+  }
 
-async function getFromLocalStorage(keys: string | string[]): Promise<Record<string, any>> {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(keys, (storage: Record<string, any>) => resolve(storage));
-  });
+  // End Helper Functions
 }

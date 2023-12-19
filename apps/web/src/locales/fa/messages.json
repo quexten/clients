@@ -611,8 +611,23 @@
   "loginWithMasterPassword": {
     "message": "با کلمه عبور اصلی وارد شوید"
   },
+  "readingPasskeyLoading": {
+    "message": "Reading passkey..."
+  },
+  "readingPasskeyLoadingInfo": {
+    "message": "Keep this window open and follow prompts from your browser."
+  },
+  "useADifferentLogInMethod": {
+    "message": "Use a different log in method"
+  },
   "loginWithPasskey": {
     "message": "با کلید عبور وارد شوید"
+  },
+  "invalidPasskeyPleaseTryAgain": {
+    "message": "Invalid Passkey. Please try again."
+  },
+  "twoFactorForPasskeysNotSupportedOnClientUpdateToLogIn": {
+    "message": "2FA for passkeys is not supported. Update the app to log in."
   },
   "loginWithPasskeyInfo": {
     "message": "از یک کلمه عبور ایجاد شده استفاده کنید که به طور خودکار بدون کلمه عبور شما را وارد می‌کند. بیومتریک‌ها، مانند تشخیص چهره یا اثر انگشت، یا سایر روش‌های امنیتی FIDO2 هویت شما را تأیید می‌کنند."
@@ -659,8 +674,8 @@
   "encryptionNotSupported": {
     "message": "رمزگذاری پشتیبانی نمی‌شود"
   },
-  "encryptionNotEnabled": {
-    "message": "Encryption not enabled"
+  "enablePasskeyEncryption": {
+    "message": "Set up encryption"
   },
   "usedForEncryption": {
     "message": "Used for encryption"
@@ -1059,6 +1074,9 @@
   "export": {
     "message": "برون ریزی"
   },
+  "exportFrom": {
+    "message": "Export from"
+  },
   "exportVault": {
     "message": "برون ریزی گاوصندوق"
   },
@@ -1134,6 +1152,9 @@
   },
   "length": {
     "message": "طول"
+  },
+  "passwordMinLength": {
+    "message": "Minimum password length"
   },
   "uppercase": {
     "message": "حروف بزرگ (A-Z)",
@@ -4218,8 +4239,8 @@
     "message": "این ارسال به طور پیش‌فرض پنهان است. با استفاده از دکمه زیر می‌توانید نمایان بودن آن را تغییر دهید.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
-  "downloadFile": {
-    "message": "بارگیری پرونده"
+  "downloadAttachments": {
+    "message": "Download attachments"
   },
   "sendAccessUnavailable": {
     "message": "ارسالی که می‌خواهید به آن دسترسی پیدا کنید وجود ندارد یا دیگر در دسترس نیست.",
@@ -4609,8 +4630,8 @@
     "message": "برای امتحان کردن امروز.",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'Learn more about Bitwarden Send or sign up to **try it today.**'"
   },
-  "sendCreatorIdentifier": {
-    "message": "کاربر Bitwarden $USER_IDENTIFIER$ موارد زیر را با شما به اشتراک گذاشت",
+  "sendAccessCreatorIdentifier": {
+    "message": "Bitwarden member $USER_IDENTIFIER$ shared the following with you",
     "placeholders": {
       "user_identifier": {
         "content": "$1",
@@ -7182,6 +7203,9 @@
   "next": {
     "message": "بعدی"
   },
+  "ssoLoginIsRequired": {
+    "message": "SSO login is required"
+  },
   "selectedRegionFlag": {
     "message": "پرچم منطقه انتخاب شد"
   },
@@ -7304,6 +7328,9 @@
   "limitCollectionCreationDeletionDesc": {
     "message": "Limit collection creation and deletion to owners and admins"
   },
+  "allowAdminAccessToAllCollectionItemsDesc": {
+    "message": "Owners and admins can manage all collections and items"
+  },
   "collectionManagementUpdated": {
     "message": "Collection management behavior saved"
   },
@@ -7386,11 +7413,38 @@
   "passkeyNotCopiedAlert": {
     "message": "کلید عبور در مورد شبیه سازی شده کپی نمی‌شود. آیا می‌خواهید به شبیه سازی این مورد ادامه دهید؟"
   },
+  "modifiedCollectionManagement": {
+    "message": "Modified collection management setting $ID$.",
+    "placeholders": {
+      "id": {
+        "content": "$1",
+        "example": "Unique ID"
+      }
+    }
+  },
   "seeDetailedInstructions": {
     "message": "See detailed instructions on our help site at",
     "description": "This is followed a by a hyperlink to the help website."
   },
   "projectAccessUpdated": {
     "message": "Project access updated"
+  },
+  "unexpectedErrorSend": {
+    "message": "An unexpected error has occurred while loading this Send. Try again later."
+  },
+  "seatLimitReached": {
+    "message": "Seat limit has been reached"
+  },
+  "contactYourProvider": {
+    "message": "Contact your provider to purchase additional seats."
+  },
+  "seatLimitReachedContactYourProvider": {
+    "message": "Seat limit has been reached. Contact your provider to purchase additional seats."
+  },
+  "collectionAccessRestricted": {
+    "message": "Collection access is restricted"
+  },
+  "serviceAccountAccessUpdated": {
+    "message": "Service account access updated"
   }
 }

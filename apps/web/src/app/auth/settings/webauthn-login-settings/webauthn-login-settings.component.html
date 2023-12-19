@@ -4,21 +4,21 @@
     <span
       *ngIf="requireSsoPolicyEnabled"
       bitBadge
-      badgeType="secondary"
+      variant="secondary"
       class="tw-max-w-full !tw-align-middle"
     >
       {{ "off" | i18n }} - {{ "ssoLoginIsRequired" | i18n }}
     </span>
     <ng-container *ngIf="!requireSsoPolicyEnabled">
-      <span *ngIf="hasCredentials" bitBadge badgeType="success" class="!tw-align-middle">{{
+      <span *ngIf="hasCredentials" bitBadge variant="success" class="!tw-align-middle">{{
         "on" | i18n
       }}</span>
-      <span *ngIf="!hasCredentials" bitBadge badgeType="secondary" class="!tw-align-middle">{{
+      <span *ngIf="!hasCredentials" bitBadge variant="secondary" class="!tw-align-middle">{{
         "off" | i18n
       }}</span>
     </ng-container>
   </ng-container>
-  <span bitBadge badgeType="warning" class="!tw-align-middle">{{ "beta" | i18n }}</span>
+  <span bitBadge variant="warning" class="!tw-align-middle">{{ "beta" | i18n }}</span>
   <ng-container *ngIf="loading">
     <i class="bwi bwi-spinner bwi-spin tw-ml-1" aria-hidden="true"></i>
   </ng-container>
@@ -39,8 +39,16 @@
         <span bitTypography="body1" class="tw-text-muted">{{ "usedForEncryption" | i18n }}</span>
       </ng-container>
       <ng-container *ngIf="credential.prfStatus === WebauthnLoginCredentialPrfStatus.Supported">
-        <i class="bwi bwi-lock-encrypted"></i>
-        <span bitTypography="body1" class="tw-text-muted">{{ "encryptionNotEnabled" | i18n }}</span>
+        <button
+          type="button"
+          bitLink
+          [disabled]="loading"
+          [attr.aria-label]="('enablePasskeyEncryption' | i18n) + ' ' + credential.name"
+          (click)="enableEncryption(credential.id)"
+        >
+          <i class="bwi bwi-lock-encrypted"></i>
+          {{ "enablePasskeyEncryption" | i18n }}
+        </button>
       </ng-container>
       <span
         *ngIf="credential.prfStatus === WebauthnLoginCredentialPrfStatus.Unsupported"

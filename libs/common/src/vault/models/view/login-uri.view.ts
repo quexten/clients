@@ -1,9 +1,9 @@
 import { Jsonify } from "type-fest";
 
-import { UriMatchType } from "../../../enums";
 import { View } from "../../../models/view/view";
 import { SafeUrls } from "../../../platform/misc/safe-urls";
 import { Utils } from "../../../platform/misc/utils";
+import { UriMatchType } from "../../enums";
 import { LoginUri } from "../domain/login-uri";
 
 export class LoginUriView implements View {
@@ -113,7 +113,7 @@ export class LoginUriView implements View {
   matchesUri(
     targetUri: string,
     equivalentDomains: Set<string>,
-    defaultUriMatch: UriMatchType = null
+    defaultUriMatch: UriMatchType = null,
   ): boolean {
     if (!this.uri || !targetUri) {
       return false;

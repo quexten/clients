@@ -2,12 +2,12 @@ import { MockProxy } from "jest-mock-extended";
 import mock from "jest-mock-extended/lib/Mock";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { EncryptionType, KdfType } from "@bitwarden/common/enums";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
 import { UserKeyResponse } from "@bitwarden/common/models/response/user-key.response";
 import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { EncryptionType, KdfType } from "@bitwarden/common/platform/enums";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import {
   UserKey,
@@ -52,7 +52,7 @@ describe("EmergencyAccessService", () => {
       cryptoService,
       encryptService,
       cipherService,
-      logService
+      logService,
     );
   });
 
@@ -122,7 +122,7 @@ describe("EmergencyAccessService", () => {
 
         const mockUserPublicKeyEncryptedUserKey = new EncString(
           EncryptionType.AesCbc256_HmacSha256_B64,
-          "mockUserPublicKeyEncryptedUserKey"
+          "mockUserPublicKeyEncryptedUserKey",
         );
 
         cryptoService.getUserKey.mockResolvedValueOnce(mockUserKey);
@@ -170,7 +170,7 @@ describe("EmergencyAccessService", () => {
       // where UserKey is the decrypted grantor user key
       const mockMasterKeyEncryptedUserKey = new EncString(
         EncryptionType.AesCbc256_HmacSha256_B64,
-        "mockMasterKeyEncryptedUserKey"
+        "mockMasterKeyEncryptedUserKey",
       );
 
       const mockUserKey = new SymmetricCryptoKey(mockDecryptedGrantorUserKey) as UserKey;
@@ -190,7 +190,7 @@ describe("EmergencyAccessService", () => {
       // Assert
       expect(emergencyAccessApiService.postEmergencyAccessPassword).toHaveBeenCalledWith(
         mockId,
-        expectedEmergencyAccessPasswordRequest
+        expectedEmergencyAccessPasswordRequest,
       );
     });
 
@@ -203,7 +203,7 @@ describe("EmergencyAccessService", () => {
       } as EmergencyAccessTakeoverResponse);
 
       await expect(
-        emergencyAccessService.takeover(mockId, mockEmail, mockName)
+        emergencyAccessService.takeover(mockId, mockEmail, mockName),
       ).rejects.toThrowError("Failed to decrypt grantor key");
 
       expect(emergencyAccessApiService.postEmergencyAccessPassword).not.toHaveBeenCalled();
@@ -240,7 +240,7 @@ describe("EmergencyAccessService", () => {
 
       cryptoService.rsaEncrypt.mockImplementation((plainValue, publicKey) => {
         return Promise.resolve(
-          new EncString(EncryptionType.Rsa2048_OaepSha1_B64, "Encrypted: " + plainValue)
+          new EncString(EncryptionType.Rsa2048_OaepSha1_B64, "Encrypted: " + plainValue),
         );
       });
     });
@@ -254,13 +254,13 @@ describe("EmergencyAccessService", () => {
         if (allowedStatuses.includes(emergencyAccess.status)) {
           expect(emergencyAccessApiService.putEmergencyAccess).toHaveBeenCalledWith(
             emergencyAccess.id,
-            expect.any(EmergencyAccessUpdateRequest)
+            expect.any(EmergencyAccessUpdateRequest),
           );
           expectedCallCount++;
         } else {
           expect(emergencyAccessApiService.putEmergencyAccess).not.toHaveBeenCalledWith(
             emergencyAccess.id,
-            expect.any(EmergencyAccessUpdateRequest)
+            expect.any(EmergencyAccessUpdateRequest),
           );
         }
       });
@@ -272,7 +272,7 @@ describe("EmergencyAccessService", () => {
 function createMockEmergencyAccess(
   id: string,
   name: string,
-  status: EmergencyAccessStatusType
+  status: EmergencyAccessStatusType,
 ): EmergencyAccessGranteeDetailsResponse {
   const emergencyAccess = new EmergencyAccessGranteeDetailsResponse({});
   emergencyAccess.id = id;

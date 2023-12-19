@@ -35,7 +35,7 @@ export class ListCommand {
     private searchService: SearchService,
     private organizationUserService: OrganizationUserService,
     private apiService: ApiService,
-    private eventCollectionService: EventCollectionService
+    private eventCollectionService: EventCollectionService,
   ) {}
 
   async run(object: string, cmdOptions: Record<string, any>): Promise<Response> {
@@ -126,16 +126,17 @@ export class ListCommand {
       ciphers = this.searchService.searchCiphersBasic(ciphers, options.search, options.trash);
     }
 
-    ciphers.forEach((c, index) => {
+    for (let i = 0; i < ciphers.length; i++) {
+      const c = ciphers[i];
       // Set upload immediately on the last item in the ciphers collection to avoid the event collection
       // service from uploading each time.
-      this.eventCollectionService.collect(
+      await this.eventCollectionService.collect(
         EventType.Cipher_ClientViewed,
         c.id,
-        index === ciphers.length - 1,
-        c.organizationId
+        i === ciphers.length - 1,
+        c.organizationId,
       );
-    });
+    }
 
     const res = new ListResponse(ciphers.map((o) => new CipherResponse(o)));
     return Response.success(res);
@@ -229,7 +230,7 @@ export class ListCommand {
           u.type = r.type;
           u.twoFactorEnabled = r.twoFactorEnabled;
           return u;
-        })
+        }),
       );
       return Response.success(res);
     } catch (e) {

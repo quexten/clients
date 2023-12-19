@@ -1,0 +1,52 @@
+<button
+  *ngIf="account.id !== specialAccountAddId"
+  type="button"
+  class="account-switcher-row tw-flex tw-w-full tw-items-center tw-gap-3 tw-rounded-md tw-border-none tw-p-3"
+  (click)="selectAccount(account.id)"
+>
+  <div class="tw-flex-shrink-0">
+    <bit-avatar
+      [id]="account.id"
+      [text]="account.name"
+      [color]="account.avatarColor"
+      size="small"
+      aria-hidden="true"
+    ></bit-avatar>
+  </div>
+  <div class="tw-text-left">
+    <span class="tw-sr-only" *ngIf="status.text === 'active'"> {{ "activeAccount" | i18n }}: </span>
+    <span class="tw-sr-only" *ngIf="status.text !== 'active'">
+      {{ "switchToAccount" | i18n }}
+    </span>
+    <div class="tw-max-w-64 tw-truncate">
+      {{ account.email }}
+    </div>
+    <div class="account-switcher-row-details tw-max-w-64 tw-truncate tw-text-sm">
+      <span class="tw-sr-only">{{ "hostedAt" | i18n }}</span>
+      {{ account.server }}
+    </div>
+    <div
+      class="account-switcher-row-details tw-text-sm tw-italic"
+      [attr.aria-hidden]="status.text === 'active'"
+    >
+      <span class="tw-sr-only">(</span>
+      {{ status.text }}
+      <span class="tw-sr-only">)</span>
+    </div>
+  </div>
+  <div class="tw-ml-auto tw-flex-shrink-0">
+    <i class="bwi tw-text-2xl" [ngClass]="status.icon" aria-hidden="true"></i>
+  </div>
+</button>
+
+<button
+  *ngIf="account.id === specialAccountAddId"
+  type="button"
+  class="account-switcher-row tw-flex tw-w-full tw-items-center tw-gap-3 tw-rounded-md tw-border-none tw-p-3"
+  (click)="selectAccount(account.id)"
+>
+  <i class="bwi bwi-plus tw-text-2xl" aria-hidden="true"></i>
+  <div>
+    {{ account.name }}
+  </div>
+</button>

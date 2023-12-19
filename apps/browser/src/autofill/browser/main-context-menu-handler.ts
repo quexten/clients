@@ -3,7 +3,7 @@ import { LogService } from "@bitwarden/common/platform/abstractions/log.service"
 import { StateFactory } from "@bitwarden/common/platform/factories/state-factory";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { GlobalState } from "@bitwarden/common/platform/models/domain/global-state";
-import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
+import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
 import { Account } from "../../models/account";
@@ -28,7 +28,7 @@ import {
   COPY_IDENTIFIER_ID,
   COPY_PASSWORD_ID,
   COPY_USERNAME_ID,
-  COPY_VERIFICATIONCODE_ID,
+  COPY_VERIFICATION_CODE_ID,
   CREATE_CARD_ID,
   CREATE_IDENTITY_ID,
   CREATE_LOGIN_ID,
@@ -46,7 +46,7 @@ export class MainContextMenuHandler {
   constructor(
     private stateService: BrowserStateService,
     private i18nService: I18nService,
-    private logService: LogService
+    private logService: LogService,
   ) {
     if (chrome.contextMenus) {
       this.create = (options) => {
@@ -89,7 +89,7 @@ export class MainContextMenuHandler {
     return new MainContextMenuHandler(
       await stateServiceFactory(cachedServices, serviceOptions),
       await i18nServiceFactory(cachedServices, serviceOptions),
-      await logServiceFactory(cachedServices, serviceOptions)
+      await logServiceFactory(cachedServices, serviceOptions),
     );
   }
 
@@ -139,7 +139,7 @@ export class MainContextMenuHandler {
 
       if (await this.stateService.getCanAccessPremium()) {
         await create({
-          id: COPY_VERIFICATIONCODE_ID,
+          id: COPY_VERIFICATION_CODE_ID,
           parentId: ROOT_ID,
           title: this.i18nService.t("copyVerificationCode"),
         });
@@ -250,7 +250,7 @@ export class MainContextMenuHandler {
 
       const canAccessPremium = await this.stateService.getCanAccessPremium();
       if (canAccessPremium && (!cipher || !Utils.isNullOrEmpty(cipher.login?.totp))) {
-        await createChildItem(COPY_VERIFICATIONCODE_ID);
+        await createChildItem(COPY_VERIFICATION_CODE_ID);
       }
 
       if ((!cipher || cipher.type === CipherType.Card) && optionId !== CREATE_LOGIN_ID) {
@@ -274,7 +274,7 @@ export class MainContextMenuHandler {
       const authed = await this.stateService.getIsAuthenticated();
       await this.loadOptions(
         this.i18nService.t(authed ? "unlockVaultMenu" : "loginToVaultMenu"),
-        NOOP_COMMAND_SUFFIX
+        NOOP_COMMAND_SUFFIX,
       );
     }
   }
