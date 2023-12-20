@@ -70,6 +70,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     passwordRepromptService: PasswordRepromptService,
     sendApiService: SendApiService,
     dialogService: DialogService,
+    window: Window,
     private datePipe: DatePipe,
   ) {
     super(
@@ -88,6 +89,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
       organizationService,
       sendApiService,
       dialogService,
+      window,
     );
   }
 
@@ -150,9 +152,9 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     this.platformUtilsService.launchUri(uri.launchUri);
   }
 
-  copy(value: string, typeI18nKey: string, aType: string) {
+  async copy(value: string, typeI18nKey: string, aType: string): Promise<boolean> {
     if (value == null) {
-      return;
+      return false;
     }
 
     this.platformUtilsService.copyToClipboard(value, { window: window });
@@ -174,6 +176,8 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
         );
       }
     }
+
+    return true;
   }
 
   async generatePassword(): Promise<boolean> {
