@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, NgZone, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
@@ -47,6 +48,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnChanges,
     sendApiService: SendApiService,
     dialogService: DialogService,
     window: Window,
+    datePipe: DatePipe,
   ) {
     super(
       cipherService,
@@ -65,6 +67,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnChanges,
       sendApiService,
       dialogService,
       window,
+      datePipe,
     );
   }
 
