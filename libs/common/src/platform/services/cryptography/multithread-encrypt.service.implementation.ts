@@ -55,7 +55,7 @@ export class MultithreadEncryptServiceImplementation extends EncryptServiceImple
               import.meta.url,
             ),
           ),
-	);
+	      );
       }
     }
 
