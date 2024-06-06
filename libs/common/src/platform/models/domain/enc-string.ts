@@ -76,6 +76,7 @@ export class EncString implements Encrypted {
     }
 
     const { encType, encPieces } = EncString.parseEncryptedString(this.encryptedString);
+
     this.encryptionType = encType;
 
     if (encPieces.length !== EXPECTED_NUM_PARTS_BY_ENCRYPTION_TYPE[encType]) {
@@ -97,6 +98,11 @@ export class EncString implements Encrypted {
       case EncryptionType.Rsa2048_OaepSha1_B64:
         this.data = encPieces[0];
         break;
+      case EncryptionType.Rsa2048_OaepSha256_HmacSha256_B64:
+      case EncryptionType.Rsa2048_OaepSha1_HmacSha256_B64:
+        this.data = encPieces[0];
+        this.mac = encPieces[1];
+        break;
       default:
         return;
     }
@@ -115,7 +121,7 @@ export class EncString implements Encrypted {
         encType = parseInt(headerPieces[0], null);
         encPieces = headerPieces[1].split("|");
       } catch (e) {
-        return;
+        return { encType: NaN, encPieces: [] };
       }
     } else {
       encPieces = encryptedString.split("|");
@@ -132,7 +138,15 @@ export class EncString implements Encrypted {
   }
 
   static isSerializedEncString(s: string): boolean {
+    if (s == null) {
+      return false;
+    }
+
     const { encType, encPieces } = this.parseEncryptedString(s);
+
+    if (isNaN(encType) || encPieces.length === 0) {
+      return false;
+    }
 
     return EXPECTED_NUM_PARTS_BY_ENCRYPTION_TYPE[encType] === encPieces.length;
   }

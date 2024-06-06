@@ -581,6 +581,9 @@
   "accessLevel": {
     "message": "访问权限等级"
   },
+  "accessing": {
+    "message": "访问中"
+  },
   "loggedOut": {
     "message": "已注销"
   },
@@ -2102,7 +2105,7 @@
     "message": "Bitwarden 家庭版计划。"
   },
   "addons": {
-    "message": "附加项目"
+    "message": "插件"
   },
   "premiumAccess": {
     "message": "高级会员"
