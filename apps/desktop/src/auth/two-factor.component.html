@@ -126,7 +126,7 @@
           <div class="box last">
             <div class="box-content">
               <div class="box-content-row" appBoxRow>
-                <label>No device found... please plug in...</label>
+                <label>{{ "fido2NoDevice" | i18n }}</label>
               </div>
             </div>
           </div>
@@ -139,7 +139,9 @@
         >
           <div class="box last">
             <div class="box-content">
-              <div class="box-content-row" appBoxRow>Processing...</div>
+              <div class="box-content-row" appBoxRow>
+                <label>{{ "fido2Processing" | i18n }}</label>
+              </div>
             </div>
           </div>
         </ng-container>
