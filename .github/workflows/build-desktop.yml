@@ -152,7 +152,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get -y install pkg-config libxss-dev libsecret-1-dev rpm musl-dev musl-tools libssl-dev
+          sudo apt-get -y install pkg-config libxss-dev libsecret-1-dev rpm musl-dev musl-tools pkg-config libssl-dev
 
       - name: Set up Snap
         run: sudo snap install snapcraft --classic
@@ -463,6 +463,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
           node-version: ${{ env._NODE_VERSION }}
+
+      - name: Set up Dependencies
+        run: |
+          brew install openssl@3
 
       - name: Rust
         shell: pwsh
