@@ -517,6 +517,7 @@ dependencies = [
  "napi-build",
  "napi-derive",
  "openssl",
+ "openssl-src",
  "rand",
  "retry",
  "scopeguard",
