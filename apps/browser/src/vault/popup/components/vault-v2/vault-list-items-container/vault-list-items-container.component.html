@@ -1,43 +1,45 @@
 <bit-section *ngIf="ciphers?.length > 0">
-  <popup-section-header [title]="title">
-    <span bitTypography="body2" slot="end">{{ ciphers.length }}</span>
+  <bit-section-header>
+    <h2 bitTypography="h6">
+      {{ title }}
+    </h2>
     <button
       *ngIf="showRefresh"
       bitIconButton="bwi-refresh"
       type="button"
       size="small"
-      slot="title-suffix"
       (click)="onRefresh.emit()"
       [appA11yTitle]="'refresh' | i18n"
     ></button>
-  </popup-section-header>
+    <span bitTypography="body2" slot="end">{{ ciphers.length }}</span>
+  </bit-section-header>
   <bit-item-group>
     <bit-item *ngFor="let cipher of ciphers">
-      <a bit-item-content [routerLink]="['/view-cipher']" [queryParams]="{ cipherId: cipher.id }">
+      <a
+        bit-item-content
+        [routerLink]="['/view-cipher']"
+        [queryParams]="{ cipherId: cipher.id }"
+        [appA11yTitle]="'viewItemTitle' | i18n: cipher.name"
+      >
         <app-vault-icon slot="start" [cipher]="cipher"></app-vault-icon>
         {{ cipher.name }}
+        <i
+          class="bwi bwi-sm"
+          *ngIf="cipher.organizationId"
+          [ngClass]="cipher.orgIcon"
+          [appA11yTitle]="orgIconTooltip(cipher)"
+        ></i>
         <span slot="secondary">{{ cipher.subTitle }}</span>
       </a>
       <ng-container slot="end">
-        <bit-item-action *ngIf="showAutoFill">
+        <bit-item-action *ngIf="showAutofillButton">
           <button type="button" bitBadge variant="primary">{{ "autoFill" | i18n }}</button>
         </bit-item-action>
-        <bit-item-action>
-          <button
-            type="button"
-            bitIconButton="bwi-clone"
-            size="small"
-            [attr.aria-label]="'copyInfo' | i18n: cipher.name"
-          ></button>
-        </bit-item-action>
-        <bit-item-action>
-          <button
-            type="button"
-            bitIconButton="bwi-ellipsis-v"
-            size="small"
-            [attr.aria-label]="'moreOptions' | i18n: cipher.name"
-          ></button>
-        </bit-item-action>
+        <app-item-copy-actions [cipher]="cipher"></app-item-copy-actions>
+        <app-item-more-options
+          [cipher]="cipher"
+          [hideLoginOptions]="showAutofillButton"
+        ></app-item-more-options>
       </ng-container>
     </bit-item>
   </bit-item-group>
