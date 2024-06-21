@@ -19,8 +19,6 @@ import { RegisterComponent } from "../auth/register.component";
 import { RemovePasswordComponent } from "../auth/remove-password.component";
 import { SetPasswordComponent } from "../auth/set-password.component";
 import { SsoComponent } from "../auth/sso.component";
-import { TwoFactorOptionsComponent } from "../auth/two-factor-options.component";
-import { TwoFactorComponent } from "../auth/two-factor.component";
 import { UpdateTempPasswordComponent } from "../auth/update-temp-password.component";
 import { PremiumComponent } from "../vault/app/accounts/premium.component";
 import { AddEditCustomFieldsComponent } from "../vault/app/vault/add-edit-custom-fields.component";
@@ -92,8 +90,6 @@ import { SendComponent } from "./tools/send/send.component";
     SettingsComponent,
     ShareComponent,
     SsoComponent,
-    TwoFactorComponent,
-    TwoFactorOptionsComponent,
     UpdateTempPasswordComponent,
     VaultComponent,
     VaultTimeoutInputComponent,

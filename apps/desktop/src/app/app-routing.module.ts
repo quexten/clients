@@ -30,7 +30,7 @@ import { RegisterComponent } from "../auth/register.component";
 import { RemovePasswordComponent } from "../auth/remove-password.component";
 import { SetPasswordComponent } from "../auth/set-password.component";
 import { SsoComponent } from "../auth/sso.component";
-import { TwoFactorComponent } from "../auth/two-factor.component";
+import { TwoFactorAuthComponent } from "../auth/two-factor-auth.component";
 import { UpdateTempPasswordComponent } from "../auth/update-temp-password.component";
 import { VaultComponent } from "../vault/app/vault/vault.component";
 
@@ -61,7 +61,25 @@ const routes: Routes = [
     path: "admin-approval-requested",
     component: LoginViaAuthRequestComponent,
   },
-  { path: "2fa", component: TwoFactorComponent },
+  {
+    path: "2fa",
+    component: AnonLayoutWrapperComponent,
+    children: [
+      {
+        path: "",
+        children: [
+          {
+            path: "",
+            component: TwoFactorAuthComponent,
+          },
+        ],
+        canActivate: [unauthGuardFn()],
+        data: {
+          pageTitle: "verifyIdentity",
+        },
+      },
+    ],
+  },
   {
     path: "login-initiated",
     component: LoginDecryptionOptionsComponent,

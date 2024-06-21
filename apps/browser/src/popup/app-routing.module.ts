@@ -33,8 +33,7 @@ import { RemovePasswordComponent } from "../auth/popup/remove-password.component
 import { SetPasswordComponent } from "../auth/popup/set-password.component";
 import { AccountSecurityComponent } from "../auth/popup/settings/account-security.component";
 import { SsoComponent } from "../auth/popup/sso.component";
-import { TwoFactorOptionsComponent } from "../auth/popup/two-factor-options.component";
-import { TwoFactorComponent } from "../auth/popup/two-factor.component";
+import { TwoFactorAuthComponent } from "../auth/popup/two-factor-auth.component";
 import { UpdateTempPasswordComponent } from "../auth/popup/update-temp-password.component";
 import { AutofillComponent } from "../autofill/popup/settings/autofill.component";
 import { ExcludedDomainsComponent } from "../autofill/popup/settings/excluded-domains.component";
@@ -138,15 +137,15 @@ const routes: Routes = [
   },
   {
     path: "2fa",
-    component: TwoFactorComponent,
+    component: AnonLayoutWrapperComponent,
     canActivate: [unauthGuardFn(unauthRouteOverrides)],
     data: { state: "2fa" },
-  },
-  {
-    path: "2fa-options",
-    component: TwoFactorOptionsComponent,
-    canActivate: [unauthGuardFn(unauthRouteOverrides)],
-    data: { state: "2fa-options" },
+    children: [
+      {
+        path: "",
+        component: TwoFactorAuthComponent,
+      },
+    ],
   },
   {
     path: "login-initiated",

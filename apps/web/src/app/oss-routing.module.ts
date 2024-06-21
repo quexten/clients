@@ -46,7 +46,7 @@ import { EmergencyAccessViewComponent } from "./auth/settings/emergency-access/v
 import { SecurityRoutingModule } from "./auth/settings/security/security-routing.module";
 import { SsoComponent } from "./auth/sso.component";
 import { TrialInitiationComponent } from "./auth/trial-initiation/trial-initiation.component";
-import { TwoFactorComponent } from "./auth/two-factor.component";
+import { TwoFactorAuthComponent } from "./auth/two-factor-auth.component";
 import { UpdatePasswordComponent } from "./auth/update-password.component";
 import { UpdateTempPasswordComponent } from "./auth/update-temp-password.component";
 import { VerifyEmailTokenComponent } from "./auth/verify-email-token.component";
@@ -250,12 +250,7 @@ const routes: Routes = [
         children: [
           {
             path: "",
-            component: TwoFactorComponent,
-          },
-          {
-            path: "",
-            component: EnvironmentSelectorComponent,
-            outlet: "environment-selector",
+            component: TwoFactorAuthComponent,
           },
         ],
         data: {

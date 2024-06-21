@@ -125,8 +125,6 @@ export const routerTransition = trigger("routerTransition", [
   transition("hint => login, register => home, environment => home", outSlideDown),
 
   transition("2fa => login", outSlideRight),
-  transition("2fa => 2fa-options", inSlideUp),
-  transition("2fa-options => 2fa", outSlideDown),
   transition("2fa => tabs", inSlideLeft),
 
   transition("login-with-device => tabs, login-with-device => 2fa", inSlideLeft),
