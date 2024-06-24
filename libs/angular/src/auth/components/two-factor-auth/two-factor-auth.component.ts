@@ -135,7 +135,6 @@ export class TwoFactorAuthComponent extends CaptchaProtectedComponent implements
     @Inject(WINDOW) protected win: Window,
   ) {
     super(environmentService, i18nService, platformUtilsService);
-    this.onSuccessfulLoginNavigate = this.goAfterLogIn;
   }
 
   async ngOnInit() {
