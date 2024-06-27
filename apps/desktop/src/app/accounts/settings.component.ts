@@ -502,8 +502,7 @@ export class SettingsComponent implements OnInit {
             type: "warning",
           });
           if (confirmed) {
-            // TODO: replace this with a link to an article on how to setup biometrics
-            this.platformUtilsService.launchUri("https://bitwarden.com/help");
+            this.platformUtilsService.launchUri("https://bitwarden.com/help/biometrics/");
           }
           return;
         }
