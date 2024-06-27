@@ -33,8 +33,6 @@ export default class BiometricUnixMain implements OsBiometricService {
     private windowMain: WindowMain,
   ) {}
 
-  async init() {}
-
   async setBiometricKey(service: string, key: string, value: string): Promise<void> {
     return await passwords.setPassword(service, key, value);
   }
