@@ -18,8 +18,8 @@ const polkitPolicy = `<?xml version="1.0" encoding="UTF-8"?>
       <description>Unlock Bitwarden</description>
       <message>Authenticate to unlock Bitwarden</message>
       <defaults>
-        <allow_any>auth_self</allow_any>
-        <allow_inactive>auth_self</allow_inactive>
+        <allow_any>no</allow_any>
+        <allow_inactive>no</allow_inactive>
         <allow_active>auth_self</allow_active>
       </defaults>
     </action>
