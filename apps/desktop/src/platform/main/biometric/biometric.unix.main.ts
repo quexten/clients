@@ -67,6 +67,10 @@ export default class BiometricUnixMain implements OsBiometricService {
   }
 
   async osBiometricsCanAutoSetup(): Promise<boolean> {
+    // We cannot auto setup on snap or flatpak since the filesystem is sandboxed.
+    // The user needs to manually set up the polkit policy outside of the sandbox
+    // since we allow access to polkit via dbus for the sandboxed clients, the authentication works from
+    // the sandbox, once the policy is set up outside of the sandbox.
     return isLinux() && !isSnapStore() && !isFlatpak();
   }
 
