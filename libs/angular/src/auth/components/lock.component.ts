@@ -32,6 +32,7 @@ import { MessagingService } from "@bitwarden/common/platform/abstractions/messag
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { BiometricStateService } from "@bitwarden/common/platform/biometrics/biometric-state.service";
+import { BiometricsServiceAbstraction } from "@bitwarden/common/platform/biometrics/biometric.service.abstraction";
 import { KeySuffixOptions } from "@bitwarden/common/platform/enums";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
 import { UserId } from "@bitwarden/common/types/guid";
@@ -86,6 +87,7 @@ export class LockComponent implements OnInit, OnDestroy {
     protected userVerificationService: UserVerificationService,
     protected pinService: PinServiceAbstraction,
     protected biometricStateService: BiometricStateService,
+    protected biometricsService: BiometricsServiceAbstraction,
     protected accountService: AccountService,
     protected authService: AuthService,
     protected kdfConfigService: KdfConfigService,
@@ -146,10 +148,10 @@ export class LockComponent implements OnInit, OnDestroy {
   }
 
   async isBiometricUnlockAvailable(): Promise<boolean> {
-    if (!(await this.platformUtilsService.supportsBiometric())) {
+    if (!(await this.biometricsService.supportsBiometric())) {
       return false;
     }
-    return this.platformUtilsService.isBiometricUnlockAvailable();
+    return this.biometricsService.isBiometricUnlockAvailable();
   }
 
   togglePassword() {
@@ -362,7 +364,7 @@ export class LockComponent implements OnInit, OnDestroy {
 
     this.masterPasswordEnabled = await this.userVerificationService.hasMasterPassword();
 
-    this.supportsBiometric = await this.platformUtilsService.supportsBiometric();
+    this.supportsBiometric = await this.biometricsService.supportsBiometric();
     this.biometricLock =
       (await this.vaultTimeoutSettingsService.isBiometricLockSet()) &&
       ((await this.cryptoService.hasUserKeyStored(KeySuffixOptions.Biometric)) ||

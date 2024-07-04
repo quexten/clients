@@ -6,14 +6,14 @@ import { passwords } from "@bitwarden/desktop-native";
 
 import { BiometricMessage, BiometricAction } from "../../types/biometric-message";
 
-import { BiometricsServiceAbstraction } from "./biometric/index";
+import { DesktopBiometricsServiceAbstraction } from "./biometric/index";
 
 const AuthRequiredSuffix = "_biometric";
 
 export class DesktopCredentialStorageListener {
   constructor(
     private serviceName: string,
-    private biometricService: BiometricsServiceAbstraction,
+    private biometricService: DesktopBiometricsServiceAbstraction,
     private logService: ConsoleLogService,
   ) {}
 
@@ -77,7 +77,7 @@ export class DesktopCredentialStorageListener {
             });
             break;
           case BiometricAction.OsSupported:
-            val = await this.biometricService.osSupportsBiometric();
+            val = await this.biometricService.supportsBiometric();
             break;
           default:
         }

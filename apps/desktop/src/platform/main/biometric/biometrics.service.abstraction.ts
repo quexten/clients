@@ -1,5 +1,7 @@
-export abstract class BiometricsServiceAbstraction {
-  abstract osSupportsBiometric(): Promise<boolean>;
+import { BiometricsServiceAbstraction } from "@bitwarden/common/platform/biometrics/biometric.service.abstraction";
+
+export abstract class DesktopBiometricsServiceAbstraction extends BiometricsServiceAbstraction {
+  abstract supportsBiometric(): Promise<boolean>;
   abstract canAuthBiometric({
     service,
     key,

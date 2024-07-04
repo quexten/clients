@@ -8,18 +8,10 @@ export class ForegroundPlatformUtilsService extends BrowserPlatformUtilsService 
   constructor(
     private toastService: ToastService,
     clipboardWriteCallback: (clipboardValue: string, clearMs: number) => void,
-    biometricCallback: () => Promise<boolean>,
-    biometricUnlockAvailableCallback: () => Promise<boolean>,
     win: Window & typeof globalThis,
     offscreenDocumentService: OffscreenDocumentService,
   ) {
-    super(
-      clipboardWriteCallback,
-      biometricCallback,
-      biometricUnlockAvailableCallback,
-      win,
-      offscreenDocumentService,
-    );
+    super(clipboardWriteCallback, win, offscreenDocumentService);
   }
 
   override showToast(

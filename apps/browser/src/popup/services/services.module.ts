@@ -63,6 +63,7 @@ import {
   ObservableStorageService,
 } from "@bitwarden/common/platform/abstractions/storage.service";
 import { BiometricStateService } from "@bitwarden/common/platform/biometrics/biometric-state.service";
+import { BiometricsServiceAbstraction } from "@bitwarden/common/platform/biometrics/biometric.service.abstraction";
 import { StateFactory } from "@bitwarden/common/platform/factories/state-factory";
 import { Message, MessageListener, MessageSender } from "@bitwarden/common/platform/messaging";
 // eslint-disable-next-line no-restricted-imports -- Used for dependency injection
@@ -106,6 +107,7 @@ import BrowserPopupUtils from "../../platform/popup/browser-popup-utils";
 import { BrowserFileDownloadService } from "../../platform/popup/services/browser-file-download.service";
 import { BrowserStateService as StateServiceAbstraction } from "../../platform/services/abstractions/browser-state.service";
 import { ScriptInjectorService } from "../../platform/services/abstractions/script-injector.service";
+import { BrowserBiometricsService } from "../../platform/services/browser-biometrics.service";
 import { BrowserCryptoService } from "../../platform/services/browser-crypto.service";
 import { BrowserEnvironmentService } from "../../platform/services/browser-environment.service";
 import BrowserLocalStorageService from "../../platform/services/browser-local-storage.service";
@@ -223,6 +225,7 @@ const safeProviders: SafeProvider[] = [
       accountService: AccountServiceAbstraction,
       stateProvider: StateProvider,
       biometricStateService: BiometricStateService,
+      biometricsService: BiometricsServiceAbstraction,
       kdfConfigService: KdfConfigService,
     ) => {
       const cryptoService = new BrowserCryptoService(
@@ -237,6 +240,7 @@ const safeProviders: SafeProvider[] = [
         accountService,
         stateProvider,
         biometricStateService,
+        biometricsService,
         kdfConfigService,
       );
       new ContainerService(cryptoService, encryptService).attachToGlobal(self);
@@ -254,6 +258,7 @@ const safeProviders: SafeProvider[] = [
       AccountServiceAbstraction,
       StateProvider,
       BiometricStateService,
+      BiometricsServiceAbstraction,
       KdfConfigService,
     ],
   }),
@@ -293,6 +298,16 @@ const safeProviders: SafeProvider[] = [
         (clipboardValue: string, clearMs: number) => {
           void BrowserApi.sendMessage("clearClipboard", { clipboardValue, clearMs });
         },
+        window,
+        offscreenDocumentService,
+      );
+    },
+    deps: [ToastService, OffscreenDocumentService],
+  }),
+  safeProvider({
+    provide: BiometricsServiceAbstraction,
+    useFactory: () => {
+      return new BrowserBiometricsService(
         async () => {
           const response = await BrowserApi.sendMessageWithResponse<{
             result: boolean;
@@ -310,11 +325,9 @@ const safeProviders: SafeProvider[] = [
           }>("biometricUnlockAvailable");
           return response.result && response.result === true;
         },
-        window,
-        offscreenDocumentService,
       );
     },
-    deps: [ToastService, OffscreenDocumentService],
+    deps: [],
   }),
   safeProvider({
     provide: SyncService,

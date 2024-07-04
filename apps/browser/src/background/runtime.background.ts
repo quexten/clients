@@ -184,7 +184,7 @@ export default class RuntimeBackground {
         return result;
       }
       case "biometricUnlockAvailable": {
-        const result = await this.platformUtilsService.isBiometricUnlockAvailable();
+        const result = await this.main.biometricUnlockAvailable();
         return result;
       }
       case "getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag": {
