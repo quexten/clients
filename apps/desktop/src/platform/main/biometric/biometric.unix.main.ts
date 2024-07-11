@@ -103,10 +103,10 @@ export default class BiometricUnixMain implements OsBiometricService {
   }
 
   async osBiometricsSetup(): Promise<void> {
-    let process = spawn("pkexec", [
+    const process = spawn("pkexec", [
       "bash",
       "-c",
-      `echo '${polkitPolicy}' > ${policyPath + policyFileName}`,
+      `echo '${polkitPolicy}' > ${policyPath + policyFileName} && chown root:root ${policyPath + policyFileName} && chcon system_u:object_r:usr_t:s0 ${policyPath + policyFileName}`,
     ]);
 
     await new Promise((resolve, reject) => {
@@ -114,21 +114,7 @@ export default class BiometricUnixMain implements OsBiometricService {
         if (code !== 0) {
           reject("Failed to set up polkit policy");
         } else {
-          process = spawn("pkexec", ["chown", "root:root", policyPath + policyFileName]);
-          process.on("close", (code) => {
-            if (code !== 0) {
-              reject("Failed to change polkit policy permissions");
-            } else {
-              // selinux requires labeling
-              process = spawn("pkexec", [
-                "chcon",
-                "system_u:object_r:usr_t:s0",
-                policyPath + policyFileName,
-              ]);
-              // fail silently
-              resolve(null);
-            }
-          });
+          resolve(null);
         }
       });
     });
