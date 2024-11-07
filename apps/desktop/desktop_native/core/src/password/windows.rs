@@ -13,7 +13,7 @@ use windows::{
 
 const CRED_FLAGS_NONE: u32 = 0;
 
-pub fn get_password<'a>(service: &str, account: &str) -> Result<String> {
+pub async fn get_password<'a>(service: &str, account: &str) -> Result<String> {
     let target_name = U16CString::from_str(target_name(service, account))?;
 
     let mut credential: *mut CREDENTIALW = std::ptr::null_mut();
@@ -45,7 +45,7 @@ pub fn get_password<'a>(service: &str, account: &str) -> Result<String> {
     Ok(String::from(password))
 }
 
-pub fn set_password(service: &str, account: &str, password: &str) -> Result<()> {
+pub async fn set_password(service: &str, account: &str, password: &str) -> Result<()> {
     let mut target_name = U16CString::from_str(target_name(service, account))?;
     let mut user_name = U16CString::from_str(account)?;
     let last_written = FILETIME {
@@ -76,7 +76,7 @@ pub fn set_password(service: &str, account: &str, password: &str) -> Result<()> 
     Ok(())
 }
 
-pub fn delete_password(service: &str, account: &str) -> Result<()> {
+pub async fn delete_password(service: &str, account: &str) -> Result<()> {
     let target_name = U16CString::from_str(target_name(service, account))?;
 
     unsafe {
@@ -90,7 +90,7 @@ pub fn delete_password(service: &str, account: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn is_available() -> Result<bool> {
+pub async fn is_available() -> Result<bool> {
     Ok(true)
 }
 
