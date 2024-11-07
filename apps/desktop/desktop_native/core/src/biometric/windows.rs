@@ -119,7 +119,7 @@ impl super::BiometricTrait for Biometric {
         Ok(OsDerivedKey { key_b64, iv_b64 })
     }
 
-    fn set_biometric_secret(
+    async fn set_biometric_secret(
         service: &str,
         account: &str,
         secret: &str,
@@ -135,7 +135,7 @@ impl super::BiometricTrait for Biometric {
         Ok(encrypted_secret)
     }
 
-    fn get_biometric_secret(
+    async fn get_biometric_secret(
         service: &str,
         account: &str,
         key_material: Option<KeyMaterial>,
@@ -291,9 +291,9 @@ mod tests {
         assert_eq!(decrypt(&secret, &key_material).unwrap(), "secret")
     }
 
-    #[test]
-    fn get_biometric_secret_requires_key() {
-        let result = <Biometric as BiometricTrait>::get_biometric_secret("", "", None);
+    #[tokio::test]
+    async fn get_biometric_secret_requires_key() {
+        let result = <Biometric as BiometricTrait>::get_biometric_secret("", "", None).await;
         assert!(result.is_err());
         assert_eq!(
             result.unwrap_err().to_string(),
@@ -301,10 +301,10 @@ mod tests {
         );
     }
 
-    #[test]
-    fn get_biometric_secret_handles_unencrypted_secret() {
+    #[tokio::test]
+    async fn get_biometric_secret_handles_unencrypted_secret() {
         scopeguard::defer! {
-            crate::password::delete_password("test", "test").unwrap();
+            crate::password::delete_password("test", "test").await.unwrap();
         }
         let test = "test";
         let secret = "password";
@@ -312,17 +312,18 @@ mod tests {
             os_key_part_b64: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned(),
             client_key_part_b64: Some("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned()),
         };
-        crate::password::set_password(test, test, secret).unwrap();
+        crate::password::set_password(test, test, secret).await.unwrap();
         let result =
             <Biometric as BiometricTrait>::get_biometric_secret(test, test, Some(key_material))
+                .await
                 .unwrap();
         assert_eq!(result, secret);
     }
 
-    #[test]
-    fn get_biometric_secret_handles_encrypted_secret() {
+    #[tokio::test]
+    async fn get_biometric_secret_handles_encrypted_secret() {
         scopeguard::defer! {
-            crate::password::delete_password("test", "test").unwrap();
+            crate::password::delete_password("test", "test").await.unwrap();
         }
         let test = "test";
         let secret =
@@ -339,9 +340,9 @@ mod tests {
         assert_eq!(result, "secret");
     }
 
-    #[test]
-    fn set_biometric_secret_requires_key() {
-        let result = <Biometric as BiometricTrait>::set_biometric_secret("", "", "", None, "");
+    #[tokio::test]
+    async fn set_biometric_secret_requires_key() {
+        let result = <Biometric as BiometricTrait>::set_biometric_secret("", "", "", None, "").await;
         assert!(result.is_err());
         assert_eq!(
             result.unwrap_err().to_string(),
