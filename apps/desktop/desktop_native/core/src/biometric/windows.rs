@@ -303,9 +303,6 @@ mod tests {
 
     #[tokio::test]
     async fn get_biometric_secret_handles_unencrypted_secret() {
-        scopeguard::defer! {
-            crate::password::delete_password("test", "test").await.unwrap();
-        }
         let test = "test";
         let secret = "password";
         let key_material = KeyMaterial {
@@ -317,14 +314,12 @@ mod tests {
             <Biometric as BiometricTrait>::get_biometric_secret(test, test, Some(key_material))
                 .await
                 .unwrap();
+        crate::password::delete_password("test", "test").await.unwrap();
         assert_eq!(result, secret);
     }
 
     #[tokio::test]
     async fn get_biometric_secret_handles_encrypted_secret() {
-        scopeguard::defer! {
-            crate::password::delete_password("test", "test").await.unwrap();
-        }
         let test = "test";
         let secret =
             CipherString::from_str("0.l9fhDUP/wDJcKwmEzcb/3w==|uP4LcqoCCj5FxBDP77NV6Q==").unwrap(); // output from test_encrypt
@@ -337,6 +332,7 @@ mod tests {
         let result =
             <Biometric as BiometricTrait>::get_biometric_secret(test, test, Some(key_material))
                 .unwrap();
+        crate::password::delete_password("test", "test").await.unwrap();
         assert_eq!(result, "secret");
     }
 
