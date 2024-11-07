@@ -120,7 +120,7 @@ mod tests {
         delete_password("BitwardenTest", "BitwardenTest").await.unwrap();
 
         // Ensure password is deleted
-        match get_password("BitwardenTest", "BitwardenTest") {
+        match get_password("BitwardenTest", "BitwardenTest").await {
             Ok(_) => panic!("Got a result"),
             Err(e) => assert_eq!("Password not found.", e.to_string()),
         }

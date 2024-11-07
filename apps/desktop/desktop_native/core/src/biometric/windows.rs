@@ -331,6 +331,7 @@ mod tests {
 
         let result =
             <Biometric as BiometricTrait>::get_biometric_secret(test, test, Some(key_material))
+                .await
                 .unwrap();
         crate::password::delete_password("test", "test").await.unwrap();
         assert_eq!(result, "secret");
