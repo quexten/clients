@@ -1,7 +1,17 @@
 use anyhow::{anyhow, Result};
+use oo7::dbus::{self};
 use std::collections::HashMap;
 
 pub async fn get_password(service: &str, account: &str) -> Result<String> {
+    match get_password_new(service, account).await {
+        Ok(res) => Ok(res),
+        Err(_) => {
+            get_password_legacy(service, account).await
+        }
+    }
+}
+
+async fn get_password_new(service: &str, account: &str) -> Result<String> {
     let keyring = oo7::Keyring::new().await?;
     let attributes = HashMap::from([("service", service), ("account", account)]);
     let results = keyring.search_items(&attributes).await?;
@@ -10,6 +20,31 @@ pub async fn get_password(service: &str, account: &str) -> Result<String> {
         Some(res) => {
             let secret = res.secret().await?;
             Ok(String::from_utf8(secret.to_vec())?)
+        },
+        None => Err(anyhow!("no result"))
+    }
+}
+
+// forces to read via secret service; remvove after 2024.03
+async fn get_password_legacy(service: &str, account: &str) -> Result<String> {
+    println!("falling back to get legacy {} {}", service, account);
+    let svc = dbus::Service::new().await?;
+    let collection = match svc.default_collection().await {
+        Ok(c) => Ok(c),
+        Err(e) => Err(e),
+    }?;
+    let keyring = oo7::Keyring::DBus(collection);
+    let attributes = HashMap::from([("service", service), ("account", account)]);
+    let results = keyring.search_items(&attributes).await?;
+    let res = results.get(0);
+    match res {
+        Some(res) => {
+            let secret = res.secret().await?;
+            println!("deleting legacy secret service entry {} {}", service, account);
+            keyring.delete(&attributes).await?;
+            let secret_string = String::from_utf8(secret.to_vec())?;
+            set_password(service, account, &secret_string).await?;
+            Ok(secret_string)
         },
         None => Err(anyhow!("no result"))
     }
