@@ -45,38 +45,6 @@ pub fn get_password<'a>(service: &str, account: &str) -> Result<String> {
     Ok(String::from(password))
 }
 
-// Remove this after sufficient releases
-pub fn get_password_keytar<'a>(service: &str, account: &str) -> Result<String> {
-    let target_name = U16CString::from_str(target_name(service, account))?;
-
-    let mut credential: *mut CREDENTIALW = std::ptr::null_mut();
-    let credential_ptr = &mut credential;
-
-    let result = unsafe {
-        CredReadW(
-            PCWSTR(target_name.as_ptr()),
-            CRED_TYPE_GENERIC,
-            CRED_FLAGS_NONE,
-            credential_ptr,
-        )
-    };
-
-    scopeguard::defer!({
-        unsafe { CredFree(credential as *mut _) };
-    });
-
-    result?;
-
-    let password = unsafe {
-        std::str::from_utf8_unchecked(std::slice::from_raw_parts(
-            (*credential).CredentialBlob,
-            (*credential).CredentialBlobSize as usize,
-        ))
-    };
-
-    Ok(String::from(password))
-}
-
 pub fn set_password(service: &str, account: &str, password: &str) -> Result<()> {
     let mut target_name = U16CString::from_str(target_name(service, account))?;
     let mut user_name = U16CString::from_str(account)?;
@@ -157,16 +125,6 @@ mod tests {
             Ok(_) => panic!("Got a result"),
             Err(e) => assert_eq!("Password not found.", e.to_string()),
         }
-    }
-
-    #[test]
-    fn test_get_password_keytar() {
-        scopeguard::defer!(delete_password("BitwardenTest", "BitwardenTest").unwrap_or({}););
-        keytar::set_password("BitwardenTest", "BitwardenTest", "HelloFromKeytar").unwrap();
-        assert_eq!(
-            "HelloFromKeytar",
-            get_password_keytar("BitwardenTest", "BitwardenTest").unwrap()
-        );
     }
 
     #[test]

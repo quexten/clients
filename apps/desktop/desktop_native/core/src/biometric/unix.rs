@@ -71,7 +71,7 @@ impl super::BiometricTrait for Biometric {
         Ok(OsDerivedKey { key_b64, iv_b64 })
     }
 
-    fn set_biometric_secret(
+    async fn set_biometric_secret(
         service: &str,
         account: &str,
         secret: &str,
@@ -83,11 +83,11 @@ impl super::BiometricTrait for Biometric {
         ))?;
 
         let encrypted_secret = encrypt(secret, &key_material, iv_b64)?;
-        crate::password::set_password(service, account, &encrypted_secret)?;
+        crate::password::set_password(service, account, &encrypted_secret).await?;
         Ok(encrypted_secret)
     }
 
-    fn get_biometric_secret(
+    async fn get_biometric_secret(
         service: &str,
         account: &str,
         key_material: Option<KeyMaterial>,
@@ -96,7 +96,7 @@ impl super::BiometricTrait for Biometric {
             "Key material is required for polkit protected keys"
         ))?;
 
-        let encrypted_secret = crate::password::get_password(service, account)?;
+        let encrypted_secret = crate::password::get_password(service, account).await?;
         let secret = CipherString::from_str(&encrypted_secret)?;
         return Ok(decrypt(&secret, &key_material)?);
     }

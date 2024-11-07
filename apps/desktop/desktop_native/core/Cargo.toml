@@ -15,8 +15,6 @@ sys = [
   "dep:core-foundation",
   "dep:security-framework",
   "dep:security-framework-sys",
-  "dep:gio",
-  "dep:libsecret",
   "dep:zbus",
   "dep:zbus_polkit",
 ]
@@ -66,7 +64,7 @@ security-framework = { version = "=2.11.0", optional = true }
 security-framework-sys = { version = "=2.11.0", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-gio = { version = "=0.19.5", optional = true }
-libsecret = { version = "=0.5.0", optional = true }
+oo7 = "0.3.3"
+
 zbus = { version = "=4.4.0", optional = true }
 zbus_polkit = { version = "=4.0.0", optional = true }

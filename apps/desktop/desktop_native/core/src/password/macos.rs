@@ -8,10 +8,6 @@ pub fn get_password(service: &str, account: &str) -> Result<String> {
     Ok(result)
 }
 
-pub fn get_password_keytar(service: &str, account: &str) -> Result<String> {
-    get_password(service, account)
-}
-
 pub fn set_password(service: &str, account: &str, password: &str) -> Result<()> {
     let result = set_generic_password(&service, &account, password.as_bytes())?;
     Ok(result)
