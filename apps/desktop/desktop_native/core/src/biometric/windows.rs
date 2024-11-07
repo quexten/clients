@@ -131,7 +131,7 @@ impl super::BiometricTrait for Biometric {
         ))?;
 
         let encrypted_secret = encrypt(secret, &key_material, iv_b64)?;
-        crate::password::set_password(service, account, &encrypted_secret)?;
+        crate::password::set_password(service, account, &encrypted_secret).await?;
         Ok(encrypted_secret)
     }
 
@@ -144,7 +144,7 @@ impl super::BiometricTrait for Biometric {
             "Key material is required for Windows Hello protected keys"
         ))?;
 
-        let encrypted_secret = crate::password::get_password(service, account)?;
+        let encrypted_secret = crate::password::get_password(service, account).await?;
         match CipherString::from_str(&encrypted_secret) {
             Ok(secret) => {
                 // If the secret is a CipherString, it is encrypted and we need to decrypt it.
@@ -332,7 +332,7 @@ mod tests {
             os_key_part_b64: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned(),
             client_key_part_b64: Some("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned()),
         };
-        crate::password::set_password(test, test, &secret.to_string()).unwrap();
+        crate::password::set_password(test, test, &secret.to_string()).await.unwrap();
 
         let result =
             <Biometric as BiometricTrait>::get_biometric_secret(test, test, Some(key_material))
