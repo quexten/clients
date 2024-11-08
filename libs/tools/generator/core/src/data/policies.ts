@@ -1,29 +1,23 @@
-import { DisabledPassphraseGeneratorPolicy, DisabledPasswordGeneratorPolicy } from "../data";
 import {
-  passphraseLeastPrivilege,
-  passwordLeastPrivilege,
-  PassphraseGeneratorOptionsEvaluator,
-  PasswordGeneratorOptionsEvaluator,
-} from "../policies";
-import { PassphraseGeneratorPolicy, PasswordGeneratorPolicy, PolicyConfiguration } from "../types";
+  PassphraseGenerationOptions,
+  PassphraseGeneratorPolicy,
+  PasswordGenerationOptions,
+  PasswordGeneratorPolicy,
+  PolicyConfiguration,
+} from "../types";
 
-const PASSPHRASE = Object.freeze({
-  disabledValue: DisabledPassphraseGeneratorPolicy,
-  combine: passphraseLeastPrivilege,
-  createEvaluator: (policy) => new PassphraseGeneratorOptionsEvaluator(policy),
-} as PolicyConfiguration<PassphraseGeneratorPolicy, PassphraseGeneratorOptionsEvaluator>);
+import { Generators } from "./generators";
 
-const PASSWORD = Object.freeze({
-  disabledValue: DisabledPasswordGeneratorPolicy,
-  combine: passwordLeastPrivilege,
-  createEvaluator: (policy) => new PasswordGeneratorOptionsEvaluator(policy),
-} as PolicyConfiguration<PasswordGeneratorPolicy, PasswordGeneratorOptionsEvaluator>);
-
-/** Policy configurations */
+/** Policy configurations
+ *  @deprecated use Generator.*.policy instead
+ */
 export const Policies = Object.freeze({
+  Passphrase: Generators.passphrase.policy,
+  Password: Generators.password.policy,
+} satisfies {
   /** Passphrase policy configuration */
-  Passphrase: PASSPHRASE,
+  Passphrase: PolicyConfiguration<PassphraseGeneratorPolicy, PassphraseGenerationOptions>;
 
-  /** Passphrase policy configuration */
-  Password: PASSWORD,
+  /** Password policy configuration */
+  Password: PolicyConfiguration<PasswordGeneratorPolicy, PasswordGenerationOptions>;
 });

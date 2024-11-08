@@ -1,3 +1,4 @@
+export * from "./generators";
 export * from "./default-addy-io-options";
 export * from "./default-catchall-options";
 export * from "./default-duck-duck-go-options";
@@ -9,10 +10,9 @@ export * from "./default-eff-username-options";
 export * from "./default-firefox-relay-options";
 export * from "./default-passphrase-generation-options";
 export * from "./default-password-generation-options";
+export * from "./default-credential-preferences";
 export * from "./default-subaddress-generator-options";
 export * from "./default-simple-login-options";
-export * from "./disabled-passphrase-generator-policy";
-export * from "./disabled-password-generator-policy";
 export * from "./forwarders";
 export * from "./integrations";
 export * from "./policies";

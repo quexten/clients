@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 
+import { CollectionView } from "@bitwarden/admin-console/common";
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
-import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import {
   CardComponent,
@@ -36,4 +36,9 @@ export class ItemDetailsV2Component {
   @Input() organization?: Organization;
   @Input() collections?: CollectionView[];
   @Input() folder?: FolderView;
+  @Input() hideOwner?: boolean = false;
+
+  get showOwnership() {
+    return this.cipher.organizationId && this.organization && !this.hideOwner;
+  }
 }

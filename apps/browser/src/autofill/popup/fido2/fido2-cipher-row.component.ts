@@ -1,19 +1,40 @@
+import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 
+import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
+import {
+  BadgeModule,
+  ButtonModule,
+  IconButtonModule,
+  ItemModule,
+  SectionComponent,
+  SectionHeaderComponent,
+  TypographyModule,
+} from "@bitwarden/components";
 
 @Component({
   selector: "app-fido2-cipher-row",
   templateUrl: "fido2-cipher-row.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    BadgeModule,
+    ButtonModule,
+    CommonModule,
+    IconButtonModule,
+    ItemModule,
+    JslibModule,
+    SectionComponent,
+    SectionHeaderComponent,
+    TypographyModule,
+  ],
 })
 export class Fido2CipherRowComponent {
   @Output() onSelected = new EventEmitter<CipherView>();
   @Input() cipher: CipherView;
   @Input() last: boolean;
   @Input() title: string;
-  @Input() isSearching: boolean;
-  @Input() isSelected: boolean;
 
   protected selectCipher(c: CipherView) {
     this.onSelected.emit(c);

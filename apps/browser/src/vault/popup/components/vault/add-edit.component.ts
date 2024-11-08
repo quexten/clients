@@ -5,6 +5,7 @@ import qrcodeParser from "qrcode-parser";
 import { firstValueFrom } from "rxjs";
 import { first } from "rxjs/operators";
 
+import { CollectionService } from "@bitwarden/admin-console/common";
 import { AddEditComponent as BaseAddEditComponent } from "@bitwarden/angular/vault/components/add-edit.component";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
@@ -12,6 +13,7 @@ import { OrganizationService } from "@bitwarden/common/admin-console/abstraction
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/autofill-settings.service";
+import { normalizeExpiryYearFormat } from "@bitwarden/common/autofill/utils";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -19,10 +21,10 @@ import { MessagingService } from "@bitwarden/common/platform/abstractions/messag
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
-import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
+import { CipherAuthorizationService } from "@bitwarden/common/vault/services/cipher-authorization.service";
 import { DialogService } from "@bitwarden/components";
 import { PasswordRepromptService } from "@bitwarden/vault";
 
@@ -71,6 +73,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit {
     datePipe: DatePipe,
     configService: ConfigService,
     private fido2UserVerificationService: Fido2UserVerificationService,
+    cipherAuthorizationService: CipherAuthorizationService,
   ) {
     super(
       cipherService,
@@ -91,6 +94,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit {
       window,
       datePipe,
       configService,
+      cipherAuthorizationService,
     );
   }
 
@@ -106,6 +110,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit {
         this.folderId = params.folderId;
       }
       if (params.collectionId) {
+        this.collectionId = params.collectionId;
         const collection = this.writeableCollections.find((c) => c.id === params.collectionId);
         if (collection != null) {
           this.collectionIds = [collection.id];
@@ -181,6 +186,11 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit {
     const fido2SessionData = await firstValueFrom(this.fido2PopoutSessionData$);
     const { isFido2Session, sessionId, userVerification } = fido2SessionData;
     const inFido2PopoutWindow = BrowserPopupUtils.inPopout(window) && isFido2Session;
+
+    // normalize card expiry year on save
+    if (this.cipher.type === this.cipherType.Card) {
+      this.cipher.card.expYear = normalizeExpiryYearFormat(this.cipher.card.expYear);
+    }
 
     // TODO: Revert to use fido2 user verification service once user verification for passkeys is approved for production.
     // PM-4577 - https://github.com/bitwarden/clients/pull/8746

@@ -60,6 +60,9 @@
       }
     }
   },
+  "welcomeBack": {
+    "message": "Tekrar hoş geldiniz"
+  },
   "moveToOrgDesc": {
     "message": "Bu kaydı taşımak istediğiniz kuruluşu seçin. Taşıdığınız kaydın sahipliği seçtiğiniz kuruluşa aktarılacak. Artık bu kaydın doğrudan sahibi olmayacaksınız."
   },
@@ -259,6 +262,9 @@
   "generatePassword": {
     "message": "Parola oluştur"
   },
+  "generatePassphrase": {
+    "message": "Generate passphrase"
+  },
   "type": {
     "message": "Tür"
   },
@@ -394,6 +400,10 @@
   "copyPassword": {
     "message": "Parolayı kopyala"
   },
+  "copyPassphrase": {
+    "message": "Copy passphrase",
+    "description": "Copy passphrase to clipboard"
+  },
   "copyUri": {
     "message": "URI'yi kopyala"
   },
@@ -407,16 +417,55 @@
     "message": "Minimum parola uzunluğu"
   },
   "uppercase": {
-    "message": "Büyük harf (A-Z)"
+    "message": "Büyük harf (A-Z)",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "Küçük harf (a-z)"
+    "message": "Küçük harf (a-z)",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "Rakamlar (0-9)"
+    "message": "Rakamlar (0-9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
     "message": "Özel karakterler (!@#$%^&*)"
+  },
+  "include": {
+    "message": "Dahil et",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "Büyük harfleri dahil et",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "A-Z",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "Küçük harfleri dahil et",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a-z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "Rakamları dahil et",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0-9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "Özel karakterleri dahil et",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "Kelime sayısı"
@@ -442,7 +491,16 @@
     "description": "Minimum Special Characters"
   },
   "ambiguous": {
-    "message": "Okurken karışabilecek karakterleri kullanma"
+    "message": "Okurken karışabilecek karakterleri kullanma",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "Okurken karışabilecek karakterleri kullanma",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "Üreteç seçeneklerinize kurumsal ilke gereksinimleri uygulandı.",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchCollection": {
     "message": "Koleksiyonda ara"
@@ -499,6 +557,9 @@
   "createAccount": {
     "message": "Hesap oluştur"
   },
+  "newToBitwarden": {
+    "message": "Bitwarden'da yeni misiniz?"
+  },
   "setAStrongPassword": {
     "message": "Güçlü bir parola belirleyin"
   },
@@ -507,6 +568,18 @@
   },
   "logIn": {
     "message": "Giriş yap"
+  },
+  "logInToBitwarden": {
+    "message": "Bitwarden'a giriş yapın"
+  },
+  "logInWithPasskey": {
+    "message": "Geçiş anahtarıyla giriş yap"
+  },
+  "loginWithDevice": {
+    "message": "Cihazla giriş yap"
+  },
+  "useSingleSignOn": {
+    "message": "Çoklu oturum açma kullan"
   },
   "submit": {
     "message": "Gönder"
@@ -554,11 +627,32 @@
   "joinOrganization": {
     "message": "Kuruluşa katıl"
   },
+  "joinOrganizationName": {
+    "message": "$ORGANIZATIONNAME$ kuruluşuna katıl",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "Kuruluşa katılmayı tamamlamak için ana parolanızı belirleyin."
   },
   "settings": {
     "message": "Ayarlar"
+  },
+  "accountEmail": {
+    "message": "Hesap e-posta adresi"
+  },
+  "requestHint": {
+    "message": "İpucunu iste"
+  },
+  "requestPasswordHint": {
+    "message": "Parola ipucunu iste"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "Hesabınızın e-posta adresini girdiğinizde parola ipucunuz size gönderilecektir"
   },
   "passwordHint": {
     "message": "Parola ipucu"
@@ -602,6 +696,12 @@
   },
   "newAccountCreated": {
     "message": "Yeni hesabınız oluşturuldu! Şimdi giriş yapabilirsiniz."
+  },
+  "newAccountCreated2": {
+    "message": "Yeni hesabınız oluşturuldu."
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "Oturum açtınız."
   },
   "masterPassSent": {
     "message": "Size ana parolanızın ipucunu içeren bir e-posta gönderdik."
@@ -753,6 +853,10 @@
   "baseUrl": {
     "message": "Sunucu URL'si"
   },
+  "selfHostBaseUrl": {
+    "message": "Kendi kendine barındırılan sunucu URL'si",
+    "description": "Label for field requesting a self-hosted integration service URL"
+  },
   "apiUrl": {
     "message": "API sunucu URL'si"
   },
@@ -896,6 +1000,18 @@
   "yourVaultIsLocked": {
     "message": "Kasanız kilitli. Devam etmek için kimliğinizi doğrulayın."
   },
+  "yourAccountIsLocked": {
+    "message": "Hesabınız kilitlendi"
+  },
+  "or": {
+    "message": "veya"
+  },
+  "unlockWithBiometrics": {
+    "message": "Kilidi biyometri ile aç"
+  },
+  "unlockWithMasterPassword": {
+    "message": "Kilidi ana parola ile aç"
+  },
   "unlock": {
     "message": "Kilidi aç"
   },
@@ -923,6 +1039,9 @@
   },
   "vaultTimeout": {
     "message": "Kasa zaman aşımı"
+  },
+  "vaultTimeout1": {
+    "message": "Zaman aşımı"
   },
   "vaultTimeoutDesc": {
     "message": "Kasa zaman aşımı eyleminin ne zaman gerçekleştirileceğini seçin."
@@ -1128,6 +1247,9 @@
     "message": "Numarayı kopyala",
     "description": "Copy credit card number"
   },
+  "copyEmail": {
+    "message": "E-postayı kopyala"
+  },
   "copySecurityCode": {
     "message": "Güvenlik kodunu kopyala",
     "description": "Copy credit card security code (CVV)"
@@ -1173,6 +1295,9 @@
   },
   "premiumPurchaseAlert": {
     "message": "Premium üyeliği bitwarden.com web kasası üzerinden satın alabilirsiniz. Şimdi siteye gitmek ister misiniz?"
+  },
+  "premiumPurchaseAlertV2": {
+    "message": "Bitwarden web uygulamasındaki hesap ayarlarınızdan Premium abonelik satın alabilirsiniz."
   },
   "premiumCurrentMember": {
     "message": "Premium üyesiniz!"
@@ -1275,6 +1400,9 @@
         "example": "Password"
       }
     }
+  },
+  "copySuccessful": {
+    "message": "Kopyalama başarılı"
   },
   "errorRefreshingAccessToken": {
     "message": "Access Token Refresh Error"
@@ -1543,8 +1671,8 @@
   "recommendedForSecurity": {
     "message": "Güvenliğiniz için önerilir."
   },
-  "lockWithMasterPassOnRestart": {
-    "message": "Yeniden başlatmada ana şifre ile kilitle"
+  "lockWithMasterPassOnRestart1": {
+    "message": "Yeniden başlatmada ana parola ile kilitle"
   },
   "deleteAccount": {
     "message": "Hesabı sil"
@@ -1554,6 +1682,12 @@
   },
   "deleteAccountWarning": {
     "message": "Hesabınızı silmek kalıcıdır. Geri alınamaz."
+  },
+  "cannotDeleteAccount": {
+    "message": "Hesap silinemiyor"
+  },
+  "cannotDeleteAccountDesc": {
+    "message": "Hesabınızın sahibi bir kuruluş olduğu için bu işlem tamamlanamadı. Bilgi almak için kuruluş yöneticinizle iletişime geçin."
   },
   "accountDeleted": {
     "message": "Hesap silindi"
@@ -1621,7 +1755,7 @@
   },
   "lock": {
     "message": "Kilitle",
-    "description": "Verb form: to make secure or inaccesible by"
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
     "message": "Çöp kutusu",
@@ -1652,7 +1786,7 @@
     "message": "Zaman aşımı eylem onayı"
   },
   "enterpriseSingleSignOn": {
-    "message": "Kurumsal tek oturum açma"
+    "message": "Kurumsal çoklu oturum açma"
   },
   "setMasterPassword": {
     "message": "Ana parolayı belirle"
@@ -1664,6 +1798,15 @@
   "orgRequiresYouToSetPassword": {
     "message": "Kuruluşunuz bir ana parola belirlemenizi gerektiriyor.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "cardMetrics": {
+    "message": "/ $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
   "verificationRequired": {
     "message": "Doğrulama gerekli",
@@ -1744,8 +1887,8 @@
   "enableBrowserIntegration": {
     "message": "Tarayıcı entegrasyonuna izin ver"
   },
-  "enableBrowserIntegrationDesc": {
-    "message": "Tarayıcıda biyometrik doğrulama için kullanılır."
+  "enableBrowserIntegrationDesc1": {
+    "message": "Safari dışındaki tarayıcılarda biyometrik kilit açmaya izin vermek için kullanılır."
   },
   "enableDuckDuckGoBrowserIntegration": {
     "message": "DuckDuckGo tarayıcı entegrasyonuna izin ver"
@@ -1814,7 +1957,7 @@
     "message": "Tarayıcıda biyometriyi kullanmak için önce ayarlardan masaüstü biyometrisini ayarlamanız gerekir."
   },
   "biometricsManualSetupTitle": {
-    "message": "Autometic setup not available"
+    "message": "Automatic setup not available"
   },
   "biometricsManualSetupDesc": {
     "message": "Due to the installation method, biometrics support could not be automatically enabled. Would you like to open the documentation on how to do this manually?"
@@ -2075,8 +2218,8 @@
   "minutes": {
     "message": "Dakika"
   },
-  "vaultTimeoutPolicyInEffect": {
-    "message": "Kuruluş ilkeleriniz izin verilen maksimum kasa zaman aşımını $HOURS$ saat $MINUTES$ dakika olarak belirlemiş.",
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "En fazla $HOURS$ saat $MINUTES$ dakika.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2225,11 +2368,15 @@
   "locked": {
     "message": "Kilitli"
   },
+  "yourVaultIsLockedV2": {
+    "message": "Kasanız kilitli"
+  },
   "unlocked": {
     "message": "Kilitli değil"
   },
   "generator": {
-    "message": "Oluşturucu"
+    "message": "Oluşturucu",
+    "description": "Short for 'credential generator'."
   },
   "whatWouldYouLikeToGenerate": {
     "message": "Ne oluşturmak istersiniz?"
@@ -2242,6 +2389,23 @@
   },
   "generateUsername": {
     "message": "Kullanıcı adı oluştur"
+  },
+  "generateEmail": {
+    "message": "E-posta oluştur"
+  },
+  "generatorBoundariesHint": {
+    "message": "Değer $MIN$ ile $MAX$ arasında olmalıdır",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "Kullanıcı adı türü"
@@ -2285,6 +2449,14 @@
   },
   "forwardedEmailDesc": {
     "message": "Harici bir yönlendirme servisiyle e-posta maskesi oluştur."
+  },
+  "forwarderDomainName": {
+    "message": "E-posta alan adı",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Seçtiğiniz servisin desteklediği bir alan adı seçin",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ hatası: $ERRORMESSAGE$",
@@ -2577,6 +2749,9 @@
   "important": {
     "message": "Önemli:"
   },
+  "accessing": {
+    "message": "Accessing"
+  },
   "accessTokenUnableToBeDecrypted": {
     "message": "You have been logged out because your access token could not be decrypted. Please log in again to resolve this issue."
   },
@@ -2628,9 +2803,6 @@
   "eu": {
     "message": "AB",
     "description": "European Union"
-  },
-  "loggingInOn": {
-    "message": "Giriş yapılan konum"
   },
   "selfHostedServer": {
     "message": "şirket içinde barındırılan"
@@ -2824,13 +2996,13 @@
     "message": "Error connecting with the Duo service. Use a different two-step login method or contact Duo for assistance."
   },
   "launchDuoAndFollowStepsToFinishLoggingIn": {
-    "message": "Duo'yu başlatın ve oturum açmayı tamamlamak için adımları izleyin."
+    "message": "Duo'yu açın ve girişi tamamlamak için adımları izleyin."
   },
   "duoRequiredByOrgForAccount": {
     "message": "Hesabınız için Duo iki adımlı giriş gereklidir."
   },
   "launchDuo": {
-    "message": "Duo'yu tarayıcıda başlat"
+    "message": "Duo'yu tarayıcıda aç"
   },
   "importFormatError": {
     "message": "Veriler doğru biçimlendirilmemiş. Lütfen içe aktarma dosyanızı kontrol edin ve tekrar deneyin."
@@ -3049,5 +3221,11 @@
   },
   "textSends": {
     "message": "Metin Send'leri"
+  },
+  "ssoError": {
+    "message": "SSO girişi için açık port bulunamadı."
+  },
+  "fileSavedToDevice": {
+    "message": "Dosya cihaza kaydedildi. Cihazınızın indirilenler klasöründen yönetebilirsiniz."
   }
 }

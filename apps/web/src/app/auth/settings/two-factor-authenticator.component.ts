@@ -11,13 +11,12 @@ import { DisableTwoFactorAuthenticatorRequest } from "@bitwarden/common/auth/mod
 import { UpdateTwoFactorAuthenticatorRequest } from "@bitwarden/common/auth/models/request/update-two-factor-authenticator.request";
 import { TwoFactorAuthenticatorResponse } from "@bitwarden/common/auth/models/response/two-factor-authenticator.response";
 import { AuthResponse } from "@bitwarden/common/auth/types/auth-response";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 
 import { TwoFactorBaseComponent } from "./two-factor-base.component";
 
@@ -68,6 +67,7 @@ export class TwoFactorAuthenticatorComponent
     private accountService: AccountService,
     dialogService: DialogService,
     private configService: ConfigService,
+    protected toastService: ToastService,
   ) {
     super(
       apiService,
@@ -76,6 +76,7 @@ export class TwoFactorAuthenticatorComponent
       logService,
       userVerificationService,
       dialogService,
+      toastService,
     );
     this.qrScript = window.document.createElement("script");
     this.qrScript.src = "scripts/qrious.min.js";
@@ -125,13 +126,6 @@ export class TwoFactorAuthenticatorComponent
   }
 
   protected override async disableMethod() {
-    const twoFactorAuthenticatorTokenFeatureFlag = await this.configService.getFeatureFlag(
-      FeatureFlag.AuthenticatorTwoFactorToken,
-    );
-    if (twoFactorAuthenticatorTokenFeatureFlag === false) {
-      return super.disableMethod();
-    }
-
     const confirmed = await this.dialogService.openSimpleDialog({
       title: { key: "disable" },
       content: { key: "twoStepDisableDesc" },
@@ -148,7 +142,11 @@ export class TwoFactorAuthenticatorComponent
     request.userVerificationToken = this.userVerificationToken;
     await this.apiService.deleteTwoFactorAuthenticator(request);
     this.enabled = false;
-    this.platformUtilsService.showToast("success", null, this.i18nService.t("twoStepDisabled"));
+    this.toastService.showToast({
+      variant: "success",
+      title: null,
+      message: this.i18nService.t("twoStepDisabled"),
+    });
     this.onUpdated.emit(false);
   }
 

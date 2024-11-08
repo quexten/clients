@@ -1,21 +1,21 @@
 import { FakeGlobalStateProvider } from "@bitwarden/common/../spec/fake-state-provider";
 import { MockProxy, mock } from "jest-mock-extended";
 
+import { OrganizationUserApiService } from "@bitwarden/admin-console/common";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
 import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { Policy } from "@bitwarden/common/admin-console/models/domain/policy";
 import { ResetPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/reset-password-policy-options";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { FakeGlobalState } from "@bitwarden/common/spec/fake-state";
 import { OrgKey } from "@bitwarden/common/types/key";
+import { KeyService } from "@bitwarden/key-management";
 
 import { I18nService } from "../../core/i18n.service";
 
@@ -29,13 +29,13 @@ describe("AcceptOrganizationInviteService", () => {
   let sut: AcceptOrganizationInviteService;
   let apiService: MockProxy<ApiService>;
   let authService: MockProxy<AuthService>;
-  let cryptoService: MockProxy<CryptoService>;
+  let keyService: MockProxy<KeyService>;
   let encryptService: MockProxy<EncryptService>;
   let policyApiService: MockProxy<PolicyApiServiceAbstraction>;
   let policyService: MockProxy<PolicyService>;
   let logService: MockProxy<LogService>;
   let organizationApiService: MockProxy<OrganizationApiServiceAbstraction>;
-  let organizationUserService: MockProxy<OrganizationUserService>;
+  let organizationUserApiService: MockProxy<OrganizationUserApiService>;
   let i18nService: MockProxy<I18nService>;
   let globalStateProvider: FakeGlobalStateProvider;
   let globalState: FakeGlobalState<OrganizationInvite>;
@@ -43,13 +43,13 @@ describe("AcceptOrganizationInviteService", () => {
   beforeEach(() => {
     apiService = mock();
     authService = mock();
-    cryptoService = mock();
+    keyService = mock();
     encryptService = mock();
     policyApiService = mock();
     policyService = mock();
     logService = mock();
     organizationApiService = mock();
-    organizationUserService = mock();
+    organizationUserApiService = mock();
     i18nService = mock();
     globalStateProvider = new FakeGlobalStateProvider();
     globalState = globalStateProvider.getFake(ORGANIZATION_INVITE);
@@ -57,13 +57,13 @@ describe("AcceptOrganizationInviteService", () => {
     sut = new AcceptOrganizationInviteService(
       apiService,
       authService,
-      cryptoService,
+      keyService,
       encryptService,
       policyApiService,
       policyService,
       logService,
       organizationApiService,
-      organizationUserService,
+      organizationUserApiService,
       i18nService,
       globalStateProvider,
     );
@@ -71,11 +71,11 @@ describe("AcceptOrganizationInviteService", () => {
 
   describe("validateAndAcceptInvite", () => {
     it("initializes an organization when given an invite where initOrganization is true", async () => {
-      cryptoService.makeOrgKey.mockResolvedValue([
+      keyService.makeOrgKey.mockResolvedValue([
         { encryptedString: "string" } as EncString,
         "orgPrivateKey" as unknown as OrgKey,
       ]);
-      cryptoService.makeKeyPair.mockResolvedValue([
+      keyService.makeKeyPair.mockResolvedValue([
         "orgPublicKey",
         { encryptedString: "string" } as EncString,
       ]);
@@ -85,10 +85,10 @@ describe("AcceptOrganizationInviteService", () => {
       const result = await sut.validateAndAcceptInvite(invite);
 
       expect(result).toBe(true);
-      expect(organizationUserService.postOrganizationUserAcceptInit).toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAcceptInit).toHaveBeenCalled();
       expect(apiService.refreshIdentityToken).toHaveBeenCalled();
       expect(globalState.nextMock).toHaveBeenCalledWith(null);
-      expect(organizationUserService.postOrganizationUserAccept).not.toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAccept).not.toHaveBeenCalled();
       expect(authService.logOut).not.toHaveBeenCalled();
     });
 
@@ -133,10 +133,10 @@ describe("AcceptOrganizationInviteService", () => {
       const result = await sut.validateAndAcceptInvite(invite);
 
       expect(result).toBe(true);
-      expect(organizationUserService.postOrganizationUserAccept).toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAccept).toHaveBeenCalled();
       expect(apiService.refreshIdentityToken).toHaveBeenCalled();
       expect(globalState.nextMock).toHaveBeenCalledWith(null);
-      expect(organizationUserService.postOrganizationUserAcceptInit).not.toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAcceptInit).not.toHaveBeenCalled();
       expect(authService.logOut).not.toHaveBeenCalled();
     });
 
@@ -161,8 +161,8 @@ describe("AcceptOrganizationInviteService", () => {
       const result = await sut.validateAndAcceptInvite(invite);
 
       expect(result).toBe(true);
-      expect(organizationUserService.postOrganizationUserAccept).toHaveBeenCalled();
-      expect(organizationUserService.postOrganizationUserAcceptInit).not.toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAccept).toHaveBeenCalled();
+      expect(organizationUserApiService.postOrganizationUserAcceptInit).not.toHaveBeenCalled();
       expect(authService.logOut).not.toHaveBeenCalled();
     });
   });

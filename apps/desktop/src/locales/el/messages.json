@@ -6,7 +6,7 @@
     "message": "Φίλτρα"
   },
   "allItems": {
-    "message": "Όλα τα αντικείμενα"
+    "message": "Όλα τα στοιχεία"
   },
   "favorites": {
     "message": "Αγαπημένα"
@@ -36,7 +36,7 @@
     "message": "Αναζήτηση κρύπτης"
   },
   "addItem": {
-    "message": "Προσθήκη αντικειμένου"
+    "message": "Προσθήκη στοιχείου"
   },
   "shared": {
     "message": "Κοινοποιήθηκε"
@@ -60,6 +60,9 @@
       }
     }
   },
+  "welcomeBack": {
+    "message": "Καλωσορίσατε και πάλι"
+  },
   "moveToOrgDesc": {
     "message": "Επιλέξτε έναν οργανισμό στον οποίο θέλετε να μετακινήσετε αυτό το στοιχείο. Η μετακίνηση σε έναν οργανισμό μεταβιβάζει την ιδιοκτησία του στοιχείου σε αυτό τον οργανισμό. Δεν θα είστε πλέον ο άμεσος ιδιοκτήτης αυτού του στοιχείου μόλις το μετακινήσετε."
   },
@@ -67,7 +70,7 @@
     "message": "Συνημμένα"
   },
   "viewItem": {
-    "message": "Προβολή αντικειμένου"
+    "message": "Προβολή στοιχείου"
   },
   "name": {
     "message": "Όνομα"
@@ -98,7 +101,7 @@
     "message": "Συνθηματικό"
   },
   "editItem": {
-    "message": "Επεξεργασία αντικειμένου"
+    "message": "Επεξεργασία στοιχείου"
   },
   "emailAddress": {
     "message": "Διεύθυνση ηλ. ταχυδρομείου"
@@ -259,6 +262,9 @@
   "generatePassword": {
     "message": "Γέννηση κωδικού πρόσβασης"
   },
+  "generatePassphrase": {
+    "message": "Δημιουργία φράσης πρόσβασης"
+  },
   "type": {
     "message": "Τύπος"
   },
@@ -394,6 +400,10 @@
   "copyPassword": {
     "message": "Αντιγραφή κωδικού πρόσβασης"
   },
+  "copyPassphrase": {
+    "message": "Αντιγραφή φράσης πρόσβασης",
+    "description": "Copy passphrase to clipboard"
+  },
   "copyUri": {
     "message": "Αντιγραφή URI"
   },
@@ -407,16 +417,55 @@
     "message": "Ελάχιστο μήκος κωδικού πρόσβασης"
   },
   "uppercase": {
-    "message": "Κεφαλαία (A-Z)"
+    "message": "Κεφαλαία (A-Z)",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "Πεζά (a-z)"
+    "message": "Πεζά (a-z)",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "Αριθμοί (0-9)"
+    "message": "Αριθμοί (0-9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
     "message": "Ειδικοί χαρακτήρες (!@#$%^&*)"
+  },
+  "include": {
+    "message": "Συμπερίληψη",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "Συμπερίληψη κεφαλαίων χαρακτήρων",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "A-Z",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "Συμπερίληψη πεζών χαρακτήρων",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a-z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "Συμπερίληψη αριθμών",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0-9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "Συμπερίληψη ειδικών χαρακτήρων",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "Αριθμός λέξεων"
@@ -442,7 +491,16 @@
     "description": "Minimum Special Characters"
   },
   "ambiguous": {
-    "message": "Αποφυγή αμφιλεγόμενων χαρακτήρων"
+    "message": "Αποφυγή αμφιλεγόμενων χαρακτήρων",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "Αποφυγή αμφιλεγόμενων χαρακτήρων",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "Οι απαιτήσεις της εταιρικής πολιτικής έχουν εφαρμοστεί στις επιλογές γεννήτριάς σας.",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchCollection": {
     "message": "Αναζήτηση στη συλλογή"
@@ -499,6 +557,9 @@
   "createAccount": {
     "message": "Δημιουργία λογαριασμού"
   },
+  "newToBitwarden": {
+    "message": "Νέος/α στο Bitwarden;"
+  },
   "setAStrongPassword": {
     "message": "Ορίστε έναν ισχυρό κωδικό πρόσβασης"
   },
@@ -507,6 +568,18 @@
   },
   "logIn": {
     "message": "Είσοδος"
+  },
+  "logInToBitwarden": {
+    "message": "Σύνδεση στο Bitwarden"
+  },
+  "logInWithPasskey": {
+    "message": "Σύνδεση με κλειδί πρόσβασης"
+  },
+  "loginWithDevice": {
+    "message": "Σύνδεση με χρήση συσκευής"
+  },
+  "useSingleSignOn": {
+    "message": "Χρήση ενιαίας σύνδεσης"
   },
   "submit": {
     "message": "Υποβολή"
@@ -554,11 +627,32 @@
   "joinOrganization": {
     "message": "Συμμετοχή σε οργανισμό"
   },
+  "joinOrganizationName": {
+    "message": "Συμμετοχή στο $ORGANIZATIONNAME$",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "Ολοκληρώστε τη συμμετοχή σας σε αυτόν τον οργανισμό ορίζοντας έναν κύριο κωδικό πρόσβασης."
   },
   "settings": {
     "message": "Ρυθμίσεις"
+  },
+  "accountEmail": {
+    "message": "Διεύθυνση ηλ. ταχυδρομείου λογαριασμού"
+  },
+  "requestHint": {
+    "message": "Αίτηση υπόδειξης"
+  },
+  "requestPasswordHint": {
+    "message": "Αίτηση υπόδειξης κωδικού πρόσβασης"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "Εισάγετε τη διεύθυνση ηλ. ταχυδρομείου του λογαριασμού σας και θα σας αποσταλεί η υπόδειξη κωδικού πρόσβασης"
   },
   "passwordHint": {
     "message": "Υπόδειξη κωδικού πρόσβασης"
@@ -602,6 +696,12 @@
   },
   "newAccountCreated": {
     "message": "Ο λογαριασμός σας έχει δημιουργηθεί! Τώρα μπορείτε να συνδεθείτε."
+  },
+  "newAccountCreated2": {
+    "message": "Ο νέος σας λογαριασμός έχει δημιουργηθεί!"
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "Έχετε συνδεθεί!"
   },
   "masterPassSent": {
     "message": "Σας στείλαμε ένα email με την υπόδειξη του κύριου κωδικού."
@@ -753,6 +853,10 @@
   "baseUrl": {
     "message": "URL Διακομιστή"
   },
+  "selfHostBaseUrl": {
+    "message": "URL διακομιστή αυτο-φιλοξενίας",
+    "description": "Label for field requesting a self-hosted integration service URL"
+  },
   "apiUrl": {
     "message": "URL διακομιστή API"
   },
@@ -820,7 +924,7 @@
     "message": "Νέα σύνδεση"
   },
   "addNewItem": {
-    "message": "Νέο αντικείμενο"
+    "message": "Νέο στοιχείο"
   },
   "addNewFolder": {
     "message": "Νέος φάκελος"
@@ -847,7 +951,7 @@
     "message": "Βοήθεια και σχόλια"
   },
   "getHelp": {
-    "message": "Ζητήστε βοήθεια"
+    "message": "Λήψη βοήθειας"
   },
   "fileBugReport": {
     "message": "Καταγράψτε μια αναφορά σφάλματος"
@@ -896,6 +1000,18 @@
   "yourVaultIsLocked": {
     "message": "Η κρύπτη σας είναι κλειδωμένη. Επαληθεύστε την ταυτότητά σας για να συνεχίσετε."
   },
+  "yourAccountIsLocked": {
+    "message": "Ο λογαριασμός σας έχει κλειδωθεί"
+  },
+  "or": {
+    "message": "ή"
+  },
+  "unlockWithBiometrics": {
+    "message": "Ξεκλείδωμα με βιομετρικά στοιχεία"
+  },
+  "unlockWithMasterPassword": {
+    "message": "Ξεκλείδωμα με κύριο κωδικό πρόσβασης"
+  },
   "unlock": {
     "message": "Ξεκλείδωμα"
   },
@@ -923,6 +1039,9 @@
   },
   "vaultTimeout": {
     "message": "Χρονικό όριο λήξης κρύπτης"
+  },
+  "vaultTimeout1": {
+    "message": "Χρονικό όριο"
   },
   "vaultTimeoutDesc": {
     "message": "Επιλέξτε πότε η κρύπτη σας θα αναλάβει τη δράση χρονικού ορίου λήξης κρύπτης."
@@ -1128,6 +1247,9 @@
     "message": "Αντιγραφή αριθμού",
     "description": "Copy credit card number"
   },
+  "copyEmail": {
+    "message": "Αντιγραφή διεύθυνσης ηλ. ταχυδρομείου"
+  },
   "copySecurityCode": {
     "message": "Αντιγραφή κωδικού ασφαλείας",
     "description": "Copy credit card security code (CVV)"
@@ -1174,6 +1296,9 @@
   "premiumPurchaseAlert": {
     "message": "Μπορείτε να αγοράσετε συνδρομή premium στο bitwarden.com web vault. Θέλετε να επισκεφθείτε την ιστοσελίδα τώρα;"
   },
+  "premiumPurchaseAlertV2": {
+    "message": "Μπορείτε να αγοράσετε το Premium από τις ρυθμίσεις λογαριασμού σας στη διαδικτυακή εφαρμογή του Bitwarden."
+  },
   "premiumCurrentMember": {
     "message": "Είστε ένα premium μέλος!"
   },
@@ -1193,7 +1318,7 @@
     "message": "Επιτυχής ανανέωση"
   },
   "passwordHistory": {
-    "message": "Ιστορικό κωδικού"
+    "message": "Ιστορικό κωδικού πρόσβασης"
   },
   "clear": {
     "message": "Εκκαθάριση",
@@ -1275,6 +1400,9 @@
         "example": "Password"
       }
     }
+  },
+  "copySuccessful": {
+    "message": "Επιτυχής Αντιγραφή"
   },
   "errorRefreshingAccessToken": {
     "message": "Σφάλμα Ανανέωσης Διακριτικού Πρόσβασης"
@@ -1366,7 +1494,7 @@
     "description": "ex. Date this item was created"
   },
   "datePasswordUpdated": {
-    "message": "Ο κωδικός ενημερώθηκε",
+    "message": "Ο κωδικός πρόσβασης ενημερώθηκε",
     "description": "ex. Date this password was updated"
   },
   "exportFrom": {
@@ -1543,7 +1671,7 @@
   "recommendedForSecurity": {
     "message": "Συνίσταται για ασφάλεια."
   },
-  "lockWithMasterPassOnRestart": {
+  "lockWithMasterPassOnRestart1": {
     "message": "Κλείδωμα με τον κύριο κωδικό πρόσβασης κατά την επανεκκίνηση"
   },
   "deleteAccount": {
@@ -1554,6 +1682,12 @@
   },
   "deleteAccountWarning": {
     "message": "Η διαγραφή του λογαριασμού σας είναι μόνιμη. Δεν μπορεί να αναιρεθεί."
+  },
+  "cannotDeleteAccount": {
+    "message": "Αδυναμία διαγραφής λογαριασμού"
+  },
+  "cannotDeleteAccountDesc": {
+    "message": "Αυτή η ενέργεια δεν μπορεί να ολοκληρωθεί επειδή ο λογαριασμός σας ανήκει σε έναν οργανισμό. Επικοινωνήστε με το διαχειριστή του οργανισμού σας για πρόσθετες λεπτομέρειες."
   },
   "accountDeleted": {
     "message": "Ο λογαριασμός διαγράφηκε"
@@ -1621,7 +1755,7 @@
   },
   "lock": {
     "message": "Κλείδωμα",
-    "description": "Verb form: to make secure or inaccesible by"
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
     "message": "Κάδος Απορριμάτων",
@@ -1664,6 +1798,15 @@
   "orgRequiresYouToSetPassword": {
     "message": "Ο οργανισμός σας απαιτεί να ορίσετε έναν κύριο κωδικό πρόσβασης.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "cardMetrics": {
+    "message": "από $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
   "verificationRequired": {
     "message": "Απαιτείται επαλήθευση",
@@ -1744,8 +1887,8 @@
   "enableBrowserIntegration": {
     "message": "Να επιτρέπεται η ενσωμάτωση περιηγητή"
   },
-  "enableBrowserIntegrationDesc": {
-    "message": "Χρησιμοποιείται για βιομετρικά στοιχεία στον περιηγητή."
+  "enableBrowserIntegrationDesc1": {
+    "message": "Χρησιμοποιείται για την ενεργοποίηση του ξεκλειδώματος με βιομετρικά στοιχεία, σε προγράμματα περιήγησης εκτός του Safari."
   },
   "enableDuckDuckGoBrowserIntegration": {
     "message": "Επίτρεψε ενσωμάτωση περιηγητή DuckDuckGo"
@@ -1850,7 +1993,7 @@
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "myVault": {
-    "message": "Το θησαυ/κιό μου"
+    "message": "Η κρύπτη μου"
   },
   "text": {
     "message": "Κείμενο"
@@ -2075,8 +2218,8 @@
   "minutes": {
     "message": "Λεπτά"
   },
-  "vaultTimeoutPolicyInEffect": {
-    "message": "Οι πολιτικές του οργανισμού σας έχουν ορίσει το μέγιστο επιτρεπόμενο χρονικό όριο λήξης θησαυ/κίου σε $HOURS$ ώρα(ες) και $MINUTES$ λεπτό(α).",
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "Μέγιστο $HOURS$ ώρα(-ες) και $MINUTES$ λεπτό(-α).",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2225,11 +2368,15 @@
   "locked": {
     "message": "Κλειδωμένο"
   },
+  "yourVaultIsLockedV2": {
+    "message": "Η κρύπτη σας έχει κλειδωθεί"
+  },
   "unlocked": {
     "message": "Ξεκλείδωτο"
   },
   "generator": {
-    "message": "Γεννήτρια"
+    "message": "Γεννήτρια",
+    "description": "Short for 'credential generator'."
   },
   "whatWouldYouLikeToGenerate": {
     "message": "Τι θα θέλατε να δημιουργήσετε;"
@@ -2242,6 +2389,23 @@
   },
   "generateUsername": {
     "message": "Δημιουργία ονόματος χρήστη"
+  },
+  "generateEmail": {
+    "message": "Δημιουργία διεύθυνσης ηλ. ταχυδρομείου"
+  },
+  "generatorBoundariesHint": {
+    "message": "Η τιμή πρέπει να είναι μεταξύ $MIN$ και $MAX$",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "Τύπος ονόματος χρήστη"
@@ -2285,6 +2449,14 @@
   },
   "forwardedEmailDesc": {
     "message": "Δημιουργήστε ένα alias email με μια εξωτερική υπηρεσία προώθησης."
+  },
+  "forwarderDomainName": {
+    "message": "Τομέας ηλ. ταχυδρομείου",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Επιλέξτε ένα τομέα που υποστηρίζεται από την επιλεγμένη υπηρεσία",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ σφάλμα: $ERRORMESSAGE$",
@@ -2411,7 +2583,7 @@
     "message": "Είστε βέβαιοι ότι θέλετε να χρησιμοποιήσετε την επιλογή \"Ποτέ\"; Ο ορισμός των επιλογών κλειδώματος σε \"Ποτέ\" αποθηκεύει το κλειδί κρυπτογράφησης του θησαυ/κίου σας στη συσκευή σας. Εάν χρησιμοποιήσετε αυτήν την επιλογή, θα πρέπει να διασφαλίσετε ότι θα διατηρείτε τη συσκευή σας κατάλληλα προστατευμένη."
   },
   "vault": {
-    "message": "Θησαυ/κιο"
+    "message": "Κρύπτη"
   },
   "loginWithMasterPassword": {
     "message": "Συνδεθείτε με τον κύριο κωδικό πρόσβασης"
@@ -2423,7 +2595,7 @@
     "message": "Απομνημόνευση διεύθυνσης ηλ. ταχυδρομείου"
   },
   "notYou": {
-    "message": "Όχι εσείς;"
+    "message": "Δεν είστε εσείς;"
   },
   "newAroundHere": {
     "message": "Είστε νέος/α εδώ;"
@@ -2554,7 +2726,7 @@
     "message": "Κανένα μήνυμα ηλ. ταχυδρομείου;"
   },
   "goBack": {
-    "message": "Μετάβαση πίσω"
+    "message": "Επιστροφή"
   },
   "toEditYourEmailAddress": {
     "message": "για να επεξεργαστείτε τη διεύθυνση ηλ. ταχυδρομείου σας."
@@ -2576,6 +2748,9 @@
   },
   "important": {
     "message": "Σημαντικό:"
+  },
+  "accessing": {
+    "message": "Πρόσβαση"
   },
   "accessTokenUnableToBeDecrypted": {
     "message": "Έχετε αποσυνδεθεί επειδή το διακριτικό πρόσβασής σας δεν μπορεί να αποκρυπτογραφηθεί. Παρακαλώ συνδεθείτε ξανά για να επιλύσετε αυτό το ζήτημα."
@@ -2628,9 +2803,6 @@
   "eu": {
     "message": "ΕΕ",
     "description": "European Union"
-  },
-  "loggingInOn": {
-    "message": "Σύνδεση σε"
   },
   "selfHostedServer": {
     "message": "αυτο-φιλοξενούμενο"
@@ -3045,9 +3217,15 @@
     "message": "Δεδομένα"
   },
   "fileSends": {
-    "message": "File Sends"
+    "message": "Send αρχείων"
   },
   "textSends": {
-    "message": "Text Sends"
+    "message": "Send κειμένων"
+  },
+  "ssoError": {
+    "message": "Δεν βρέθηκαν ελεύθερες θύρες για τη σύνδεση sso."
+  },
+  "fileSavedToDevice": {
+    "message": "Το αρχείο αποθηκεύτηκε στη συσκευή. Διαχείριση από τις λήψεις της συσκευής σας."
   }
 }

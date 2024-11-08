@@ -4,7 +4,7 @@ import { map } from "rxjs";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { TableDataSource } from "@bitwarden/components";
+import { TableDataSource, ToastService } from "@bitwarden/components";
 
 import { ProjectListView } from "../models/view/project-list.view";
 
@@ -24,6 +24,8 @@ export class ProjectsListComponent {
   }
   private _projects: ProjectListView[];
 
+  @Input() showMenus?: boolean = true;
+
   @Input()
   set search(search: string) {
     this.selection.clear();
@@ -33,6 +35,7 @@ export class ProjectsListComponent {
   @Output() editProjectEvent = new EventEmitter<string>();
   @Output() deleteProjectEvent = new EventEmitter<ProjectListView[]>();
   @Output() newProjectEvent = new EventEmitter();
+  @Output() copiedProjectUUIdEvent = new EventEmitter<string>();
 
   selection = new SelectionModel<string>(true, []);
   protected dataSource = new TableDataSource<ProjectListView>();
@@ -43,6 +46,7 @@ export class ProjectsListComponent {
   constructor(
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
+    private toastService: ToastService,
   ) {}
 
   isAllSelected() {
@@ -72,11 +76,11 @@ export class ProjectsListComponent {
         this.projects.filter((project) => this.selection.isSelected(project.id)),
       );
     } else {
-      this.platformUtilsService.showToast(
-        "error",
-        this.i18nService.t("errorOccurred"),
-        this.i18nService.t("nothingSelected"),
-      );
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: this.i18nService.t("nothingSelected"),
+      });
     }
   }
 
@@ -88,5 +92,14 @@ export class ProjectsListComponent {
       return true;
     }
     return false;
+  }
+
+  copyProjectUuidToClipboard(id: string) {
+    this.platformUtilsService.copyToClipboard(id);
+    this.platformUtilsService.showToast(
+      "success",
+      null,
+      this.i18nService.t("valueCopied", this.i18nService.t("projectId")),
+    );
   }
 }

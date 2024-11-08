@@ -5,15 +5,15 @@ import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { BiometricStateService } from "@bitwarden/common/platform/biometrics/biometric-state.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserKey } from "@bitwarden/common/types/key";
+import { KeyService, BiometricStateService } from "@bitwarden/key-management";
 
 import { BrowserApi } from "../platform/browser/browser-api";
 
@@ -72,7 +72,8 @@ export class NativeMessagingBackground {
   private validatingFingerprint: boolean;
 
   constructor(
-    private cryptoService: CryptoService,
+    private keyService: KeyService,
+    private encryptService: EncryptService,
     private cryptoFunctionService: CryptoFunctionService,
     private runtimeBackground: RuntimeBackground,
     private messagingService: MessagingService,
@@ -87,7 +88,7 @@ export class NativeMessagingBackground {
       // Reload extension to activate nativeMessaging
       chrome.permissions.onAdded.addListener((permissions) => {
         if (permissions.permissions?.includes("nativeMessaging")) {
-          BrowserApi.reloadExtension(null);
+          BrowserApi.reloadExtension();
         }
       });
     }
@@ -227,7 +228,7 @@ export class NativeMessagingBackground {
       await this.secureCommunication();
     }
 
-    return await this.cryptoService.encrypt(JSON.stringify(message), this.sharedSecret);
+    return await this.encryptService.encrypt(JSON.stringify(message), this.sharedSecret);
   }
 
   getResponse(): Promise<any> {
@@ -273,7 +274,11 @@ export class NativeMessagingBackground {
     let message = rawMessage as ReceiveMessage;
     if (!this.platformUtilsService.isSafari()) {
       message = JSON.parse(
-        await this.cryptoService.decryptToUtf8(rawMessage as EncString, this.sharedSecret),
+        await this.encryptService.decryptToUtf8(
+          rawMessage as EncString,
+          this.sharedSecret,
+          "ipc-desktop-ipc-channel-key",
+        ),
       );
     }
 
@@ -285,7 +290,9 @@ export class NativeMessagingBackground {
     switch (message.command) {
       case "biometricUnlock": {
         if (
-          ["not enabled", "not supported", "not unlocked", "canceled"].includes(message.response)
+          ["not available", "not enabled", "not supported", "not unlocked", "canceled"].includes(
+            message.response,
+          )
         ) {
           this.rejecter(message.response);
           return;
@@ -314,15 +321,12 @@ export class NativeMessagingBackground {
               const activeUserId = await firstValueFrom(
                 this.accountService.activeAccount$.pipe(map((a) => a?.id)),
               );
-              const isUserKeyValid = await this.cryptoService.validateUserKey(
-                userKey,
-                activeUserId,
-              );
+              const isUserKeyValid = await this.keyService.validateUserKey(userKey, activeUserId);
               if (isUserKeyValid) {
-                await this.cryptoService.setUserKey(userKey, activeUserId);
+                await this.keyService.setUserKey(userKey, activeUserId);
               } else {
                 this.logService.error("Unable to verify biometric unlocked userkey");
-                await this.cryptoService.clearKeys(activeUserId);
+                await this.keyService.clearKeys(activeUserId);
                 this.rejecter("userkey wrong");
                 return;
               }
@@ -338,10 +342,10 @@ export class NativeMessagingBackground {
           // Verify key is correct by attempting to decrypt a secret
           try {
             const userId = (await firstValueFrom(this.accountService.activeAccount$))?.id;
-            await this.cryptoService.getFingerprint(userId);
+            await this.keyService.getFingerprint(userId);
           } catch (e) {
             this.logService.error("Unable to verify key: " + e);
-            await this.cryptoService.clearKeys();
+            await this.keyService.clearKeys();
             this.rejecter("userkey wrong");
             return;
           }
@@ -350,6 +354,10 @@ export class NativeMessagingBackground {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           this.runtimeBackground.processMessage({ command: "unlocked" });
         }
+        break;
+      }
+      case "biometricUnlockAvailable": {
+        this.resolver(message);
         break;
       }
       default:
@@ -390,7 +398,7 @@ export class NativeMessagingBackground {
   }
 
   private async showFingerprintDialog() {
-    const fingerprint = await this.cryptoService.getFingerprint(
+    const fingerprint = await this.keyService.getFingerprint(
       (await firstValueFrom(this.accountService.activeAccount$))?.id,
       this.publicKey,
     );

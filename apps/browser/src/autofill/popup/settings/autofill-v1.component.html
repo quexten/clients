@@ -41,8 +41,45 @@
           </option>
         </select>
       </div>
-      <div class="box-footer" *ngIf="accountSwitcherEnabled && canOverrideBrowserAutofillSetting">
-        {{ "showInlineMenuOnFormFieldsDescAlt" | i18n }}
+      <div class="box-footer" *ngIf="accountSwitcherEnabled || !canOverrideBrowserAutofillSetting">
+        <span *ngIf="accountSwitcherEnabled">{{ "showInlineMenuOnFormFieldsDescAlt" | i18n }}</span>
+        <span *ngIf="!canOverrideBrowserAutofillSetting">
+          {{ "turnOffBrowserBuiltInPasswordManagerSettings" | i18n }}
+          <a
+            [attr.href]="disablePasswordManagerLink"
+            (click)="openDisablePasswordManagerLink($event)"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {{ "turnOffBrowserBuiltInPasswordManagerSettingsLink" | i18n }}
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="box tw-mb-5" *ngIf="inlineMenuPositioningImprovementsEnabled && inlineMenuIsEnabled">
+    <div class="box-content">
+      <div class="box-content-row box-content-row-checkbox" appBoxRow>
+        <label for="show-inline-menu-identities" class="!tw-mr-0">{{
+          "showInlineMenuIdentitiesLabel" | i18n
+        }}</label>
+        <input
+          id="show-inline-menu-identities"
+          type="checkbox"
+          (change)="updateShowInlineMenuIdentities()"
+          [(ngModel)]="showInlineMenuIdentities"
+        />
+      </div>
+      <div class="box-content-row box-content-row-checkbox" appBoxRow>
+        <label for="show-inline-menu-cards" class="!tw-mr-0">{{
+          "showInlineMenuCardsLabel" | i18n
+        }}</label>
+        <input
+          id="show-inline-menu-cards"
+          type="checkbox"
+          (change)="updateShowInlineMenuCards()"
+          [(ngModel)]="showInlineMenuCards"
+        />
       </div>
     </div>
   </div>
@@ -60,7 +97,7 @@
         />
       </div>
     </div>
-    <div class="box-footer">
+    <div class="box-footer" *ngIf="canOverrideBrowserAutofillSetting">
       <span *ngIf="accountSwitcherEnabled">{{ "showInlineMenuOnFormFieldsDescAlt" | i18n }}</span>
       {{ "turnOffBrowserBuiltInPasswordManagerSettings" | i18n }}
       <a

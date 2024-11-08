@@ -2,10 +2,9 @@ import { OptionValues } from "commander";
 import * as inquirer from "inquirer";
 import { firstValueFrom } from "rxjs";
 
-import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
@@ -15,6 +14,7 @@ import { SendAccess } from "@bitwarden/common/tools/send/models/domain/send-acce
 import { SendAccessRequest } from "@bitwarden/common/tools/send/models/request/send-access.request";
 import { SendAccessView } from "@bitwarden/common/tools/send/models/view/send-access.view";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
+import { KeyService } from "@bitwarden/key-management";
 import { NodeUtils } from "@bitwarden/node/node-utils";
 
 import { DownloadCommand } from "../../../commands/download.command";
@@ -27,14 +27,14 @@ export class SendReceiveCommand extends DownloadCommand {
   private sendAccessRequest: SendAccessRequest;
 
   constructor(
-    private apiService: ApiService,
-    cryptoService: CryptoService,
+    private keyService: KeyService,
+    encryptService: EncryptService,
     private cryptoFunctionService: CryptoFunctionService,
     private platformUtilsService: PlatformUtilsService,
     private environmentService: EnvironmentService,
     private sendApiService: SendApiService,
   ) {
-    super(cryptoService);
+    super(encryptService);
   }
 
   async run(url: string, options: OptionValues): Promise<Response> {
@@ -146,7 +146,7 @@ export class SendReceiveCommand extends DownloadCommand {
       );
 
       const sendAccess = new SendAccess(sendResponse);
-      this.decKey = await this.cryptoService.makeSendKey(key);
+      this.decKey = await this.keyService.makeSendKey(key);
       return await sendAccess.decrypt(this.decKey);
     } catch (e) {
       if (e instanceof ErrorResponse) {

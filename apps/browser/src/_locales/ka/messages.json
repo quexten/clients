@@ -19,14 +19,23 @@
   "createAccount": {
     "message": "ანგარიშის შექმნა"
   },
+  "newToBitwarden": {
+    "message": "New to Bitwarden?"
+  },
+  "logInWithPasskey": {
+    "message": "Log in with passkey"
+  },
+  "useSingleSignOn": {
+    "message": "Use single sign-on"
+  },
+  "welcomeBack": {
+    "message": "Welcome back"
+  },
   "setAStrongPassword": {
     "message": "Set a strong password"
   },
   "finishCreatingYourAccountBySettingAPassword": {
     "message": "Finish creating your account by setting a password"
-  },
-  "login": {
-    "message": "ავტორიზაცია"
   },
   "enterpriseSingleSignOn": {
     "message": "Enterprise single sign-on"
@@ -38,10 +47,10 @@
     "message": "დახურვა"
   },
   "submit": {
-    "message": "დადასტურება"
+    "message": "გადაცემა"
   },
   "emailAddress": {
-    "message": "ელ-ფოსტა"
+    "message": "ელფოსტის მისამართი"
   },
   "masterPass": {
     "message": "Master password"
@@ -74,14 +83,23 @@
   "joinOrganization": {
     "message": "Join organization"
   },
+  "joinOrganizationName": {
+    "message": "Join $ORGANIZATIONNAME$",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "Finish joining this organization by setting a master password."
   },
   "tab": {
-    "message": "Tab"
+    "message": "ჩანართი"
   },
   "vault": {
-    "message": "Vault"
+    "message": "საცავი"
   },
   "myVault": {
     "message": "My vault"
@@ -93,13 +111,16 @@
     "message": "ხელსაწყოები"
   },
   "settings": {
-    "message": "პარამეტრები"
+    "message": "მორგება"
   },
   "currentTab": {
     "message": "Current tab"
   },
   "copyPassword": {
     "message": "პაროლის კოპირება"
+  },
+  "copyPassphrase": {
+    "message": "Copy passphrase"
   },
   "copyNote": {
     "message": "Copy note"
@@ -117,7 +138,7 @@
     "message": "უსაფრთხოების კოდის კოპირება"
   },
   "copyName": {
-    "message": "Copy name"
+    "message": "სახელის კოპირება"
   },
   "copyCompany": {
     "message": "Copy company"
@@ -131,8 +152,27 @@
   "copyLicenseNumber": {
     "message": "Copy license number"
   },
+  "copyCustomField": {
+    "message": "Copy $FIELD$",
+    "placeholders": {
+      "field": {
+        "content": "$1",
+        "example": "Custom field label"
+      }
+    }
+  },
+  "copyWebsite": {
+    "message": "Copy website"
+  },
+  "copyNotes": {
+    "message": "Copy notes"
+  },
+  "fill": {
+    "message": "Fill",
+    "description": "This string is used on the vault page to indicate autofilling. Horizontal space is limited in the interface here so try and keep translations as concise as possible."
+  },
   "autoFill": {
-    "message": "თვითშევსება"
+    "message": "ავტომატური შევსება"
   },
   "autoFillLogin": {
     "message": "Autofill login"
@@ -180,7 +220,19 @@
     "message": "ავტორიზაციის დამატება"
   },
   "addItem": {
-    "message": "Add item"
+    "message": "ელემენტის დამატება"
+  },
+  "accountEmail": {
+    "message": "Account email"
+  },
+  "requestHint": {
+    "message": "Request hint"
+  },
+  "requestPasswordHint": {
+    "message": "Request password hint"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "Enter your account email address and your password hint will be sent to you"
   },
   "passwordHint": {
     "message": "Password hint"
@@ -204,7 +256,7 @@
     "message": "კოდი გაიგზავნა"
   },
   "verificationCode": {
-    "message": "ერთჯერადი კოდი"
+    "message": "გადამოწმების კოდი"
   },
   "confirmIdentity": {
     "message": "Confirm your identity to continue."
@@ -245,7 +297,7 @@
     "message": "ორსაფეხურიანი ავტორიზაცია"
   },
   "logOut": {
-    "message": "გამოსვლა"
+    "message": "სისტემიდან გასვლა"
   },
   "aboutBitwarden": {
     "message": "About Bitwarden"
@@ -293,7 +345,7 @@
     "message": "შენახვა"
   },
   "move": {
-    "message": "Move"
+    "message": "გადატანა"
   },
   "addFolder": {
     "message": "საქაღალდის დამატება"
@@ -302,13 +354,13 @@
     "message": "სახელი"
   },
   "editFolder": {
-    "message": "საქაღალდის რედაქტირება"
+    "message": "საქაღალდის ჩასწორება"
   },
   "newFolder": {
-    "message": "New folder"
+    "message": "ახალი საქაღალდე"
   },
   "folderName": {
-    "message": "Folder name"
+    "message": "საქაღალდის სახელი"
   },
   "folderHintText": {
     "message": "Nest a folder by adding the parent folder's name followed by a “/”. Example: Social/Forums"
@@ -332,7 +384,7 @@
     "message": "There are no folders to list."
   },
   "helpFeedback": {
-    "message": "დახმარება & გამოხმაურება"
+    "message": "დახმარება და უკუკავშირი"
   },
   "helpCenter": {
     "message": "Bitwarden Help center"
@@ -350,14 +402,14 @@
     "message": "Sync vault now"
   },
   "lastSync": {
-    "message": "Last sync:"
+    "message": "ბოლო სინქი:"
   },
   "passGen": {
     "message": "Password generator"
   },
   "generator": {
-    "message": "Generator",
-    "description": "Short for 'Password Generator'."
+    "message": "გენერატორი",
+    "description": "Short for 'credential generator'."
   },
   "passGenInfo": {
     "message": "Automatically generate strong, unique passwords for your logins."
@@ -369,34 +421,77 @@
     "message": "Import items"
   },
   "select": {
-    "message": "მონიშვნა"
+    "message": "არჩევა"
   },
   "generatePassword": {
-    "message": "Generate password"
+    "message": "პაროლის გენერირება"
+  },
+  "generatePassphrase": {
+    "message": "Generate passphrase"
   },
   "regeneratePassword": {
     "message": "Regenerate password"
   },
   "options": {
-    "message": "პარამეტრები"
+    "message": "მორგება"
   },
   "length": {
     "message": "სიგრძე"
   },
   "passwordMinLength": {
-    "message": "Minimum password length"
+    "message": "პაროლის მინიმალური სიგრძე"
   },
   "uppercase": {
-    "message": "Uppercase (A-Z)"
+    "message": "Uppercase (A-Z)",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "Lowercase (a-z)"
+    "message": "Lowercase (a-z)",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "Numbers (0-9)"
+    "message": "Numbers (0-9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
-    "message": "Special characters (!@#$%^&*)"
+    "message": "Special characters (!@#$%^&*)",
+    "description": "deprecated. Use specialCharactersLabel instead."
+  },
+  "include": {
+    "message": "ჩართვა",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "Include uppercase characters",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "ა-ჰ",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "Include lowercase characters",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a-z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "Include numbers",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0-9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "Include special characters",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "სიტყვათა რაოდენობა"
@@ -405,7 +500,7 @@
     "message": "Word separator"
   },
   "capitalize": {
-    "message": "დიდი ასოთი აღნიშვნა",
+    "message": "მაღალ რეგისტრში გადაყვანა",
     "description": "Make the first letter of a work uppercase."
   },
   "includeNumber": {
@@ -418,16 +513,25 @@
     "message": "Minimum special"
   },
   "avoidAmbChar": {
-    "message": "Avoid ambiguous characters"
+    "message": "Avoid ambiguous characters",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "Avoid ambiguous characters",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "Enterprise policy requirements have been applied to your generator options.",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchVault": {
     "message": "Search vault"
   },
   "edit": {
-    "message": "შეცვლა"
+    "message": "ჩასწორება"
   },
   "view": {
-    "message": "ნახვა"
+    "message": "ხედი"
   },
   "noItemsInList": {
     "message": "There are no items to list."
@@ -445,13 +549,13 @@
     "message": "Authenticator secret"
   },
   "passphrase": {
-    "message": "Passphrase"
+    "message": "საკვანძო სიტყვა"
   },
   "favorite": {
     "message": "რჩეული"
   },
   "unfavorite": {
-    "message": "Unfavorite"
+    "message": "რჩეულებიდან წაშლა"
   },
   "itemAddedToFavorites": {
     "message": "Item added to favorites"
@@ -460,34 +564,46 @@
     "message": "Item removed from favorites"
   },
   "notes": {
-    "message": "Notes"
+    "message": "შენიშვნები"
+  },
+  "privateNote": {
+    "message": "პირადი მინაწერი"
   },
   "note": {
-    "message": "Note"
+    "message": "შენიშვნა"
   },
   "editItem": {
-    "message": "Edit item"
+    "message": "ჩანაწერის ჩასწორება"
   },
   "folder": {
     "message": "საქაღალდე"
   },
   "deleteItem": {
-    "message": "Delete item"
+    "message": "ჩანაწერის წაშლა"
   },
   "viewItem": {
     "message": "View item"
   },
   "launch": {
-    "message": "Launch"
+    "message": "გაშვება"
   },
   "launchWebsite": {
     "message": "Launch website"
+  },
+  "launchWebsiteName": {
+    "message": "Launch website $ITEMNAME$",
+    "placeholders": {
+      "itemname": {
+        "content": "$1",
+        "example": "Secret item"
+      }
+    }
   },
   "website": {
     "message": "ვებგვერდი"
   },
   "toggleVisibility": {
-    "message": "Toggle visibility"
+    "message": "ხილულობის გადართვა"
   },
   "manage": {
     "message": "მართვა"
@@ -507,8 +623,11 @@
   "sessionTimeoutHeader": {
     "message": "Session timeout"
   },
+  "vaultTimeoutHeader": {
+    "message": "Vault timeout"
+  },
   "otherOptions": {
-    "message": "Other options"
+    "message": "სხვა პარამეტრები"
   },
   "rateExtension": {
     "message": "Rate the extension"
@@ -525,8 +644,17 @@
   "yourVaultIsLocked": {
     "message": "Your vault is locked. Verify your identity to continue."
   },
+  "yourVaultIsLockedV2": {
+    "message": "Your vault is locked"
+  },
+  "yourAccountIsLocked": {
+    "message": "Your account is locked"
+  },
+  "or": {
+    "message": "or"
+  },
   "unlock": {
-    "message": "გახსნა"
+    "message": "განბლოკვა"
   },
   "loggedInAsOn": {
     "message": "Logged in as $EMAIL$ on $HOSTNAME$.",
@@ -547,6 +675,9 @@
   "vaultTimeout": {
     "message": "Vault timeout"
   },
+  "vaultTimeout1": {
+    "message": "მოლოდინის ვადა"
+  },
   "lockNow": {
     "message": "Lock now"
   },
@@ -554,7 +685,7 @@
     "message": "Lock all"
   },
   "immediately": {
-    "message": "დაუყონებლივ"
+    "message": "დაუყოვნებლივ"
   },
   "tenSeconds": {
     "message": "10 წამი"
@@ -614,10 +745,10 @@
     "message": "დაფიქსირდა შეცდომა"
   },
   "emailRequired": {
-    "message": "ელ-ფოსტის მისამართი აუცილებელია."
+    "message": "ელფოსტის მისამართი აუცილებელია."
   },
   "invalidEmail": {
-    "message": "არასწორი ელ-ფოსტის მისამართი."
+    "message": "არასწორი ელფოსტის მისამართი."
   },
   "masterPasswordRequired": {
     "message": "Master password is required."
@@ -641,6 +772,12 @@
   "newAccountCreated": {
     "message": "Your new account has been created! You may now log in."
   },
+  "newAccountCreated2": {
+    "message": "Your new account has been created!"
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "You have been logged in!"
+  },
   "youSuccessfullyLoggedIn": {
     "message": "You successfully logged in"
   },
@@ -651,13 +788,13 @@
     "message": "We've sent you an email with your master password hint."
   },
   "verificationCodeRequired": {
-    "message": "ერთჯერადი კოდი აუცილებელია."
+    "message": "გადამოწმების კოდი აუცილებელია."
   },
   "webauthnCancelOrTimeout": {
     "message": "The authentication was cancelled or took too long. Please try again."
   },
   "invalidVerificationCode": {
-    "message": "Invalid verification code"
+    "message": "არასწორი გადამოწმების კოდი"
   },
   "valueCopied": {
     "message": "$VALUE$ copied",
@@ -690,11 +827,14 @@
   "totpHelperWithCapture": {
     "message": "Bitwarden can store and fill 2-step verification codes. Select the camera icon to take a screenshot of this website's authenticator QR code, or copy and paste the key into this field."
   },
+  "learnMoreAboutAuthenticators": {
+    "message": "Learn more about authenticators"
+  },
   "copyTOTP": {
     "message": "Copy Authenticator key (TOTP)"
   },
   "loggedOut": {
-    "message": "Logged out"
+    "message": "გამოხვედით"
   },
   "loggedOutDesc": {
     "message": "You have been logged out of your account."
@@ -703,7 +843,10 @@
     "message": "Your login session has expired."
   },
   "logIn": {
-    "message": "Log in"
+    "message": "შესვლა"
+  },
+  "logInToBitwarden": {
+    "message": "Log in to Bitwarden"
   },
   "restartRegistration": {
     "message": "Restart registration"
@@ -718,10 +861,10 @@
     "message": "You may already have an account"
   },
   "logOutConfirmation": {
-    "message": "Are you sure you want to log out?"
+    "message": "დარწმუნებული ბრძანდებით, რომ გნებავთ, გახვიდეთ?"
   },
   "yes": {
-    "message": "Yes"
+    "message": "კი"
   },
   "no": {
     "message": "არა"
@@ -737,6 +880,12 @@
   },
   "twoStepLoginConfirmation": {
     "message": "Two-step login makes your account more secure by requiring you to verify your login with another device such as a security key, authenticator app, SMS, phone call, or email. Two-step login can be set up on the bitwarden.com web vault. Do you want to visit the website now?"
+  },
+  "twoStepLoginConfirmationContent": {
+    "message": "Make your account more secure by setting up two-step login in the Bitwarden web app."
+  },
+  "twoStepLoginConfirmationTitle": {
+    "message": "Continue to web app?"
   },
   "editedFolder": {
     "message": "Folder saved"
@@ -760,7 +909,7 @@
     "message": "Syncing failed"
   },
   "passwordCopied": {
-    "message": "Password copied"
+    "message": "პაროლი დაკოპირდა"
   },
   "uri": {
     "message": "URI"
@@ -776,10 +925,10 @@
     }
   },
   "newUri": {
-    "message": "New URI"
+    "message": "ახალი URI"
   },
   "addDomain": {
-    "message": "Add domain",
+    "message": "დომენის დამატება",
     "description": "'Domain' here refers to an internet domain name (e.g. 'bitwarden.com') and the message in whole described the act of putting a domain value into the context."
   },
   "addedItem": {
@@ -810,13 +959,13 @@
     "message": "Search folder"
   },
   "searchCollection": {
-    "message": "Search collection"
+    "message": "კოლექციაში ძებნა"
   },
   "searchType": {
     "message": "Search type"
   },
   "noneFolder": {
-    "message": "No folder",
+    "message": "საქაღალდის გარეშე",
     "description": "This is the folder for uncategorized items"
   },
   "enableAddLoginNotification": {
@@ -841,7 +990,7 @@
     "message": "List card items on the Tab page for easy autofill."
   },
   "showIdentitiesInVaultView": {
-    "message": "Show identifies as Autofill suggestions on Vault view"
+    "message": "Show identities as Autofill suggestions on Vault view"
   },
   "showIdentitiesCurrentTab": {
     "message": "Show identities on Tab page"
@@ -850,7 +999,7 @@
     "message": "List identity items on the Tab page for easy autofill."
   },
   "clearClipboard": {
-    "message": "Clear clipboard",
+    "message": "ბუფერის გასუფთავება",
     "description": "Clipboard is the operating system thing where you copy/paste data to on your device."
   },
   "clearClipboardDesc": {
@@ -861,7 +1010,7 @@
     "message": "Should Bitwarden remember this password for you?"
   },
   "notificationAddSave": {
-    "message": "Save"
+    "message": "შენახვა"
   },
   "enableChangedPasswordNotification": {
     "message": "Ask to update existing login"
@@ -882,16 +1031,16 @@
     "message": "Do you want to update this password in Bitwarden?"
   },
   "notificationChangeSave": {
-    "message": "Update"
+    "message": "განახლება"
   },
   "notificationUnlockDesc": {
     "message": "Unlock your Bitwarden vault to complete the autofill request."
   },
   "notificationUnlock": {
-    "message": "Unlock"
+    "message": "განბლოკვა"
   },
   "additionalOptions": {
-    "message": "Additional options"
+    "message": "დამატებითი პარამეტრები"
   },
   "enableContextMenuItem": {
     "message": "Show context menu options"
@@ -910,7 +1059,7 @@
     "message": "Choose the default way that URI match detection is handled for logins when performing actions such as autofill."
   },
   "theme": {
-    "message": "Theme"
+    "message": "თემა"
   },
   "themeDesc": {
     "message": "Change the application's color theme."
@@ -919,15 +1068,15 @@
     "message": "Change the application's color theme. Applies to all logged in accounts."
   },
   "dark": {
-    "message": "Dark",
+    "message": "ბნელი",
     "description": "Dark color"
   },
   "light": {
-    "message": "Light",
+    "message": "ღია",
     "description": "Light color"
   },
   "solarizedDark": {
-    "message": "Solarized dark",
+    "message": "სოლარიზებული მუქი",
     "description": "'Solarized' is a noun and the name of a color scheme. It should not be translated."
   },
   "exportFrom": {
@@ -955,7 +1104,7 @@
     "message": "Set a file password to encrypt the export and import it to any Bitwarden account using the password for decryption."
   },
   "exportTypeHeading": {
-    "message": "Export type"
+    "message": "გატანის ტიპი"
   },
   "accountRestricted": {
     "message": "Account restricted"
@@ -964,7 +1113,7 @@
     "message": "“File password”  and “Confirm file password“ do not match."
   },
   "warning": {
-    "message": "WARNING",
+    "message": "გაფრთხილება",
     "description": "WARNING (should stay in capitalized letters if the language permits)"
   },
   "confirmVaultExport": {
@@ -983,7 +1132,7 @@
     "message": "Enter your master password to export your vault data."
   },
   "shared": {
-    "message": "Shared"
+    "message": "გაზიარებული"
   },
   "bitwardenForBusinessPageDesc": {
     "message": "Bitwarden for Business allows you to share your vault items with others by using an organization. Learn more on the bitwarden.com website."
@@ -992,7 +1141,7 @@
     "message": "Move to organization"
   },
   "share": {
-    "message": "Share"
+    "message": "გაზიარება"
   },
   "movedItemToOrg": {
     "message": "$ITEMNAME$ moved to $ORGNAME$",
@@ -1011,7 +1160,7 @@
     "message": "Choose an organization that you wish to move this item to. Moving to an organization transfers ownership of the item to that organization. You will no longer be the direct owner of this item once it has been moved."
   },
   "learnMore": {
-    "message": "Learn more"
+    "message": "გაიგეთ მეტი"
   },
   "authenticatorKeyTotp": {
     "message": "Authenticator key (TOTP)"
@@ -1023,7 +1172,7 @@
     "message": "Copy verification code"
   },
   "attachments": {
-    "message": "Attachments"
+    "message": "დანართი"
   },
   "deleteAttachment": {
     "message": "Delete attachment"
@@ -1044,10 +1193,13 @@
     "message": "Attachment saved"
   },
   "file": {
-    "message": "File"
+    "message": "ფაილი"
+  },
+  "fileToShare": {
+    "message": "File to share"
   },
   "selectFile": {
-    "message": "Select a file"
+    "message": "აირჩიეთ ფაილი"
   },
   "maxFileSize": {
     "message": "Maximum file size is 500 MB."
@@ -1079,6 +1231,9 @@
   "ppremiumSignUpStorage": {
     "message": "1 GB encrypted storage for file attachments."
   },
+  "premiumSignUpEmergency": {
+    "message": "Emergency access."
+  },
   "premiumSignUpTwoStepOptions": {
     "message": "Proprietary two-step login options such as YubiKey and Duo."
   },
@@ -1100,14 +1255,29 @@
   "premiumPurchaseAlert": {
     "message": "You can purchase Premium membership on the bitwarden.com web vault. Do you want to visit the website now?"
   },
+  "premiumPurchaseAlertV2": {
+    "message": "You can purchase Premium from your account settings on the Bitwarden web app."
+  },
   "premiumCurrentMember": {
     "message": "You are a Premium member!"
   },
   "premiumCurrentMemberThanks": {
     "message": "Thank you for supporting Bitwarden."
   },
+  "premiumFeatures": {
+    "message": "Upgrade to Premium and receive:"
+  },
   "premiumPrice": {
     "message": "All for just $PRICE$ /year!",
+    "placeholders": {
+      "price": {
+        "content": "$1",
+        "example": "$10"
+      }
+    }
+  },
+  "premiumPriceV2": {
+    "message": "All for just $PRICE$ per year!",
     "placeholders": {
       "price": {
         "content": "$1",
@@ -1155,7 +1325,7 @@
     }
   },
   "rememberMe": {
-    "message": "Remember me"
+    "message": "დამიმახსოვრე"
   },
   "sendVerificationCodeEmailAgain": {
     "message": "Send verification code email again"
@@ -1173,7 +1343,7 @@
     "message": "To start the WebAuthn 2FA verification. Click the button below to open a new tab and follow the instructions provided in the new tab."
   },
   "webAuthnNewTabOpen": {
-    "message": "Open new tab"
+    "message": "ახალი ჩანართის გახსნა"
   },
   "webAuthnAuthenticate": {
     "message": "Authenticate WebAuthn"
@@ -1197,7 +1367,7 @@
     "message": "Recovery code"
   },
   "authenticatorAppTitle": {
-    "message": "Authenticator app"
+    "message": "ავთენტიკატორი აპი"
   },
   "authenticatorAppDescV2": {
     "message": "Enter a code generated by an authenticator app like Bitwarden Authenticator.",
@@ -1224,7 +1394,7 @@
     "message": "Use any WebAuthn compatible security key to access your account."
   },
   "emailTitle": {
-    "message": "Email"
+    "message": "ელ-ფოსტა"
   },
   "emailDescV2": {
     "message": "Enter a code sent to your email."
@@ -1251,7 +1421,11 @@
     "message": "For advanced users. You can specify the base URL of each service independently."
   },
   "baseUrl": {
-    "message": "Server URL"
+    "message": "სერვერის URL"
+  },
+  "selfHostBaseUrl": {
+    "message": "Self-host server URL",
+    "description": "Label for field requesting a self-hosted integration service URL"
   },
   "apiUrl": {
     "message": "API server URL"
@@ -1281,6 +1455,12 @@
   "showInlineMenuLabel": {
     "message": "Show autofill suggestions on form fields"
   },
+  "showInlineMenuIdentitiesLabel": {
+    "message": "Display identities as suggestions"
+  },
+  "showInlineMenuCardsLabel": {
+    "message": "Display cards as suggestions"
+  },
   "showInlineMenuOnIconSelectionLabel": {
     "message": "Display suggestions when icon is selected"
   },
@@ -1294,7 +1474,7 @@
     "message": "Edit browser settings."
   },
   "autofillOverlayVisibilityOff": {
-    "message": "Off",
+    "message": "გამორთული",
     "description": "Overlay setting select option for disabling autofill overlay"
   },
   "autofillOverlayVisibilityOnFieldFocus": {
@@ -1379,10 +1559,10 @@
     "message": "Custom fields"
   },
   "copyValue": {
-    "message": "Copy value"
+    "message": "დააკოპირეთ მნიშვნელობა"
   },
   "value": {
-    "message": "Value"
+    "message": "მნიშვნელობა"
   },
   "newCustomField": {
     "message": "New custom field"
@@ -1391,19 +1571,19 @@
     "message": "Drag to sort"
   },
   "cfTypeText": {
-    "message": "Text"
+    "message": "ტექსტი"
   },
   "cfTypeHidden": {
-    "message": "Hidden"
+    "message": "დამალული"
   },
   "cfTypeBoolean": {
-    "message": "Boolean"
+    "message": "ბულევი"
   },
   "cfTypeCheckbox": {
-    "message": "Checkbox"
+    "message": "ჩასართავი"
   },
   "cfTypeLinked": {
-    "message": "Linked",
+    "message": "მიბმული",
     "description": "This describes a field that is 'linked' (tied) to another field."
   },
   "linkedValue": {
@@ -1435,10 +1615,10 @@
     "message": "Cardholder name"
   },
   "number": {
-    "message": "Number"
+    "message": "რიცხვი"
   },
   "brand": {
-    "message": "Brand"
+    "message": "სავაჭრო მარკა"
   },
   "expirationMonth": {
     "message": "Expiration month"
@@ -1447,43 +1627,43 @@
     "message": "Expiration year"
   },
   "expiration": {
-    "message": "Expiration"
+    "message": "ვადა"
   },
   "january": {
-    "message": "January"
+    "message": "იანვარი"
   },
   "february": {
-    "message": "February"
+    "message": "თებერვალი"
   },
   "march": {
-    "message": "March"
+    "message": "მარტი"
   },
   "april": {
-    "message": "April"
+    "message": "აპრილი"
   },
   "may": {
-    "message": "May"
+    "message": "მაისი"
   },
   "june": {
-    "message": "June"
+    "message": "ივნისი"
   },
   "july": {
-    "message": "July"
+    "message": "ივლისი"
   },
   "august": {
-    "message": "August"
+    "message": "აგვისტო"
   },
   "september": {
-    "message": "September"
+    "message": "სექტემბერი"
   },
   "october": {
-    "message": "October"
+    "message": "ოქტომბერი"
   },
   "november": {
-    "message": "November"
+    "message": "ნოემბერი"
   },
   "december": {
-    "message": "December"
+    "message": "დეკემბერი"
   },
   "securityCode": {
     "message": "Security code"
@@ -1492,40 +1672,40 @@
     "message": "ex."
   },
   "title": {
-    "message": "Title"
+    "message": "სათაური"
   },
   "mr": {
-    "message": "Mr"
+    "message": "ბატონი"
   },
   "mrs": {
-    "message": "Mrs"
+    "message": "ქალბატონი"
   },
   "ms": {
-    "message": "Ms"
+    "message": "ქალბატონი"
   },
   "dr": {
-    "message": "Dr"
+    "message": "დოქტორი"
   },
   "mx": {
     "message": "Mx"
   },
   "firstName": {
-    "message": "First name"
+    "message": "სახელი"
   },
   "middleName": {
-    "message": "Middle name"
+    "message": "შუა სახელი"
   },
   "lastName": {
-    "message": "Last name"
+    "message": "გვარი"
   },
   "fullName": {
-    "message": "Full name"
+    "message": "სრული სახელი"
   },
   "identityName": {
     "message": "Identity name"
   },
   "company": {
-    "message": "Company"
+    "message": "კომპანია"
   },
   "ssn": {
     "message": "Social Security number"
@@ -1537,13 +1717,13 @@
     "message": "License number"
   },
   "email": {
-    "message": "Email"
+    "message": "ელ-ფოსტა"
   },
   "phone": {
-    "message": "Phone"
+    "message": "ტელეფონი"
   },
   "address": {
-    "message": "Address"
+    "message": "მისამართი"
   },
   "address1": {
     "message": "Address 1"
@@ -1558,19 +1738,19 @@
     "message": "City / Town"
   },
   "stateProvince": {
-    "message": "State / Province"
+    "message": "რეგიონი/მხარე"
   },
   "zipPostalCode": {
     "message": "Zip / Postal code"
   },
   "country": {
-    "message": "Country"
+    "message": "ქვეყანა"
   },
   "type": {
-    "message": "Type"
+    "message": "ტიპი"
   },
   "typeLogin": {
-    "message": "Login"
+    "message": "შესვლა"
   },
   "typeLogins": {
     "message": "Logins"
@@ -1579,10 +1759,10 @@
     "message": "Secure note"
   },
   "typeCard": {
-    "message": "Card"
+    "message": "ბარათი"
   },
   "typeIdentity": {
-    "message": "Identity"
+    "message": "იდენტიფიკაცია"
   },
   "newItemHeader": {
     "message": "New $TYPE$",
@@ -1614,11 +1794,20 @@
   "passwordHistory": {
     "message": "Password history"
   },
+  "generatorHistory": {
+    "message": "Generator history"
+  },
+  "clearGeneratorHistoryTitle": {
+    "message": "Clear generator history"
+  },
+  "cleargGeneratorHistoryDescription": {
+    "message": "If you continue, all entries will be permanently deleted from generator's history. Are you sure you want to continue?"
+  },
   "back": {
-    "message": "Back"
+    "message": "უკან"
   },
   "collections": {
-    "message": "Collections"
+    "message": "კოლექციები"
   },
   "nCollections": {
     "message": "$COUNT$ collections",
@@ -1630,19 +1819,19 @@
     }
   },
   "favorites": {
-    "message": "Favorites"
+    "message": "სანიშნეები"
   },
   "popOutNewWindow": {
     "message": "Pop out to a new window"
   },
   "refresh": {
-    "message": "Refresh"
+    "message": "განახლება"
   },
   "cards": {
-    "message": "Cards"
+    "message": "კარტი"
   },
   "identities": {
-    "message": "Identities"
+    "message": "იდენტიფიკატორები"
   },
   "logins": {
     "message": "Logins"
@@ -1651,7 +1840,7 @@
     "message": "Secure notes"
   },
   "clear": {
-    "message": "Clear",
+    "message": "გაწმენდა",
     "description": "To clear something out. example: To clear browser history."
   },
   "checkPassword": {
@@ -1678,21 +1867,21 @@
     "description": "Domain name. Ex. website.com"
   },
   "domainName": {
-    "message": "Domain name",
+    "message": "დომენის სახელი",
     "description": "Domain name. Ex. website.com"
   },
   "host": {
-    "message": "Host",
+    "message": "ჰოსტი",
     "description": "A URL's host value. For example, the host of https://sub.domain.com:443 is 'sub.domain.com:443'."
   },
   "exact": {
-    "message": "Exact"
+    "message": "ზუსტი"
   },
   "startsWith": {
-    "message": "Starts with"
+    "message": "იწყება"
   },
   "regEx": {
-    "message": "Regular expression",
+    "message": "რეგულარულ გამოსახულება",
     "description": "A programming term, also known as 'RegEx'."
   },
   "matchDetection": {
@@ -1715,30 +1904,39 @@
     "description": "The URI of one of the current open tabs in the browser."
   },
   "organization": {
-    "message": "Organization",
+    "message": "ორგანიზაცია",
     "description": "An entity of multiple related people (ex. a team or business organization)."
   },
   "types": {
-    "message": "Types"
+    "message": "ტიპები"
   },
   "allItems": {
-    "message": "All items"
+    "message": "ყველა ჩანაწერი"
   },
   "noPasswordsInList": {
     "message": "There are no passwords to list."
   },
+  "clearHistory": {
+    "message": "პაროლების ისტორია"
+  },
+  "nothingToShow": {
+    "message": "Nothing to show"
+  },
+  "nothingGeneratedRecently": {
+    "message": "You haven't generated anything recently"
+  },
   "remove": {
-    "message": "Remove"
+    "message": "წაშლა"
   },
   "default": {
-    "message": "Default"
+    "message": "ნაგულისხმევი"
   },
   "dateUpdated": {
-    "message": "Updated",
+    "message": "განახლებულია",
     "description": "ex. Date this item was updated"
   },
   "dateCreated": {
-    "message": "Created",
+    "message": "შექმნის თარიღი",
     "description": "ex. Date this item was created"
   },
   "datePasswordUpdated": {
@@ -1755,21 +1953,21 @@
     "message": "There are no collections to list."
   },
   "ownership": {
-    "message": "Ownership"
+    "message": "მფლობელობა"
   },
   "whoOwnsThisItem": {
     "message": "Who owns this item?"
   },
   "strong": {
-    "message": "Strong",
+    "message": "ძლიერი",
     "description": "ex. A strong password. Scale: Weak -> Good -> Strong"
   },
   "good": {
-    "message": "Good",
+    "message": "კარგი",
     "description": "ex. A good password. Scale: Weak -> Good -> Strong"
   },
   "weak": {
-    "message": "Weak",
+    "message": "სუსტი",
     "description": "ex. A weak password. Scale: Weak -> Good -> Strong"
   },
   "weakMasterPassword": {
@@ -1779,14 +1977,23 @@
     "message": "The master password you have chosen is weak. You should use a strong master password (or a passphrase) to properly protect your Bitwarden account. Are you sure you want to use this master password?"
   },
   "pin": {
-    "message": "PIN",
+    "message": "PIN კოდი",
     "description": "PIN code. Ex. The short code (often numeric) that you use to unlock a device."
   },
   "unlockWithPin": {
     "message": "Unlock with PIN"
   },
+  "setYourPinTitle": {
+    "message": "Set PIN"
+  },
+  "setYourPinButton": {
+    "message": "Set PIN"
+  },
   "setYourPinCode": {
     "message": "Set your PIN code for unlocking Bitwarden. Your PIN settings will be reset if you ever fully log out of the application."
+  },
+  "setYourPinCode1": {
+    "message": "Your PIN will be used to unlock Bitwarden instead of your master password. Your PIN will reset if you ever fully log out of Bitwarden."
   },
   "pinRequired": {
     "message": "PIN code is required."
@@ -1800,6 +2007,9 @@
   "unlockWithBiometrics": {
     "message": "Unlock with biometrics"
   },
+  "unlockWithMasterPassword": {
+    "message": "Unlock with master password"
+  },
   "awaitDesktop": {
     "message": "Awaiting confirmation from desktop"
   },
@@ -1809,6 +2019,9 @@
   "lockWithMasterPassOnRestart": {
     "message": "Lock with master password on browser restart"
   },
+  "lockWithMasterPassOnRestart1": {
+    "message": "Require master password on browser restart"
+  },
   "selectOneCollection": {
     "message": "You must select at least one collection."
   },
@@ -1816,7 +2029,7 @@
     "message": "Clone item"
   },
   "clone": {
-    "message": "Clone"
+    "message": "კლონი"
   },
   "passwordGeneratorPolicyInEffect": {
     "message": "One or more organization policies are affecting your generator settings."
@@ -1847,12 +2060,15 @@
   "vaultTimeoutAction": {
     "message": "Vault timeout action"
   },
+  "vaultTimeoutAction1": {
+    "message": "Timeout action"
+  },
   "lock": {
-    "message": "Lock",
-    "description": "Verb form: to make secure or inaccesible by"
+    "message": "ჩაკეტვა",
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
-    "message": "Trash",
+    "message": "ნაგავი",
     "description": "Noun: a special folder to hold deleted items"
   },
   "searchTrash": {
@@ -1874,7 +2090,7 @@
     "message": "Item restored"
   },
   "alreadyHaveAccount": {
-    "message": "Already have an account?"
+    "message": "უკვე გაქვთ ანგარიში?"
   },
   "vaultTimeoutLogOutConfirmation": {
     "message": "Logging out will remove all access to your vault and requires online authentication after the timeout period. Are you sure you want to use this setting?"
@@ -1970,7 +2186,7 @@
     "message": "Get advice, announcements, and research opportunities from Bitwarden in your inbox."
   },
   "unsubscribe": {
-    "message": "Unsubscribe"
+    "message": "გამოწერის გაუქმება"
   },
   "atAnyTime": {
     "message": "at any time."
@@ -1988,16 +2204,16 @@
     "message": "Terms of Service and Privacy Policy have not been acknowledged."
   },
   "termsOfService": {
-    "message": "Terms of Service"
+    "message": "მომსახურების პირობები"
   },
   "privacyPolicy": {
-    "message": "Privacy Policy"
+    "message": "კონფიდენციალობის პოლიტიკა"
   },
   "hintEqualsPassword": {
     "message": "Your password hint cannot be the same as your password."
   },
   "ok": {
-    "message": "Ok"
+    "message": "დიახ"
   },
   "errorRefreshingAccessToken": {
     "message": "Access Token Refresh Error"
@@ -2041,11 +2257,11 @@
   "nativeMessagingWrongUserTitle": {
     "message": "Account missmatch"
   },
-  "nativeMessagingWrongUserKeyDesc": {
-    "message": "Biometric unlock failed. The biometric secret key failed to unlock the vault. Please try to set up biometrics again."
-  },
   "nativeMessagingWrongUserKeyTitle": {
     "message": "Biometric key missmatch"
+  },
+  "nativeMessagingWrongUserKeyDesc": {
+    "message": "Biometric unlock failed. The biometric secret key failed to unlock the vault. Please try to set up biometrics again."
   },
   "biometricsNotEnabledTitle": {
     "message": "Biometrics not set up"
@@ -2064,6 +2280,12 @@
   },
   "biometricsNotUnlockedDesc": {
     "message": "Please unlock this user in the desktop application and try again."
+  },
+  "biometricsNotAvailableTitle": {
+    "message": "Biometric unlock unavailable"
+  },
+  "biometricsNotAvailableDesc": {
+    "message": "Biometric unlock is currently unavailable. Please try again later."
   },
   "biometricsFailedTitle": {
     "message": "Biometrics failed"
@@ -2093,7 +2315,7 @@
     "message": "An organization policy has blocked importing items into your individual vault."
   },
   "domainsTitle": {
-    "message": "Domains",
+    "message": "დომენები",
     "description": "A category title describing the concept of web domains"
   },
   "excludedDomains": {
@@ -2126,8 +2348,29 @@
   "excludedDomainsSavedSuccess": {
     "message": "Excluded domain changes saved"
   },
+  "limitSendViews": {
+    "message": "Limit views"
+  },
+  "limitSendViewsHint": {
+    "message": "No one can view this Send after the limit is reached.",
+    "description": "Displayed under the limit views field on Send"
+  },
+  "limitSendViewsCount": {
+    "message": "$ACCESSCOUNT$ views left",
+    "description": "Displayed under the limit views field on Send",
+    "placeholders": {
+      "accessCount": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
   "send": {
-    "message": "Send",
+    "message": "გაგზავნა",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendDetails": {
+    "message": "Send details",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "searchSends": {
@@ -2139,40 +2382,46 @@
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "sendTypeText": {
-    "message": "Text"
+    "message": "ტექსტი"
+  },
+  "sendTypeTextToShare": {
+    "message": "Text to share"
   },
   "sendTypeFile": {
-    "message": "File"
+    "message": "ფაილი"
   },
   "allSends": {
     "message": "All Sends",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "hideTextByDefault": {
+    "message": "Hide text by default"
   },
   "maxAccessCountReached": {
     "message": "Max access count reached",
     "description": "This text will be displayed after a Send has been accessed the maximum amount of times."
   },
   "expired": {
-    "message": "Expired"
+    "message": "ვადაგასულია"
   },
   "pendingDeletion": {
-    "message": "Pending deletion"
+    "message": "ელოდება წაშლას"
   },
   "passwordProtected": {
     "message": "Password protected"
   },
   "copyLink": {
-    "message": "Copy link"
+    "message": "Ბმულის კოპირება"
   },
   "copySendLink": {
     "message": "Copy Send link",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "removePassword": {
-    "message": "Remove Password"
+    "message": "პაროლის წაშლა"
   },
   "delete": {
-    "message": "Delete"
+    "message": "წაშლა"
   },
   "removedPassword": {
     "message": "Password removed"
@@ -2186,7 +2435,7 @@
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "disabled": {
-    "message": "Disabled"
+    "message": "გამორთული"
   },
   "removePasswordConfirmation": {
     "message": "Are you sure you want to remove the password?"
@@ -2197,6 +2446,10 @@
   },
   "deleteSendConfirmation": {
     "message": "Are you sure you want to delete this Send?",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "deleteSendPermanentConfirmation": {
+    "message": "Are you sure you want to permanently delete this Send?",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "editSend": {
@@ -2221,15 +2474,19 @@
     "message": "The Send will be permanently deleted on the specified date and time.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
+  "deletionDateDescV2": {
+    "message": "The Send will be permanently deleted on this date.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "expirationDate": {
-    "message": "Expiration date"
+    "message": "ვადა"
   },
   "expirationDateDesc": {
     "message": "If set, access to this Send will expire on the specified date and time.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "oneDay": {
-    "message": "1 day"
+    "message": "1 დღე"
   },
   "days": {
     "message": "$DAYS$ days",
@@ -2241,7 +2498,7 @@
     }
   },
   "custom": {
-    "message": "Custom"
+    "message": "განსხვავებული"
   },
   "maximumAccessCount": {
     "message": "Maximum Access Count"
@@ -2252,6 +2509,10 @@
   },
   "sendPasswordDesc": {
     "message": "Optionally require a password for users to access this Send.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendPasswordDescV3": {
+    "message": "Add an optional password for recipients to access this Send.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "sendNotesDesc": {
@@ -2281,7 +2542,7 @@
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "newPassword": {
-    "message": "New password"
+    "message": "ახალი პაროლი"
   },
   "sendDisabled": {
     "message": "Send removed",
@@ -2295,8 +2556,52 @@
     "message": "Send created",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
+  "createdSendSuccessfully": {
+    "message": "Send created successfully!",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendExpiresInHoursSingle": {
+    "message": "The Send will be available to anyone with the link for the next 1 hour.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendExpiresInHours": {
+    "message": "The Send will be available to anyone with the link for the next $HOURS$ hours.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "sendExpiresInDaysSingle": {
+    "message": "The Send will be available to anyone with the link for the next 1 day.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendExpiresInDays": {
+    "message": "The Send will be available to anyone with the link for the next $DAYS$ days.",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated.",
+    "placeholders": {
+      "days": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "sendLinkCopied": {
+    "message": "Send link copied",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
   "editedSend": {
     "message": "Send saved",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendFilePopoutDialogText": {
+    "message": "Pop out extension?",
+    "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
+  },
+  "sendFilePopoutDialogDesc": {
+    "message": "To create a file Send, you need to pop out the extension to a new window.",
     "description": "'Send' is a noun and the name of a feature called 'Bitwarden Send'. It should not be translated."
   },
   "sendLinuxChromiumFileWarning": {
@@ -2308,6 +2613,9 @@
   "sendSafariFileWarning": {
     "message": "In order to choose a file using Safari, pop out to a new window by clicking this banner."
   },
+  "popOut": {
+    "message": "გატანა"
+  },
   "sendFileCalloutHeader": {
     "message": "Before you start"
   },
@@ -2316,7 +2624,7 @@
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read '**To use a calendar style date picker ** click here to pop out your window.'"
   },
   "sendFirefoxCustomDatePopoutMessage2": {
-    "message": "click here",
+    "message": "აქ დააწკაპუნეთ",
     "description": "This will be used as part of a larger sentence, broken up to include links. The full sentence will read 'To use a calendar style date picker **click here** to pop out your window.'"
   },
   "sendFirefoxCustomDatePopoutMessage3": {
@@ -2341,6 +2649,9 @@
   "hideEmail": {
     "message": "Hide my email address from recipients."
   },
+  "hideYourEmail": {
+    "message": "Hide your email address from viewers."
+  },
   "sendOptionsPolicyInEffect": {
     "message": "One or more organization policies are affecting your Send options."
   },
@@ -2357,7 +2668,7 @@
     "message": "Email verification required"
   },
   "emailVerifiedV2": {
-    "message": "Email verified"
+    "message": "ელფოსტა გადამოწმებულია"
   },
   "emailVerificationRequiredDesc": {
     "message": "You must verify your email to use this feature. You can verify your email in the web vault."
@@ -2384,7 +2695,7 @@
     "message": "This organization has an enterprise policy that will automatically enroll you in password reset. Enrollment will allow organization administrators to change your master password."
   },
   "selectFolder": {
-    "message": "Select folder..."
+    "message": "აირჩიეთ საქაღალდე..."
   },
   "noFoldersFound": {
     "message": "No folders found",
@@ -2398,18 +2709,56 @@
     "message": "Your organization requires you to set a master password.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
   },
+  "cardMetrics": {
+    "message": "out of $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
   "verificationRequired": {
     "message": "Verification required",
     "description": "Default title for the user verification dialog."
   },
   "hours": {
-    "message": "Hours"
+    "message": "საათი"
   },
   "minutes": {
-    "message": "Minutes"
+    "message": "წუთი"
+  },
+  "vaultTimeoutPolicyAffectingOptions": {
+    "message": "Enterprise policy requirements have been applied to your timeout options"
   },
   "vaultTimeoutPolicyInEffect": {
     "message": "Your organization policies have set your maximum allowed vault timeout to $HOURS$ hour(s) and $MINUTES$ minute(s).",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "$HOURS$ hour(s) and $MINUTES$ minute(s) maximum.",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "5"
+      },
+      "minutes": {
+        "content": "$2",
+        "example": "5"
+      }
+    }
+  },
+  "vaultTimeoutPolicyMaximumError": {
+    "message": "Timeout exceeds the restriction set by your organization: $HOURS$ hour(s) and $MINUTES$ minute(s) maximum",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2517,13 +2866,30 @@
     }
   },
   "error": {
-    "message": "Error"
+    "message": "შეცდომა"
   },
   "regenerateUsername": {
     "message": "Regenerate username"
   },
   "generateUsername": {
     "message": "Generate username"
+  },
+  "generateEmail": {
+    "message": "Generate email"
+  },
+  "generatorBoundariesHint": {
+    "message": "Value must be between $MIN$ and $MAX$",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "Username type"
@@ -2542,7 +2908,7 @@
     "message": "Use your domain's configured catch-all inbox."
   },
   "random": {
-    "message": "Random"
+    "message": "შემთხვევითი"
   },
   "randomWord": {
     "message": "Random word"
@@ -2557,13 +2923,21 @@
     "message": "Password type"
   },
   "service": {
-    "message": "Service"
+    "message": "სერვისი"
   },
   "forwardedEmail": {
     "message": "Forwarded email alias"
   },
   "forwardedEmailDesc": {
     "message": "Generate an email alias with an external forwarding service."
+  },
+  "forwarderDomainName": {
+    "message": "Email domain",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Choose a domain that is supported by the selected service",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ error: $ERRORMESSAGE$",
@@ -2668,14 +3042,14 @@
     }
   },
   "hostname": {
-    "message": "Hostname",
+    "message": "ჰოსტის სახელი",
     "description": "Part of a URL."
   },
   "apiAccessToken": {
     "message": "API Access Token"
   },
   "apiKey": {
-    "message": "API Key"
+    "message": "API-ის გასაღები"
   },
   "ssoKeyConnectorError": {
     "message": "Key connector error: make sure key connector is available and working correctly."
@@ -2702,19 +3076,19 @@
     "message": "Settings have been edited"
   },
   "environmentEditedClick": {
-    "message": "Click here"
+    "message": "დააწკაპუნეთ აქ"
   },
   "environmentEditedReset": {
     "message": "to reset to pre-configured settings"
   },
   "serverVersion": {
-    "message": "Server version"
+    "message": "სერვერის ვერსია"
   },
   "selfHostedServer": {
     "message": "self-hosted"
   },
   "thirdParty": {
-    "message": "Third-party"
+    "message": "მესამე-პირი"
   },
   "thirdPartyServerMessage": {
     "message": "Connected to third-party server implementation, $SERVERNAME$. Please verify bugs using the official server, or report them to the third-party server.",
@@ -2822,7 +3196,7 @@
     "message": "Select an item from this screen, or explore other options in settings."
   },
   "gotIt": {
-    "message": "Got it"
+    "message": "გავიგე"
   },
   "autofillSettings": {
     "message": "Autofill settings"
@@ -2834,7 +3208,7 @@
     "message": "Change shortcut"
   },
   "autofillKeyboardManagerShortcutsLabel": {
-    "message": "Manage shortcuts"
+    "message": "მალსახმობების მართვა"
   },
   "autofillShortcut": {
     "message": "Autofill keyboard shortcut"
@@ -2859,9 +3233,6 @@
         "example": "CTRL+Shift+L"
       }
     }
-  },
-  "loggingInOn": {
-    "message": "Logging in on"
   },
   "opensInANewWindow": {
     "message": "Opens in a new window"
@@ -2891,7 +3262,7 @@
     "message": "Creating account on"
   },
   "checkYourEmail": {
-    "message": "Check your email"
+    "message": "შეამოწმეთ თქვენი ელფოსტა"
   },
   "followTheLinkInTheEmailSentTo": {
     "message": "Follow the link in the email sent to"
@@ -2903,7 +3274,7 @@
     "message": "No email?"
   },
   "goBack": {
-    "message": "Go back"
+    "message": "უკან დაბრუნება"
   },
   "toEditYourEmailAddress": {
     "message": "to edit your email address."
@@ -2916,10 +3287,10 @@
     "message": "Access denied. You do not have permission to view this page."
   },
   "general": {
-    "message": "General"
+    "message": "ზოგადი"
   },
   "display": {
-    "message": "Display"
+    "message": "ჩვენება"
   },
   "accountSuccessfullyCreated": {
     "message": "Account successfully created!"
@@ -2957,10 +3328,10 @@
     "message": "Input is required."
   },
   "required": {
-    "message": "required"
+    "message": "აუცილებელია"
   },
   "search": {
-    "message": "Search"
+    "message": "ძებნა"
   },
   "inputMinLength": {
     "message": "Input must be at least $COUNT$ characters long.",
@@ -3039,7 +3410,7 @@
     }
   },
   "selectPlaceholder": {
-    "message": "-- Select --"
+    "message": "-- არჩევა --"
   },
   "multiSelectPlaceholder": {
     "message": "-- Type to filter --"
@@ -3048,10 +3419,10 @@
     "message": "Retrieving options..."
   },
   "multiSelectNotFound": {
-    "message": "No items found"
+    "message": "ჩანაწერები ნაპოვნი არაა"
   },
   "multiSelectClearAll": {
-    "message": "Clear all"
+    "message": "ყველას გასუფთავება"
   },
   "plusNMore": {
     "message": "+ $QUANTITY$ more",
@@ -3063,7 +3434,7 @@
     }
   },
   "submenu": {
-    "message": "Submenu"
+    "message": "ქვემენიუ"
   },
   "toggleCollapse": {
     "message": "Toggle collapse",
@@ -3086,7 +3457,7 @@
     "description": "Notification button text for starting a fileless import."
   },
   "importing": {
-    "message": "Importing...",
+    "message": "შემოტანა...",
     "description": "Notification message for when an import is in progress."
   },
   "dataSuccessfullyImported": {
@@ -3120,7 +3491,7 @@
     "message": "Toggle side navigation"
   },
   "skipToContent": {
-    "message": "Skip to content"
+    "message": "შემცველობაზე გადახტომა"
   },
   "bitwardenOverlayButton": {
     "message": "Bitwarden autofill menu button",
@@ -3143,7 +3514,7 @@
     "description": "Text to display in overlay when the account is locked."
   },
   "unlockAccount": {
-    "message": "Unlock account",
+    "message": "ანგარიშის განბლოკვა",
     "description": "Button text to display in overlay when the account is locked."
   },
   "unlockAccountAria": {
@@ -3163,7 +3534,7 @@
     "description": "Text to show in overlay if there are no matching items"
   },
   "newItem": {
-    "message": "New item",
+    "message": "ახალი ჩანაწერი",
     "description": "Button text to display in overlay when there are no matching items"
   },
   "addNewVaultItem": {
@@ -3199,17 +3570,17 @@
     "description": "Screen reader text for announcing when the overlay opens on the page"
   },
   "turnOn": {
-    "message": "Turn on"
+    "message": "ჩართვა"
   },
   "ignore": {
-    "message": "Ignore"
+    "message": "იგნორი"
   },
   "importData": {
-    "message": "Import data",
+    "message": "მონაცემების შემოტანა",
     "description": "Used for the header of the import dialog, the import button and within the file-password-prompt"
   },
   "importError": {
-    "message": "Import error"
+    "message": "შემოტანის შეცდომა"
   },
   "importErrorDesc": {
     "message": "There was a problem with the data you tried to import. Please resolve the errors listed below in your source file and try again."
@@ -3218,7 +3589,7 @@
     "message": "Resolve the errors below and try again."
   },
   "description": {
-    "message": "Description"
+    "message": "აღწერა"
   },
   "importSuccess": {
     "message": "Data successfully imported"
@@ -3233,7 +3604,7 @@
     }
   },
   "tryAgain": {
-    "message": "Try again"
+    "message": "კიდევ სცადეთ"
   },
   "verificationRequiredForActionSetPinToContinue": {
     "message": "Verification required for this action. Set a PIN to continue."
@@ -3269,7 +3640,7 @@
     "message": "Resend code"
   },
   "total": {
-    "message": "Total"
+    "message": "სულ"
   },
   "importWarning": {
     "message": "You are importing data to $ORGANIZATION$. Your data may be shared with members of this organization. Do you want to proceed?",
@@ -3311,16 +3682,16 @@
     "message": "Invalid file password, please use the password you entered when you created the export file."
   },
   "destination": {
-    "message": "Destination"
+    "message": "სამიზნე"
   },
   "learnAboutImportOptions": {
     "message": "Learn about your import options"
   },
   "selectImportFolder": {
-    "message": "Select a folder"
+    "message": "აირჩიეთ საქაღალდე"
   },
   "selectImportCollection": {
-    "message": "Select a collection"
+    "message": "აირჩიეთ კოლექცია"
   },
   "importTargetHint": {
     "message": "Select this option if you want the imported file contents moved to a $DESTINATION$",
@@ -3342,10 +3713,10 @@
     "message": "Select the import file"
   },
   "chooseFile": {
-    "message": "Choose File"
+    "message": "ფაილის არჩევა"
   },
   "noFileChosen": {
-    "message": "No file chosen"
+    "message": "ფაილი არჩეული არაა"
   },
   "orCopyPasteFileContents": {
     "message": "or copy/paste the import file contents"
@@ -3373,7 +3744,10 @@
     "message": "Vault data exported"
   },
   "typePasskey": {
-    "message": "Passkey"
+    "message": "საკვანძო გასაღები"
+  },
+  "accessing": {
+    "message": "წვდომა"
   },
   "passkeyNotCopied": {
     "message": "Passkey will not be copied"
@@ -3384,7 +3758,7 @@
   "passkeyFeatureIsNotImplementedForAccountsWithoutMasterPassword": {
     "message": "Verification required by the initiating site. This feature is not yet implemented for accounts without master password."
   },
-  "logInWithPasskey": {
+  "logInWithPasskeyQuestion": {
     "message": "Log in with passkey?"
   },
   "passkeyAlreadyExists": {
@@ -3396,8 +3770,14 @@
   "noMatchingPasskeyLogin": {
     "message": "You do not have a matching login for this site."
   },
+  "noMatchingLoginsForSite": {
+    "message": "No matching logins for this site"
+  },
+  "searchSavePasskeyNewLogin": {
+    "message": "Search or save passkey as new login"
+  },
   "confirm": {
-    "message": "Confirm"
+    "message": "დადასტურება"
   },
   "savePasskey": {
     "message": "Save passkey"
@@ -3405,8 +3785,11 @@
   "savePasskeyNewLogin": {
     "message": "Save passkey as new login"
   },
-  "choosePasskey": {
+  "chooseCipherForPasskeySave": {
     "message": "Choose a login to save this passkey to"
+  },
+  "chooseCipherForPasskeyAuth": {
+    "message": "Choose a passkey to log in with"
   },
   "passkeyItem": {
     "message": "Passkey Item"
@@ -3430,16 +3813,16 @@
     "message": "No LastPass data found"
   },
   "incorrectUsernameOrPassword": {
-    "message": "Incorrect username or password"
+    "message": "არასწორი მომხმარებელი ან პაროლი"
   },
   "incorrectPassword": {
-    "message": "Incorrect password"
+    "message": "არასწორი პაროლი"
   },
   "incorrectCode": {
     "message": "Incorrect code"
   },
   "incorrectPin": {
-    "message": "Incorrect PIN"
+    "message": "PIN კოდი არასწორია"
   },
   "multifactorAuthenticationFailed": {
     "message": "Multifactor authentication failed"
@@ -3463,7 +3846,7 @@
     "message": "Approve the login request in your authentication app or enter a one-time passcode."
   },
   "passcode": {
-    "message": "Passcode"
+    "message": "საკვანძო კოდი"
   },
   "lastPassMasterPassword": {
     "message": "LastPass master password"
@@ -3485,19 +3868,19 @@
     "message": "Import directly from LastPass"
   },
   "importFromCSV": {
-    "message": "Import from CSV"
+    "message": "CVS-დან შემოტანა"
   },
   "lastPassTryAgainCheckEmail": {
     "message": "Try again or look for an email from LastPass to verify it's you."
   },
   "collection": {
-    "message": "Collection"
+    "message": "კოლექცია"
   },
   "lastPassYubikeyDesc": {
     "message": "Insert the YubiKey associated with your LastPass account into your computer's USB port, then touch its button."
   },
   "switchAccount": {
-    "message": "Switch account"
+    "message": "ანგარიშის გადართვა"
   },
   "switchAccounts": {
     "message": "Switch accounts"
@@ -3515,16 +3898,16 @@
     "message": "Account limit reached. Log out of an account to add another."
   },
   "active": {
-    "message": "active"
+    "message": "აქტიური"
   },
   "locked": {
-    "message": "locked"
+    "message": "დაბლოკილია"
   },
   "unlocked": {
     "message": "unlocked"
   },
   "server": {
-    "message": "server"
+    "message": "სერვერი"
   },
   "hostedAt": {
     "message": "hosted at"
@@ -3533,7 +3916,7 @@
     "message": "Use your device or hardware key"
   },
   "justOnce": {
-    "message": "Just once"
+    "message": "მხოლოდ ერთხელ"
   },
   "alwaysForThisSite": {
     "message": "Always for this site"
@@ -3596,15 +3979,23 @@
     "description": "Description for the dialog that appears when the user has not granted the extension permission to set privacy settings"
   },
   "makeDefault": {
-    "message": "Make default",
+    "message": "ნაგულისხმებად გამოყენება",
     "description": "Button text for the setting that allows overriding the default browser autofill settings"
   },
   "saveCipherAttemptSuccess": {
     "message": "Credentials saved successfully!",
     "description": "Notification message for when saving credentials has succeeded."
   },
+  "passwordSaved": {
+    "message": "Password saved!",
+    "description": "Notification message for when saving credentials has succeeded."
+  },
   "updateCipherAttemptSuccess": {
     "message": "Credentials updated successfully!",
+    "description": "Notification message for when updating credentials has succeeded."
+  },
+  "passwordUpdated": {
+    "message": "Password updated!",
     "description": "Notification message for when updating credentials has succeeded."
   },
   "saveCipherAttemptFailed": {
@@ -3612,7 +4003,7 @@
     "description": "Notification message for when saving credentials has failed."
   },
   "success": {
-    "message": "Success"
+    "message": "წარმატება"
   },
   "removePasskey": {
     "message": "Remove passkey"
@@ -3708,19 +4099,19 @@
     "message": "Copy phone"
   },
   "copyAddress": {
-    "message": "Copy address"
+    "message": "მისამართის დაკოპირება"
   },
   "adminConsole": {
     "message": "Admin Console"
   },
   "accountSecurity": {
-    "message": "Account security"
+    "message": "ანგარიშის უსაფრთხოება"
   },
   "notifications": {
-    "message": "Notifications"
+    "message": "გაფრთხილებები"
   },
   "appearance": {
-    "message": "Appearance"
+    "message": "გარეგნობა"
   },
   "errorAssigningTargetCollection": {
     "message": "Error assigning target collection."
@@ -3749,7 +4140,7 @@
     }
   },
   "new": {
-    "message": "New"
+    "message": "ახალი"
   },
   "removeItem": {
     "message": "Remove $NAME$",
@@ -3768,7 +4159,7 @@
     "message": "Item details"
   },
   "itemName": {
-    "message": "Item name"
+    "message": "ჩანაწერის სახელი"
   },
   "cannotRemoveViewOnlyCollections": {
     "message": "You cannot remove collections with View only permissions: $COLLECTIONS$",
@@ -3783,10 +4174,10 @@
     "message": "Organization is deactivated"
   },
   "owner": {
-    "message": "Owner"
+    "message": "მფლობელი"
   },
   "selfOwnershipLabel": {
-    "message": "You",
+    "message": "თქვენ",
     "description": "Used as a label to indicate that the user is the owner of an item."
   },
   "contactYourOrgAdmin": {
@@ -3799,22 +4190,22 @@
     "message": "Item history"
   },
   "lastEdited": {
-    "message": "Last edited"
+    "message": "ბოლოს ჩასწორებული"
   },
   "ownerYou": {
     "message": "Owner: You"
   },
   "linked": {
-    "message": "Linked"
+    "message": "მიბმული"
   },
   "copySuccessful": {
     "message": "Copy Successful"
   },
   "upload": {
-    "message": "Upload"
+    "message": "ატვირთვა"
   },
   "addAttachment": {
-    "message": "Add attachment"
+    "message": "მიმაგრებული ფაილის დამატება"
   },
   "maxFileSizeSansPunctuation": {
     "message": "Maximum file size is 500 MB"
@@ -3841,22 +4232,22 @@
     "message": "Are you sure you want to permanently delete this attachment?"
   },
   "premium": {
-    "message": "Premium"
+    "message": "პრემიუმი"
   },
   "freeOrgsCannotUseAttachments": {
     "message": "Free organizations cannot use attachments"
   },
   "filters": {
-    "message": "Filters"
+    "message": "ფილტრები"
   },
   "personalDetails": {
     "message": "Personal details"
   },
   "identification": {
-    "message": "Identification"
+    "message": "იდენტიფიკაცია"
   },
   "contactInfo": {
-    "message": "Contact info"
+    "message": "საკონტაქტო ინფორმაცია"
   },
   "downloadAttachment": {
     "message": "Download - $ITEMNAME$",
@@ -3878,10 +4269,20 @@
     "message": "Authenticator key"
   },
   "autofillOptions": {
-    "message": "Auto-fill options"
+    "message": "Autofill options"
   },
   "websiteUri": {
     "message": "Website (URI)"
+  },
+  "websiteUriCount": {
+    "message": "Website (URI) $COUNT$",
+    "description": "Label for an input field that contains a website URI. The input field is part of a list of fields, and the count indicates the position of the field in the list.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   },
   "websiteAdded": {
     "message": "Website added"
@@ -3923,8 +4324,14 @@
   "autoFillOnPageLoad": {
     "message": "Autofill on page load?"
   },
+  "cardExpiredTitle": {
+    "message": "Expired card"
+  },
+  "cardExpiredMessage": {
+    "message": "If you've renewed it, update the card's information"
+  },
   "cardDetails": {
-    "message": "Card details"
+    "message": "ბარათის დეტალები"
   },
   "cardBrandDetails": {
     "message": "$BRAND$ details",
@@ -3935,21 +4342,27 @@
       }
     }
   },
+  "enableAnimations": {
+    "message": "ანიმაციების ჩართვა"
+  },
+  "showAnimations": {
+    "message": "Show animations"
+  },
   "addAccount": {
-    "message": "Add account"
+    "message": "ანგარიშის დამატება"
   },
   "loading": {
-    "message": "Loading"
+    "message": "იტვირთება"
   },
   "data": {
-    "message": "Data"
+    "message": "მონაცემები"
   },
   "passkeys": {
     "message": "Passkeys",
     "description": "A section header for a list of passkeys."
   },
   "passwords": {
-    "message": "Passwords",
+    "message": "პაროლები",
     "description": "A section header for a list of passwords."
   },
   "logInWithPasskeyAriaLabel": {
@@ -3957,7 +4370,7 @@
     "description": "ARIA label for the inline menu button that logs in with a passkey."
   },
   "assign": {
-    "message": "Assign"
+    "message": "მინიჭება"
   },
   "bulkCollectionAssignmentDialogDescriptionSingular": {
     "message": "Only organization members with access to these collections will be able to see the item."
@@ -3978,13 +4391,13 @@
     }
   },
   "addField": {
-    "message": "Add field"
+    "message": "ველის დამატება"
   },
   "add": {
-    "message": "Add"
+    "message": "დამატება"
   },
   "fieldType": {
-    "message": "Field type"
+    "message": "ველის ტიპი"
   },
   "fieldLabel": {
     "message": "Field label"
@@ -4150,8 +4563,14 @@
   "itemLocation": {
     "message": "Item Location"
   },
+  "fileSend": {
+    "message": "File Send"
+  },
   "fileSends": {
     "message": "File Sends"
+  },
+  "textSend": {
+    "message": "Text Send"
   },
   "textSends": {
     "message": "Text Sends"
@@ -4169,6 +4588,204 @@
     "message": "Show number of login autofill suggestions on extension icon"
   },
   "systemDefault": {
-    "message": "System default"
+    "message": "სისტემურად ნაგულისხმევი"
+  },
+  "enterprisePolicyRequirementsApplied": {
+    "message": "Enterprise policy requirements have been applied to this setting"
+  },
+  "retry": {
+    "message": "თავიდან ცდა"
+  },
+  "vaultCustomTimeoutMinimum": {
+    "message": "Minimum custom timeout is 1 minute."
+  },
+  "additionalContentAvailable": {
+    "message": "Additional content is available"
+  },
+  "fileSavedToDevice": {
+    "message": "File saved to device. Manage from your device downloads."
+  },
+  "showCharacterCount": {
+    "message": "Show character count"
+  },
+  "hideCharacterCount": {
+    "message": "Hide character count"
+  },
+  "itemsInTrash": {
+    "message": "Items in trash"
+  },
+  "noItemsInTrash": {
+    "message": "No items in trash"
+  },
+  "noItemsInTrashDesc": {
+    "message": "Items you delete will appear here and be permanently deleted after 30 days"
+  },
+  "trashWarning": {
+    "message": "Items that have been in trash more than 30 days will automatically be deleted"
+  },
+  "restore": {
+    "message": "აღდგენა"
+  },
+  "deleteForever": {
+    "message": "Delete forever"
+  },
+  "noEditPermissions": {
+    "message": "You don't have permission to edit this item"
+  },
+  "authenticating": {
+    "message": "ავთენტიკაცია"
+  },
+  "fillGeneratedPassword": {
+    "message": "Fill generated password",
+    "description": "Heading for the password generator within the inline menu"
+  },
+  "passwordRegenerated": {
+    "message": "Password regenerated",
+    "description": "Notification message for when a password has been regenerated"
+  },
+  "saveLoginToBitwarden": {
+    "message": "Save login to Bitwarden?",
+    "description": "Confirmation message for saving a login to Bitwarden"
+  },
+  "spaceCharacterDescriptor": {
+    "message": "Space",
+    "description": "Represents the space key in screen reader content as a readable word"
+  },
+  "tildeCharacterDescriptor": {
+    "message": "Tilde",
+    "description": "Represents the ~ key in screen reader content as a readable word"
+  },
+  "backtickCharacterDescriptor": {
+    "message": "Backtick",
+    "description": "Represents the ` key in screen reader content as a readable word"
+  },
+  "exclamationCharacterDescriptor": {
+    "message": "Exclamation mark",
+    "description": "Represents the ! key in screen reader content as a readable word"
+  },
+  "atSignCharacterDescriptor": {
+    "message": "At sign",
+    "description": "Represents the @ key in screen reader content as a readable word"
+  },
+  "hashSignCharacterDescriptor": {
+    "message": "Hash sign",
+    "description": "Represents the # key in screen reader content as a readable word"
+  },
+  "dollarSignCharacterDescriptor": {
+    "message": "Dollar sign",
+    "description": "Represents the $ key in screen reader content as a readable word"
+  },
+  "percentSignCharacterDescriptor": {
+    "message": "Percent sign",
+    "description": "Represents the % key in screen reader content as a readable word"
+  },
+  "caretCharacterDescriptor": {
+    "message": "Caret",
+    "description": "Represents the ^ key in screen reader content as a readable word"
+  },
+  "ampersandCharacterDescriptor": {
+    "message": "Ampersand",
+    "description": "Represents the & key in screen reader content as a readable word"
+  },
+  "asteriskCharacterDescriptor": {
+    "message": "Asterisk",
+    "description": "Represents the * key in screen reader content as a readable word"
+  },
+  "parenLeftCharacterDescriptor": {
+    "message": "Left parenthesis",
+    "description": "Represents the ( key in screen reader content as a readable word"
+  },
+  "parenRightCharacterDescriptor": {
+    "message": "Right parenthesis",
+    "description": "Represents the ) key in screen reader content as a readable word"
+  },
+  "hyphenCharacterDescriptor": {
+    "message": "Underscore",
+    "description": "Represents the _ key in screen reader content as a readable word"
+  },
+  "underscoreCharacterDescriptor": {
+    "message": "Hyphen",
+    "description": "Represents the - key in screen reader content as a readable word"
+  },
+  "plusCharacterDescriptor": {
+    "message": "Plus",
+    "description": "Represents the + key in screen reader content as a readable word"
+  },
+  "equalsCharacterDescriptor": {
+    "message": "Equals",
+    "description": "Represents the = key in screen reader content as a readable word"
+  },
+  "braceLeftCharacterDescriptor": {
+    "message": "Left brace",
+    "description": "Represents the { key in screen reader content as a readable word"
+  },
+  "braceRightCharacterDescriptor": {
+    "message": "Right brace",
+    "description": "Represents the } key in screen reader content as a readable word"
+  },
+  "bracketLeftCharacterDescriptor": {
+    "message": "Left bracket",
+    "description": "Represents the [ key in screen reader content as a readable word"
+  },
+  "bracketRightCharacterDescriptor": {
+    "message": "Right bracket",
+    "description": "Represents the ] key in screen reader content as a readable word"
+  },
+  "pipeCharacterDescriptor": {
+    "message": "Pipe",
+    "description": "Represents the | key in screen reader content as a readable word"
+  },
+  "backSlashCharacterDescriptor": {
+    "message": "Back slash",
+    "description": "Represents the back slash key in screen reader content as a readable word"
+  },
+  "colonCharacterDescriptor": {
+    "message": "Colon",
+    "description": "Represents the : key in screen reader content as a readable word"
+  },
+  "semicolonCharacterDescriptor": {
+    "message": "Semicolon",
+    "description": "Represents the ; key in screen reader content as a readable word"
+  },
+  "doubleQuoteCharacterDescriptor": {
+    "message": "Double quote",
+    "description": "Represents the double quote key in screen reader content as a readable word"
+  },
+  "singleQuoteCharacterDescriptor": {
+    "message": "Single quote",
+    "description": "Represents the ' key in screen reader content as a readable word"
+  },
+  "lessThanCharacterDescriptor": {
+    "message": "Less than",
+    "description": "Represents the < key in screen reader content as a readable word"
+  },
+  "greaterThanCharacterDescriptor": {
+    "message": "Greater than",
+    "description": "Represents the > key in screen reader content as a readable word"
+  },
+  "commaCharacterDescriptor": {
+    "message": "Comma",
+    "description": "Represents the , key in screen reader content as a readable word"
+  },
+  "periodCharacterDescriptor": {
+    "message": "Period",
+    "description": "Represents the . key in screen reader content as a readable word"
+  },
+  "questionCharacterDescriptor": {
+    "message": "Question mark",
+    "description": "Represents the ? key in screen reader content as a readable word"
+  },
+  "forwardSlashCharacterDescriptor": {
+    "message": "Forward slash",
+    "description": "Represents the / key in screen reader content as a readable word"
+  },
+  "lowercaseAriaLabel": {
+    "message": "Lowercase"
+  },
+  "uppercaseAriaLabel": {
+    "message": "Uppercase"
+  },
+  "generatedPassword": {
+    "message": "Generated password"
   }
 }

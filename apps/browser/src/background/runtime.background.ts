@@ -1,14 +1,15 @@
 import { firstValueFrom, map, mergeMap } from "rxjs";
 
+import { LockService } from "@bitwarden/auth/common";
 import { NotificationsService } from "@bitwarden/common/abstractions/notifications.service";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AutofillOverlayVisibility, ExtensionCommand } from "@bitwarden/common/autofill/constants";
 import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/autofill-settings.service";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ProcessReloadServiceAbstraction } from "@bitwarden/common/key-management/abstractions/process-reload.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
-import { SystemService } from "@bitwarden/common/platform/abstractions/system.service";
 import { devFlagEnabled } from "@bitwarden/common/platform/misc/flags";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { CipherType } from "@bitwarden/common/vault/enums";
@@ -20,7 +21,6 @@ import {
   openTwoFactorAuthPopout,
 } from "../auth/popup/utils/auth-popout-window";
 import { LockedVaultPendingNotificationsData } from "../autofill/background/abstractions/notification.background";
-import { Fido2Background } from "../autofill/fido2/background/abstractions/fido2.background";
 import { AutofillService } from "../autofill/services/abstractions/autofill.service";
 import { BrowserApi } from "../platform/browser/browser-api";
 import { BrowserEnvironmentService } from "../platform/services/browser-environment.service";
@@ -33,7 +33,6 @@ export default class RuntimeBackground {
   private pageDetailsToAutoFill: any[] = [];
   private onInstalledReason: string = null;
   private lockedVaultPendingNotifications: LockedVaultPendingNotificationsData[] = [];
-  private extensionRefreshIsActive: boolean = false;
 
   constructor(
     private main: MainBackground,
@@ -41,14 +40,14 @@ export default class RuntimeBackground {
     private platformUtilsService: BrowserPlatformUtilsService,
     private notificationsService: NotificationsService,
     private autofillSettingsService: AutofillSettingsServiceAbstraction,
-    private systemService: SystemService,
+    private processReloadSerivce: ProcessReloadServiceAbstraction,
     private environmentService: BrowserEnvironmentService,
     private messagingService: MessagingService,
     private logService: LogService,
     private configService: ConfigService,
-    private fido2Background: Fido2Background,
     private messageListener: MessageListener,
     private accountService: AccountService,
+    private readonly lockService: LockService,
   ) {
     // onInstalled listener must be wired up before anything else, so we do it in the ctor
     chrome.runtime.onInstalled.addListener((details: any) => {
@@ -69,6 +68,7 @@ export default class RuntimeBackground {
     ) => {
       const messagesWithResponse = [
         "biometricUnlock",
+        "biometricUnlockAvailable",
         "getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag",
         "getInlineMenuFieldQualificationFeatureFlag",
       ];
@@ -89,10 +89,6 @@ export default class RuntimeBackground {
       );
       return false;
     };
-
-    this.extensionRefreshIsActive = await this.configService.getFeatureFlag(
-      FeatureFlag.ExtensionRefresh,
-    );
 
     this.messageListener.allMessages$
       .pipe(
@@ -184,7 +180,11 @@ export default class RuntimeBackground {
         }
         break;
       case "biometricUnlock": {
-        const result = await this.main.biometricUnlock();
+        const result = await this.main.biometricsService.authenticateBiometric();
+        return result;
+      }
+      case "biometricUnlockAvailable": {
+        const result = await this.main.biometricsService.isBiometricUnlockAvailable();
         return result;
       }
       case "getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag": {
@@ -216,7 +216,7 @@ export default class RuntimeBackground {
         }
 
         await this.notificationsService.updateConnection(msg.command === "loggedIn");
-        this.systemService.cancelProcessReload();
+        this.processReloadSerivce.cancelProcessReload();
 
         if (item) {
           await BrowserApi.focusWindow(item.commandToRetry.sender.tab.windowId);
@@ -234,7 +234,7 @@ export default class RuntimeBackground {
         await this.main.refreshBadge();
         await this.main.refreshMenu(false);
 
-        if (this.extensionRefreshIsActive) {
+        if (await this.configService.getFeatureFlag(FeatureFlag.ExtensionRefresh)) {
           await this.autofillService.setAutoFillOnPageLoadOrgPolicy();
         }
         break;
@@ -244,6 +244,12 @@ export default class RuntimeBackground {
         break;
       case "lockVault":
         await this.main.vaultTimeoutService.lock(msg.userId);
+        break;
+      case "lockAll":
+        {
+          await this.lockService.lockAll();
+          this.messagingService.send("lockAllFinished", { requestId: msg.requestId });
+        }
         break;
       case "logout":
         await this.main.logout(msg.expired, msg.userId);
@@ -257,7 +263,7 @@ export default class RuntimeBackground {
           await this.configService.ensureConfigFetched();
           await this.main.updateOverlayCiphers();
 
-          if (this.extensionRefreshIsActive) {
+          if (await this.configService.getFeatureFlag(FeatureFlag.ExtensionRefresh)) {
             await this.autofillService.setAutoFillOnPageLoadOrgPolicy();
           }
         }
@@ -272,9 +278,10 @@ export default class RuntimeBackground {
         await this.main.refreshBadge();
         await this.main.refreshMenu();
         break;
-      case "bgReseedStorage":
+      case "bgReseedStorage": {
         await this.main.reseedStorage();
         break;
+      }
       case "authResult": {
         const env = await firstValueFrom(this.environmentService.environment$);
         const vaultUrl = env.getWebVaultUrl();
@@ -356,7 +363,6 @@ export default class RuntimeBackground {
 
   private async checkOnInstalled() {
     setTimeout(async () => {
-      void this.fido2Background.injectFido2ContentScriptsInAllTabs();
       void this.autofillService.loadAutofillScriptsOnInstall();
 
       if (this.onInstalledReason != null) {

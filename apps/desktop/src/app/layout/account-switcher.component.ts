@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { ConnectedPosition } from "@angular/cdk/overlay";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { combineLatest, firstValueFrom, map, Observable, switchMap } from "rxjs";
 
@@ -51,7 +51,7 @@ type InactiveAccount = ActiveAccount & {
     ]),
   ],
 })
-export class AccountSwitcherComponent {
+export class AccountSwitcherComponent implements OnInit {
   activeAccount$: Observable<ActiveAccount | null>;
   inactiveAccounts$: Observable<{ [userId: string]: InactiveAccount }>;
   authStatus = AuthenticationStatus;
@@ -151,6 +151,24 @@ export class AccountSwitcherComponent {
     );
   }
 
+  async ngOnInit() {
+    const active = await firstValueFrom(this.accountService.activeAccount$);
+    if (active == null) {
+      return;
+    }
+    const authStatus = await firstValueFrom(
+      this.authService.authStatuses$.pipe(map((statuses) => statuses[active.id])),
+    );
+    if (authStatus === AuthenticationStatus.LoggedOut) {
+      const nextUpAccount = await firstValueFrom(this.accountService.nextUpAccount$);
+      if (nextUpAccount != null) {
+        await this.switch(nextUpAccount.id);
+      } else {
+        await this.addAccount();
+      }
+    }
+  }
+
   toggle() {
     this.isOpen = !this.isOpen;
   }
@@ -183,8 +201,11 @@ export class AccountSwitcherComponent {
   }): Promise<{ [userId: string]: InactiveAccount }> {
     const inactiveAccounts: { [userId: string]: InactiveAccount } = {};
 
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
     for (const userId in baseAccounts) {
-      if (userId == null || userId === (await this.stateService.getUserId())) {
+      if (userId == null || userId === activeUserId) {
         continue;
       }
 

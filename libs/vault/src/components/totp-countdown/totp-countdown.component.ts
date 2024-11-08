@@ -6,7 +6,7 @@ import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { TypographyModule } from "@bitwarden/components";
 
 @Component({
-  selector: "button[bitTotpCountdown]:not(button[bitButton])",
+  selector: "[bitTotpCountdown]",
   templateUrl: "totp-countdown.component.html",
   standalone: true,
   imports: [CommonModule, TypographyModule],
@@ -44,13 +44,16 @@ export class BitTotpCountdownComponent implements OnInit {
     if (this.totpCode != null) {
       if (this.totpCode.length > 4) {
         this.totpCodeFormatted = this.formatTotpCode();
-        this.sendCopyCode.emit(this.totpCodeFormatted);
+        this.sendCopyCode.emit({
+          totpCode: this.totpCode,
+          totpCodeFormatted: this.totpCodeFormatted,
+        });
       } else {
         this.totpCodeFormatted = this.totpCode;
       }
     } else {
       this.totpCodeFormatted = null;
-      this.sendCopyCode.emit(this.totpCodeFormatted);
+      this.sendCopyCode.emit({ totpCode: null, totpCodeFormatted: null });
       this.clearTotp();
     }
   }

@@ -1,6 +1,8 @@
+import {
+  OrganizationUserApiService,
+  OrganizationUserResetPasswordEnrollmentRequest,
+} from "@bitwarden/admin-console/common";
 import { UserVerificationDialogComponent } from "@bitwarden/auth/angular";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
-import { OrganizationUserResetPasswordEnrollmentRequest } from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { VerificationWithSecret } from "@bitwarden/common/auth/types/verification";
@@ -8,7 +10,7 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 
 import { OrganizationUserResetPasswordService } from "../members/services/organization-user-reset-password/organization-user-reset-password.service";
 
@@ -23,12 +25,13 @@ export class EnrollMasterPasswordReset {
     dialogService: DialogService,
     data: EnrollMasterPasswordResetData,
     resetPasswordService: OrganizationUserResetPasswordService,
-    organizationUserService: OrganizationUserService,
+    organizationUserApiService: OrganizationUserApiService,
     platformUtilsService: PlatformUtilsService,
     i18nService: I18nService,
     syncService: SyncService,
     logService: LogService,
     userVerificationService: UserVerificationService,
+    toastService: ToastService,
   ) {
     const result = await UserVerificationDialogComponent.open(dialogService, {
       title: "enrollAccountRecovery",
@@ -49,7 +52,7 @@ export class EnrollMasterPasswordReset {
 
           // Process the enrollment request, which is an endpoint that is
           // gated by a server-side check of the master password hash
-          await organizationUserService.putOrganizationUserResetPasswordEnrollment(
+          await organizationUserApiService.putOrganizationUserResetPasswordEnrollment(
             data.organization.id,
             data.organization.userId,
             request,
@@ -71,7 +74,11 @@ export class EnrollMasterPasswordReset {
 
     // Enrollment succeeded
     try {
-      platformUtilsService.showToast("success", null, i18nService.t("enrollPasswordResetSuccess"));
+      toastService.showToast({
+        variant: "success",
+        title: null,
+        message: i18nService.t("enrollPasswordResetSuccess"),
+      });
       await syncService.fullSync(true);
     } catch (e) {
       logService.error(e);

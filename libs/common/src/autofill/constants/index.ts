@@ -23,6 +23,9 @@ export const EVENTS = {
   VISIBILITYCHANGE: "visibilitychange",
   MOUSEENTER: "mouseenter",
   MOUSELEAVE: "mouseleave",
+  MOUSEUP: "mouseup",
+  MOUSEOUT: "mouseout",
+  SUBMIT: "submit",
 } as const;
 
 export const ClearClipboardDelay = {
@@ -56,7 +59,11 @@ export const NOTIFICATION_BAR_LIFESPAN_MS = 150000; // 150 seconds
 
 export const AUTOFILL_OVERLAY_HANDLE_REPOSITION = "autofill-overlay-handle-reposition-event";
 
+export const AUTOFILL_OVERLAY_HANDLE_SCROLL = "autofill-overlay-handle-scroll-event";
+
 export const UPDATE_PASSKEYS_HEADINGS_ON_SCROLL = "update-passkeys-headings-on-scroll";
+
+export const AUTOFILL_TRIGGER_FORM_FIELD_SUBMIT = "autofill-trigger-form-field-submit";
 
 export const AutofillOverlayVisibility = {
   Off: 0,
@@ -101,3 +108,9 @@ export const ExtensionCommand = {
 } as const;
 
 export type ExtensionCommandType = (typeof ExtensionCommand)[keyof typeof ExtensionCommand];
+
+export const CLEAR_NOTIFICATION_LOGIN_DATA_DURATION = 60 * 1000; // 1 minute
+
+export const MAX_DEEP_QUERY_RECURSION_DEPTH = 4;
+
+export * from "./match-patterns";

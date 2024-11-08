@@ -1,19 +1,17 @@
 import { Injectable } from "@angular/core";
 
-import { UserKeyRotationDataProvider } from "@bitwarden/auth/common";
-import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
 import {
+  OrganizationUserApiService,
   OrganizationUserResetPasswordRequest,
   OrganizationUserResetPasswordWithIdRequest,
-} from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
+} from "@bitwarden/admin-console/common";
+import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
+import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import {
   Argon2KdfConfig,
   KdfConfig,
   PBKDF2KdfConfig,
 } from "@bitwarden/common/auth/models/domain/kdf-config";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { KdfType } from "@bitwarden/common/platform/enums";
@@ -22,6 +20,7 @@ import { EncryptedString, EncString } from "@bitwarden/common/platform/models/do
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
+import { UserKeyRotationDataProvider, KeyService } from "@bitwarden/key-management";
 
 @Injectable({
   providedIn: "root",
@@ -30,10 +29,10 @@ export class OrganizationUserResetPasswordService
   implements UserKeyRotationDataProvider<OrganizationUserResetPasswordWithIdRequest>
 {
   constructor(
-    private cryptoService: CryptoService,
+    private keyService: KeyService,
     private encryptService: EncryptService,
     private organizationService: OrganizationService,
-    private organizationUserService: OrganizationUserService,
+    private organizationUserApiService: OrganizationUserApiService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private i18nService: I18nService,
   ) {}
@@ -53,11 +52,11 @@ export class OrganizationUserResetPasswordService
     const publicKey = Utils.fromB64ToArray(orgKeys.publicKey);
 
     // RSA Encrypt user key with organization's public key
-    userKey ??= await this.cryptoService.getUserKey();
+    userKey ??= await this.keyService.getUserKey();
     if (userKey == null) {
       throw new Error("No user key found");
     }
-    const encryptedKey = await this.cryptoService.rsaEncrypt(userKey.key, publicKey);
+    const encryptedKey = await this.encryptService.rsaEncrypt(userKey.key, publicKey);
 
     return encryptedKey.encryptedString;
   }
@@ -76,7 +75,7 @@ export class OrganizationUserResetPasswordService
     orgUserId: string,
     orgId: string,
   ): Promise<void> {
-    const response = await this.organizationUserService.getOrganizationUserResetPasswordDetails(
+    const response = await this.organizationUserApiService.getOrganizationUserResetPasswordDetails(
       orgId,
       orgUserId,
     );
@@ -86,7 +85,7 @@ export class OrganizationUserResetPasswordService
     }
 
     // Decrypt Organization's encrypted Private Key with org key
-    const orgSymKey = await this.cryptoService.getOrgKey(orgId);
+    const orgSymKey = await this.keyService.getOrgKey(orgId);
     if (orgSymKey == null) {
       throw new Error("No org key found");
     }
@@ -96,7 +95,10 @@ export class OrganizationUserResetPasswordService
     );
 
     // Decrypt User's Reset Password Key to get UserKey
-    const decValue = await this.cryptoService.rsaDecrypt(response.resetPasswordKey, decPrivateKey);
+    const decValue = await this.encryptService.rsaDecrypt(
+      new EncString(response.resetPasswordKey),
+      decPrivateKey,
+    );
     const existingUserKey = new SymmetricCryptoKey(decValue) as UserKey;
 
     // determine Kdf Algorithm
@@ -106,18 +108,15 @@ export class OrganizationUserResetPasswordService
         : new Argon2KdfConfig(response.kdfIterations, response.kdfMemory, response.kdfParallelism);
 
     // Create new master key and hash new password
-    const newMasterKey = await this.cryptoService.makeMasterKey(
+    const newMasterKey = await this.keyService.makeMasterKey(
       newMasterPassword,
       email.trim().toLowerCase(),
       kdfConfig,
     );
-    const newMasterKeyHash = await this.cryptoService.hashMasterKey(
-      newMasterPassword,
-      newMasterKey,
-    );
+    const newMasterKeyHash = await this.keyService.hashMasterKey(newMasterPassword, newMasterKey);
 
     // Create new encrypted user key for the User
-    const newUserKey = await this.cryptoService.encryptUserKeyWithMasterKey(
+    const newUserKey = await this.keyService.encryptUserKeyWithMasterKey(
       newMasterKey,
       existingUserKey,
     );
@@ -128,7 +127,11 @@ export class OrganizationUserResetPasswordService
     request.newMasterPasswordHash = newMasterKeyHash;
 
     // Change user's password
-    await this.organizationUserService.putOrganizationUserResetPassword(orgId, orgUserId, request);
+    await this.organizationUserApiService.putOrganizationUserResetPassword(
+      orgId,
+      orgUserId,
+      request,
+    );
   }
 
   /**

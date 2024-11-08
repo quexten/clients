@@ -11,7 +11,6 @@ import { UserVerificationService } from "@bitwarden/common/auth/abstractions/use
 import { VerificationType } from "@bitwarden/common/auth/enums/verification-type";
 import { PasswordRequest } from "@bitwarden/common/auth/models/request/password.request";
 import { Verification } from "@bitwarden/common/auth/types/verification";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -19,8 +18,9 @@ import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/pl
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { MasterKey, UserKey } from "@bitwarden/common/types/key";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
+import { KeyService } from "@bitwarden/key-management";
 
 import { ChangePasswordComponent as BaseChangePasswordComponent } from "./change-password.component";
 
@@ -40,7 +40,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
     platformUtilsService: PlatformUtilsService,
     passwordGenerationService: PasswordGenerationServiceAbstraction,
     policyService: PolicyService,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     messagingService: MessagingService,
     private apiService: ApiService,
     stateService: StateService,
@@ -50,10 +50,11 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
     kdfConfigService: KdfConfigService,
     masterPasswordService: InternalMasterPasswordServiceAbstraction,
     accountService: AccountService,
+    toastService: ToastService,
   ) {
     super(
       i18nService,
-      cryptoService,
+      keyService,
       messagingService,
       passwordGenerationService,
       platformUtilsService,
@@ -63,6 +64,7 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
       kdfConfigService,
       masterPasswordService,
       accountService,
+      toastService,
     );
   }
 
@@ -77,11 +79,11 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
 
   async setupSubmitActions(): Promise<boolean> {
     if (this.currentMasterPassword == null || this.currentMasterPassword === "") {
-      this.platformUtilsService.showToast(
-        "error",
-        this.i18nService.t("errorOccurred"),
-        this.i18nService.t("masterPasswordRequired"),
-      );
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: this.i18nService.t("masterPasswordRequired"),
+      });
       return false;
     }
 
@@ -92,7 +94,11 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
     try {
       await this.userVerificationService.verifyUser(secret);
     } catch (e) {
-      this.platformUtilsService.showToast("error", this.i18nService.t("errorOccurred"), e.message);
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: e.message,
+      });
       return false;
     }
 
@@ -108,9 +114,9 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
     try {
       // Create Request
       const request = new PasswordRequest();
-      request.masterPasswordHash = await this.cryptoService.hashMasterKey(
+      request.masterPasswordHash = await this.keyService.hashMasterKey(
         this.currentMasterPassword,
-        await this.cryptoService.getOrDeriveMasterKey(this.currentMasterPassword),
+        await this.keyService.getOrDeriveMasterKey(this.currentMasterPassword),
       );
       request.newMasterPasswordHash = newMasterKeyHash;
       request.key = newUserKey[1].encryptedString;
@@ -120,11 +126,11 @@ export class UpdatePasswordComponent extends BaseChangePasswordComponent {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.apiService.postPassword(request);
 
-      this.platformUtilsService.showToast(
-        "success",
-        this.i18nService.t("masterPasswordChanged"),
-        this.i18nService.t("logBackIn"),
-      );
+      this.toastService.showToast({
+        variant: "success",
+        title: this.i18nService.t("masterPasswordChanged"),
+        message: this.i18nService.t("logBackIn"),
+      });
 
       if (this.onSuccessfulChangePassword != null) {
         // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.

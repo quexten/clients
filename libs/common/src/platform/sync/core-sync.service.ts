@@ -1,4 +1,6 @@
-import { firstValueFrom, map, of, switchMap } from "rxjs";
+import { firstValueFrom, map, Observable, of, switchMap } from "rxjs";
+
+import { CollectionService } from "@bitwarden/admin-console/common";
 
 import { ApiService } from "../../abstractions/api.service";
 import { AccountService } from "../../auth/abstractions/account.service";
@@ -14,7 +16,6 @@ import { SendApiService } from "../../tools/send/services/send-api.service.abstr
 import { InternalSendService } from "../../tools/send/services/send.service.abstraction";
 import { UserId } from "../../types/guid";
 import { CipherService } from "../../vault/abstractions/cipher.service";
-import { CollectionService } from "../../vault/abstractions/collection.service";
 import { FolderApiServiceAbstraction } from "../../vault/abstractions/folder/folder-api.service.abstraction";
 import { InternalFolderService } from "../../vault/abstractions/folder/folder.service.abstraction";
 import { SyncService } from "../../vault/abstractions/sync/sync.service.abstraction";
@@ -65,6 +66,17 @@ export abstract class CoreSyncService implements SyncService {
 
   lastSync$(userId: UserId) {
     return this.stateProvider.getUser(userId, LAST_SYNC_DATE).state$;
+  }
+
+  activeUserLastSync$(): Observable<Date | null> {
+    return this.accountService.activeAccount$.pipe(
+      switchMap((a) => {
+        if (a == null) {
+          return of(null);
+        }
+        return this.lastSync$(a.id);
+      }),
+    );
   }
 
   async setLastSync(date: Date, userId: UserId): Promise<void> {

@@ -2,14 +2,19 @@ import { filter, firstValueFrom, Observable, scan, startWith } from "rxjs";
 import { pairwise } from "rxjs/operators";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { AccountInfo, AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
-import { AutofillOverlayVisibility } from "@bitwarden/common/autofill/constants";
+import {
+  AutofillOverlayVisibility,
+  CardExpiryDateDelimiters,
+} from "@bitwarden/common/autofill/constants";
 import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/autofill-settings.service";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
+import { UserNotificationSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/user-notification-settings.service";
 import { InlineMenuVisibilitySetting } from "@bitwarden/common/autofill/types";
+import { normalizeExpiryYearFormat } from "@bitwarden/common/autofill/utils";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { EventType } from "@bitwarden/common/enums";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
@@ -20,10 +25,12 @@ import {
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessageListener } from "@bitwarden/common/platform/messaging";
+import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { FieldType, CipherType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
+import { CardView } from "@bitwarden/common/vault/models/view/card.view";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FieldView } from "@bitwarden/common/vault/models/view/field.view";
 import { IdentityView } from "@bitwarden/common/vault/models/view/identity.view";
@@ -47,6 +54,7 @@ import {
 } from "./abstractions/autofill.service";
 import {
   AutoFillConstants,
+  CardExpiryDateFormat,
   CreditCardAutoFillConstants,
   IdentityAutoFillConstants,
 } from "./autofill-constants";
@@ -71,6 +79,7 @@ export default class AutofillService implements AutofillServiceInterface {
     private accountService: AccountService,
     private authService: AuthService,
     private configService: ConfigService,
+    private userNotificationSettingsService: UserNotificationSettingsServiceAbstraction,
     private messageListener: MessageListener,
   ) {}
 
@@ -121,10 +130,23 @@ export default class AutofillService implements AutofillServiceInterface {
   async loadAutofillScriptsOnInstall() {
     BrowserApi.addListener(chrome.runtime.onConnect, this.handleInjectedScriptPortConnection);
     void this.injectAutofillScriptsInAllTabs();
+
     this.autofillSettingsService.inlineMenuVisibility$
       .pipe(startWith(undefined), pairwise())
       .subscribe(([previousSetting, currentSetting]) =>
-        this.handleInlineMenuVisibilityChange(previousSetting, currentSetting),
+        this.handleInlineMenuVisibilitySettingsChange(previousSetting, currentSetting),
+      );
+
+    this.autofillSettingsService.showInlineMenuCards$
+      .pipe(startWith(undefined), pairwise())
+      .subscribe(([previousSetting, currentSetting]) =>
+        this.handleInlineMenuVisibilitySettingsChange(previousSetting, currentSetting),
+      );
+
+    this.autofillSettingsService.showInlineMenuIdentities$
+      .pipe(startWith(undefined), pairwise())
+      .subscribe(([previousSetting, currentSetting]) =>
+        this.handleInlineMenuVisibilitySettingsChange(previousSetting, currentSetting),
       );
   }
 
@@ -164,25 +186,14 @@ export default class AutofillService implements AutofillServiceInterface {
     const activeAccount = await firstValueFrom(this.accountService.activeAccount$);
     const authStatus = await firstValueFrom(this.authService.activeAccountStatus$);
     const accountIsUnlocked = authStatus === AuthenticationStatus.Unlocked;
-    let inlineMenuVisibility: InlineMenuVisibilitySetting = AutofillOverlayVisibility.Off;
     let autoFillOnPageLoadIsEnabled = false;
+    const addLoginImprovementsFlagActive = await this.configService.getFeatureFlag(
+      FeatureFlag.NotificationBarAddLoginImprovements,
+    );
 
-    if (activeAccount) {
-      inlineMenuVisibility = await this.getInlineMenuVisibility();
-    }
-
-    let mainAutofillScript = "bootstrap-autofill.js";
-
-    if (inlineMenuVisibility) {
-      const inlineMenuPositioningImprovements = await this.configService.getFeatureFlag(
-        FeatureFlag.InlineMenuPositioningImprovements,
-      );
-      mainAutofillScript = inlineMenuPositioningImprovements
-        ? "bootstrap-autofill-overlay.js"
-        : "bootstrap-legacy-autofill-overlay.js";
-    }
-
-    const injectedScripts = [mainAutofillScript];
+    const injectedScripts = [
+      await this.getBootstrapAutofillContentScript(activeAccount, addLoginImprovementsFlagActive),
+    ];
 
     if (activeAccount && accountIsUnlocked) {
       autoFillOnPageLoadIsEnabled = await this.getAutofillOnPageLoad();
@@ -199,7 +210,11 @@ export default class AutofillService implements AutofillServiceInterface {
       });
     }
 
-    injectedScripts.push("notificationBar.js", "contextMenuHandler.js");
+    if (!addLoginImprovementsFlagActive) {
+      injectedScripts.push("notificationBar.js");
+    }
+
+    injectedScripts.push("contextMenuHandler.js");
 
     for (const injectedScript of injectedScripts) {
       await this.scriptInjectorService.inject({
@@ -211,6 +226,57 @@ export default class AutofillService implements AutofillServiceInterface {
         },
       });
     }
+  }
+
+  /**
+   * Identifies the correct autofill script to inject based on whether the
+   * inline menu is enabled, and whether the user has the notification bar
+   * enabled.
+   *
+   * @param activeAccount - The active account
+   * @param addLoginImprovementsFlagActive - Whether the add login improvements feature flag is active
+   */
+  private async getBootstrapAutofillContentScript(
+    activeAccount: { id: UserId | undefined } & AccountInfo,
+    addLoginImprovementsFlagActive = false,
+  ): Promise<string> {
+    let inlineMenuVisibility: InlineMenuVisibilitySetting = AutofillOverlayVisibility.Off;
+
+    if (activeAccount) {
+      inlineMenuVisibility = await this.getInlineMenuVisibility();
+    }
+
+    const inlineMenuPositioningImprovements = await this.configService.getFeatureFlag(
+      FeatureFlag.InlineMenuPositioningImprovements,
+    );
+    if (!inlineMenuPositioningImprovements) {
+      return !inlineMenuVisibility
+        ? "bootstrap-autofill.js"
+        : "bootstrap-legacy-autofill-overlay.js";
+    }
+
+    const enableChangedPasswordPrompt = await firstValueFrom(
+      this.userNotificationSettingsService.enableChangedPasswordPrompt$,
+    );
+    const enableAddedLoginPrompt = await firstValueFrom(
+      this.userNotificationSettingsService.enableAddedLoginPrompt$,
+    );
+    const isNotificationBarEnabled =
+      addLoginImprovementsFlagActive && (enableChangedPasswordPrompt || enableAddedLoginPrompt);
+
+    if (!inlineMenuVisibility && !isNotificationBarEnabled) {
+      return "bootstrap-autofill.js";
+    }
+
+    if (!inlineMenuVisibility && isNotificationBarEnabled) {
+      return "bootstrap-autofill-overlay-notifications.js";
+    }
+
+    if (inlineMenuVisibility && !isNotificationBarEnabled) {
+      return "bootstrap-autofill-overlay-menu.js";
+    }
+
+    return "bootstrap-autofill-overlay.js";
   }
 
   /**
@@ -675,7 +741,12 @@ export default class AutofillService implements AutofillServiceInterface {
         );
         break;
       case CipherType.Card:
-        fillScript = this.generateCardFillScript(fillScript, pageDetails, filledFields, options);
+        fillScript = await this.generateCardFillScript(
+          fillScript,
+          pageDetails,
+          filledFields,
+          options,
+        );
         break;
       case CipherType.Identity:
         fillScript = await this.generateIdentityFillScript(
@@ -829,7 +900,10 @@ export default class AutofillService implements AutofillServiceInterface {
           options.allowTotpAutofill &&
           f.viewable &&
           (f.type === "text" || f.type === "number") &&
-          (AutofillService.fieldIsFuzzyMatch(f, AutoFillConstants.TotpFieldNames) ||
+          (AutofillService.fieldIsFuzzyMatch(f, [
+            ...AutoFillConstants.TotpFieldNames,
+            ...AutoFillConstants.AmbiguousTotpFieldNames,
+          ]) ||
             f.autoCompleteType === "one-time-code")
         ) {
           totps.push(f);
@@ -866,13 +940,16 @@ export default class AutofillService implements AutofillServiceInterface {
 
     if (options.allowTotpAutofill) {
       await Promise.all(
-        totps.map(async (t) => {
+        totps.map(async (t, i) => {
           if (Object.prototype.hasOwnProperty.call(filledFields, t.opid)) {
             return;
           }
 
           filledFields[t.opid] = t;
-          const totpValue = await this.totpService.getCode(login.totp);
+          let totpValue = await this.totpService.getCode(login.totp);
+          if (totpValue.length == totps.length) {
+            totpValue = totpValue.charAt(i);
+          }
           AutofillService.fillByOpid(fillScript, t, totpValue);
         }),
       );
@@ -891,12 +968,12 @@ export default class AutofillService implements AutofillServiceInterface {
    * @returns {AutofillScript|null}
    * @private
    */
-  private generateCardFillScript(
+  private async generateCardFillScript(
     fillScript: AutofillScript,
     pageDetails: AutofillPageDetails,
     filledFields: { [id: string]: AutofillField },
     options: GenerateFillScriptOptions,
-  ): AutofillScript | null {
+  ): Promise<AutofillScript | null> {
     if (!options.cipher.card) {
       return null;
     }
@@ -981,6 +1058,7 @@ export default class AutofillService implements AutofillServiceInterface {
     this.makeScriptAction(fillScript, card, fillFields, filledFields, "code");
     this.makeScriptAction(fillScript, card, fillFields, filledFields, "brand");
 
+    // There is an expiration month field and the cipher has an expiration month value
     if (fillFields.expMonth && AutofillService.hasValue(card.expMonth)) {
       let expMonth: string = card.expMonth;
 
@@ -1019,6 +1097,7 @@ export default class AutofillService implements AutofillServiceInterface {
       AutofillService.fillByOpid(fillScript, fillFields.expMonth, expMonth);
     }
 
+    // There is an expiration year field and the cipher has an expiration year value
     if (fillFields.expYear && AutofillService.hasValue(card.expYear)) {
       let expYear: string = card.expYear;
       if (fillFields.expYear.selectInfo && fillFields.expYear.selectInfo.options) {
@@ -1050,7 +1129,7 @@ export default class AutofillService implements AutofillServiceInterface {
         fillFields.expYear.maxLength === 4
       ) {
         if (expYear.length === 2) {
-          expYear = "20" + expYear;
+          expYear = normalizeExpiryYearFormat(expYear);
         }
       } else if (
         this.fieldAttrsContain(fillFields.expYear, "yy") ||
@@ -1065,142 +1144,174 @@ export default class AutofillService implements AutofillServiceInterface {
       AutofillService.fillByOpid(fillScript, fillFields.expYear, expYear);
     }
 
+    // There is a single expiry date field (combined values) and the cipher has both expiration month and year
     if (
       fillFields.exp &&
       AutofillService.hasValue(card.expMonth) &&
       AutofillService.hasValue(card.expYear)
     ) {
-      const fullMonth = ("0" + card.expMonth).slice(-2);
+      let combinedExpiryFillValue = null;
 
-      let fullYear: string = card.expYear;
-      let partYear: string = null;
-      if (fullYear.length === 2) {
-        partYear = fullYear;
-        fullYear = "20" + fullYear;
-      } else if (fullYear.length === 4) {
-        partYear = fullYear.substr(2, 2);
-      }
+      const enableNewCardCombinedExpiryAutofill = await this.configService.getFeatureFlag(
+        FeatureFlag.EnableNewCardCombinedExpiryAutofill,
+      );
 
-      let exp: string = null;
-      for (let i = 0; i < CreditCardAutoFillConstants.MonthAbbr.length; i++) {
-        if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] +
-              "/" +
-              CreditCardAutoFillConstants.YearAbbrLong[i],
-          )
-        ) {
-          exp = fullMonth + "/" + fullYear;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] +
-              "/" +
-              CreditCardAutoFillConstants.YearAbbrShort[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = fullMonth + "/" + partYear;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrLong[i] +
-              "/" +
-              CreditCardAutoFillConstants.MonthAbbr[i],
-          )
-        ) {
-          exp = fullYear + "/" + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrShort[i] +
-              "/" +
-              CreditCardAutoFillConstants.MonthAbbr[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = partYear + "/" + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] +
-              "-" +
-              CreditCardAutoFillConstants.YearAbbrLong[i],
-          )
-        ) {
-          exp = fullMonth + "-" + fullYear;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] +
-              "-" +
-              CreditCardAutoFillConstants.YearAbbrShort[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = fullMonth + "-" + partYear;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrLong[i] +
-              "-" +
-              CreditCardAutoFillConstants.MonthAbbr[i],
-          )
-        ) {
-          exp = fullYear + "-" + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrShort[i] +
-              "-" +
-              CreditCardAutoFillConstants.MonthAbbr[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = partYear + "-" + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrLong[i] + CreditCardAutoFillConstants.MonthAbbr[i],
-          )
-        ) {
-          exp = fullYear + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.YearAbbrShort[i] + CreditCardAutoFillConstants.MonthAbbr[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = partYear + fullMonth;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] + CreditCardAutoFillConstants.YearAbbrLong[i],
-          )
-        ) {
-          exp = fullMonth + fullYear;
-        } else if (
-          this.fieldAttrsContain(
-            fillFields.exp,
-            CreditCardAutoFillConstants.MonthAbbr[i] + CreditCardAutoFillConstants.YearAbbrShort[i],
-          ) &&
-          partYear != null
-        ) {
-          exp = fullMonth + partYear;
+      if (enableNewCardCombinedExpiryAutofill) {
+        combinedExpiryFillValue = this.generateCombinedExpiryValue(card, fillFields.exp);
+      } else {
+        const fullMonth = ("0" + card.expMonth).slice(-2);
+
+        let fullYear: string = card.expYear;
+        let partYear: string = null;
+        if (fullYear.length === 2) {
+          partYear = fullYear;
+          fullYear = normalizeExpiryYearFormat(fullYear);
+        } else if (fullYear.length === 4) {
+          partYear = fullYear.substr(2, 2);
         }
 
-        if (exp != null) {
-          break;
+        for (let i = 0; i < CreditCardAutoFillConstants.MonthAbbr.length; i++) {
+          if (
+            // mm/yyyy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                "/" +
+                CreditCardAutoFillConstants.YearAbbrLong[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullMonth + "/" + fullYear;
+          } else if (
+            // mm/yy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                "/" +
+                CreditCardAutoFillConstants.YearAbbrShort[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = fullMonth + "/" + partYear;
+          } else if (
+            // yyyy/mm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrLong[i] +
+                "/" +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullYear + "/" + fullMonth;
+          } else if (
+            // yy/mm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrShort[i] +
+                "/" +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = partYear + "/" + fullMonth;
+          } else if (
+            // mm-yyyy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                "-" +
+                CreditCardAutoFillConstants.YearAbbrLong[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullMonth + "-" + fullYear;
+          } else if (
+            // mm-yy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                "-" +
+                CreditCardAutoFillConstants.YearAbbrShort[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = fullMonth + "-" + partYear;
+          } else if (
+            // yyyy-mm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrLong[i] +
+                "-" +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullYear + "-" + fullMonth;
+          } else if (
+            // yy-mm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrShort[i] +
+                "-" +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = partYear + "-" + fullMonth;
+          } else if (
+            // yyyymm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrLong[i] +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullYear + fullMonth;
+          } else if (
+            // yymm
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.YearAbbrShort[i] +
+                CreditCardAutoFillConstants.MonthAbbr[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = partYear + fullMonth;
+          } else if (
+            // mmyyyy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                CreditCardAutoFillConstants.YearAbbrLong[i],
+            )
+          ) {
+            combinedExpiryFillValue = fullMonth + fullYear;
+          } else if (
+            // mmyy
+            this.fieldAttrsContain(
+              fillFields.exp,
+              CreditCardAutoFillConstants.MonthAbbr[i] +
+                CreditCardAutoFillConstants.YearAbbrShort[i],
+            ) &&
+            partYear != null
+          ) {
+            combinedExpiryFillValue = fullMonth + partYear;
+          }
+
+          if (combinedExpiryFillValue != null) {
+            break;
+          }
+        }
+
+        // If none of the previous cases applied, set as default
+        if (combinedExpiryFillValue == null) {
+          combinedExpiryFillValue = fullYear + "-" + fullMonth;
         }
       }
 
-      if (exp == null) {
-        exp = fullYear + "-" + fullMonth;
-      }
-
-      this.makeScriptActionWithValue(fillScript, exp, fillFields.exp, filledFields);
+      this.makeScriptActionWithValue(
+        fillScript,
+        combinedExpiryFillValue,
+        fillFields.exp,
+        filledFields,
+      );
     }
 
     return fillScript;
@@ -1241,28 +1352,169 @@ export default class AutofillService implements AutofillServiceInterface {
    * Used when handling autofill on credit card fields. Determines whether
    * the field has an attribute that matches the given value.
    * @param {AutofillField} field
-   * @param {string} containsVal
+   * @param {string} containsValue
    * @returns {boolean}
    * @private
    */
-  private fieldAttrsContain(field: AutofillField, containsVal: string): boolean {
+  private fieldAttrsContain(field: AutofillField, containsValue: string): boolean {
     if (!field) {
       return false;
     }
 
-    let doesContain = false;
-    CreditCardAutoFillConstants.CardAttributesExtended.forEach((attr) => {
-      // eslint-disable-next-line
-      if (doesContain || !field.hasOwnProperty(attr) || !field[attr]) {
+    let doesContainValue = false;
+    CreditCardAutoFillConstants.CardAttributesExtended.forEach((attributeName) => {
+      // eslint-disable-next-line no-prototype-builtins
+      if (doesContainValue || !field[attributeName]) {
         return;
       }
 
-      let val = field[attr];
-      val = val.replace(/ /g, "").toLowerCase();
-      doesContain = val.indexOf(containsVal) > -1;
+      let fieldValue = field[attributeName];
+      fieldValue = fieldValue.replace(/ /g, "").toLowerCase();
+      doesContainValue = fieldValue.indexOf(containsValue) > -1;
     });
 
-    return doesContain;
+    return doesContainValue;
+  }
+
+  /**
+   * Returns a string value representation of the combined card expiration month and year values
+   * in a format matching discovered guidance within the field attributes (typically provided for users).
+   *
+   * @param {CardView} cardCipher
+   * @param {AutofillField} field
+   */
+  private generateCombinedExpiryValue(cardCipher: CardView, field: AutofillField): string {
+    /*
+      Some expectations of the passed stored card cipher view:
+
+      - At the time of writing, the stored card expiry year value (`expYear`)
+        can be any arbitrary string (no format validation). We may attempt some format
+        normalization here, but expect the user to have entered a string of integers
+        with a length of 2 or 4
+
+      - the `expiration` property cannot be used for autofill as it is an opinionated
+        format
+
+      - `expMonth` a stringified integer stored with no zero-padding and is not
+        zero-indexed (e.g. January is "1", not "01" or 0)
+    */
+
+    // Expiry format options
+    let useMonthPadding = true;
+    let useYearFull = false;
+    let delimiter = "/";
+    let orderByYear = false;
+
+    // Because users are allowed to store truncated years, we need to make assumptions
+    // about the full year format when called for
+    const currentCentury = `${new Date().getFullYear()}`.slice(0, 2);
+
+    // Note, we construct the output rather than doing string replacement against the
+    // format guidance pattern to avoid edge cases that would output invalid values
+    const [
+      // The guidance parsed from the field properties regarding expiry format
+      expectedExpiryDateFormat,
+      // The (localized) date pattern set that was used to parse the expiry format guidance
+      expiryDateFormatPatterns,
+    ] = this.getExpectedExpiryDateFormat(field);
+
+    if (expectedExpiryDateFormat) {
+      const { Month, MonthShort, Year } = expiryDateFormatPatterns;
+
+      const expiryDateDelimitersPattern = "\\" + CardExpiryDateDelimiters.join("\\");
+
+      // assign the delimiter from the expected format string
+      delimiter =
+        expectedExpiryDateFormat.match(new RegExp(`[${expiryDateDelimitersPattern}]`, "g"))?.[0] ||
+        "";
+
+      // check if the expected format starts with a month form
+      // order matters here; check long form first, since short form will match against long
+      if (expectedExpiryDateFormat.indexOf(Month + delimiter) === 0) {
+        useMonthPadding = true;
+        orderByYear = false;
+      } else if (expectedExpiryDateFormat.indexOf(MonthShort + delimiter) === 0) {
+        useMonthPadding = false;
+        orderByYear = false;
+      } else {
+        orderByYear = true;
+
+        // short form can match against long form, but long won't match against short
+        const containsLongMonthPattern = new RegExp(`${Month}`, "i");
+        useMonthPadding = containsLongMonthPattern.test(expectedExpiryDateFormat);
+      }
+
+      const containsLongYearPattern = new RegExp(`${Year}`, "i");
+
+      useYearFull = containsLongYearPattern.test(expectedExpiryDateFormat);
+    }
+
+    const month = useMonthPadding
+      ? // Ensure zero-padding
+        ("0" + cardCipher.expMonth).slice(-2)
+      : // Handle zero-padded stored month values, even though they are not _expected_ to be as such
+        cardCipher.expMonth.replaceAll("0", "");
+    // Note: assumes the user entered an `expYear` value with a length of either 2 or 4
+    const year = (currentCentury + cardCipher.expYear).slice(useYearFull ? -4 : -2);
+
+    const combinedExpiryFillValue = (orderByYear ? [year, month] : [month, year]).join(delimiter);
+
+    return combinedExpiryFillValue;
+  }
+
+  /**
+   * Returns a string value representation of discovered guidance for a combined month and year expiration value from the field attributes
+   *
+   * @param {AutofillField} field
+   */
+  private getExpectedExpiryDateFormat(
+    field: AutofillField,
+  ): [string | null, CardExpiryDateFormat | null] {
+    let expectedDateFormat = null;
+    let dateFormatPatterns = null;
+
+    const expiryDateDelimitersPattern = "\\" + CardExpiryDateDelimiters.join("\\");
+
+    CreditCardAutoFillConstants.CardExpiryDateFormats.find((dateFormat) => {
+      dateFormatPatterns = dateFormat;
+
+      const { Month, MonthShort, YearShort, Year } = dateFormat;
+
+      // Non-exhaustive coverage of field guidances. Some uncovered edge cases: ". " delimiter, space-delimited delimiters ("mm / yyyy").
+      // We should consider if added whitespace is for improved readability of user-guidance or actually desired in the filled value.
+      // e.g. "/((mm|m)[\/\-\.\ ]{0,1}(yyyy|yy))|((yyyy|yy)[\/\-\.\ ]{0,1}(mm|m))/gi"
+      const dateFormatPattern = new RegExp(
+        `((${Month}|${MonthShort})[${expiryDateDelimitersPattern}]{0,1}(${Year}|${YearShort}))|((${Year}|${YearShort})[${expiryDateDelimitersPattern}]{0,1}(${Month}|${MonthShort}))`,
+        "gi",
+      );
+
+      return CreditCardAutoFillConstants.CardAttributesExtended.find((attributeName) => {
+        const fieldAttributeValue = field[attributeName];
+
+        const fieldAttributeMatch = fieldAttributeValue?.match(dateFormatPattern);
+        // break find as soon as a match is found
+
+        if (fieldAttributeMatch?.length) {
+          expectedDateFormat = fieldAttributeMatch[0];
+
+          // remove any irrelevant characters
+          const irrelevantExpiryCharactersPattern = new RegExp(
+            // "or digits" to ensure numbers are removed from guidance pattern, which aren't covered by ^\w
+            `[^\\w${expiryDateDelimitersPattern}]|[\\d]`,
+            "gi",
+          );
+          expectedDateFormat.replaceAll(irrelevantExpiryCharactersPattern, "");
+
+          return true;
+        }
+
+        return false;
+      });
+    });
+    // @TODO if expectedDateFormat is still null, and there is a `pattern` attribute, cycle
+    // through generated formatted values, checking against the provided regex pattern
+
+    return [expectedDateFormat, dateFormatPatterns];
   }
 
   /**
@@ -1633,7 +1885,10 @@ export default class AutofillService implements AutofillServiceInterface {
    */
   private excludeFieldFromIdentityFill(field: AutofillField): boolean {
     return (
-      AutofillService.isExcludedFieldType(field, AutoFillConstants.ExcludedAutofillTypes) ||
+      AutofillService.isExcludedFieldType(field, [
+        "password",
+        ...AutoFillConstants.ExcludedAutofillTypes,
+      ]) ||
       AutoFillConstants.ExcludedIdentityAutocompleteTypes.has(field.autoCompleteType) ||
       !field.viewable
     );
@@ -2325,6 +2580,11 @@ export default class AutofillService implements AutofillServiceInterface {
         return;
       }
 
+      // We want to avoid treating TOTP fields as password fields
+      if (AutofillService.fieldIsFuzzyMatch(f, AutoFillConstants.TotpFieldNames)) {
+        return;
+      }
+
       const isLikePassword = () => {
         if (f.type !== "text") {
           return false;
@@ -2437,12 +2697,18 @@ export default class AutofillService implements AutofillServiceInterface {
         (withoutForm || f.form === passwordField.form) &&
         (canBeHidden || f.viewable) &&
         (f.type === "text" || f.type === "number") &&
-        AutofillService.fieldIsFuzzyMatch(f, AutoFillConstants.TotpFieldNames)
+        AutofillService.fieldIsFuzzyMatch(f, [
+          ...AutoFillConstants.TotpFieldNames,
+          ...AutoFillConstants.AmbiguousTotpFieldNames,
+        ])
       ) {
         totpField = f;
 
         if (
-          this.findMatchingFieldIndex(f, AutoFillConstants.TotpFieldNames) > -1 ||
+          this.findMatchingFieldIndex(f, [
+            ...AutoFillConstants.TotpFieldNames,
+            ...AutoFillConstants.AmbiguousTotpFieldNames,
+          ]) > -1 ||
           f.autoCompleteType === "one-time-code"
         ) {
           // We found an exact match. No need to keep looking.
@@ -2627,6 +2893,12 @@ export default class AutofillService implements AutofillServiceInterface {
     ) {
       return true;
     }
+    if (
+      AutofillService.hasValue(field.dataSetValues) &&
+      this.fuzzyMatch(names, field.dataSetValues)
+    ) {
+      return true;
+    }
 
     return false;
   }
@@ -2786,37 +3058,40 @@ export default class AutofillService implements AutofillServiceInterface {
     const tabs = await BrowserApi.tabsQuery({});
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index];
-      if (tab.url?.startsWith("http")) {
+      if (tab?.id && tab.url?.startsWith("http")) {
         const frames = await BrowserApi.getAllFrameDetails(tab.id);
-        frames.forEach((frame) => this.injectAutofillScripts(tab, frame.frameId, false));
+        if (frames) {
+          frames.forEach((frame) => this.injectAutofillScripts(tab, frame.frameId, false));
+        }
       }
     }
   }
 
   /**
-   * Updates the autofill inline menu visibility setting in all active tabs
-   * when the InlineMenuVisibilitySetting observable is updated.
+   * Updates the autofill inline menu visibility settings in all active tabs
+   * when the inlineMenuVisibility, showInlineMenuCards, or showInlineMenuIdentities
+   * observables are updated.
    *
-   * @param previousSetting - The previous setting value
-   * @param currentSetting - The current setting value
+   * @param oldSettingValue - The previous setting value
+   * @param newSettingValue - The current setting value
    */
-  private async handleInlineMenuVisibilityChange(
-    previousSetting: InlineMenuVisibilitySetting,
-    currentSetting: InlineMenuVisibilitySetting,
+  private async handleInlineMenuVisibilitySettingsChange(
+    oldSettingValue: InlineMenuVisibilitySetting | boolean,
+    newSettingValue: InlineMenuVisibilitySetting | boolean,
   ) {
-    if (previousSetting === undefined || previousSetting === currentSetting) {
+    if (oldSettingValue == null || oldSettingValue === newSettingValue) {
       return;
     }
 
-    const inlineMenuPreviouslyDisabled = previousSetting === AutofillOverlayVisibility.Off;
-    const inlineMenuCurrentlyDisabled = currentSetting === AutofillOverlayVisibility.Off;
-    if (!inlineMenuPreviouslyDisabled && !inlineMenuCurrentlyDisabled) {
-      const tabs = await BrowserApi.tabsQuery({});
-      tabs.forEach((tab) =>
-        BrowserApi.tabSendMessageData(tab, "updateAutofillInlineMenuVisibility", {
-          inlineMenuVisibility: currentSetting,
-        }),
-      );
+    const isInlineMenuVisibilitySubSetting =
+      typeof oldSettingValue === "boolean" || typeof newSettingValue === "boolean";
+    const inlineMenuPreviouslyDisabled = oldSettingValue === AutofillOverlayVisibility.Off;
+    const inlineMenuCurrentlyDisabled = newSettingValue === AutofillOverlayVisibility.Off;
+    if (
+      !isInlineMenuVisibilitySubSetting &&
+      !inlineMenuPreviouslyDisabled &&
+      !inlineMenuCurrentlyDisabled
+    ) {
       return;
     }
 

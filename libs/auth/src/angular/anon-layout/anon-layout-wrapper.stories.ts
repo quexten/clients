@@ -15,8 +15,6 @@ import {
   Environment,
 } from "@bitwarden/common/platform/abstractions/environment.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { ThemeType } from "@bitwarden/common/platform/enums";
-import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
 import { ButtonModule } from "@bitwarden/components";
 
 // FIXME: remove `/apps` import from `/libs`
@@ -40,7 +38,6 @@ const decorators = (options: {
   applicationVersion?: string;
   clientType?: ClientType;
   hostName?: string;
-  themeType?: ThemeType;
 }) => {
   return [
     componentWrapperDecorator(
@@ -83,12 +80,6 @@ const decorators = (options: {
               Promise.resolve(options.applicationVersion || "FAKE_APP_VERSION"),
             getClientType: () => options.clientType || ClientType.Web,
           } as Partial<PlatformUtilsService>,
-        },
-        {
-          provide: ThemeStateService,
-          useValue: {
-            selectedTheme$: of(options.themeType || ThemeType.Light),
-          } as Partial<ThemeStateService>,
         },
       ],
     }),
@@ -172,17 +163,20 @@ export const DefaultContentExample: Story = {
 
 // Dynamic Content Example
 const initialData: AnonLayoutWrapperData = {
-  pageTitle: "setAStrongPassword",
-  pageSubtitle: "finishCreatingYourAccountBySettingAPassword",
+  pageTitle: {
+    key: "setAStrongPassword",
+  },
+  pageSubtitle: {
+    key: "finishCreatingYourAccountBySettingAPassword",
+  },
   pageIcon: LockIcon,
 };
 
 const changedData: AnonLayoutWrapperData = {
-  pageTitle: "enterpriseSingleSignOn",
-  pageSubtitle: {
-    subtitle: "user@email.com (non-translated)",
-    translate: false,
+  pageTitle: {
+    key: "enterpriseSingleSignOn",
   },
+  pageSubtitle: "user@email.com (non-translated)",
   pageIcon: RegistrationCheckEmailIcon,
 };
 

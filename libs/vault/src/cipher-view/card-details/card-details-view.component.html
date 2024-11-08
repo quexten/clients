@@ -2,7 +2,7 @@
   <bit-section-header>
     <h2 bitTypography="h6">{{ setSectionTitle }}</h2>
   </bit-section-header>
-  <bit-card class="[&_bit-form-field:last-of-type]:tw-mb-0">
+  <read-only-cipher-card>
     <bit-form-field *ngIf="card.cardholderName">
       <bit-label>{{ "cardholderName" | i18n }}</bit-label>
       <input
@@ -23,6 +23,7 @@
         [value]="card.number"
         aria-readonly="true"
         data-testid="cardholder-number"
+        class="tw-font-mono"
       />
       <button
         bitSuffix
@@ -30,6 +31,7 @@
         bitIconButton
         bitPasswordInputToggle
         data-testid="toggle-number"
+        (toggledChange)="logCardEvent($event, EventType.Cipher_ClientToggledCardNumberVisible)"
       ></button>
       <button
         bitIconButton="bwi-clone"
@@ -38,7 +40,7 @@
         [appCopyClick]="card.number"
         showToast
         [valueLabel]="'number' | i18n"
-        [appA11yTitle]="'copyValue' | i18n"
+        [appA11yTitle]="'copyNumber' | i18n"
         data-testid="copy-number"
       ></button>
     </bit-form-field>
@@ -62,6 +64,7 @@
         [value]="card.code"
         aria-readonly="true"
         data-testid="cardholder-code"
+        class="tw-font-mono"
       />
       <button
         bitSuffix
@@ -69,6 +72,7 @@
         bitIconButton
         bitPasswordInputToggle
         data-testid="toggle-code"
+        (toggledChange)="logCardEvent($event, EventType.Cipher_ClientToggledCardCodeVisible)"
       ></button>
       <button
         bitIconButton="bwi-clone"
@@ -77,9 +81,10 @@
         [appCopyClick]="card.code"
         showToast
         [valueLabel]="'securityCode' | i18n"
-        [appA11yTitle]="'copyValue' | i18n"
+        [appA11yTitle]="'copySecurityCode' | i18n"
         data-testid="copy-code"
+        (click)="logCardEvent(true, EventType.Cipher_ClientCopiedCardCode)"
       ></button>
     </bit-form-field>
-  </bit-card>
+  </read-only-cipher-card>
 </bit-section>

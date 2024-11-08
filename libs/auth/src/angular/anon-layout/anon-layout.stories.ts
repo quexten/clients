@@ -1,3 +1,4 @@
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
 import { BehaviorSubject, of } from "rxjs";
 
@@ -5,7 +6,6 @@ import { ClientType } from "@bitwarden/common/enums";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
 
 import { ButtonModule } from "../../../../components/src/button";
 import { I18nMockService } from "../../../../components/src/utils/i18n-mock.service";
@@ -23,7 +23,7 @@ export default {
   component: AnonLayoutComponent,
   decorators: [
     moduleMetadata({
-      imports: [ButtonModule],
+      imports: [ButtonModule, RouterModule],
       providers: [
         {
           provide: PlatformUtilsService,
@@ -48,10 +48,8 @@ export default {
           },
         },
         {
-          provide: ThemeStateService,
-          useValue: {
-            selectedTheme$: of("light"),
-          },
+          provide: ActivatedRoute,
+          useValue: { queryParams: of({}) },
         },
       ],
     }),
@@ -73,7 +71,7 @@ export const WithPrimaryContent: Story = {
     template:
       // Projected content (the <div>) and styling is just a sample and can be replaced with any content/styling.
       `
-      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname">
+      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="hideLogo" >
         <div>
           <div class="tw-font-bold">Primary Projected Content Area (customizable)</div>
           <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus illum vero, placeat recusandae esse ratione eius minima veniam nemo, quas beatae! Impedit molestiae alias sapiente explicabo. Sapiente corporis ipsa numquam?</div>
@@ -90,7 +88,7 @@ export const WithSecondaryContent: Story = {
       // Projected content (the <div>'s) and styling is just a sample and can be replaced with any content/styling.
       // Notice that slot="secondary" is requred to project any secondary content.
       `
-      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname">
+      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="hideLogo" >
         <div>
           <div class="tw-font-bold">Primary Projected Content Area (customizable)</div>
           <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus illum vero, placeat recusandae esse ratione eius minima veniam nemo, quas beatae! Impedit molestiae alias sapiente explicabo. Sapiente corporis ipsa numquam?</div>
@@ -111,7 +109,7 @@ export const WithLongContent: Story = {
     template:
       // Projected content (the <div>'s) and styling is just a sample and can be replaced with any content/styling.
       `
-      <auth-anon-layout title="Page Title lorem ipsum dolor consectetur sit amet expedita quod est" subtitle="Subtitle here Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, quod est?" [showReadonlyHostname]="showReadonlyHostname">
+      <auth-anon-layout title="Page Title lorem ipsum dolor consectetur sit amet expedita quod est" subtitle="Subtitle here Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, quod est?" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="hideLogo" >
         <div>
           <div class="tw-font-bold">Primary Projected Content Area (customizable)</div>
           <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus illum vero, placeat recusandae esse ratione eius minima veniam nemo, quas beatae! Impedit molestiae alias sapiente explicabo. Sapiente corporis ipsa numquam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
@@ -133,7 +131,7 @@ export const WithThinPrimaryContent: Story = {
     template:
       // Projected content (the <div>'s) and styling is just a sample and can be replaced with any content/styling.
       `
-      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname">
+      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="hideLogo" >
         <div class="text-center">Lorem ipsum</div>
 
         <div slot="secondary" class="text-center">
@@ -167,7 +165,7 @@ export const HideLogo: Story = {
     template:
       // Projected content (the <div>) and styling is just a sample and can be replaced with any content/styling.
       `
-      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="true">
+      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideLogo]="true" >
         <div>
           <div class="tw-font-bold">Primary Projected Content Area (customizable)</div>
           <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus illum vero, placeat recusandae esse ratione eius minima veniam nemo, quas beatae! Impedit molestiae alias sapiente explicabo. Sapiente corporis ipsa numquam?</div>
@@ -183,7 +181,7 @@ export const HideFooter: Story = {
     template:
       // Projected content (the <div>) and styling is just a sample and can be replaced with any content/styling.
       `
-      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideFooter]="true">
+      <auth-anon-layout [title]="title" [subtitle]="subtitle" [showReadonlyHostname]="showReadonlyHostname" [hideFooter]="true" [hideLogo]="hideLogo" >
         <div>
           <div class="tw-font-bold">Primary Projected Content Area (customizable)</div>
           <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus illum vero, placeat recusandae esse ratione eius minima veniam nemo, quas beatae! Impedit molestiae alias sapiente explicabo. Sapiente corporis ipsa numquam?</div>

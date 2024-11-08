@@ -15,7 +15,6 @@ import { PasswordRequest } from "@bitwarden/common/auth/models/request/password.
 import { UpdateTdeOffboardingPasswordRequest } from "@bitwarden/common/auth/models/request/update-tde-offboarding-password.request";
 import { UpdateTempPasswordRequest } from "@bitwarden/common/auth/models/request/update-temp-password.request";
 import { MasterPasswordVerification } from "@bitwarden/common/auth/types/verification";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -24,8 +23,9 @@ import { StateService } from "@bitwarden/common/platform/abstractions/state.serv
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { MasterKey, UserKey } from "@bitwarden/common/types/key";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
+import { KeyService } from "@bitwarden/key-management";
 
 import { ChangePasswordComponent as BaseChangePasswordComponent } from "./change-password.component";
 
@@ -52,7 +52,7 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
     platformUtilsService: PlatformUtilsService,
     passwordGenerationService: PasswordGenerationServiceAbstraction,
     policyService: PolicyService,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     messagingService: MessagingService,
     private apiService: ApiService,
     stateService: StateService,
@@ -64,10 +64,11 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
     kdfConfigService: KdfConfigService,
     accountService: AccountService,
     masterPasswordService: InternalMasterPasswordServiceAbstraction,
+    toastService: ToastService,
   ) {
     super(
       i18nService,
-      cryptoService,
+      keyService,
       messagingService,
       passwordGenerationService,
       platformUtilsService,
@@ -77,6 +78,7 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
       kdfConfigService,
       masterPasswordService,
       accountService,
+      toastService,
     );
   }
 
@@ -99,11 +101,11 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
 
   get masterPasswordWarningText(): string {
     if (this.reason == ForceSetPasswordReason.WeakMasterPassword) {
-      return this.i18nService.t("weakMasterPasswordWarning");
+      return this.i18nService.t("updateWeakMasterPasswordWarning");
     } else if (this.reason == ForceSetPasswordReason.TdeOffboarding) {
       return this.i18nService.t("tdeDisabledMasterPasswordRequired");
     } else {
-      return this.i18nService.t("masterPasswordWarning");
+      return this.i18nService.t("updateMasterPasswordWarning");
     }
   }
 
@@ -132,21 +134,21 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
 
     try {
       // Create new key and hash new password
-      const newMasterKey = await this.cryptoService.makeMasterKey(
+      const newMasterKey = await this.keyService.makeMasterKey(
         this.masterPassword,
         this.email.trim().toLowerCase(),
         this.kdfConfig,
       );
-      const newPasswordHash = await this.cryptoService.hashMasterKey(
+      const newPasswordHash = await this.keyService.hashMasterKey(
         this.masterPassword,
         newMasterKey,
       );
 
       // Grab user key
-      const userKey = await this.cryptoService.getUserKey();
+      const userKey = await this.keyService.getUserKey();
 
       // Encrypt user key with new master key
-      const newProtectedUserKey = await this.cryptoService.encryptUserKeyWithMasterKey(
+      const newProtectedUserKey = await this.keyService.encryptUserKeyWithMasterKey(
         newMasterKey,
         userKey,
       );
@@ -176,11 +178,11 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
       }
 
       await this.formPromise;
-      this.platformUtilsService.showToast(
-        "success",
-        null,
-        this.i18nService.t("updatedMasterPassword"),
-      );
+      this.toastService.showToast({
+        variant: "success",
+        title: null,
+        message: this.i18nService.t("updatedMasterPassword"),
+      });
 
       const userId = (await firstValueFrom(this.accountService.activeAccount$))?.id;
       await this.masterPasswordService.setForceSetPasswordReason(

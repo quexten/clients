@@ -11,7 +11,6 @@ import { KdfConfigService } from "@bitwarden/common/auth/abstractions/kdf-config
 import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/auth/abstractions/master-password.service.abstraction";
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { PasswordRequest } from "@bitwarden/common/auth/models/request/password.request";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -22,10 +21,11 @@ import { UserId } from "@bitwarden/common/types/guid";
 import { MasterKey, UserKey } from "@bitwarden/common/types/key";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
+import { KeyService } from "@bitwarden/key-management";
 
-import { UserKeyRotationService } from "../key-rotation/user-key-rotation.service";
+import { UserKeyRotationService } from "../../key-management/key-rotation/user-key-rotation.service";
 
 @Component({
   selector: "app-change-password",
@@ -43,7 +43,7 @@ export class ChangePasswordComponent
 
   constructor(
     i18nService: I18nService,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     messagingService: MessagingService,
     stateService: StateService,
     passwordGenerationService: PasswordGenerationServiceAbstraction,
@@ -60,10 +60,11 @@ export class ChangePasswordComponent
     kdfConfigService: KdfConfigService,
     masterPasswordService: InternalMasterPasswordServiceAbstraction,
     accountService: AccountService,
+    toastService: ToastService,
   ) {
     super(
       i18nService,
-      cryptoService,
+      keyService,
       messagingService,
       passwordGenerationService,
       platformUtilsService,
@@ -73,6 +74,7 @@ export class ChangePasswordComponent
       kdfConfigService,
       masterPasswordService,
       accountService,
+      toastService,
     );
   }
 
@@ -83,7 +85,6 @@ export class ChangePasswordComponent
       this.router.navigate(["/settings/security/two-factor"]);
     }
 
-    this.masterPasswordHint = (await this.apiService.getProfile()).masterPasswordHint;
     await super.ngOnInit();
 
     this.characterMinimumMessage = this.i18nService.t("characterMinimum", this.minimumLength);
@@ -138,12 +139,15 @@ export class ChangePasswordComponent
   }
 
   async submit() {
-    if (this.masterPasswordHint != null && this.masterPasswordHint == this.masterPassword) {
-      this.platformUtilsService.showToast(
-        "error",
-        this.i18nService.t("errorOccurred"),
-        this.i18nService.t("hintEqualsPassword"),
-      );
+    if (
+      this.masterPasswordHint != null &&
+      this.masterPasswordHint.toLowerCase() === this.masterPassword.toLowerCase()
+    ) {
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: this.i18nService.t("hintEqualsPassword"),
+      });
       return;
     }
 
@@ -157,11 +161,11 @@ export class ChangePasswordComponent
 
   async setupSubmitActions() {
     if (this.currentMasterPassword == null || this.currentMasterPassword === "") {
-      this.platformUtilsService.showToast(
-        "error",
-        this.i18nService.t("errorOccurred"),
-        this.i18nService.t("masterPasswordRequired"),
-      );
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: this.i18nService.t("masterPasswordRequired"),
+      });
       return false;
     }
 
@@ -177,31 +181,31 @@ export class ChangePasswordComponent
     newMasterKey: MasterKey,
     newUserKey: [UserKey, EncString],
   ) {
-    const masterKey = await this.cryptoService.makeMasterKey(
+    const masterKey = await this.keyService.makeMasterKey(
       this.currentMasterPassword,
       await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.email))),
       await this.kdfConfigService.getKdfConfig(),
     );
 
     const userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
-    const newLocalKeyHash = await this.cryptoService.hashMasterKey(
+    const newLocalKeyHash = await this.keyService.hashMasterKey(
       this.masterPassword,
       newMasterKey,
       HashPurpose.LocalAuthorization,
     );
 
-    const userKey = await this.masterPasswordService.decryptUserKeyWithMasterKey(masterKey);
+    const userKey = await this.masterPasswordService.decryptUserKeyWithMasterKey(masterKey, userId);
     if (userKey == null) {
-      this.platformUtilsService.showToast(
-        "error",
-        null,
-        this.i18nService.t("invalidMasterPassword"),
-      );
+      this.toastService.showToast({
+        variant: "error",
+        title: null,
+        message: this.i18nService.t("invalidMasterPassword"),
+      });
       return;
     }
 
     const request = new PasswordRequest();
-    request.masterPasswordHash = await this.cryptoService.hashMasterKey(
+    request.masterPasswordHash = await this.keyService.hashMasterKey(
       this.currentMasterPassword,
       masterKey,
     );
@@ -223,14 +227,18 @@ export class ChangePasswordComponent
 
       await this.formPromise;
 
-      this.platformUtilsService.showToast(
-        "success",
-        this.i18nService.t("masterPasswordChanged"),
-        this.i18nService.t("logBackIn"),
-      );
+      this.toastService.showToast({
+        variant: "success",
+        title: this.i18nService.t("masterPasswordChanged"),
+        message: this.i18nService.t("logBackIn"),
+      });
       this.messagingService.send("logout");
     } catch {
-      this.platformUtilsService.showToast("error", null, this.i18nService.t("errorOccurred"));
+      this.toastService.showToast({
+        variant: "error",
+        title: null,
+        message: this.i18nService.t("errorOccurred"),
+      });
     }
   }
 

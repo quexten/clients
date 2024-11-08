@@ -1,4 +1,4 @@
-import { CommonModule, Location } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -6,10 +6,14 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { firstValueFrom, map, switchMap } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
+import { EventType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { CipherId, CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
+import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
+import { AddEditCipherInfo } from "@bitwarden/common/vault/types/add-edit-cipher-info";
 import { AsyncActionsModule, ButtonModule, SearchModule } from "@bitwarden/components";
 import {
   CipherFormConfig,
@@ -18,6 +22,7 @@ import {
   CipherFormMode,
   CipherFormModule,
   DefaultCipherFormConfigService,
+  OptionalInitialValues,
   TotpCaptureService,
 } from "@bitwarden/vault";
 
@@ -27,6 +32,7 @@ import { PopOutComponent } from "../../../../../platform/popup/components/pop-ou
 import { PopupFooterComponent } from "../../../../../platform/popup/layout/popup-footer.component";
 import { PopupHeaderComponent } from "../../../../../platform/popup/layout/popup-header.component";
 import { PopupPageComponent } from "../../../../../platform/popup/layout/popup-page.component";
+import { PopupRouterCacheService } from "../../../../../platform/popup/view-cache/popup-router-cache.service";
 import { PopupCloseWarningService } from "../../../../../popup/services/popup-close-warning.service";
 import { BrowserCipherFormGenerationService } from "../../../services/browser-cipher-form-generation.service";
 import { BrowserTotpCaptureService } from "../../../services/browser-totp-capture.service";
@@ -150,11 +156,13 @@ export class AddEditV2Component implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
     private i18nService: I18nService,
     private addEditFormConfigService: CipherFormConfigService,
-    private router: Router,
     private popupCloseWarningService: PopupCloseWarningService,
+    private popupRouterCacheService: PopupRouterCacheService,
+    private router: Router,
+    private cipherService: CipherService,
+    private eventCollectionService: EventCollectionService,
   ) {
     this.subscribeToParams();
   }
@@ -182,11 +190,7 @@ export class AddEditV2Component implements OnInit {
   };
 
   /**
-   * Navigates to previous view or view-cipher path
-   * depending on the history length.
-   *
-   * This can happen when history is lost due to the extension being
-   * forced into a popout window.
+   * Handle back button
    */
   async handleBackButton() {
     if (this.inFido2PopoutWindow) {
@@ -200,13 +204,7 @@ export class AddEditV2Component implements OnInit {
       return;
     }
 
-    if (history.length === 1) {
-      await this.router.navigate(["/view-cipher"], {
-        queryParams: { cipherId: this.originalCipherId },
-      });
-    } else {
-      this.location.back();
-    }
+    await this.popupRouterCacheService.back();
   }
 
   async onCipherSaved(cipher: CipherView) {
@@ -228,10 +226,18 @@ export class AddEditV2Component implements OnInit {
       return;
     }
 
-    await this.router.navigate(["/view-cipher"], {
-      replaceUrl: true,
-      queryParams: { cipherId: cipher.id },
-    });
+    // When the cipher is in edit / partial edit, the previous page was the view-cipher page.
+    // In the case of creating a new cipher, the user should go view-cipher page but we need to also
+    // remove it from the history stack. This avoids the user having to click back twice on the
+    // view-cipher page.
+    if (this.config.mode === "edit" || this.config.mode === "partial-edit") {
+      await this.popupRouterCacheService.back();
+    } else {
+      await this.router.navigate(["/view-cipher"], {
+        replaceUrl: true,
+        queryParams: { cipherId: cipher.id },
+      });
+    }
   }
 
   subscribeToParams(): void {
@@ -256,7 +262,30 @@ export class AddEditV2Component implements OnInit {
             config.mode = "partial-edit";
           }
 
-          this.setInitialValuesFromParams(params, config);
+          config.initialValues = this.setInitialValuesFromParams(params);
+
+          // The browser notification bar and overlay use addEditCipherInfo$ to pass modified cipher details to the form
+          // Attempt to fetch them here and overwrite the initialValues if present
+          const cachedCipherInfo = await firstValueFrom(this.cipherService.addEditCipherInfo$);
+
+          if (cachedCipherInfo != null) {
+            // Cached cipher info has priority over queryParams
+            config.initialValues = {
+              ...config.initialValues,
+              ...mapAddEditCipherInfoToInitialValues(cachedCipherInfo),
+            };
+            // Be sure to clear the "cached" cipher info, so it doesn't get used again
+            await this.cipherService.setAddEditCipherInfo(null);
+          }
+
+          if (["edit", "partial-edit"].includes(config.mode) && config.originalCipher?.id) {
+            await this.eventCollectionService.collect(
+              EventType.Cipher_ClientViewed,
+              config.originalCipher.id,
+              false,
+              config.originalCipher.organizationId,
+            );
+          }
 
           return config;
         }),
@@ -267,26 +296,27 @@ export class AddEditV2Component implements OnInit {
       });
   }
 
-  setInitialValuesFromParams(params: QueryParams, config: CipherFormConfig) {
-    config.initialValues = {};
+  setInitialValuesFromParams(params: QueryParams) {
+    const initialValues = {} as OptionalInitialValues;
     if (params.folderId) {
-      config.initialValues.folderId = params.folderId;
+      initialValues.folderId = params.folderId;
     }
     if (params.organizationId) {
-      config.initialValues.organizationId = params.organizationId;
+      initialValues.organizationId = params.organizationId;
     }
     if (params.collectionId) {
-      config.initialValues.collectionIds = [params.collectionId];
+      initialValues.collectionIds = [params.collectionId];
     }
     if (params.uri) {
-      config.initialValues.loginUri = params.uri;
+      initialValues.loginUri = params.uri;
     }
     if (params.username) {
-      config.initialValues.username = params.username;
+      initialValues.username = params.username;
     }
     if (params.name) {
-      config.initialValues.name = params.name;
+      initialValues.name = params.name;
     }
+    return initialValues;
   }
 
   setHeader(mode: CipherFormMode, type: CipherType) {
@@ -294,13 +324,73 @@ export class AddEditV2Component implements OnInit {
 
     switch (type) {
       case CipherType.Login:
-        return this.i18nService.t(partOne, this.i18nService.t("typeLogin"));
+        return this.i18nService.t(partOne, this.i18nService.t("typeLogin").toLocaleLowerCase());
       case CipherType.Card:
-        return this.i18nService.t(partOne, this.i18nService.t("typeCard"));
+        return this.i18nService.t(partOne, this.i18nService.t("typeCard").toLocaleLowerCase());
       case CipherType.Identity:
-        return this.i18nService.t(partOne, this.i18nService.t("typeIdentity"));
+        return this.i18nService.t(partOne, this.i18nService.t("typeIdentity").toLocaleLowerCase());
       case CipherType.SecureNote:
-        return this.i18nService.t(partOne, this.i18nService.t("note"));
+        return this.i18nService.t(partOne, this.i18nService.t("note").toLocaleLowerCase());
     }
   }
 }
+
+/**
+ * Helper to map the old AddEditCipherInfo to the new OptionalInitialValues type used by the CipherForm
+ * @param cipherInfo
+ */
+const mapAddEditCipherInfoToInitialValues = (
+  cipherInfo: AddEditCipherInfo | null,
+): OptionalInitialValues => {
+  const initialValues: OptionalInitialValues = {};
+
+  if (cipherInfo == null) {
+    return initialValues;
+  }
+
+  if (cipherInfo.collectionIds != null) {
+    initialValues.collectionIds = cipherInfo.collectionIds as CollectionId[];
+  }
+
+  if (cipherInfo.cipher == null) {
+    return initialValues;
+  }
+
+  const cipher = cipherInfo.cipher;
+
+  if (cipher.folderId != null) {
+    initialValues.folderId = cipher.folderId;
+  }
+
+  if (cipher.organizationId != null) {
+    initialValues.organizationId = cipher.organizationId as OrganizationId;
+  }
+
+  if (cipher.name != null) {
+    initialValues.name = cipher.name;
+  }
+
+  if (cipher.type === CipherType.Login) {
+    const login = cipher.login;
+
+    if (login != null) {
+      if (login.uris != null && login.uris.length > 0) {
+        initialValues.loginUri = login.uris[0].uri;
+      }
+
+      if (login.username != null) {
+        initialValues.username = login.username;
+      }
+
+      if (login.password != null) {
+        initialValues.password = login.password;
+      }
+    }
+  }
+
+  if (cipher.type === CipherType.Identity && cipher.identity?.username != null) {
+    initialValues.username = cipher.identity.username;
+  }
+
+  return initialValues;
+};

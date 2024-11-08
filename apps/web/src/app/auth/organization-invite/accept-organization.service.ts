@@ -1,20 +1,19 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, firstValueFrom, map } from "rxjs";
 
-import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
 import {
+  OrganizationUserApiService,
   OrganizationUserAcceptRequest,
   OrganizationUserAcceptInitRequest,
-} from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
+} from "@bitwarden/admin-console/common";
+import { ApiService } from "@bitwarden/common/abstractions/api.service";
+import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { Policy } from "@bitwarden/common/admin-console/models/domain/policy";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -26,6 +25,7 @@ import {
   ORGANIZATION_INVITE_DISK,
 } from "@bitwarden/common/platform/state";
 import { OrgKey } from "@bitwarden/common/types/key";
+import { KeyService } from "@bitwarden/key-management";
 
 import { OrganizationInvite } from "./organization-invite";
 
@@ -52,13 +52,13 @@ export class AcceptOrganizationInviteService {
   constructor(
     private readonly apiService: ApiService,
     private readonly authService: AuthService,
-    private readonly cryptoService: CryptoService,
+    private readonly keyService: KeyService,
     private readonly encryptService: EncryptService,
     private readonly policyApiService: PolicyApiServiceAbstraction,
     private readonly policyService: PolicyService,
     private readonly logService: LogService,
     private readonly organizationApiService: OrganizationApiServiceAbstraction,
-    private readonly organizationUserService: OrganizationUserService,
+    private readonly organizationUserApiService: OrganizationUserApiService,
     private readonly i18nService: I18nService,
     private readonly globalStateProvider: GlobalStateProvider,
   ) {
@@ -121,7 +121,7 @@ export class AcceptOrganizationInviteService {
 
   private async acceptAndInitOrganization(invite: OrganizationInvite): Promise<void> {
     await this.prepareAcceptAndInitRequest(invite).then((request) =>
-      this.organizationUserService.postOrganizationUserAcceptInit(
+      this.organizationUserApiService.postOrganizationUserAcceptInit(
         invite.organizationId,
         invite.organizationUserId,
         request,
@@ -137,8 +137,8 @@ export class AcceptOrganizationInviteService {
     const request = new OrganizationUserAcceptInitRequest();
     request.token = invite.token;
 
-    const [encryptedOrgKey, orgKey] = await this.cryptoService.makeOrgKey<OrgKey>();
-    const [orgPublicKey, encryptedOrgPrivateKey] = await this.cryptoService.makeKeyPair(orgKey);
+    const [encryptedOrgKey, orgKey] = await this.keyService.makeOrgKey<OrgKey>();
+    const [orgPublicKey, encryptedOrgPrivateKey] = await this.keyService.makeKeyPair(orgKey);
     const collection = await this.encryptService.encrypt(
       this.i18nService.t("defaultCollection"),
       orgKey,
@@ -156,7 +156,7 @@ export class AcceptOrganizationInviteService {
 
   private async accept(invite: OrganizationInvite): Promise<void> {
     await this.prepareAcceptRequest(invite).then((request) =>
-      this.organizationUserService.postOrganizationUserAccept(
+      this.organizationUserApiService.postOrganizationUserAccept(
         invite.organizationId,
         invite.organizationUserId,
         request,
@@ -183,8 +183,8 @@ export class AcceptOrganizationInviteService {
       const publicKey = Utils.fromB64ToArray(response.publicKey);
 
       // RSA Encrypt user's encKey.key with organization public key
-      const userKey = await this.cryptoService.getUserKey();
-      const encryptedKey = await this.cryptoService.rsaEncrypt(userKey.key, publicKey);
+      const userKey = await this.keyService.getUserKey();
+      const encryptedKey = await this.encryptService.rsaEncrypt(userKey.key, publicKey);
 
       // Add reset password key to accept request
       request.resetPasswordKey = encryptedKey.encryptedString;

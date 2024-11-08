@@ -60,6 +60,9 @@
       }
     }
   },
+  "welcomeBack": {
+    "message": "Welcome back"
+  },
   "moveToOrgDesc": {
     "message": "このアイテムを移動する組織を選択してください。組織に移動すると、アイテムの所有権がその組織に移行します。 このアイテムが移動された後、あなたはこのアイテムの直接の所有者にはなりません。"
   },
@@ -259,6 +262,9 @@
   "generatePassword": {
     "message": "パスワードの自動生成"
   },
+  "generatePassphrase": {
+    "message": "Generate passphrase"
+  },
   "type": {
     "message": "タイプ"
   },
@@ -394,6 +400,10 @@
   "copyPassword": {
     "message": "パスワードのコピー"
   },
+  "copyPassphrase": {
+    "message": "Copy passphrase",
+    "description": "Copy passphrase to clipboard"
+  },
   "copyUri": {
     "message": "URI のコピー"
   },
@@ -407,16 +417,55 @@
     "message": "パスワードの最低文字数"
   },
   "uppercase": {
-    "message": "大文字（A-Z）"
+    "message": "大文字（A-Z）",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "小文字（a-z）"
+    "message": "小文字（a-z）",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "数字 (0～9)"
+    "message": "数字 (0～9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
     "message": "特殊文字（!@#$%^&*)"
+  },
+  "include": {
+    "message": "含む",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "大文字を含める",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "A～Z",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "小文字を含める",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a～z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "数字を含める",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0～9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "特殊記号を含める",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "単語数"
@@ -442,7 +491,16 @@
     "description": "Minimum Special Characters"
   },
   "ambiguous": {
-    "message": "あいまいな文字を省く"
+    "message": "あいまいな文字を省く",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "あいまいな文字を避ける",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "生成オプションにエンタープライズポリシー要件を適用しました",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchCollection": {
     "message": "コレクションの検索"
@@ -499,6 +557,9 @@
   "createAccount": {
     "message": "アカウントの作成"
   },
+  "newToBitwarden": {
+    "message": "New to Bitwarden?"
+  },
   "setAStrongPassword": {
     "message": "強力なパスワードを設定する"
   },
@@ -507,6 +568,18 @@
   },
   "logIn": {
     "message": "ログイン"
+  },
+  "logInToBitwarden": {
+    "message": "Log in to Bitwarden"
+  },
+  "logInWithPasskey": {
+    "message": "Log in with passkey"
+  },
+  "loginWithDevice": {
+    "message": "Log in with device"
+  },
+  "useSingleSignOn": {
+    "message": "Use single sign-on"
   },
   "submit": {
     "message": "送信"
@@ -554,11 +627,32 @@
   "joinOrganization": {
     "message": "組織に参加"
   },
+  "joinOrganizationName": {
+    "message": "Join $ORGANIZATIONNAME$",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "マスターパスワードを設定して、この組織への参加を完了します。"
   },
   "settings": {
     "message": "設定"
+  },
+  "accountEmail": {
+    "message": "アカウントのメールアドレス"
+  },
+  "requestHint": {
+    "message": "ヒントを要求"
+  },
+  "requestPasswordHint": {
+    "message": "パスワードのヒントを要求する"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "アカウントのメールアドレスを入力すると、パスワードのヒントが送信されます"
   },
   "passwordHint": {
     "message": "パスワードのヒント"
@@ -602,6 +696,12 @@
   },
   "newAccountCreated": {
     "message": "新しいアカウントを作成しました！今すぐログインできます。"
+  },
+  "newAccountCreated2": {
+    "message": "新しいアカウントを作成しました！"
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "ログインしました！"
   },
   "masterPassSent": {
     "message": "あなたのマスターパスワードのヒントを記載したメールを送信しました。"
@@ -753,6 +853,10 @@
   "baseUrl": {
     "message": "サーバー URL"
   },
+  "selfHostBaseUrl": {
+    "message": "Self-host server URL",
+    "description": "Label for field requesting a self-hosted integration service URL"
+  },
   "apiUrl": {
     "message": "API サーバー URL"
   },
@@ -896,6 +1000,18 @@
   "yourVaultIsLocked": {
     "message": "保管庫がロックされています。開くにはマスターパスワードを入力してください。"
   },
+  "yourAccountIsLocked": {
+    "message": "アカウントがロックされています"
+  },
+  "or": {
+    "message": "または"
+  },
+  "unlockWithBiometrics": {
+    "message": "生体認証でロック解除"
+  },
+  "unlockWithMasterPassword": {
+    "message": "マスターパスワードでロック解除"
+  },
   "unlock": {
     "message": "ロック解除"
   },
@@ -923,6 +1039,9 @@
   },
   "vaultTimeout": {
     "message": "保管庫のタイムアウト"
+  },
+  "vaultTimeout1": {
+    "message": "タイムアウト"
   },
   "vaultTimeoutDesc": {
     "message": "保管庫がタイムアウトし、選択したアクションを実行するタイミングを選択します。"
@@ -1128,6 +1247,9 @@
     "message": "番号のコピー",
     "description": "Copy credit card number"
   },
+  "copyEmail": {
+    "message": "Copy email"
+  },
   "copySecurityCode": {
     "message": "セキュリティコードのコピー",
     "description": "Copy credit card security code (CVV)"
@@ -1173,6 +1295,9 @@
   },
   "premiumPurchaseAlert": {
     "message": "プレミアム会員権は bitwarden.com ウェブ保管庫で購入できます。ウェブサイトを開きますか？"
+  },
+  "premiumPurchaseAlertV2": {
+    "message": "Bitwarden ウェブアプリでアカウント設定からプレミアムを購入できます。"
   },
   "premiumCurrentMember": {
     "message": "あなたはプレミアム会員です！"
@@ -1275,6 +1400,9 @@
         "example": "Password"
       }
     }
+  },
+  "copySuccessful": {
+    "message": "コピーしました"
   },
   "errorRefreshingAccessToken": {
     "message": "アクセストークンの更新エラー"
@@ -1543,7 +1671,7 @@
   "recommendedForSecurity": {
     "message": "セキュリティ向上のためおすすめします。"
   },
-  "lockWithMasterPassOnRestart": {
+  "lockWithMasterPassOnRestart1": {
     "message": "再起動時にマスターパスワードでロック"
   },
   "deleteAccount": {
@@ -1554,6 +1682,12 @@
   },
   "deleteAccountWarning": {
     "message": "アカウントを恒久的に削除します。元に戻すことはできません。"
+  },
+  "cannotDeleteAccount": {
+    "message": "Cannot delete account"
+  },
+  "cannotDeleteAccountDesc": {
+    "message": "This action cannot be completed because your account is owned by an organization. Contact your organization administrator for additional details."
   },
   "accountDeleted": {
     "message": "アカウントが削除されました"
@@ -1621,7 +1755,7 @@
   },
   "lock": {
     "message": "ロック",
-    "description": "Verb form: to make secure or inaccesible by"
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
     "message": "ごみ箱",
@@ -1664,6 +1798,15 @@
   "orgRequiresYouToSetPassword": {
     "message": "あなたの組織では、マスターパスワードの設定を義務付けています。",
     "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "cardMetrics": {
+    "message": " / $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
   "verificationRequired": {
     "message": "認証が必要です",
@@ -1744,8 +1887,8 @@
   "enableBrowserIntegration": {
     "message": "ブラウザ統合を有効にする"
   },
-  "enableBrowserIntegrationDesc": {
-    "message": "ブラウザでの生体認証のためにブラウザ統合を使用します。"
+  "enableBrowserIntegrationDesc1": {
+    "message": "Safari 以外のブラウザで生体認証によるロック解除を許可するために使用されます。"
   },
   "enableDuckDuckGoBrowserIntegration": {
     "message": "DuckDuckGo ブラウザの統合を許可する"
@@ -2075,8 +2218,8 @@
   "minutes": {
     "message": "分"
   },
-  "vaultTimeoutPolicyInEffect": {
-    "message": "あなたの組織ポリシーは保管庫のタイムアウトに影響を与えています。最大保管庫のタイムアウト時間は $HOURS$ 時間 $MINUTES$ 分です。",
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "$HOURS$ 時間と $MINUTES$ 分が最大です。",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2225,11 +2368,15 @@
   "locked": {
     "message": "ロック中"
   },
+  "yourVaultIsLockedV2": {
+    "message": "保管庫がロックされています"
+  },
   "unlocked": {
     "message": "ロック解除済み"
   },
   "generator": {
-    "message": "ジェネレーター"
+    "message": "ジェネレーター",
+    "description": "Short for 'credential generator'."
   },
   "whatWouldYouLikeToGenerate": {
     "message": "何を生成しますか？"
@@ -2242,6 +2389,23 @@
   },
   "generateUsername": {
     "message": "ユーザー名を生成"
+  },
+  "generateEmail": {
+    "message": "Generate email"
+  },
+  "generatorBoundariesHint": {
+    "message": "Value must be between $MIN$ and $MAX$",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "ユーザー名の種類"
@@ -2285,6 +2449,14 @@
   },
   "forwardedEmailDesc": {
     "message": "外部転送サービスを使用してメールエイリアスを生成します。"
+  },
+  "forwarderDomainName": {
+    "message": "Email domain",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Choose a domain that is supported by the selected service",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ エラー: $ERRORMESSAGE$",
@@ -2577,6 +2749,9 @@
   "important": {
     "message": "重要"
   },
+  "accessing": {
+    "message": "アクセス中"
+  },
   "accessTokenUnableToBeDecrypted": {
     "message": "アクセストークンを復号できなかったためログアウトしました。この問題を解決するためには再度ログインしてください。"
   },
@@ -2628,9 +2803,6 @@
   "eu": {
     "message": "EU",
     "description": "European Union"
-  },
-  "loggingInOn": {
-    "message": "ログイン先"
   },
   "selfHostedServer": {
     "message": "自己ホスト型"
@@ -3049,5 +3221,11 @@
   },
   "textSends": {
     "message": "テキスト Send"
+  },
+  "ssoError": {
+    "message": "SSO ログインのための空きポートが見つかりませんでした。"
+  },
+  "fileSavedToDevice": {
+    "message": "ファイルをデバイスに保存しました。デバイスのダウンロードで管理できます。"
   }
 }

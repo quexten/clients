@@ -14,11 +14,12 @@ import { ProviderUserBulkRequest } from "@bitwarden/common/admin-console/models/
 import { ProviderUserConfirmRequest } from "@bitwarden/common/admin-console/models/request/provider/provider-user-confirm.request";
 import { ProviderUserUserDetailsResponse } from "@bitwarden/common/admin-console/models/response/provider/provider-user.response";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { DialogService, ToastService } from "@bitwarden/components";
+import { KeyService } from "@bitwarden/key-management";
 import { BaseMembersComponent } from "@bitwarden/web-vault/app/admin-console/common/base-members.component";
 import {
   peopleFilter,
@@ -58,7 +59,7 @@ export class MembersComponent extends BaseMembersComponent<ProviderUser> {
 
   constructor(
     apiService: ApiService,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     dialogService: DialogService,
     i18nService: I18nService,
     logService: LogService,
@@ -66,6 +67,7 @@ export class MembersComponent extends BaseMembersComponent<ProviderUser> {
     toastService: ToastService,
     userNamePipe: UserNamePipe,
     validationService: ValidationService,
+    private encryptService: EncryptService,
     private activatedRoute: ActivatedRoute,
     private providerService: ProviderService,
     private router: Router,
@@ -73,7 +75,7 @@ export class MembersComponent extends BaseMembersComponent<ProviderUser> {
     super(
       apiService,
       i18nService,
-      cryptoService,
+      keyService,
       validationService,
       logService,
       userNamePipe,
@@ -183,14 +185,14 @@ export class MembersComponent extends BaseMembersComponent<ProviderUser> {
   }
 
   async confirmUser(user: ProviderUser, publicKey: Uint8Array): Promise<void> {
-    const providerKey = await this.cryptoService.getProviderKey(this.providerId);
-    const key = await this.cryptoService.rsaEncrypt(providerKey.key, publicKey);
+    const providerKey = await this.keyService.getProviderKey(this.providerId);
+    const key = await this.encryptService.rsaEncrypt(providerKey.key, publicKey);
     const request = new ProviderUserConfirmRequest();
     request.key = key.encryptedString;
     await this.apiService.postProviderUserConfirm(this.providerId, user.id, request);
   }
 
-  deleteUser = (id: string): Promise<void> =>
+  removeUser = (id: string): Promise<void> =>
     this.apiService.deleteProviderUser(this.providerId, id);
 
   edit = async (user: ProviderUser | null): Promise<void> => {

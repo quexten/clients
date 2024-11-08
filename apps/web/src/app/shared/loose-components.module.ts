@@ -17,8 +17,6 @@ import { InactiveTwoFactorReportComponent as OrgInactiveTwoFactorReportComponent
 import { ReusedPasswordsReportComponent as OrgReusedPasswordsReportComponent } from "../admin-console/organizations/tools/reused-passwords-report.component";
 import { UnsecuredWebsitesReportComponent as OrgUnsecuredWebsitesReportComponent } from "../admin-console/organizations/tools/unsecured-websites-report.component";
 import { WeakPasswordsReportComponent as OrgWeakPasswordsReportComponent } from "../admin-console/organizations/tools/weak-passwords-report.component";
-import { ProvidersComponent } from "../admin-console/providers/providers.component";
-import { VerifyRecoverDeleteProviderComponent } from "../admin-console/providers/verify-recover-delete-provider.component";
 import { HintComponent } from "../auth/hint.component";
 import { RecoverDeleteComponent } from "../auth/recover-delete.component";
 import { RecoverTwoFactorComponent } from "../auth/recover-two-factor.component";
@@ -61,7 +59,6 @@ import { VerifyEmailTokenComponent } from "../auth/verify-email-token.component"
 import { VerifyRecoverDeleteComponent } from "../auth/verify-recover-delete.component";
 import { SponsoredFamiliesComponent } from "../billing/settings/sponsored-families.component";
 import { SponsoringOrgRowComponent } from "../billing/settings/sponsoring-org-row.component";
-import { PaymentMethodWarningsModule } from "../billing/shared";
 import { DynamicAvatarComponent } from "../components/dynamic-avatar.component";
 import { SelectableAvatarComponent } from "../components/selectable-avatar.component";
 import { FrontendLayoutComponent } from "../layouts/frontend-layout.component";
@@ -77,14 +74,11 @@ import { PremiumBadgeComponent } from "../vault/components/premium-badge.compone
 import { AddEditCustomFieldsComponent } from "../vault/individual-vault/add-edit-custom-fields.component";
 import { AddEditComponent } from "../vault/individual-vault/add-edit.component";
 import { AttachmentsComponent } from "../vault/individual-vault/attachments.component";
-import { CollectionsComponent } from "../vault/individual-vault/collections.component";
 import { FolderAddEditComponent } from "../vault/individual-vault/folder-add-edit.component";
 import { OrganizationBadgeModule } from "../vault/individual-vault/organization-badge/organization-badge.module";
 import { PipesModule } from "../vault/individual-vault/pipes/pipes.module";
-import { ShareComponent } from "../vault/individual-vault/share.component";
 import { AddEditComponent as OrgAddEditComponent } from "../vault/org-vault/add-edit.component";
 import { AttachmentsComponent as OrgAttachmentsComponent } from "../vault/org-vault/attachments.component";
-import { CollectionsComponent as OrgCollectionsComponent } from "../vault/org-vault/collections.component";
 import { PurgeVaultComponent } from "../vault/settings/purge-vault.component";
 
 import { EnvironmentSelectorModule } from "./../components/environment-selector/environment-selector.module";
@@ -113,7 +107,6 @@ import { SharedModule } from "./shared.module";
     HeaderModule,
     OrganizationLayoutComponent,
     UserLayoutComponent,
-    PaymentMethodWarningsModule,
     VerifyRecoverDeleteOrgComponent,
     VaultTimeoutInputComponent,
   ],
@@ -126,7 +119,6 @@ import { SharedModule } from "./shared.module";
     ApiKeyComponent,
     AttachmentsComponent,
     ChangeEmailComponent,
-    CollectionsComponent,
     DeauthorizeSessionsComponent,
     DeleteAccountDialogComponent,
     DomainRulesComponent,
@@ -142,7 +134,6 @@ import { SharedModule } from "./shared.module";
     HintComponent,
     OrgAddEditComponent,
     OrgAttachmentsComponent,
-    OrgCollectionsComponent,
     OrgEventsComponent,
     OrgExposedPasswordsReportComponent,
     OrgInactiveTwoFactorReportComponent,
@@ -156,7 +147,6 @@ import { SharedModule } from "./shared.module";
     PremiumBadgeComponent,
     ProfileComponent,
     ChangeAvatarDialogComponent,
-    ProvidersComponent,
     PurgeVaultComponent,
     RecoverDeleteComponent,
     RecoverTwoFactorComponent,
@@ -166,7 +156,6 @@ import { SharedModule } from "./shared.module";
     SelectableAvatarComponent,
     SendAddEditComponent,
     SetPasswordComponent,
-    ShareComponent,
     SponsoredFamiliesComponent,
     SponsoringOrgRowComponent,
     SsoComponent,
@@ -184,7 +173,6 @@ import { SharedModule } from "./shared.module";
     UpdateTempPasswordComponent,
     VerifyEmailTokenComponent,
     VerifyRecoverDeleteComponent,
-    VerifyRecoverDeleteProviderComponent,
   ],
   exports: [
     UserVerificationModule,
@@ -196,7 +184,6 @@ import { SharedModule } from "./shared.module";
     ApiKeyComponent,
     AttachmentsComponent,
     ChangeEmailComponent,
-    CollectionsComponent,
     DeauthorizeSessionsComponent,
     DeleteAccountDialogComponent,
     DomainRulesComponent,
@@ -214,7 +201,6 @@ import { SharedModule } from "./shared.module";
     OrgAddEditComponent,
     OrganizationLayoutComponent,
     OrgAttachmentsComponent,
-    OrgCollectionsComponent,
     OrgEventsComponent,
     OrgExposedPasswordsReportComponent,
     OrgInactiveTwoFactorReportComponent,
@@ -228,7 +214,6 @@ import { SharedModule } from "./shared.module";
     PremiumBadgeComponent,
     ProfileComponent,
     ChangeAvatarDialogComponent,
-    ProvidersComponent,
     PurgeVaultComponent,
     RecoverDeleteComponent,
     RecoverTwoFactorComponent,
@@ -238,7 +223,6 @@ import { SharedModule } from "./shared.module";
     SelectableAvatarComponent,
     SendAddEditComponent,
     SetPasswordComponent,
-    ShareComponent,
     SponsoredFamiliesComponent,
     SponsoringOrgRowComponent,
     SsoComponent,
@@ -257,7 +241,6 @@ import { SharedModule } from "./shared.module";
     UserLayoutComponent,
     VerifyEmailTokenComponent,
     VerifyRecoverDeleteComponent,
-    VerifyRecoverDeleteProviderComponent,
     HeaderModule,
     DangerZoneComponent,
   ],

@@ -60,6 +60,9 @@
       }
     }
   },
+  "welcomeBack": {
+    "message": "Welkom terug"
+  },
   "moveToOrgDesc": {
     "message": "Kies een organisatie waarnaar je dit item wilt verplaatsen. Door het verplaatsen krijgt de organisatie de eigendomsrechten van het item. Je bent niet langer de directe eigenaar meer van het item als het is verplaatst."
   },
@@ -259,6 +262,9 @@
   "generatePassword": {
     "message": "Genereer wachtwoord"
   },
+  "generatePassphrase": {
+    "message": "Wachtwoordzin genereren"
+  },
   "type": {
     "message": "Categorie"
   },
@@ -394,6 +400,10 @@
   "copyPassword": {
     "message": "Kopieer wachtwoord"
   },
+  "copyPassphrase": {
+    "message": "Wachtwoordzin kopiëren",
+    "description": "Copy passphrase to clipboard"
+  },
   "copyUri": {
     "message": "URI kopiëren"
   },
@@ -407,16 +417,55 @@
     "message": "Minimale wachtwoordlengte"
   },
   "uppercase": {
-    "message": "Hoofdletters (A-Z)"
+    "message": "Hoofdletters (A-Z)",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "Kleine letters (a-z)"
+    "message": "Kleine letters (a-z)",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "Cijfers (0-9)"
+    "message": "Cijfers (0-9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
     "message": "Speciale tekens (!@#$%^&*)"
+  },
+  "include": {
+    "message": "Toevoegen",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "Hoofdletters toevoegen",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "A-Z",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "Kleine letters toevoegen",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a-z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "Nummers toevoegen",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0-9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "Speciale tekens toevoegen",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "Aantal woorden"
@@ -442,7 +491,16 @@
     "description": "Minimum Special Characters"
   },
   "ambiguous": {
-    "message": "Vermijd dubbelzinnige tekens"
+    "message": "Vermijd dubbelzinnige tekens",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "Dubbelzinnige tekens vermijden",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "Bedrijfsbeleidseisen zijn toegepast op je generator-instellingen.",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchCollection": {
     "message": "Doorzoek collectie"
@@ -499,6 +557,9 @@
   "createAccount": {
     "message": "Maak een account aan"
   },
+  "newToBitwarden": {
+    "message": "Nieuw bij Bitwarden?"
+  },
   "setAStrongPassword": {
     "message": "Stel een sterk wachtwoord in"
   },
@@ -507,6 +568,18 @@
   },
   "logIn": {
     "message": "Log in"
+  },
+  "logInToBitwarden": {
+    "message": "Inloggen op Bitwarden"
+  },
+  "logInWithPasskey": {
+    "message": "Inloggen met passkey"
+  },
+  "loginWithDevice": {
+    "message": "Inloggen met apparaat"
+  },
+  "useSingleSignOn": {
+    "message": "Single sign-on gebruiken"
   },
   "submit": {
     "message": "Opslaan"
@@ -554,11 +627,32 @@
   "joinOrganization": {
     "message": "Join organisatie"
   },
+  "joinOrganizationName": {
+    "message": "Aansluiten bij $ORGANIZATIONNAME$",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "Voltooi je lidmaatschap aan deze organisatie door een hoofdwachtwoord in te stellen."
   },
   "settings": {
     "message": "Instellingen"
+  },
+  "accountEmail": {
+    "message": "E-mailadres van account"
+  },
+  "requestHint": {
+    "message": "Hint vragen"
+  },
+  "requestPasswordHint": {
+    "message": "Hoofdwachtwoordhint vragen"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "Als je het e-mailadres van je account invult, versturen we je je wachtwoordhint"
   },
   "passwordHint": {
     "message": "Wachtwoordhint"
@@ -602,6 +696,12 @@
   },
   "newAccountCreated": {
     "message": "Je nieuwe account is aangemaakt! Je kunt nu inloggen."
+  },
+  "newAccountCreated2": {
+    "message": "Je nieuwe account is aangemaakt!"
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "Je bent ingelogd!"
   },
   "masterPassSent": {
     "message": "We hebben je een e-mail gestuurd met je hoofdwachtwoordhint."
@@ -753,6 +853,10 @@
   "baseUrl": {
     "message": "Server-URL"
   },
+  "selfHostBaseUrl": {
+    "message": "URL zelfgehoste server",
+    "description": "Label for field requesting a self-hosted integration service URL"
+  },
   "apiUrl": {
     "message": "API server-URL"
   },
@@ -896,6 +1000,18 @@
   "yourVaultIsLocked": {
     "message": "Je kluis is vergrendeld. Voer je hoofdwachtwoord in om door te gaan."
   },
+  "yourAccountIsLocked": {
+    "message": "Je account is vergrendeld"
+  },
+  "or": {
+    "message": "of"
+  },
+  "unlockWithBiometrics": {
+    "message": "Biometrisch ontgrendelen"
+  },
+  "unlockWithMasterPassword": {
+    "message": "Ontgrendelen met hoofdwachtwoord"
+  },
   "unlock": {
     "message": "Ontgrendelen"
   },
@@ -923,6 +1039,9 @@
   },
   "vaultTimeout": {
     "message": "Time-out van de kluis"
+  },
+  "vaultTimeout1": {
+    "message": "Time-out"
   },
   "vaultTimeoutDesc": {
     "message": "Stel de time-out van de kluis en de bijbehorende actie in."
@@ -1128,6 +1247,9 @@
     "message": "Nummer kopiëren",
     "description": "Copy credit card number"
   },
+  "copyEmail": {
+    "message": "E-mail kopiëren"
+  },
   "copySecurityCode": {
     "message": "Beveiligingscode kopiëren",
     "description": "Copy credit card security code (CVV)"
@@ -1173,6 +1295,9 @@
   },
   "premiumPurchaseAlert": {
     "message": "Je kunt een Premium-abonnement aanschaffen in de webkluis op bitwarden.com. Wil je de website nu bezoeken?"
+  },
+  "premiumPurchaseAlertV2": {
+    "message": "Je kunt Premium via je accountinstellingen in de Bitwarden-webapp kopen."
   },
   "premiumCurrentMember": {
     "message": "Je bent Premium-lid!"
@@ -1275,6 +1400,9 @@
         "example": "Password"
       }
     }
+  },
+  "copySuccessful": {
+    "message": "Kopiëren gelukt"
   },
   "errorRefreshingAccessToken": {
     "message": "Fout bij vernieuwen toegangstoken"
@@ -1543,7 +1671,7 @@
   "recommendedForSecurity": {
     "message": "Aanbevolen voor veiligheid."
   },
-  "lockWithMasterPassOnRestart": {
+  "lockWithMasterPassOnRestart1": {
     "message": "Bij herstart vergrendelen met hoofdwachtwoord"
   },
   "deleteAccount": {
@@ -1554,6 +1682,12 @@
   },
   "deleteAccountWarning": {
     "message": "Het verwijderen van je account is definitief. Je kunt dit niet ongedaan maken."
+  },
+  "cannotDeleteAccount": {
+    "message": "Kan account niet verwijderen"
+  },
+  "cannotDeleteAccountDesc": {
+    "message": "Je kunt deze actie niet afronden omdat je account eigendom is van een organisatie. Neem contact op met de beheerder van je organisatie voor details."
   },
   "accountDeleted": {
     "message": "Account verwijderd"
@@ -1621,7 +1755,7 @@
   },
   "lock": {
     "message": "Vergrendelen",
-    "description": "Verb form: to make secure or inaccesible by"
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
     "message": "Prullenbak",
@@ -1664,6 +1798,15 @@
   "orgRequiresYouToSetPassword": {
     "message": "Je organisatie vereist dat je een hoofdwachtwoord instelt.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "cardMetrics": {
+    "message": "van $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
   "verificationRequired": {
     "message": "Verificatie vereist",
@@ -1744,8 +1887,8 @@
   "enableBrowserIntegration": {
     "message": "Browserintegratie inschakelen"
   },
-  "enableBrowserIntegrationDesc": {
-    "message": "Browserintegratie wordt gebruikt voor biometrie in de browser."
+  "enableBrowserIntegrationDesc1": {
+    "message": "Wordt gebruikt voor het toestaan van biometrische ontgrendelen in andere browsers dan Safari."
   },
   "enableDuckDuckGoBrowserIntegration": {
     "message": "DuckDuckGo browserintegratie toestaan"
@@ -2075,8 +2218,8 @@
   "minutes": {
     "message": "Minuten"
   },
-  "vaultTimeoutPolicyInEffect": {
-    "message": "Het beleid van je organisatie heeft invloed op de time-out van je kluis. De maximaal toegestane Kluis Time-out is $HOURS$ uur en $MINUTES$ minuten",
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "$HOURS$ uren en $MINUTES$ minu(u)t(en) maximaal.",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2225,11 +2368,15 @@
   "locked": {
     "message": "Vergrendeld"
   },
+  "yourVaultIsLockedV2": {
+    "message": "Je kluis is vergrendeld"
+  },
   "unlocked": {
     "message": "Ontgrendeld"
   },
   "generator": {
-    "message": "Generator"
+    "message": "Generator",
+    "description": "Short for 'credential generator'."
   },
   "whatWouldYouLikeToGenerate": {
     "message": "Wat wil je genereren?"
@@ -2242,6 +2389,23 @@
   },
   "generateUsername": {
     "message": "Gebruikersnamen genereren"
+  },
+  "generateEmail": {
+    "message": "E-mailadres genereren"
+  },
+  "generatorBoundariesHint": {
+    "message": "Waarde moet tussen $MIN$ en $MAX$ liggen",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "Type gebruikersnaam"
@@ -2285,6 +2449,14 @@
   },
   "forwardedEmailDesc": {
     "message": "Genereer een e-mailalias met een externe doorstuurservice."
+  },
+  "forwarderDomainName": {
+    "message": "E-maildomein",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Kies een domein dat wordt ondersteund door de geselecteerde dienst",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ fout: $ERRORMESSAGE$",
@@ -2577,6 +2749,9 @@
   "important": {
     "message": "Belangrijk:"
   },
+  "accessing": {
+    "message": "Toegang verkrijgen"
+  },
   "accessTokenUnableToBeDecrypted": {
     "message": "U bent uitgelogd omdat uw toegangstoken niet kon worden gedecodeerd. Log opnieuw in om dit probleem op te lossen."
   },
@@ -2628,9 +2803,6 @@
   "eu": {
     "message": "EU",
     "description": "European Union"
-  },
-  "loggingInOn": {
-    "message": "Inloggen op"
   },
   "selfHostedServer": {
     "message": "zelfgehost"
@@ -3049,5 +3221,11 @@
   },
   "textSends": {
     "message": "Tekst-Sends"
+  },
+  "ssoError": {
+    "message": "Er zijn geen vrije poorten gevonden voor de sso-login."
+  },
+  "fileSavedToDevice": {
+    "message": "Bestand op apparaat opgeslagen. Beheer vanaf de downloads op je apparaat."
   }
 }

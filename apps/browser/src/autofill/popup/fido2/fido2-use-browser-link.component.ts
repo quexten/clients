@@ -1,8 +1,11 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
-import { ConnectedPosition } from "@angular/cdk/overlay";
+import { A11yModule } from "@angular/cdk/a11y";
+import { ConnectedPosition, CdkOverlayOrigin, CdkConnectedOverlay } from "@angular/cdk/overlay";
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { firstValueFrom } from "rxjs";
 
+import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
 import { NeverDomains } from "@bitwarden/common/models/domain/domain-service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -15,6 +18,8 @@ import { BrowserFido2UserInterfaceSession } from "../../fido2/services/browser-f
 @Component({
   selector: "app-fido2-use-browser-link",
   templateUrl: "fido2-use-browser-link.component.html",
+  standalone: true,
+  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, CommonModule, JslibModule],
   animations: [
     trigger("transformPanel", [
       state(
@@ -90,11 +95,11 @@ export class Fido2UseBrowserLinkComponent {
    * @param uri - The domain uri to exclude from future FIDO2 prompts.
    */
   private async handleDomainExclusion(uri: string) {
-    const exisitingDomains = await firstValueFrom(this.domainSettingsService.neverDomains$);
+    const existingDomains = await firstValueFrom(this.domainSettingsService.neverDomains$);
 
     const validDomain = Utils.getHostname(uri);
     const savedDomains: NeverDomains = {
-      ...exisitingDomains,
+      ...existingDomains,
     };
     savedDomains[validDomain] = null;
 

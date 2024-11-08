@@ -1,8 +1,8 @@
+import { CollectionView } from "@bitwarden/admin-console/common";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { CipherId, CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
-import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 
 /**
@@ -23,6 +23,7 @@ export type OptionalInitialValues = {
   collectionIds?: CollectionId[];
   loginUri?: string;
   username?: string;
+  password?: string;
   name?: string;
 };
 
@@ -58,7 +59,8 @@ type BaseCipherFormConfig = {
   originalCipher?: Cipher;
 
   /**
-   * Optional initial values for the form when creating a new cipher. Useful when creating a cipher in a filtered view.
+   * Optional initial values for the form when opening the cipher form.
+   * Useful when creating a new cipher in a filtered view or modifying a cipher with values from another source (e.g. the notification bar in Browser)
    */
   initialValues?: OptionalInitialValues;
 
@@ -77,6 +79,12 @@ type BaseCipherFormConfig = {
    * List of organizations that the user can create ciphers for.
    */
   organizations?: Organization[];
+
+  /** Hides the fields that are only applicable to individuals, useful in the Admin Console where folders aren't applicable */
+  hideIndividualVaultFields?: true;
+
+  /** True when the config is built within the context of the Admin Console */
+  isAdminConsole?: true;
 };
 
 /**

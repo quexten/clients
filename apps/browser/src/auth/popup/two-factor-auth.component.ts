@@ -32,6 +32,7 @@ import {
   LinkModule,
   TypographyModule,
   DialogService,
+  ToastService,
 } from "@bitwarden/components";
 
 import {
@@ -95,6 +96,7 @@ export class TwoFactorAuthComponent
     @Inject(WINDOW) protected win: Window,
     private syncService: SyncService,
     private messagingService: MessagingService,
+    toastService: ToastService,
   ) {
     super(
       loginStrategyService,
@@ -114,8 +116,9 @@ export class TwoFactorAuthComponent
       accountService,
       formBuilder,
       win,
+      toastService,
     );
-    super.onSuccessfulLoginTdeNavigate = async () => {
+    this.onSuccessfulLoginTdeNavigate = async () => {
       this.win.close();
     };
     this.onSuccessfulLoginNavigate = this.goAfterLogIn;
@@ -128,7 +131,7 @@ export class TwoFactorAuthComponent
       // WebAuthn fallback response
       this.selectedProviderType = TwoFactorProviderType.WebAuthn;
       this.token = this.route.snapshot.paramMap.get("webAuthnResponse");
-      super.onSuccessfulLogin = async () => {
+      this.onSuccessfulLogin = async () => {
         // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.syncService.fullSync(true);

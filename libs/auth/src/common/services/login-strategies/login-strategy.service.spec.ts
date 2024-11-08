@@ -11,14 +11,15 @@ import { TokenService } from "@bitwarden/common/auth/abstractions/token.service"
 import { TwoFactorService } from "@bitwarden/common/auth/abstractions/two-factor.service";
 import { TwoFactorProviderType } from "@bitwarden/common/auth/enums/two-factor-provider-type";
 import { AuthResult } from "@bitwarden/common/auth/models/domain/auth-result";
+import { PBKDF2KdfConfig } from "@bitwarden/common/auth/models/domain/kdf-config";
 import { TokenTwoFactorRequest } from "@bitwarden/common/auth/models/request/identity-token/token-two-factor.request";
 import { IdentityTokenResponse } from "@bitwarden/common/auth/models/response/identity-token.response";
 import { IdentityTwoFactorResponse } from "@bitwarden/common/auth/models/response/identity-two-factor.response";
+import { PreloginResponse } from "@bitwarden/common/auth/models/response/prelogin.response";
 import { FakeMasterPasswordService } from "@bitwarden/common/auth/services/master-password/fake-master-password.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -36,6 +37,7 @@ import {
 } from "@bitwarden/common/spec";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
 import { UserId } from "@bitwarden/common/types/guid";
+import { KeyService } from "@bitwarden/key-management";
 
 import {
   AuthRequestServiceAbstraction,
@@ -52,7 +54,7 @@ describe("LoginStrategyService", () => {
 
   let accountService: FakeAccountService;
   let masterPasswordService: FakeMasterPasswordService;
-  let cryptoService: MockProxy<CryptoService>;
+  let keyService: MockProxy<KeyService>;
   let apiService: MockProxy<ApiService>;
   let tokenService: MockProxy<TokenService>;
   let appIdService: MockProxy<AppIdService>;
@@ -83,7 +85,7 @@ describe("LoginStrategyService", () => {
   beforeEach(() => {
     accountService = mockAccountServiceWith(userId);
     masterPasswordService = new FakeMasterPasswordService();
-    cryptoService = mock<CryptoService>();
+    keyService = mock<KeyService>();
     apiService = mock<ApiService>();
     tokenService = mock<TokenService>();
     appIdService = mock<AppIdService>();
@@ -110,7 +112,7 @@ describe("LoginStrategyService", () => {
     sut = new LoginStrategyService(
       accountService,
       masterPasswordService,
-      cryptoService,
+      keyService,
       apiService,
       tokenService,
       appIdService,
@@ -159,6 +161,9 @@ describe("LoginStrategyService", () => {
       new IdentityTokenResponse({
         ForcePasswordReset: false,
         Kdf: KdfType.Argon2id,
+        KdfIterations: 2,
+        KdfMemory: 16,
+        KdfParallelism: 1,
         Key: "KEY",
         PrivateKey: "PRIVATE_KEY",
         ResetMasterPassword: false,
@@ -169,6 +174,15 @@ describe("LoginStrategyService", () => {
         token_type: "Bearer",
       }),
     );
+    apiService.postPrelogin.mockResolvedValue(
+      new PreloginResponse({
+        Kdf: KdfType.Argon2id,
+        KdfIterations: 2,
+        KdfMemory: 16,
+        KdfParallelism: 1,
+      }),
+    );
+
     tokenService.decodeAccessToken.calledWith("ACCESS_TOKEN").mockResolvedValue({
       sub: "USER_ID",
       name: "NAME",
@@ -194,6 +208,15 @@ describe("LoginStrategyService", () => {
       }),
     );
 
+    apiService.postPrelogin.mockResolvedValue(
+      new PreloginResponse({
+        Kdf: KdfType.Argon2id,
+        KdfIterations: 2,
+        KdfMemory: 16,
+        KdfParallelism: 1,
+      }),
+    );
+
     await sut.logIn(credentials);
 
     const twoFactorToken = new TokenTwoFactorRequest(
@@ -205,6 +228,9 @@ describe("LoginStrategyService", () => {
       new IdentityTokenResponse({
         ForcePasswordReset: false,
         Kdf: KdfType.Argon2id,
+        KdfIterations: 2,
+        KdfMemory: 16,
+        KdfParallelism: 1,
         Key: "KEY",
         PrivateKey: "PRIVATE_KEY",
         ResetMasterPassword: false,
@@ -241,6 +267,15 @@ describe("LoginStrategyService", () => {
       }),
     );
 
+    apiService.postPrelogin.mockResolvedValue(
+      new PreloginResponse({
+        Kdf: KdfType.Argon2id,
+        KdfIterations: 2,
+        KdfMemory: 16,
+        KdfParallelism: 1,
+      }),
+    );
+
     await sut.logIn(credentials);
 
     loginStrategyCacheExpirationState.stateSubject.next(new Date(Date.now() - 1000 * 60 * 5));
@@ -252,5 +287,41 @@ describe("LoginStrategyService", () => {
     );
 
     await expect(sut.logInTwoFactor(twoFactorToken, "CAPTCHA")).rejects.toThrow();
+  });
+
+  it("throw error on too low kdf config", async () => {
+    const credentials = new PasswordLoginCredentials("EMAIL", "MASTER_PASSWORD");
+    apiService.postIdentityToken.mockResolvedValue(
+      new IdentityTokenResponse({
+        ForcePasswordReset: false,
+        Kdf: KdfType.PBKDF2_SHA256,
+        KdfIterations: PBKDF2KdfConfig.PRELOGIN_ITERATIONS_MIN - 1,
+        Key: "KEY",
+        PrivateKey: "PRIVATE_KEY",
+        ResetMasterPassword: false,
+        access_token: "ACCESS_TOKEN",
+        expires_in: 3600,
+        refresh_token: "REFRESH_TOKEN",
+        scope: "api offline_access",
+        token_type: "Bearer",
+      }),
+    );
+    apiService.postPrelogin.mockResolvedValue(
+      new PreloginResponse({
+        Kdf: KdfType.PBKDF2_SHA256,
+        KdfIterations: PBKDF2KdfConfig.PRELOGIN_ITERATIONS_MIN - 1,
+      }),
+    );
+
+    tokenService.decodeAccessToken.calledWith("ACCESS_TOKEN").mockResolvedValue({
+      sub: "USER_ID",
+      name: "NAME",
+      email: "EMAIL",
+      premium: false,
+    });
+
+    await expect(sut.logIn(credentials)).rejects.toThrow(
+      `PBKDF2 iterations must be at least ${PBKDF2KdfConfig.PRELOGIN_ITERATIONS_MIN}, but was ${PBKDF2KdfConfig.PRELOGIN_ITERATIONS_MIN - 1}; possible pre-login downgrade attack detected.`,
+    );
   });
 });

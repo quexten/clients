@@ -16,14 +16,15 @@ import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { DeviceTrustServiceAbstraction } from "@bitwarden/common/auth/abstractions/device-trust.service.abstraction";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
+import { ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
+import { KeyService } from "@bitwarden/key-management";
 
 import { EnvironmentComponent } from "../environment.component";
 
@@ -38,7 +39,7 @@ export class LoginViaAuthRequestComponent extends BaseLoginWithDeviceComponent {
 
   constructor(
     protected router: Router,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     cryptoFunctionService: CryptoFunctionService,
     appIdService: AppIdService,
     passwordGenerationService: PasswordGenerationServiceAbstraction,
@@ -58,10 +59,11 @@ export class LoginViaAuthRequestComponent extends BaseLoginWithDeviceComponent {
     loginStrategyService: LoginStrategyServiceAbstraction,
     accountService: AccountService,
     private location: Location,
+    toastService: ToastService,
   ) {
     super(
       router,
-      cryptoService,
+      keyService,
       cryptoFunctionService,
       appIdService,
       passwordGenerationService,
@@ -78,9 +80,10 @@ export class LoginViaAuthRequestComponent extends BaseLoginWithDeviceComponent {
       deviceTrustService,
       authRequestService,
       loginStrategyService,
+      toastService,
     );
 
-    super.onSuccessfulLogin = () => {
+    this.onSuccessfulLogin = () => {
       return syncService.fullSync(true);
     };
   }

@@ -93,14 +93,17 @@
   </ng-container>
 
   <bit-search
-    *ngIf="restrictProviderAccessFlag && organization?.isProviderUser && !organization?.isMember"
+    *ngIf="organization?.isProviderUser && !organization?.isMember"
     class="tw-grow"
     [ngModel]="searchText"
     (ngModelChange)="onSearchTextChanged($event)"
     [placeholder]="'searchCollection' | i18n"
   ></bit-search>
 
-  <div *ngIf="filter.type !== 'trash' && filter.collectionId !== Unassigned" class="tw-shrink-0">
+  <div
+    *ngIf="filter.type !== 'trash' && filter.collectionId !== Unassigned && organization"
+    class="tw-shrink-0"
+  >
     <div *ngIf="canCreateCipher && canCreateCollection" appListDropdown>
       <button
         bitButton
@@ -110,13 +113,37 @@
         id="newItemDropdown"
         appA11yTitle="{{ 'new' | i18n }}"
       >
-        {{ "new" | i18n }}<i class="bwi bwi-angle-down tw-ml-2" aria-hidden="true"></i>
+        <i class="bwi bwi-plus-f" aria-hidden="true"></i>
+        {{ "new" | i18n }}<i class="bwi tw-ml-2" aria-hidden="true"></i>
       </button>
       <bit-menu #addOptions aria-labelledby="newItemDropdown">
-        <button type="button" bitMenuItem (click)="addCipher()">
-          <i class="bwi bwi-fw bwi-globe" aria-hidden="true"></i>
-          {{ "item" | i18n }}
-        </button>
+        <ng-container [ngSwitch]="extensionRefreshEnabled">
+          <ng-container *ngSwitchCase="true">
+            <button type="button" bitMenuItem (click)="addCipher(CipherType.Login)">
+              <i class="bwi bwi-globe" slot="start" aria-hidden="true"></i>
+              {{ "typeLogin" | i18n }}
+            </button>
+            <button type="button" bitMenuItem (click)="addCipher(CipherType.Card)">
+              <i class="bwi bwi-credit-card" slot="start" aria-hidden="true"></i>
+              {{ "typeCard" | i18n }}
+            </button>
+            <button type="button" bitMenuItem (click)="addCipher(CipherType.Identity)">
+              <i class="bwi bwi-id-card" slot="start" aria-hidden="true"></i>
+              {{ "typeIdentity" | i18n }}
+            </button>
+            <button type="button" bitMenuItem (click)="addCipher(CipherType.SecureNote)">
+              <i class="bwi bwi-sticky-note" slot="start" aria-hidden="true"></i>
+              {{ "note" | i18n }}
+            </button>
+            <bit-menu-divider></bit-menu-divider>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <button type="button" bitMenuItem (click)="addCipher()">
+              <i class="bwi bwi-fw bwi-globe" aria-hidden="true"></i>
+              {{ "item" | i18n }}
+            </button>
+          </ng-container>
+        </ng-container>
         <button type="button" bitMenuItem (click)="addCollection()">
           <i class="bwi bwi-fw bwi-collection" aria-hidden="true"></i>
           {{ "collection" | i18n }}

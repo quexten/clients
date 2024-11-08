@@ -12,6 +12,7 @@
   },
   "flags": {
     "showPasswordless": false,
-    "enableCipherKeyEncryption": true
-  }
+    "sdk": true
+  },
+  "devFlags": {}
 }

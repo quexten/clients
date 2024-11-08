@@ -2,9 +2,11 @@ import { CommonModule } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
+import { firstValueFrom, map } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions";
 import { ProductTierType } from "@bitwarden/common/billing/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -48,6 +50,7 @@ export class OpenAttachmentsComponent implements OnInit {
     private toastService: ToastService,
     private i18nService: I18nService,
     private filePopoutUtilsService: FilePopoutUtilsService,
+    private accountService: AccountService,
   ) {
     this.billingAccountProfileStateService.hasPremiumFromAnySource$
       .pipe(takeUntilDestroyed())
@@ -64,8 +67,11 @@ export class OpenAttachmentsComponent implements OnInit {
     }
 
     const cipherDomain = await this.cipherService.get(this.cipherId);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
     const cipher = await cipherDomain.decrypt(
-      await this.cipherService.getKeyForCipherKeyDecryption(cipherDomain),
+      await this.cipherService.getKeyForCipherKeyDecryption(cipherDomain, activeUserId),
     );
 
     if (!cipher.organizationId) {
@@ -94,16 +100,13 @@ export class OpenAttachmentsComponent implements OnInit {
       return;
     }
 
+    await this.router.navigate(["/attachments"], { queryParams: { cipherId: this.cipherId } });
+
+    // Open the attachments page in a popout
+    // This is done after the router navigation to ensure that the navigation
+    // is included in the `PopupRouterCacheService` history
     if (this.openAttachmentsInPopout) {
-      const destinationUrl = this.router
-        .createUrlTree(["/attachments"], { queryParams: { cipherId: this.cipherId } })
-        .toString();
-
-      const currentBaseUrl = window.location.href.replace(this.router.url, "");
-
-      await BrowserPopupUtils.openCurrentPagePopout(window, currentBaseUrl + destinationUrl);
-    } else {
-      await this.router.navigate(["/attachments"], { queryParams: { cipherId: this.cipherId } });
+      await BrowserPopupUtils.openCurrentPagePopout(window);
     }
   }
 }

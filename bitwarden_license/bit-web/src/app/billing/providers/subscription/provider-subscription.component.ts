@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subject, concatMap, takeUntil } from "rxjs";
 
-import { BillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/billilng-api.service.abstraction";
+import { BillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/billing-api.service.abstraction";
 import { TaxInformation } from "@bitwarden/common/billing/models/domain";
 import { ExpandedTaxInfoUpdateRequest } from "@bitwarden/common/billing/models/request/expanded-tax-info-update.request";
 import {
@@ -100,5 +100,15 @@ export class ProviderSubscriptionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  get activePlans(): ProviderPlanResponse[] {
+    return this.subscription.plans.filter((plan) => {
+      if (plan.purchasedSeats === 0) {
+        return plan.seatMinimum > 0;
+      } else {
+        return plan.purchasedSeats > 0;
+      }
+    });
   }
 }

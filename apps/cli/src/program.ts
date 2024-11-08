@@ -1,6 +1,5 @@
 import * as chalk from "chalk";
 import { program, Command, OptionValues } from "commander";
-import { firstValueFrom } from "rxjs";
 
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 
@@ -61,18 +60,8 @@ export class Program extends BaseProgram {
       process.env.BW_NOINTERACTION = "true";
     });
 
-    program.on("option:session", async (key) => {
+    program.on("option:session", (key) => {
       process.env.BW_SESSION = key;
-
-      // once we have the session key, we can set the user key in memory
-      const activeAccount = await firstValueFrom(
-        this.serviceContainer.accountService.activeAccount$,
-      );
-      if (activeAccount) {
-        await this.serviceContainer.userAutoUnlockKeyService.setUserKeyInMemoryIfAutoUserKeySet(
-          activeAccount.id,
-        );
-      }
     });
 
     program.on("command:*", () => {
@@ -161,7 +150,7 @@ export class Program extends BaseProgram {
             this.serviceContainer.passwordStrengthService,
             this.serviceContainer.platformUtilsService,
             this.serviceContainer.accountService,
-            this.serviceContainer.cryptoService,
+            this.serviceContainer.keyService,
             this.serviceContainer.policyService,
             this.serviceContainer.twoFactorService,
             this.serviceContainer.syncService,
@@ -206,9 +195,9 @@ export class Program extends BaseProgram {
         writeLn("", true);
       })
       .action(async (cmd) => {
-        await this.exitIfNotAuthed();
+        const userId = await this.exitIfNotAuthed();
 
-        if (await this.serviceContainer.keyConnectorService.getUsesKeyConnector()) {
+        if (await this.serviceContainer.keyConnectorService.getUsesKeyConnector(userId)) {
           const logoutCommand = new LogoutCommand(
             this.serviceContainer.authService,
             this.serviceContainer.i18nService,
@@ -269,7 +258,7 @@ export class Program extends BaseProgram {
           const command = new UnlockCommand(
             this.serviceContainer.accountService,
             this.serviceContainer.masterPasswordService,
-            this.serviceContainer.cryptoService,
+            this.serviceContainer.keyService,
             this.serviceContainer.userVerificationService,
             this.serviceContainer.cryptoFunctionService,
             this.serviceContainer.logService,

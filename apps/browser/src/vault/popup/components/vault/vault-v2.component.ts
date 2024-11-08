@@ -1,3 +1,4 @@
+import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CommonModule } from "@angular/common";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -11,7 +12,6 @@ import { ButtonModule, Icons, NoItemsModule } from "@bitwarden/components";
 import { VaultIcons } from "@bitwarden/vault";
 
 import { CurrentAccountComponent } from "../../../../auth/popup/account-switching/current-account.component";
-import { BrowserApi } from "../../../../platform/browser/browser-api";
 import { PopOutComponent } from "../../../../platform/popup/components/pop-out.component";
 import { PopupHeaderComponent } from "../../../../platform/popup/layout/popup-header.component";
 import { PopupPageComponent } from "../../../../platform/popup/layout/popup-page.component";
@@ -51,6 +51,7 @@ enum VaultState {
     RouterLink,
     VaultV2SearchComponent,
     NewItemDropdownV2Component,
+    ScrollingModule,
   ],
   providers: [VaultUiOnboardingService],
 })
@@ -70,7 +71,6 @@ export class VaultV2Component implements OnInit, OnDestroy {
               filter.collection?.organizationId) as OrganizationId,
             collectionId: filter.collection?.id as CollectionId,
             folderId: filter.folder?.id,
-            uri: (await BrowserApi.getTabFromCurrentWindow())?.url,
           }) as NewItemInitialValues,
       ),
       shareReplay({ refCount: true, bufferSize: 1 }),

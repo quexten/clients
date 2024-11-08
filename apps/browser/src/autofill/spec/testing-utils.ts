@@ -165,9 +165,18 @@ export function triggerWebRequestOnBeforeRedirectEvent(
   });
 }
 
+export function triggerWebRequestOnCompletedEvent(details: chrome.webRequest.WebResponseDetails) {
+  (chrome.webRequest.onCompleted.addListener as unknown as jest.SpyInstance).mock.calls.forEach(
+    (call) => {
+      const callback = call[0];
+      callback(details);
+    },
+  );
+}
+
 export function mockQuerySelectorAllDefinedCall() {
   const originalDocumentQuerySelectorAll = document.querySelectorAll;
-  document.querySelectorAll = function (selector: string) {
+  globalThis.document.querySelectorAll = function (selector: string) {
     return originalDocumentQuerySelectorAll.call(
       document,
       selector === ":defined" ? "*" : selector,

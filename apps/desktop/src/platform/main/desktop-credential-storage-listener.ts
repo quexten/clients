@@ -4,16 +4,14 @@ import { BiometricKey } from "@bitwarden/common/auth/types/biometric-key";
 import { ConsoleLogService } from "@bitwarden/common/platform/services/console-log.service";
 import { passwords } from "@bitwarden/desktop-napi";
 
-import { BiometricMessage, BiometricAction } from "../../types/biometric-message";
-
-import { BiometricsServiceAbstraction } from "./biometric/index";
+import { DesktopBiometricsService } from "../../key-management/biometrics/index";
 
 const AuthRequiredSuffix = "_biometric";
 
 export class DesktopCredentialStorageListener {
   constructor(
     private serviceName: string,
-    private biometricService: BiometricsServiceAbstraction,
+    private biometricService: DesktopBiometricsService,
     private logService: ConsoleLogService,
   ) {}
 
@@ -50,57 +48,12 @@ export class DesktopCredentialStorageListener {
         this.logService.info(e);
       }
     });
-
-    ipcMain.handle("biometric", async (event: any, message: BiometricMessage) => {
-      try {
-        let serviceName = this.serviceName;
-        message.keySuffix = "_" + (message.keySuffix ?? "");
-        if (message.keySuffix !== "_") {
-          serviceName += message.keySuffix;
-        }
-
-        let val: string | boolean = null;
-
-        if (!message.action) {
-          return val;
-        }
-
-        switch (message.action) {
-          case BiometricAction.EnabledForUser:
-            if (!message.key || !message.userId) {
-              break;
-            }
-            val = await this.biometricService.canAuthBiometric({
-              service: serviceName,
-              key: message.key,
-              userId: message.userId,
-            });
-            break;
-          case BiometricAction.OsSupported:
-            val = await this.biometricService.osSupportsBiometric();
-            break;
-          case BiometricAction.NeedsSetup:
-            val = await this.biometricService.osBiometricsNeedsSetup();
-            break;
-          case BiometricAction.Setup:
-            await this.biometricService.osBiometricsSetup();
-            break;
-          case BiometricAction.CanAutoSetup:
-            val = await this.biometricService.osBiometricsCanAutoSetup();
-            break;
-          default:
-        }
-
-        return val;
-      } catch (e) {
-        this.logService.info(e);
-      }
-    });
   }
 
   // Gracefully handle old keytar values, and if detected updated the entry to the proper format
   private async getPassword(serviceName: string, key: string, keySuffix: string) {
     let val: string;
+    // todo: remove this when biometrics has been migrated to desktop_native
     if (keySuffix === AuthRequiredSuffix) {
       val = (await this.biometricService.getBiometricKey(serviceName, key)) ?? null;
     } else {

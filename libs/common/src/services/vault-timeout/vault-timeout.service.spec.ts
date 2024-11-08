@@ -1,6 +1,7 @@
 import { MockProxy, any, mock } from "jest-mock-extended";
 import { BehaviorSubject, from, of } from "rxjs";
 
+import { CollectionService } from "@bitwarden/admin-console/common";
 import { LogoutReason } from "@bitwarden/auth/common";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { TaskSchedulerService } from "@bitwarden/common/platform/scheduling";
@@ -21,7 +22,6 @@ import { StateEventRunnerService } from "../../platform/state";
 import { UserId } from "../../types/guid";
 import { VaultTimeout, VaultTimeoutStringType } from "../../types/vault-timeout.type";
 import { CipherService } from "../../vault/abstractions/cipher.service";
-import { CollectionService } from "../../vault/abstractions/collection.service";
 import { FolderService } from "../../vault/abstractions/folder/folder.service.abstraction";
 
 import { VaultTimeoutService } from "./vault-timeout.service";
@@ -137,8 +137,6 @@ describe("VaultTimeoutService", () => {
     vaultTimeoutSettingsService.getVaultTimeoutByUserId$.mockImplementation((userId) => {
       return new BehaviorSubject<VaultTimeout>(accounts[userId]?.vaultTimeout);
     });
-
-    stateService.getUserId.mockResolvedValue(globalSetups?.userId);
 
     // Set desired user active and known users on accounts service : note the only thing that matters here is that the ID are set
     if (globalSetups?.userId) {

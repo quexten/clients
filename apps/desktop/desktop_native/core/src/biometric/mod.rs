@@ -28,14 +28,16 @@ pub trait BiometricTrait {
     #[allow(async_fn_in_trait)]
     async fn available() -> Result<bool>;
     fn derive_key_material(secret: Option<&str>) -> Result<OsDerivedKey>;
-    fn set_biometric_secret(
+    #[allow(async_fn_in_trait)]
+    async fn set_biometric_secret(
         service: &str,
         account: &str,
         secret: &str,
         key_material: Option<KeyMaterial>,
         iv_b64: &str,
     ) -> Result<String>;
-    fn get_biometric_secret(
+    #[allow(async_fn_in_trait)]
+    async fn get_biometric_secret(
         service: &str,
         account: &str,
         key_material: Option<KeyMaterial>,

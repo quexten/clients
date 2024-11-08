@@ -8,7 +8,7 @@ import { Policy } from "@bitwarden/common/admin-console/models/domain/policy";
 import { StateProvider } from "@bitwarden/common/platform/state";
 import { UserId } from "@bitwarden/common/types/guid";
 
-import { DefaultPassphraseGenerationOptions, DisabledPassphraseGeneratorPolicy } from "../data";
+import { DefaultPassphraseGenerationOptions, Policies } from "../data";
 import { PasswordRandomizer } from "../engine";
 import { PassphraseGeneratorOptionsEvaluator } from "../policies";
 
@@ -17,7 +17,7 @@ import { PASSPHRASE_SETTINGS } from "./storage";
 
 const SomeUser = "some user" as UserId;
 
-describe("Password generation strategy", () => {
+describe("Passphrase generation strategy", () => {
   describe("toEvaluator()", () => {
     it("should map to the policy evaluator", async () => {
       const strategy = new PassphraseGeneratorStrategy(null, null);
@@ -50,7 +50,7 @@ describe("Password generation strategy", () => {
         const evaluator = await firstValueFrom(evaluator$);
 
         expect(evaluator).toBeInstanceOf(PassphraseGeneratorOptionsEvaluator);
-        expect(evaluator.policy).toMatchObject(DisabledPassphraseGeneratorPolicy);
+        expect(evaluator.policy).toMatchObject(Policies.Passphrase.disabledValue);
       },
     );
   });
@@ -98,7 +98,7 @@ describe("Password generation strategy", () => {
       const strategy = new PassphraseGeneratorStrategy(randomizer, null);
 
       const result = await strategy.generate({
-        numWords: 4,
+        numWords: 6,
         capitalize: true,
         includeNumber: true,
         wordSeparator: "!",
@@ -106,7 +106,7 @@ describe("Password generation strategy", () => {
 
       expect(result).toEqual("passphrase");
       expect(randomizer.randomEffLongWords).toHaveBeenCalledWith({
-        numberOfWords: 4,
+        numberOfWords: 6,
         capitalize: true,
         number: true,
         separator: "!",
@@ -135,14 +135,14 @@ describe("Password generation strategy", () => {
       const strategy = new PassphraseGeneratorStrategy(randomizer, null);
 
       const result = await strategy.generate({
-        numWords: 4,
+        numWords: 6,
         includeNumber: true,
         wordSeparator: "!",
       });
 
       expect(result).toEqual("passphrase");
       expect(randomizer.randomEffLongWords).toHaveBeenCalledWith({
-        numberOfWords: 4,
+        numberOfWords: 6,
         capitalize: DefaultPassphraseGenerationOptions.capitalize,
         number: true,
         separator: "!",
@@ -153,14 +153,14 @@ describe("Password generation strategy", () => {
       const strategy = new PassphraseGeneratorStrategy(randomizer, null);
 
       const result = await strategy.generate({
-        numWords: 4,
+        numWords: 6,
         capitalize: true,
         wordSeparator: "!",
       });
 
       expect(result).toEqual("passphrase");
       expect(randomizer.randomEffLongWords).toHaveBeenCalledWith({
-        numberOfWords: 4,
+        numberOfWords: 6,
         capitalize: true,
         number: DefaultPassphraseGenerationOptions.includeNumber,
         separator: "!",
@@ -171,14 +171,14 @@ describe("Password generation strategy", () => {
       const strategy = new PassphraseGeneratorStrategy(randomizer, null);
 
       const result = await strategy.generate({
-        numWords: 4,
+        numWords: 6,
         capitalize: true,
         includeNumber: true,
       });
 
       expect(result).toEqual("passphrase");
       expect(randomizer.randomEffLongWords).toHaveBeenCalledWith({
-        numberOfWords: 4,
+        numberOfWords: 6,
         capitalize: true,
         number: true,
         separator: DefaultPassphraseGenerationOptions.wordSeparator,

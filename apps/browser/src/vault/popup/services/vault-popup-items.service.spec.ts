@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { mock } from "jest-mock-extended";
 import { BehaviorSubject, firstValueFrom, timeout } from "rxjs";
 
+import { CollectionService, CollectionView } from "@bitwarden/admin-console/common";
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
@@ -10,11 +11,9 @@ import { SyncService } from "@bitwarden/common/platform/sync";
 import { ObservableTracker } from "@bitwarden/common/spec";
 import { CipherId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
-import { CollectionService } from "@bitwarden/common/vault/abstractions/collection.service";
 import { VaultSettingsService } from "@bitwarden/common/vault/abstractions/vault-settings/vault-settings.service";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
-import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 
 import { BrowserApi } from "../../../platform/browser/browser-api";
 
@@ -30,6 +29,7 @@ describe("VaultPopupItemsService", () => {
 
   let mockOrg: Organization;
   let mockCollections: CollectionView[];
+  let activeUserLastSync$: BehaviorSubject<Date>;
 
   const cipherServiceMock = mock<CipherService>();
   const vaultSettingsServiceMock = mock<VaultSettingsService>();
@@ -92,7 +92,8 @@ describe("VaultPopupItemsService", () => {
     organizationServiceMock.organizations$ = new BehaviorSubject([mockOrg]);
     collectionService.decryptedCollections$ = new BehaviorSubject(mockCollections);
 
-    syncServiceMock.getLastSync.mockResolvedValue(new Date());
+    activeUserLastSync$ = new BehaviorSubject(new Date());
+    syncServiceMock.activeUserLastSync$.mockReturnValue(activeUserLastSync$);
 
     testBed = TestBed.configureTestingModule({
       providers: [
@@ -161,7 +162,7 @@ describe("VaultPopupItemsService", () => {
   });
 
   it("should not emit cipher list if syncService.getLastSync returns null", async () => {
-    syncServiceMock.getLastSync.mockResolvedValue(null);
+    activeUserLastSync$.next(null);
 
     const obs$ = service.autoFillCiphers$.pipe(timeout(50));
 
@@ -276,6 +277,10 @@ describe("VaultPopupItemsService", () => {
   });
 
   describe("remainingCiphers$", () => {
+    beforeEach(() => {
+      searchService.isSearchable.mockImplementation(async (text) => text.length > 2);
+    });
+
     it("should exclude autofill and favorite ciphers", (done) => {
       service.remainingCiphers$.subscribe((ciphers) => {
         // 2 autofill ciphers, 2 favorite ciphers = 6 remaining ciphers to show
@@ -284,9 +289,17 @@ describe("VaultPopupItemsService", () => {
       });
     });
 
-    it("should sort by last used then by name", (done) => {
-      service.remainingCiphers$.subscribe((ciphers) => {
+    it("should sort by last used then by name by default", (done) => {
+      service.remainingCiphers$.subscribe(() => {
         expect(cipherServiceMock.getLocaleSortingFunction).toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it("should NOT sort by last used then by name when search text is applied", (done) => {
+      service.applyFilter("Login");
+      service.remainingCiphers$.subscribe(() => {
+        expect(cipherServiceMock.getLocaleSortingFunction).not.toHaveBeenCalled();
         done();
       });
     });
@@ -351,6 +364,24 @@ describe("VaultPopupItemsService", () => {
       searchService.searchCiphers.mockImplementation(async () => []);
       service.noFilteredResults$.subscribe((noResults) => {
         expect(noResults).toBe(true);
+        done();
+      });
+    });
+  });
+
+  describe("deletedCiphers$", () => {
+    it("should return deleted ciphers", (done) => {
+      const ciphers = [
+        { id: "1", type: CipherType.Login, name: "Login 1", isDeleted: true },
+        { id: "2", type: CipherType.Login, name: "Login 2", isDeleted: true },
+        { id: "3", type: CipherType.Login, name: "Login 3", isDeleted: true },
+        { id: "4", type: CipherType.Login, name: "Login 4", isDeleted: false },
+      ] as CipherView[];
+
+      cipherServiceMock.getAllDecrypted.mockResolvedValue(ciphers);
+
+      service.deletedCiphers$.subscribe((deletedCiphers) => {
+        expect(deletedCiphers.length).toBe(3);
         done();
       });
     });

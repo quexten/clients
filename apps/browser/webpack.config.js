@@ -122,7 +122,7 @@ const moduleRules = [
     loader: "@ngtools/webpack",
   },
   {
-    test: /\.wasm$/,
+    test: /argon2(-simd)?\.wasm$/,
     loader: "base64-loader",
     type: "javascript/auto",
   },
@@ -226,6 +226,10 @@ const mainConfig = {
       "./src/autofill/content/trigger-autofill-script-injection.ts",
     "content/bootstrap-autofill": "./src/autofill/content/bootstrap-autofill.ts",
     "content/bootstrap-autofill-overlay": "./src/autofill/content/bootstrap-autofill-overlay.ts",
+    "content/bootstrap-autofill-overlay-menu":
+      "./src/autofill/content/bootstrap-autofill-overlay-menu.ts",
+    "content/bootstrap-autofill-overlay-notifications":
+      "./src/autofill/content/bootstrap-autofill-overlay-notifications.ts",
     "content/bootstrap-legacy-autofill-overlay":
       "./src/autofill/deprecated/content/bootstrap-legacy-autofill-overlay.ts",
     "content/autofiller": "./src/autofill/content/autofiller.ts",
@@ -312,12 +316,17 @@ const mainConfig = {
   },
   output: {
     filename: "[name].js",
+    chunkFilename: "assets/[name].js",
+    webassemblyModuleFilename: "assets/[modulehash].wasm",
     path: path.resolve(__dirname, "build"),
     clean: true,
   },
   module: {
-    noParse: /\.wasm$/,
+    noParse: /argon2(-simd)?\.wasm$/,
     rules: moduleRules,
+  },
+  experiments: {
+    asyncWebAssembly: true,
   },
   plugins: plugins,
 };
@@ -391,12 +400,15 @@ if (manifestVersion == 2) {
           loader: "ts-loader",
         },
         {
-          test: /\.wasm$/,
+          test: /argon2(-simd)?\.wasm$/,
           loader: "base64-loader",
           type: "javascript/auto",
         },
       ],
-      noParse: /\.wasm$/,
+      noParse: /argon2(-simd)?\.wasm$/,
+    },
+    experiments: {
+      asyncWebAssembly: true,
     },
     resolve: {
       extensions: [".ts", ".js"],

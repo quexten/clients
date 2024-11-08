@@ -5,7 +5,7 @@ import { AuthRequestResponse } from "@bitwarden/common/auth/models/response/auth
 import { FakeMasterPasswordService } from "@bitwarden/common/auth/services/master-password/fake-master-password.service";
 import { AuthRequestPushNotification } from "@bitwarden/common/models/response/notification.response";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
@@ -13,6 +13,7 @@ import { StateProvider } from "@bitwarden/common/platform/state";
 import { FakeAccountService, mockAccountServiceWith } from "@bitwarden/common/spec";
 import { UserId } from "@bitwarden/common/types/guid";
 import { MasterKey, UserKey } from "@bitwarden/common/types/key";
+import { KeyService } from "@bitwarden/key-management";
 
 import { AuthRequestService } from "./auth-request.service";
 
@@ -23,10 +24,12 @@ describe("AuthRequestService", () => {
   let accountService: FakeAccountService;
   let masterPasswordService: FakeMasterPasswordService;
   const appIdService = mock<AppIdService>();
-  const cryptoService = mock<CryptoService>();
+  const keyService = mock<KeyService>();
+  const encryptService = mock<EncryptService>();
   const apiService = mock<ApiService>();
 
   let mockPrivateKey: Uint8Array;
+  let mockPublicKey: Uint8Array;
   const mockUserId = Utils.newGuid() as UserId;
 
   beforeEach(() => {
@@ -38,12 +41,14 @@ describe("AuthRequestService", () => {
       appIdService,
       accountService,
       masterPasswordService,
-      cryptoService,
+      keyService,
+      encryptService,
       apiService,
       stateProvider,
     );
 
     mockPrivateKey = new Uint8Array(64);
+    mockPublicKey = new Uint8Array(64);
   });
 
   describe("authRequestPushNotification$", () => {
@@ -80,7 +85,7 @@ describe("AuthRequestService", () => {
 
   describe("approveOrDenyAuthRequest", () => {
     beforeEach(() => {
-      cryptoService.rsaEncrypt.mockResolvedValue({
+      encryptService.rsaEncrypt.mockResolvedValue({
         encryptedString: "ENCRYPTED_STRING",
       } as EncString);
       appIdService.getAppId.mockResolvedValue("APP_ID");
@@ -106,18 +111,18 @@ describe("AuthRequestService", () => {
         new AuthRequestResponse({ id: "123", publicKey: "KEY" }),
       );
 
-      expect(cryptoService.rsaEncrypt).toHaveBeenCalledWith(new Uint8Array(64), expect.anything());
+      expect(encryptService.rsaEncrypt).toHaveBeenCalledWith(new Uint8Array(64), expect.anything());
     });
 
     it("should use the user key if the master key and hash do not exist", async () => {
-      cryptoService.getUserKey.mockResolvedValueOnce({ key: new Uint8Array(64) } as UserKey);
+      keyService.getUserKey.mockResolvedValueOnce({ key: new Uint8Array(64) } as UserKey);
 
       await sut.approveOrDenyAuthRequest(
         true,
         new AuthRequestResponse({ id: "123", publicKey: "KEY" }),
       );
 
-      expect(cryptoService.rsaEncrypt).toHaveBeenCalledWith(new Uint8Array(64), expect.anything());
+      expect(encryptService.rsaEncrypt).toHaveBeenCalledWith(new Uint8Array(64), expect.anything());
     });
   });
   describe("setUserKeyAfterDecryptingSharedUserKey", () => {
@@ -130,7 +135,7 @@ describe("AuthRequestService", () => {
       const mockDecryptedUserKey = {} as UserKey;
       jest.spyOn(sut, "decryptPubKeyEncryptedUserKey").mockResolvedValueOnce(mockDecryptedUserKey);
 
-      cryptoService.setUserKey.mockResolvedValueOnce(undefined);
+      keyService.setUserKey.mockResolvedValueOnce(undefined);
 
       // Act
       await sut.setUserKeyAfterDecryptingSharedUserKey(
@@ -144,7 +149,7 @@ describe("AuthRequestService", () => {
         mockAuthReqResponse.key,
         mockPrivateKey,
       );
-      expect(cryptoService.setUserKey).toBeCalledWith(mockDecryptedUserKey, mockUserId);
+      expect(keyService.setUserKey).toBeCalledWith(mockDecryptedUserKey, mockUserId);
     });
   });
 
@@ -170,7 +175,7 @@ describe("AuthRequestService", () => {
       masterPasswordService.mock.decryptUserKeyWithMasterKey.mockResolvedValue(
         mockDecryptedUserKey,
       );
-      cryptoService.setUserKey.mockResolvedValueOnce(undefined);
+      keyService.setUserKey.mockResolvedValueOnce(undefined);
 
       // Act
       await sut.setKeysAfterDecryptingSharedMasterKeyAndHash(
@@ -195,10 +200,10 @@ describe("AuthRequestService", () => {
       );
       expect(masterPasswordService.mock.decryptUserKeyWithMasterKey).toHaveBeenCalledWith(
         mockDecryptedMasterKey,
-        undefined,
+        mockUserId,
         undefined,
       );
-      expect(cryptoService.setUserKey).toHaveBeenCalledWith(mockDecryptedUserKey, mockUserId);
+      expect(keyService.setUserKey).toHaveBeenCalledWith(mockDecryptedUserKey, mockUserId);
     });
   });
 
@@ -209,7 +214,7 @@ describe("AuthRequestService", () => {
       const mockDecryptedUserKeyBytes = new Uint8Array(64);
       const mockDecryptedUserKey = new SymmetricCryptoKey(mockDecryptedUserKeyBytes) as UserKey;
 
-      cryptoService.rsaDecrypt.mockResolvedValueOnce(mockDecryptedUserKeyBytes);
+      encryptService.rsaDecrypt.mockResolvedValueOnce(mockDecryptedUserKeyBytes);
 
       // Act
       const result = await sut.decryptPubKeyEncryptedUserKey(
@@ -218,7 +223,10 @@ describe("AuthRequestService", () => {
       );
 
       // Assert
-      expect(cryptoService.rsaDecrypt).toBeCalledWith(mockPubKeyEncryptedUserKey, mockPrivateKey);
+      expect(encryptService.rsaDecrypt).toBeCalledWith(
+        new EncString(mockPubKeyEncryptedUserKey),
+        mockPrivateKey,
+      );
       expect(result).toEqual(mockDecryptedUserKey);
     });
   });
@@ -236,7 +244,7 @@ describe("AuthRequestService", () => {
       const mockDecryptedMasterKeyHashBytes = new Uint8Array(64);
       const mockDecryptedMasterKeyHash = Utils.fromBufferToUtf8(mockDecryptedMasterKeyHashBytes);
 
-      cryptoService.rsaDecrypt
+      encryptService.rsaDecrypt
         .mockResolvedValueOnce(mockDecryptedMasterKeyBytes)
         .mockResolvedValueOnce(mockDecryptedMasterKeyHashBytes);
 
@@ -248,18 +256,28 @@ describe("AuthRequestService", () => {
       );
 
       // Assert
-      expect(cryptoService.rsaDecrypt).toHaveBeenNthCalledWith(
+      expect(encryptService.rsaDecrypt).toHaveBeenNthCalledWith(
         1,
-        mockPubKeyEncryptedMasterKey,
+        new EncString(mockPubKeyEncryptedMasterKey),
         mockPrivateKey,
       );
-      expect(cryptoService.rsaDecrypt).toHaveBeenNthCalledWith(
+      expect(encryptService.rsaDecrypt).toHaveBeenNthCalledWith(
         2,
-        mockPubKeyEncryptedMasterKeyHash,
+        new EncString(mockPubKeyEncryptedMasterKeyHash),
         mockPrivateKey,
       );
       expect(result.masterKey).toEqual(mockDecryptedMasterKey);
       expect(result.masterKeyHash).toEqual(mockDecryptedMasterKeyHash);
+    });
+  });
+
+  describe("getFingerprintPhrase", () => {
+    it("returns the same fingerprint regardless of email casing", () => {
+      const email = "test@email.com";
+      const emailUpperCase = email.toUpperCase();
+      const phrase = sut.getFingerprintPhrase(email, mockPublicKey);
+      const phraseUpperCase = sut.getFingerprintPhrase(emailUpperCase, mockPublicKey);
+      expect(phrase).toEqual(phraseUpperCase);
     });
   });
 });

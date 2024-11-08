@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "short_name": "__MSG_appName__",
-  "version": "2024.8.0",
+  "version": "2024.11.0",
   "description": "__MSG_extDesc__",
   "default_locale": "en",
   "author": "Bitwarden Inc.",
@@ -134,7 +134,9 @@
   "sidebar_action": {
     "default_title": "Bitwarden",
     "default_panel": "popup/index.html?uilocation=sidebar",
-    "default_icon": "images/icon19.png"
+    "default_icon": "images/icon19.png",
+    "open_at_install": false,
+    "browser_style": false
   },
   "storage": {
     "managed_schema": "managed_schema.json"

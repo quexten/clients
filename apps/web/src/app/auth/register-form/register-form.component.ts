@@ -11,14 +11,14 @@ import { PolicyService } from "@bitwarden/common/admin-console/abstractions/poli
 import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/master-password-policy-options";
 import { ReferenceEventRequest } from "@bitwarden/common/models/request/reference-event.request";
 import { RegisterRequest } from "@bitwarden/common/models/request/register.request";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
+import { KeyService } from "@bitwarden/key-management";
 
 import { AcceptOrganizationInviteService } from "../organization-invite/accept-organization.service";
 
@@ -41,7 +41,7 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
     loginStrategyService: LoginStrategyServiceAbstraction,
     router: Router,
     i18nService: I18nService,
-    cryptoService: CryptoService,
+    keyService: KeyService,
     apiService: ApiService,
     stateService: StateService,
     platformUtilsService: PlatformUtilsService,
@@ -52,6 +52,7 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
     auditService: AuditService,
     dialogService: DialogService,
     acceptOrgInviteService: AcceptOrganizationInviteService,
+    toastService: ToastService,
   ) {
     super(
       formValidationErrorService,
@@ -59,7 +60,7 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
       loginStrategyService,
       router,
       i18nService,
-      cryptoService,
+      keyService,
       apiService,
       stateService,
       platformUtilsService,
@@ -68,8 +69,9 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
       logService,
       auditService,
       dialogService,
+      toastService,
     );
-    super.modifyRegisterRequest = async (request: RegisterRequest) => {
+    this.modifyRegisterRequest = async (request: RegisterRequest) => {
       // Org invites are deep linked. Non-existent accounts are redirected to the register page.
       // Org user id and token are included here only for validation and two factor purposes.
       const orgInvite = await acceptOrgInviteService.getOrganizationInvite();
@@ -104,11 +106,11 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
         this.enforcedPolicyOptions,
       )
     ) {
-      this.platformUtilsService.showToast(
-        "error",
-        this.i18nService.t("errorOccurred"),
-        this.i18nService.t("masterPasswordPolicyRequirementsNotMet"),
-      );
+      this.toastService.showToast({
+        variant: "error",
+        title: this.i18nService.t("errorOccurred"),
+        message: this.i18nService.t("masterPasswordPolicyRequirementsNotMet"),
+      });
       return;
     }
 

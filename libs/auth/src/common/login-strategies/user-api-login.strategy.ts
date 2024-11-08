@@ -64,13 +64,16 @@ export class UserApiLoginStrategy extends LoginStrategy {
     response: IdentityTokenResponse,
     userId: UserId,
   ): Promise<void> {
-    await this.cryptoService.setMasterKeyEncryptedUserKey(response.key);
+    await this.keyService.setMasterKeyEncryptedUserKey(response.key, userId);
 
     if (response.apiUseKeyConnector) {
       const masterKey = await firstValueFrom(this.masterPasswordService.masterKey$(userId));
       if (masterKey) {
-        const userKey = await this.masterPasswordService.decryptUserKeyWithMasterKey(masterKey);
-        await this.cryptoService.setUserKey(userKey, userId);
+        const userKey = await this.masterPasswordService.decryptUserKeyWithMasterKey(
+          masterKey,
+          userId,
+        );
+        await this.keyService.setUserKey(userKey, userId);
       }
     }
   }
@@ -79,7 +82,7 @@ export class UserApiLoginStrategy extends LoginStrategy {
     response: IdentityTokenResponse,
     userId: UserId,
   ): Promise<void> {
-    await this.cryptoService.setPrivateKey(
+    await this.keyService.setPrivateKey(
       response.privateKey ?? (await this.createKeyPairForOldAccount(userId)),
       userId,
     );

@@ -2,6 +2,7 @@ import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
+import { InlineMenuFillTypes } from "../../enums/autofill-overlay.enum";
 import AutofillPageDetails from "../../models/autofill-page-details";
 import { PageDetail } from "../../services/abstractions/autofill.service";
 
@@ -32,14 +33,19 @@ export type WebsiteIconData = {
   icon: string;
 };
 
+export type UpdateOverlayCiphersParams = {
+  updateAllCipherTypes: boolean;
+  refocusField: boolean;
+};
+
 export type FocusedFieldData = {
   focusedFieldStyles: Partial<CSSStyleDeclaration>;
   focusedFieldRects: Partial<DOMRect>;
-  filledByCipherType?: CipherType;
+  inlineMenuFillType?: InlineMenuFillTypes;
   tabId?: number;
   frameId?: number;
   accountCreationFieldType?: string;
-  showInlineMenuAccountCreation?: boolean;
+  showPasskeys?: boolean;
 };
 
 export type InlineMenuElementPosition = {
@@ -110,6 +116,12 @@ export type ToggleInlineMenuHiddenMessage = {
   setTransparentInlineMenu?: boolean;
 };
 
+export type UpdateInlineMenuVisibilityMessage = {
+  overlayElement?: string;
+  isVisible?: boolean;
+  forceUpdate?: boolean;
+};
+
 export type OverlayBackgroundExtensionMessage = {
   command: string;
   portKey?: string;
@@ -118,14 +130,15 @@ export type OverlayBackgroundExtensionMessage = {
   details?: AutofillPageDetails;
   isFieldCurrentlyFocused?: boolean;
   isFieldCurrentlyFilling?: boolean;
-  isVisible?: boolean;
   subFrameData?: SubFrameOffsetData;
   focusedFieldData?: FocusedFieldData;
+  isOpeningFullInlineMenu?: boolean;
   styles?: Partial<CSSStyleDeclaration>;
   data?: LockedVaultPendingNotificationsData;
 } & OverlayAddNewItemMessage &
   CloseInlineMenuMessage &
-  ToggleInlineMenuHiddenMessage;
+  ToggleInlineMenuHiddenMessage &
+  UpdateInlineMenuVisibilityMessage;
 
 export type OverlayPortMessage = {
   [key: string]: any;
@@ -187,14 +200,12 @@ export type OverlayBackgroundExtensionMessageHandlers = {
   updateIsFieldCurrentlyFilling: ({ message }: BackgroundMessageParam) => void;
   checkIsFieldCurrentlyFilling: () => boolean;
   getAutofillInlineMenuVisibility: () => void;
-  openAutofillInlineMenu: () => void;
+  openAutofillInlineMenu: ({ message, sender }: BackgroundOnMessageHandlerParams) => Promise<void>;
+  getInlineMenuCardsVisibility: () => void;
+  getInlineMenuIdentitiesVisibility: () => void;
   closeAutofillInlineMenu: ({ message, sender }: BackgroundOnMessageHandlerParams) => void;
   checkAutofillInlineMenuFocused: ({ sender }: BackgroundSenderParam) => void;
   focusAutofillInlineMenuList: () => void;
-  updateAutofillInlineMenuPosition: ({
-    message,
-    sender,
-  }: BackgroundOnMessageHandlerParams) => Promise<void>;
   getAutofillInlineMenuPosition: () => InlineMenuPosition;
   updateAutofillInlineMenuElementIsVisibleStatus: ({
     message,
@@ -211,10 +222,13 @@ export type OverlayBackgroundExtensionMessageHandlers = {
   }: BackgroundOnMessageHandlerParams) => void;
   collectPageDetailsResponse: ({ message, sender }: BackgroundOnMessageHandlerParams) => void;
   unlockCompleted: ({ message }: BackgroundMessageParam) => void;
+  doFullSync: () => void;
   addedCipher: () => void;
   addEditCipherSubmitted: () => void;
   editedCipher: () => void;
   deletedCipher: () => void;
+  bgSaveCipher: () => void;
+  fido2AbortRequest: ({ message, sender }: BackgroundOnMessageHandlerParams) => void;
 };
 
 export type PortMessageParam = {
@@ -236,14 +250,16 @@ export type InlineMenuButtonPortMessageHandlers = {
 
 export type InlineMenuListPortMessageHandlers = {
   [key: string]: CallableFunction;
-  checkAutofillInlineMenuButtonFocused: () => void;
-  autofillInlineMenuBlurred: () => void;
+  checkAutofillInlineMenuButtonFocused: ({ port }: PortConnectionParam) => void;
+  autofillInlineMenuBlurred: ({ port }: PortConnectionParam) => void;
   unlockVault: ({ port }: PortConnectionParam) => void;
   fillAutofillInlineMenuCipher: ({ message, port }: PortOnMessageHandlerParams) => void;
   addNewVaultItem: ({ message, port }: PortOnMessageHandlerParams) => void;
   viewSelectedCipher: ({ message, port }: PortOnMessageHandlerParams) => void;
   redirectAutofillInlineMenuFocusOut: ({ message, port }: PortOnMessageHandlerParams) => void;
   updateAutofillInlineMenuListHeight: ({ message, port }: PortOnMessageHandlerParams) => void;
+  refreshGeneratedPassword: () => Promise<void>;
+  fillGeneratedPassword: ({ port }: PortConnectionParam) => Promise<void>;
 };
 
 export interface OverlayBackground {

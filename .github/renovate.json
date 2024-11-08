@@ -36,6 +36,10 @@
       "matchUpdateTypes": "major"
     },
     {
+      "groupName": "macOS/iOS bindings",
+      "matchPackageNames": ["core-foundation", "security-framework", "security-framework-sys"]
+    },
+    {
       "matchPackageNames": [
         "@ngtools/webpack",
         "base64-loader",
@@ -69,7 +73,7 @@
       "reviewers": ["team:team-admin-console-dev"]
     },
     {
-      "matchPackageNames": ["@types/node-ipc", "node-ipc", "qrious", "regedit"],
+      "matchPackageNames": ["@types/node-ipc", "node-ipc", "qrious"],
       "description": "Auth owned dependencies",
       "commitMessagePrefix": "[deps] Auth:",
       "reviewers": ["team:team-auth-dev"]
@@ -81,7 +85,6 @@
         "cross-env",
         "del",
         "gulp",
-        "gulp-filter",
         "gulp-if",
         "gulp-json-editor",
         "gulp-replace",
@@ -107,6 +110,8 @@
     },
     {
       "matchPackageNames": [
+        "@electron/notarize",
+        "@electron/rebuild",
         "@types/argon2-browser",
         "@types/chrome",
         "@types/firefox-webext-browser",
@@ -116,6 +121,12 @@
         "argon2",
         "argon2-browser",
         "big-integer",
+        "electron-builder",
+        "electron-log",
+        "electron-reload",
+        "electron-store",
+        "electron-updater",
+        "electron",
         "node-forge",
         "rxjs",
         "type-fest",
@@ -194,19 +205,11 @@
     },
     {
       "matchPackageNames": [
-        "@electron/notarize",
-        "@electron/rebuild",
         "@microsoft/signalr-protocol-msgpack",
         "@microsoft/signalr",
         "@types/jsdom",
         "@types/papaparse",
         "@types/zxcvbn",
-        "electron-builder",
-        "electron-log",
-        "electron-reload",
-        "electron-store",
-        "electron-updater",
-        "electron",
         "jsdom",
         "jszip",
         "oidc-client-ts",
@@ -255,5 +258,5 @@
       "reviewers": ["team:team-vault-dev"]
     }
   ],
-  "ignoreDeps": ["@types/koa-bodyparser", "bootstrap", "node-ipc", "node", "npm", "regedit"]
+  "ignoreDeps": ["@types/koa-bodyparser", "bootstrap", "node-ipc", "node", "npm"]
 }

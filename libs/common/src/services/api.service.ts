@@ -1,5 +1,11 @@
 import { firstValueFrom } from "rxjs";
 
+import {
+  CollectionRequest,
+  CollectionAccessDetailsResponse,
+  CollectionDetailsResponse,
+  CollectionResponse,
+} from "@bitwarden/admin-console/common";
 import { LogoutReason } from "@bitwarden/auth/common";
 
 import { ApiService as ApiServiceAbstraction } from "../abstractions/api.service";
@@ -102,7 +108,6 @@ import { DeleteRecoverRequest } from "../models/request/delete-recover.request";
 import { EventRequest } from "../models/request/event.request";
 import { KdfRequest } from "../models/request/kdf.request";
 import { KeysRequest } from "../models/request/keys.request";
-import { OrganizationImportRequest } from "../models/request/organization-import.request";
 import { PreloginRequest } from "../models/request/prelogin.request";
 import { RegisterRequest } from "../models/request/register.request";
 import { StorageRequest } from "../models/request/storage.request";
@@ -121,6 +126,7 @@ import { AppIdService } from "../platform/abstractions/app-id.service";
 import { EnvironmentService } from "../platform/abstractions/environment.service";
 import { LogService } from "../platform/abstractions/log.service";
 import { PlatformUtilsService } from "../platform/abstractions/platform-utils.service";
+import { flagEnabled } from "../platform/misc/flags";
 import { Utils } from "../platform/misc/utils";
 import { SyncResponse } from "../platform/sync";
 import { UserId } from "../types/guid";
@@ -134,15 +140,9 @@ import { CipherCreateRequest } from "../vault/models/request/cipher-create.reque
 import { CipherPartialRequest } from "../vault/models/request/cipher-partial.request";
 import { CipherShareRequest } from "../vault/models/request/cipher-share.request";
 import { CipherRequest } from "../vault/models/request/cipher.request";
-import { CollectionRequest } from "../vault/models/request/collection.request";
 import { AttachmentUploadDataResponse } from "../vault/models/response/attachment-upload-data.response";
 import { AttachmentResponse } from "../vault/models/response/attachment.response";
 import { CipherResponse } from "../vault/models/response/cipher.response";
-import {
-  CollectionAccessDetailsResponse,
-  CollectionDetailsResponse,
-  CollectionResponse,
-} from "../vault/models/response/collection.response";
 import { OptionalCipherResponse } from "../vault/models/response/optional-cipher.response";
 
 /**
@@ -891,10 +891,6 @@ export class ApiService implements ApiServiceAbstraction {
   async getPlans(): Promise<ListResponse<PlanResponse>> {
     const r = await this.send("GET", "/plans", null, false, true);
     return new ListResponse(r, PlanResponse);
-  }
-
-  async postPublicImportDirectory(request: OrganizationImportRequest): Promise<any> {
-    return this.send("POST", "/public/organization/import", request, true, false);
   }
 
   async getTaxRates(): Promise<ListResponse<TaxRateResponse>> {
@@ -1848,44 +1844,20 @@ export class ApiService implements ApiServiceAbstraction {
     const requestUrl =
       apiUrl + Utils.normalizePath(pathParts[0]) + (pathParts.length > 1 ? `?${pathParts[1]}` : "");
 
-    const headers = new Headers({
-      "Device-Type": this.deviceType,
-    });
-    if (this.customUserAgent != null) {
-      headers.set("User-Agent", this.customUserAgent);
-    }
+    const [requestHeaders, requestBody] = await this.buildHeadersAndBody(
+      authed,
+      hasResponse,
+      body,
+      alterHeaders,
+    );
 
     const requestInit: RequestInit = {
       cache: "no-store",
       credentials: await this.getCredentials(),
       method: method,
     };
-
-    if (authed) {
-      const authHeader = await this.getActiveBearerToken();
-      headers.set("Authorization", "Bearer " + authHeader);
-    }
-    if (body != null) {
-      if (typeof body === "string") {
-        requestInit.body = body;
-        headers.set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-      } else if (typeof body === "object") {
-        if (body instanceof FormData) {
-          requestInit.body = body;
-        } else {
-          headers.set("Content-Type", "application/json; charset=utf-8");
-          requestInit.body = JSON.stringify(body);
-        }
-      }
-    }
-    if (hasResponse) {
-      headers.set("Accept", "application/json");
-    }
-    if (alterHeaders != null) {
-      alterHeaders(headers);
-    }
-
-    requestInit.headers = headers;
+    requestInit.headers = requestHeaders;
+    requestInit.body = requestBody;
     const response = await this.fetch(new Request(requestUrl, requestInit));
 
     const responseType = response.headers.get("content-type");
@@ -1900,6 +1872,51 @@ export class ApiService implements ApiServiceAbstraction {
       const error = await this.handleError(response, false, authed);
       return Promise.reject(error);
     }
+  }
+
+  private async buildHeadersAndBody(
+    authed: boolean,
+    hasResponse: boolean,
+    body: any,
+    alterHeaders: (headers: Headers) => void,
+  ): Promise<[Headers, any]> {
+    let requestBody: any = null;
+    const headers = new Headers({
+      "Device-Type": this.deviceType,
+    });
+
+    if (flagEnabled("prereleaseBuild")) {
+      headers.set("Is-Prerelease", "true");
+    }
+    if (this.customUserAgent != null) {
+      headers.set("User-Agent", this.customUserAgent);
+    }
+    if (hasResponse) {
+      headers.set("Accept", "application/json");
+    }
+    if (alterHeaders != null) {
+      alterHeaders(headers);
+    }
+    if (authed) {
+      const authHeader = await this.getActiveBearerToken();
+      headers.set("Authorization", "Bearer " + authHeader);
+    }
+
+    if (body != null) {
+      if (typeof body === "string") {
+        requestBody = body;
+        headers.set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+      } else if (typeof body === "object") {
+        if (body instanceof FormData) {
+          requestBody = body;
+        } else {
+          headers.set("Content-Type", "application/json; charset=utf-8");
+          requestBody = JSON.stringify(body);
+        }
+      }
+    }
+
+    return [headers, requestBody];
   }
 
   private async handleError(

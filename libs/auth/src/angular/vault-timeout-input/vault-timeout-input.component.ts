@@ -4,6 +4,8 @@ import {
   AbstractControl,
   ControlValueAccessor,
   FormBuilder,
+  FormControl,
+  FormGroup,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
@@ -22,13 +24,15 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { VaultTimeout, VaultTimeoutOption } from "@bitwarden/common/types/vault-timeout.type";
 import { FormFieldModule, SelectModule } from "@bitwarden/components";
 
-interface VaultTimeoutFormValue {
-  vaultTimeout: VaultTimeout | null;
-  custom: {
-    hours: number | null;
-    minutes: number | null;
-  };
-}
+type VaultTimeoutForm = FormGroup<{
+  vaultTimeout: FormControl<VaultTimeout | null>;
+  custom: FormGroup<{
+    hours: FormControl<number | null>;
+    minutes: FormControl<number | null>;
+  }>;
+}>;
+
+type VaultTimeoutFormValue = VaultTimeoutForm["value"];
 
 @Component({
   selector: "auth-vault-timeout-input",
@@ -51,20 +55,45 @@ interface VaultTimeoutFormValue {
 export class VaultTimeoutInputComponent
   implements ControlValueAccessor, Validator, OnInit, OnDestroy, OnChanges
 {
+  protected readonly VaultTimeoutAction = VaultTimeoutAction;
+
   get showCustom() {
     return this.form.get("vaultTimeout").value === VaultTimeoutInputComponent.CUSTOM_VALUE;
   }
 
-  get exceedsMinimumTimout(): boolean {
+  get exceedsMinimumTimeout(): boolean {
     return (
       !this.showCustom || this.customTimeInMinutes() > VaultTimeoutInputComponent.MIN_CUSTOM_MINUTES
     );
   }
 
+  get exceedsMaximumTimeout(): boolean {
+    return (
+      this.showCustom &&
+      this.customTimeInMinutes() >
+        this.vaultTimeoutPolicyMinutes + 60 * this.vaultTimeoutPolicyHours
+    );
+  }
+
+  get filteredVaultTimeoutOptions(): VaultTimeoutOption[] {
+    // by policy max value
+    if (this.vaultTimeoutPolicy == null || this.vaultTimeoutPolicy.data == null) {
+      return this.vaultTimeoutOptions;
+    }
+
+    return this.vaultTimeoutOptions.filter((option) => {
+      if (typeof option.value === "number") {
+        return option.value <= this.vaultTimeoutPolicy.data.minutes;
+      }
+
+      return false;
+    });
+  }
+
   static CUSTOM_VALUE = -100;
   static MIN_CUSTOM_MINUTES = 0;
 
-  form = this.formBuilder.group({
+  form: VaultTimeoutForm = this.formBuilder.group({
     vaultTimeout: [null],
     custom: this.formBuilder.group({
       hours: [null],
@@ -73,6 +102,7 @@ export class VaultTimeoutInputComponent
   });
 
   @Input() vaultTimeoutOptions: VaultTimeoutOption[];
+
   vaultTimeoutPolicy: Policy;
   vaultTimeoutPolicyHours: number;
   vaultTimeoutPolicyMinutes: number;
@@ -120,7 +150,7 @@ export class VaultTimeoutInputComponent
         takeUntil(this.destroy$),
       )
       .subscribe((value) => {
-        const current = Math.max(value, 0);
+        const current = typeof value === "string" ? 0 : Math.max(value, 0);
 
         // This cannot emit an event b/c it would cause form.valueChanges to fire again
         // and we are already handling that above so just silently update
@@ -203,7 +233,7 @@ export class VaultTimeoutInputComponent
       return { policyError: true };
     }
 
-    if (!this.exceedsMinimumTimout) {
+    if (!this.exceedsMinimumTimeout) {
       return { minTimeoutError: true };
     }
 

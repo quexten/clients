@@ -3,7 +3,7 @@
     "pretty": true,
     "moduleResolution": "node",
     "target": "ES2016",
-    "module": "es6",
+    "module": "ES2020",
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
@@ -14,6 +14,7 @@
     "paths": {
       "@bitwarden/cli/*": ["../../apps/cli/src/*"],
       "@bitwarden/common/spec": ["../../libs/common/spec"],
+      "@bitwarden/admin-console/common": ["../../libs/admin-console/src/common"],
       "@bitwarden/auth/common": ["../../libs/auth/src/common"],
       "@bitwarden/auth/angular": ["../../libs/auth/src/angular"],
       "@bitwarden/common/*": ["../../libs/common/src/*"],
@@ -22,6 +23,7 @@
       "@bitwarden/generator-legacy": ["../../libs/tools/generator/extensions/legacy/src"],
       "@bitwarden/generator-history": ["../../libs/tools/generator/extensions/history/src"],
       "@bitwarden/generator-navigation": ["../../libs/tools/generator/extensions/navigation/src"],
+      "@bitwarden/key-management": ["../../libs/key-management/src"],
       "@bitwarden/vault-export-core": [
         "../../libs/tools/export/vault-export/vault-export-core/src"
       ],

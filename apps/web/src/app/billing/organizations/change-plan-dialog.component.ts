@@ -21,23 +21,29 @@ import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
 import { OrganizationUpgradeRequest } from "@bitwarden/common/admin-console/models/request/organization-upgrade.request";
+import { BillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions";
 import {
   PaymentMethodType,
+  PlanInterval,
   PlanType,
   ProductTierType,
-  PlanInterval,
 } from "@bitwarden/common/billing/enums";
 import { PaymentRequest } from "@bitwarden/common/billing/models/request/payment.request";
+import { UpdatePaymentMethodRequest } from "@bitwarden/common/billing/models/request/update-payment-method.request";
 import { BillingResponse } from "@bitwarden/common/billing/models/response/billing.response";
 import { OrganizationSubscriptionResponse } from "@bitwarden/common/billing/models/response/organization-subscription.response";
+import { PaymentSourceResponse } from "@bitwarden/common/billing/models/response/payment-source.response";
 import { PlanResponse } from "@bitwarden/common/billing/models/response/plan.response";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 import { DialogService, ToastService } from "@bitwarden/components";
+import { KeyService } from "@bitwarden/key-management";
 
-import { PaymentComponent } from "../shared/payment.component";
+import { PaymentV2Component } from "../shared/payment/payment-v2.component";
+import { PaymentComponent } from "../shared/payment/payment.component";
 import { TaxInfoComponent } from "../shared/tax-info.component";
 
 type ChangePlanDialogParams = {
@@ -80,6 +86,7 @@ interface OnSuccessArgs {
 })
 export class ChangePlanDialogComponent implements OnInit, OnDestroy {
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+  @ViewChild(PaymentV2Component) paymentV2Component: PaymentV2Component;
   @ViewChild(TaxInfoComponent) taxComponent: TaxInfoComponent;
 
   @Input() acceptingSponsorship = false;
@@ -138,7 +145,7 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     clientOwnerEmail: ["", [Validators.email]],
     plan: [this.plan],
     productTier: [this.productTier],
-    planInterval: [1],
+    // planInterval: [1],
   });
 
   planType: string;
@@ -146,6 +153,7 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
   selectedInterval: number = 1;
   planIntervals = PlanInterval;
   passwordManagerPlans: PlanResponse[];
+  secretsManagerPlans: PlanResponse[];
   organization: Organization;
   sub: OrganizationSubscriptionResponse;
   billing: BillingResponse;
@@ -153,6 +161,13 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
   showPayment: boolean = false;
   totalOpened: boolean = false;
   currentPlan: PlanResponse;
+  currentFocusIndex = 0;
+  isCardStateDisabled = false;
+  focusedIndex: number | null = null;
+  accountCredit: number;
+  paymentSource?: PaymentSourceResponse;
+
+  deprecateStripeSourcesAPI: boolean;
 
   private destroy$ = new Subject<void>();
 
@@ -162,7 +177,7 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private apiService: ApiService,
     private i18nService: I18nService,
-    private cryptoService: CryptoService,
+    private keyService: KeyService,
     private router: Router,
     private syncService: SyncService,
     private policyService: PolicyService,
@@ -170,9 +185,15 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     private messagingService: MessagingService,
     private formBuilder: FormBuilder,
     private organizationApiService: OrganizationApiServiceAbstraction,
+    private configService: ConfigService,
+    private billingApiService: BillingApiServiceAbstraction,
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.deprecateStripeSourcesAPI = await this.configService.getFeatureFlag(
+      FeatureFlag.AC2476_DeprecateStripeSourcesAPI,
+    );
+
     if (this.dialogParams.organizationId) {
       this.currentPlanName = this.resolvePlanName(this.dialogParams.productTierType);
       this.sub =
@@ -182,12 +203,20 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
       this.currentPlan = this.sub?.plan;
       this.selectedPlan = this.sub?.plan;
       this.organization = await this.organizationService.get(this.organizationId);
-      this.billing = await this.organizationApiService.getBilling(this.organizationId);
+      if (this.deprecateStripeSourcesAPI) {
+        const { accountCredit, paymentSource } =
+          await this.billingApiService.getOrganizationPaymentMethod(this.organizationId);
+        this.accountCredit = accountCredit;
+        this.paymentSource = paymentSource;
+      } else {
+        this.billing = await this.organizationApiService.getBilling(this.organizationId);
+      }
     }
 
     if (!this.selfHosted) {
       const plans = await this.apiService.getPlans();
       this.passwordManagerPlans = plans.data.filter((plan) => !!plan.PasswordManager);
+      this.secretsManagerPlans = plans.data.filter((plan) => !!plan.SecretsManager);
 
       if (
         this.productTier === ProductTierType.Enterprise ||
@@ -230,19 +259,16 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
         selected: false,
       },
     ];
-
-    this.formGroup
-      .get("planInterval")
-      .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => (this.selectedInterval = value));
-
-    this.discountPercentageFromSub = this.sub?.customerDiscount?.percentOff;
+    this.discountPercentageFromSub = this.isSecretsManagerTrial()
+      ? 0
+      : (this.sub?.customerDiscount?.percentOff ?? 0);
 
     this.setInitialPlanSelection();
     this.loading = false;
   }
 
   setInitialPlanSelection() {
+    this.focusedIndex = this.selectableProducts.length - 1;
     this.selectPlan(this.getPlanByType(ProductTierType.Enterprise));
   }
 
@@ -250,8 +276,27 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     return this.selectableProducts.find((product) => product.productTier === productTier);
   }
 
+  secretsManagerTrialDiscount() {
+    return this.sub?.customerDiscount?.appliesTo?.includes("sm-standalone")
+      ? this.discountPercentage
+      : this.discountPercentageFromSub + this.discountPercentage;
+  }
+
+  isSecretsManagerTrial(): boolean {
+    return (
+      this.sub?.subscription?.items?.some((item) =>
+        this.sub?.customerDiscount?.appliesTo?.includes(item.productId),
+      ) ?? false
+    );
+  }
+
   planTypeChanged() {
     this.selectPlan(this.getPlanByType(ProductTierType.Enterprise));
+  }
+
+  updateInterval(event: number) {
+    this.selectedInterval = event;
+    this.planTypeChanged();
   }
 
   protected getPlanIntervals() {
@@ -267,52 +312,48 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     ];
   }
 
+  optimizedNgForRender(index: number) {
+    return index;
+  }
+
   protected getPlanCardContainerClasses(plan: PlanResponse, index: number) {
     let cardState: PlanCardState;
 
-    if (plan == this.selectedPlan) {
+    if (plan == this.currentPlan) {
+      cardState = PlanCardState.Disabled;
+      this.isCardStateDisabled = true;
+      this.focusedIndex = index;
+    } else if (plan == this.selectedPlan) {
       cardState = PlanCardState.Selected;
+      this.isCardStateDisabled = false;
+      this.focusedIndex = index;
     } else if (
       this.selectedInterval === PlanInterval.Monthly &&
       plan.productTier == ProductTierType.Families
     ) {
       cardState = PlanCardState.Disabled;
+      this.isCardStateDisabled = true;
+      this.focusedIndex = this.selectableProducts.length - 1;
     } else {
       cardState = PlanCardState.NotSelected;
+      this.isCardStateDisabled = false;
     }
 
     switch (cardState) {
       case PlanCardState.Selected: {
-        if (this.currentPlan.productTier === ProductTierType.Teams) {
-          return [
-            "tw-group",
-            "tw-cursor-pointer",
-            "tw-block",
-            "tw-rounded",
-            "tw-w-1/2",
-            "tw-border",
-            "tw-border-solid",
-            "tw-border-primary-600",
-            "hover:tw-border-primary-700",
-            "focus:tw-border-2",
-            "focus:tw-border-primary-700",
-            "focus:tw-rounded-lg",
-          ];
-        } else {
-          return [
-            "tw-group",
-            "tw-cursor-pointer",
-            "tw-block",
-            "tw-rounded",
-            "tw-border",
-            "tw-border-solid",
-            "tw-border-primary-600",
-            "hover:tw-border-primary-700",
-            "focus:tw-border-2",
-            "focus:tw-border-primary-700",
-            "focus:tw-rounded-lg",
-          ];
-        }
+        return [
+          "tw-group",
+          "tw-cursor-pointer",
+          "tw-block",
+          "tw-rounded",
+          "tw-border",
+          "tw-border-solid",
+          "tw-border-primary-600",
+          "hover:tw-border-primary-700",
+          "focus:tw-border-2",
+          "focus:tw-border-primary-700",
+          "focus:tw-rounded-lg",
+        ];
       }
       case PlanCardState.NotSelected: {
         return [
@@ -336,10 +377,6 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
           "tw-text-muted",
           "tw-block",
           "tw-rounded",
-          "tw-border",
-          "tw-border-solid",
-          "tw-border-1",
-          "tw-border-secondary-300",
         ];
       }
     }
@@ -352,6 +389,10 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     ) {
       return;
     }
+
+    if (plan === this.currentPlan) {
+      return;
+    }
     this.selectedPlan = plan;
     this.formGroup.patchValue({ productTier: plan.productTier });
   }
@@ -362,11 +403,17 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
   }
 
   get upgradeRequiresPaymentMethod() {
-    return (
-      this.organization?.productTierType === ProductTierType.Free &&
-      !this.showFree &&
-      !this.billing?.paymentSource
-    );
+    const isFreeTier = this.organization?.productTierType === ProductTierType.Free;
+    const shouldHideFree = !this.showFree;
+    const hasNoPaymentSource = this.deprecateStripeSourcesAPI
+      ? !this.paymentSource
+      : !this.billing?.paymentSource;
+
+    return isFreeTier && shouldHideFree && hasNoPaymentSource;
+  }
+
+  get selectedSecretsManagerPlan() {
+    return this.secretsManagerPlans.find((plan) => plan.type === this.selectedPlan.type);
   }
 
   get selectedPlanInterval() {
@@ -397,9 +444,37 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
         this.planIsEnabled(plan),
     );
 
+    if (
+      this.currentPlan.productTier === ProductTierType.Free &&
+      this.selectedInterval === PlanInterval.Monthly &&
+      !this.organization.useSecretsManager
+    ) {
+      const familyPlan = this.passwordManagerPlans.find(
+        (plan) => plan.productTier == ProductTierType.Families,
+      );
+      result.push(familyPlan);
+    }
+
+    if (
+      this.organization.useSecretsManager &&
+      this.currentPlan.productTier === ProductTierType.Free
+    ) {
+      const familyPlanIndex = result.findIndex(
+        (plan) => plan.productTier === ProductTierType.Families,
+      );
+
+      if (familyPlanIndex !== -1) {
+        result.splice(familyPlanIndex, 1);
+      }
+    }
+
+    if (this.currentPlan.productTier !== ProductTierType.Free) {
+      result.push(this.currentPlan);
+    }
+
     result.sort((planA, planB) => planA.displaySortOrder - planB.displaySortOrder);
 
-    return result.reverse();
+    return result;
   }
 
   get selectablePlans() {
@@ -413,13 +488,51 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  get storageGb() {
+    return this.sub?.maxStorageGb ? this.sub?.maxStorageGb - 1 : 0;
+  }
+
   passwordManagerSeatTotal(plan: PlanResponse): number {
-    if (!plan.PasswordManager.hasAdditionalSeatsOption) {
+    if (!plan.PasswordManager.hasAdditionalSeatsOption || this.isSecretsManagerTrial()) {
       return 0;
     }
 
-    const result = plan.PasswordManager.seatPrice * Math.abs(this.organization.seats || 0);
+    const result = plan.PasswordManager.seatPrice * Math.abs(this.sub?.seats || 0);
     return result;
+  }
+
+  secretsManagerSeatTotal(plan: PlanResponse, seats: number): number {
+    if (!plan.SecretsManager.hasAdditionalSeatsOption) {
+      return 0;
+    }
+
+    return plan.SecretsManager.seatPrice * Math.abs(seats || 0);
+  }
+
+  additionalStorageTotal(plan: PlanResponse): number {
+    if (!plan.PasswordManager.hasAdditionalStorageOption) {
+      return 0;
+    }
+
+    return (
+      plan.PasswordManager.additionalStoragePricePerGb *
+      Math.abs(this.sub?.maxStorageGb ? this.sub?.maxStorageGb - 1 : 0 || 0)
+    );
+  }
+
+  additionalStoragePriceMonthly(selectedPlan: PlanResponse) {
+    return selectedPlan.PasswordManager.additionalStoragePricePerGb;
+  }
+
+  additionalServiceAccountTotal(plan: PlanResponse): number {
+    if (
+      !plan.SecretsManager.hasAdditionalServiceAccountOption ||
+      this.additionalServiceAccount == 0
+    ) {
+      return 0;
+    }
+
+    return plan.SecretsManager.additionalPricePerServiceAccount * this.additionalServiceAccount;
   }
 
   get passwordManagerSubtotal() {
@@ -433,18 +546,60 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     return subTotal - this.discount;
   }
 
+  get secretsManagerSubtotal() {
+    const plan = this.selectedSecretsManagerPlan;
+
+    if (!this.organization.useSecretsManager) {
+      return 0;
+    }
+
+    return (
+      plan.SecretsManager.basePrice +
+      this.secretsManagerSeatTotal(plan, this.sub?.smSeats) +
+      this.additionalServiceAccountTotal(plan)
+    );
+  }
+
   get taxCharges() {
     return this.taxComponent != null && this.taxComponent.taxRate != null
       ? (this.taxComponent.taxRate / 100) * this.passwordManagerSubtotal
       : 0;
   }
 
+  get passwordManagerSeats() {
+    if (this.selectedPlan.productTier === ProductTierType.Families) {
+      return this.selectedPlan.PasswordManager.baseSeats;
+    }
+    return this.sub?.seats;
+  }
+
   get total() {
-    return this.passwordManagerSubtotal + this.taxCharges || 0;
+    if (this.organization.useSecretsManager) {
+      return (
+        this.passwordManagerSubtotal +
+          this.additionalStorageTotal(this.selectedPlan) +
+          this.secretsManagerSubtotal +
+          this.taxCharges || 0
+      );
+    }
+    return (
+      this.passwordManagerSubtotal +
+        this.additionalStorageTotal(this.selectedPlan) +
+        this.taxCharges || 0
+    );
   }
 
   get teamsStarterPlanIsAvailable() {
     return this.selectablePlans.some((plan) => plan.type === PlanType.TeamsStarter);
+  }
+
+  get additionalServiceAccount() {
+    const baseServiceAccount = this.currentPlan.SecretsManager?.baseServiceAccount || 0;
+    const usedServiceAccounts = this.sub?.smServiceAccounts || 0;
+
+    const additionalServiceAccounts = baseServiceAccount - usedServiceAccounts;
+
+    return additionalServiceAccounts <= 0 ? Math.abs(additionalServiceAccounts) : 0;
   }
 
   changedProduct() {
@@ -483,7 +638,16 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
   }
 
   changedCountry() {
-    if (this.paymentComponent && this.taxComponent) {
+    if (this.deprecateStripeSourcesAPI && this.paymentV2Component && this.taxComponent) {
+      this.paymentV2Component.showBankAccount = this.taxComponent.country === "US";
+
+      if (
+        !this.paymentV2Component.showBankAccount &&
+        this.paymentV2Component.selected === PaymentMethodType.BankAccount
+      ) {
+        this.paymentV2Component.select(PaymentMethodType.Card);
+      }
+    } else if (this.paymentComponent && this.taxComponent) {
       this.paymentComponent!.hideBank = this.taxComponent?.taxFormGroup?.value.country !== "US";
       // Bank Account payments are only available for US customers
       if (
@@ -504,7 +668,7 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
 
     const doSubmit = async (): Promise<string> => {
       let orgId: string = null;
-      orgId = await this.updateOrganization(orgId);
+      orgId = await this.updateOrganization();
       this.toastService.showToast({
         variant: "success",
         title: null,
@@ -517,7 +681,7 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
       if (!this.acceptingSponsorship && !this.isInTrialFlow) {
         // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.router.navigate(["/organizations/" + orgId]);
+        this.router.navigate(["/organizations/" + orgId + "/billing/subscription"]);
       }
 
       if (this.isInTrialFlow) {
@@ -538,10 +702,14 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   };
 
-  private async updateOrganization(orgId: string) {
+  private async updateOrganization() {
     const request = new OrganizationUpgradeRequest();
     if (this.selectedPlan.productTier !== ProductTierType.Families) {
-      request.additionalSeats = this.organization.seats;
+      request.additionalSeats = this.sub?.seats;
+    }
+    if (this.sub?.maxStorageGb > this.selectedPlan.PasswordManager.baseStorageGb) {
+      request.additionalStorageGb =
+        this.sub?.maxStorageGb - this.selectedPlan.PasswordManager.baseStorageGb;
     }
     request.premiumAccessAddon =
       this.selectedPlan.PasswordManager.hasPremiumAccessOption &&
@@ -552,20 +720,43 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
       request.billingAddressPostalCode = this.taxComponent.taxFormGroup?.value.postalCode;
     }
 
+    // Secrets Manager
+    this.buildSecretsManagerRequest(request);
+
     if (this.upgradeRequiresPaymentMethod || this.showPayment) {
-      const tokenResult = await this.paymentComponent.createPaymentToken();
-      const paymentRequest = new PaymentRequest();
-      paymentRequest.paymentToken = tokenResult[0];
-      paymentRequest.paymentMethodType = tokenResult[1];
-      paymentRequest.country = this.taxComponent.taxFormGroup?.value.country;
-      paymentRequest.postalCode = this.taxComponent.taxFormGroup?.value.postalCode;
-      await this.organizationApiService.updatePayment(this.organizationId, paymentRequest);
+      if (this.deprecateStripeSourcesAPI) {
+        const tokenizedPaymentSource = await this.paymentV2Component.tokenize();
+        const updatePaymentMethodRequest = new UpdatePaymentMethodRequest();
+        updatePaymentMethodRequest.paymentSource = tokenizedPaymentSource;
+        updatePaymentMethodRequest.taxInformation = {
+          country: this.taxComponent.country,
+          postalCode: this.taxComponent.postalCode,
+          taxId: this.taxComponent.taxId,
+          line1: this.taxComponent.line1,
+          line2: this.taxComponent.line2,
+          city: this.taxComponent.city,
+          state: this.taxComponent.state,
+        };
+
+        await this.billingApiService.updateOrganizationPaymentMethod(
+          this.organizationId,
+          updatePaymentMethodRequest,
+        );
+      } else {
+        const tokenResult = await this.paymentComponent.createPaymentToken();
+        const paymentRequest = new PaymentRequest();
+        paymentRequest.paymentToken = tokenResult[0];
+        paymentRequest.paymentMethodType = tokenResult[1];
+        paymentRequest.country = this.taxComponent.taxFormGroup?.value.country;
+        paymentRequest.postalCode = this.taxComponent.taxFormGroup?.value.postalCode;
+        await this.organizationApiService.updatePayment(this.organizationId, paymentRequest);
+      }
     }
 
     // Backfill pub/priv key if necessary
     if (!this.organization.hasPublicAndPrivateKeys) {
-      const orgShareKey = await this.cryptoService.getOrgKey(this.organizationId);
-      const orgKeys = await this.cryptoService.makeKeyPair(orgShareKey);
+      const orgShareKey = await this.keyService.getOrgKey(this.organizationId);
+      const orgKeys = await this.keyService.makeKeyPair(orgShareKey);
       request.keys = new OrganizationKeysRequest(orgKeys[0], orgKeys[1].encryptedString);
     }
 
@@ -591,6 +782,23 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     }
 
     return text;
+  }
+
+  private buildSecretsManagerRequest(request: OrganizationUpgradeRequest): void {
+    request.useSecretsManager = this.organization.useSecretsManager;
+    if (!this.organization.useSecretsManager) {
+      return;
+    }
+
+    if (
+      this.selectedPlan.SecretsManager.hasAdditionalSeatsOption &&
+      this.currentPlan.productTier === ProductTierType.Free
+    ) {
+      request.additionalSmSeats = this.organization.seats;
+    } else {
+      request.additionalSmSeats = this.sub?.smSeats;
+      request.additionalServiceAccounts = this.additionalServiceAccount;
+    }
   }
 
   private upgradeFlowPrefillForm() {
@@ -634,21 +842,44 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
     this.totalOpened = !this.totalOpened;
   }
 
+  calculateTotalAppliedDiscount(total: number) {
+    const discountedTotal = total * (this.discountPercentageFromSub / 100);
+    return discountedTotal;
+  }
+
   get paymentSourceClasses() {
-    if (this.billing.paymentSource == null) {
-      return [];
-    }
-    switch (this.billing.paymentSource.type) {
-      case PaymentMethodType.Card:
-        return ["bwi-credit-card"];
-      case PaymentMethodType.BankAccount:
-        return ["bwi-bank"];
-      case PaymentMethodType.Check:
-        return ["bwi-money"];
-      case PaymentMethodType.PayPal:
-        return ["bwi-paypal text-primary"];
-      default:
+    if (this.deprecateStripeSourcesAPI) {
+      if (this.paymentSource == null) {
         return [];
+      }
+      switch (this.paymentSource.type) {
+        case PaymentMethodType.Card:
+          return ["bwi-credit-card"];
+        case PaymentMethodType.BankAccount:
+          return ["bwi-bank"];
+        case PaymentMethodType.Check:
+          return ["bwi-money"];
+        case PaymentMethodType.PayPal:
+          return ["bwi-paypal text-primary"];
+        default:
+          return [];
+      }
+    } else {
+      if (this.billing.paymentSource == null) {
+        return [];
+      }
+      switch (this.billing.paymentSource.type) {
+        case PaymentMethodType.Card:
+          return ["bwi-credit-card"];
+        case PaymentMethodType.BankAccount:
+          return ["bwi-bank"];
+        case PaymentMethodType.Check:
+          return ["bwi-money"];
+        case PaymentMethodType.PayPal:
+          return ["bwi-paypal text-primary"];
+        default:
+          return [];
+      }
     }
   }
 
@@ -662,6 +893,48 @@ export class ChangePlanDialogComponent implements OnInit, OnDestroy {
         return this.i18nService.t("planNameFamilies");
       case ProductTierType.Teams:
         return this.i18nService.t("planNameTeams");
+      case ProductTierType.TeamsStarter:
+        return this.i18nService.t("planNameTeamsStarter");
     }
+  }
+
+  onKeydown(event: KeyboardEvent, index: number) {
+    const cardElements = Array.from(document.querySelectorAll(".product-card")) as HTMLElement[];
+    let newIndex = index;
+    const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
+
+    if (["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(event.key)) {
+      do {
+        newIndex = (newIndex + direction + cardElements.length) % cardElements.length;
+      } while (this.isCardDisabled(newIndex) && newIndex !== index);
+
+      event.preventDefault();
+
+      setTimeout(() => {
+        const card = cardElements[newIndex];
+        if (
+          !(
+            card.classList.contains("tw-bg-secondary-100") &&
+            card.classList.contains("tw-text-muted")
+          )
+        ) {
+          card?.focus();
+        }
+      }, 0);
+    }
+  }
+
+  onFocus(index: number) {
+    this.focusedIndex = index;
+    this.selectPlan(this.selectableProducts[index]);
+  }
+
+  isCardDisabled(index: number): boolean {
+    const card = this.selectableProducts[index];
+    return card === (this.currentPlan || this.isCardStateDisabled);
+  }
+
+  manageSelectableProduct(index: number) {
+    return index;
   }
 }

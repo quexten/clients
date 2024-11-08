@@ -3,8 +3,8 @@
  * @jest-environment ../../libs/shared/test.environment.ts
  */
 
-import { mock } from "jest-mock-extended";
-import { Subject, firstValueFrom, of } from "rxjs";
+import { matches, mock } from "jest-mock-extended";
+import { BehaviorSubject, Subject, bufferCount, firstValueFrom, of } from "rxjs";
 
 import {
   FakeGlobalState,
@@ -16,6 +16,7 @@ import {
 import { subscribeTo } from "../../../../spec/observable-tracker";
 import { AuthService } from "../../../auth/abstractions/auth.service";
 import { AuthenticationStatus } from "../../../auth/enums/authentication-status";
+import { FeatureFlag } from "../../../enums/feature-flag.enum";
 import { UserId } from "../../../types/guid";
 import { ConfigApiServiceAbstraction } from "../../abstractions/config/config-api.service.abstraction";
 import { ServerConfig } from "../../abstractions/config/server-config";
@@ -35,6 +36,7 @@ import {
   RETRIEVAL_INTERVAL,
   GLOBAL_SERVER_CONFIGURATIONS,
   USER_SERVER_CONFIG,
+  SLOW_EMISSION_GUARD,
 } from "./default-config.service";
 
 describe("ConfigService", () => {
@@ -65,12 +67,14 @@ describe("ConfigService", () => {
   describe.each([null, userId])("active user: %s", (activeUserId) => {
     let sut: DefaultConfigService;
 
+    const environmentSubject = new BehaviorSubject(environmentFactory(activeApiUrl));
+
     beforeAll(async () => {
       await accountService.switchAccount(activeUserId);
     });
 
     beforeEach(() => {
-      environmentService.environment$ = of(environmentFactory(activeApiUrl));
+      environmentService.environment$ = environmentSubject;
       sut = new DefaultConfigService(
         configApiService,
         environmentService,
@@ -129,7 +133,8 @@ describe("ConfigService", () => {
             await firstValueFrom(sut.serverConfig$);
 
             expect(logService.error).toHaveBeenCalledWith(
-              `Unable to fetch ServerConfig from ${activeApiUrl}: Unable to fetch`,
+              `Unable to fetch ServerConfig from ${activeApiUrl}`,
+              matches<Error>((e) => e.message === "Unable to fetch"),
             );
           });
         });
@@ -137,6 +142,10 @@ describe("ConfigService", () => {
         describe("fetch success", () => {
           const response = serverConfigResponseFactory();
           const newConfig = new ServerConfig(new ServerConfigData(response));
+
+          beforeEach(() => {
+            configApiService.get.mockResolvedValue(response);
+          });
 
           it("should be a new config", async () => {
             expect(newConfig).not.toEqual(activeUserId ? userStored : globalStored[activeApiUrl]);
@@ -149,8 +158,6 @@ describe("ConfigService", () => {
           });
 
           it("returns the updated config", async () => {
-            configApiService.get.mockResolvedValue(response);
-
             const actual = await firstValueFrom(sut.serverConfig$);
 
             // This is the time the response is converted to a config
@@ -270,6 +277,96 @@ describe("ConfigService", () => {
       });
     });
   });
+
+  describe("userCachedFeatureFlag$", () => {
+    it("maps saved user config to a feature flag", async () => {
+      const updateFeature = (value: boolean) => {
+        return new ServerConfig(
+          new ServerConfigData({
+            featureStates: {
+              "test-feature": value,
+            },
+          }),
+        );
+      };
+
+      const configService = new DefaultConfigService(
+        configApiService,
+        environmentService,
+        logService,
+        stateProvider,
+        authService,
+      );
+
+      userState.nextState(null);
+
+      const promise = firstValueFrom(
+        configService
+          .userCachedFeatureFlag$("test-feature" as FeatureFlag, userId)
+          .pipe(bufferCount(3)),
+      );
+
+      userState.nextState(updateFeature(true));
+      userState.nextState(updateFeature(false));
+
+      const values = await promise;
+
+      // We wouldn't normally expect this to be undefined, the logic
+      // should normally return the feature flags default value but since
+      // we are faking a feature flag key, undefined is expected
+      expect(values[0]).toBe(undefined);
+      expect(values[1]).toBe(true);
+      expect(values[2]).toBe(false);
+    });
+  });
+
+  describe("slow configuration", () => {
+    const environmentSubject = new BehaviorSubject<Environment>(null);
+
+    let sut: DefaultConfigService = null;
+
+    beforeEach(async () => {
+      const config = serverConfigFactory("existing-data", tooOld);
+      environmentService.environment$ = environmentSubject;
+
+      globalState.stateSubject.next({ [apiUrl(0)]: config });
+      userState.stateSubject.next({
+        syncValue: true,
+        combinedState: [userId, config],
+      });
+
+      configApiService.get.mockImplementation(() => {
+        return new Promise<ServerConfigResponse>((resolve) => {
+          setTimeout(() => {
+            resolve(serverConfigResponseFactory("slow-response"));
+          }, SLOW_EMISSION_GUARD + 20);
+        });
+      });
+
+      sut = new DefaultConfigService(
+        configApiService,
+        environmentService,
+        logService,
+        stateProvider,
+        authService,
+      );
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("emits old configuration when the http call takes a long time", async () => {
+      environmentSubject.next(environmentFactory(apiUrl(0)));
+
+      const configs = await firstValueFrom(sut.serverConfig$.pipe(bufferCount(2)));
+
+      await jest.runOnlyPendingTimersAsync();
+
+      expect(configs[0].gitHash).toBe("existing-data");
+      expect(configs[1].gitHash).toBe("slow-response");
+    });
+  });
 });
 
 function apiUrl(count: number) {
@@ -305,8 +402,9 @@ function serverConfigResponseFactory(hash?: string) {
   });
 }
 
-function environmentFactory(apiUrl: string) {
+function environmentFactory(apiUrl: string, isCloud: boolean = true) {
   return {
     getApiUrl: () => apiUrl,
+    isCloud: () => isCloud,
   } as Environment;
 }

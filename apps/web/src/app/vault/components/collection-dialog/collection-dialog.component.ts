@@ -13,22 +13,23 @@ import {
 } from "rxjs";
 import { first } from "rxjs/operators";
 
+import {
+  CollectionAccessSelectionView,
+  CollectionAdminService,
+  CollectionAdminView,
+  OrganizationUserApiService,
+  OrganizationUserUserMiniResponse,
+  CollectionResponse,
+  CollectionView,
+} from "@bitwarden/admin-console/common";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
-import { OrganizationUserUserDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-user/responses/organization-user.response";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
-import { CollectionResponse } from "@bitwarden/common/vault/models/response/collection.response";
-import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
 import { BitValidators, DialogService } from "@bitwarden/components";
 
-import {
-  CollectionAccessSelectionView,
-  GroupService,
-  GroupView,
-} from "../../../admin-console/organizations/core";
+import { GroupService, GroupView } from "../../../admin-console/organizations/core";
 import { PermissionMode } from "../../../admin-console/organizations/shared/components/access-selector/access-selector.component";
 import {
   AccessItemType,
@@ -38,8 +39,6 @@ import {
   convertToPermission,
   convertToSelectionView,
 } from "../../../admin-console/organizations/shared/components/access-selector/access-selector.models";
-import { CollectionAdminService } from "../../core/collection-admin.service";
-import { CollectionAdminView } from "../../core/views/collection-admin.view";
 
 export enum CollectionDialogTabType {
   Info = 0,
@@ -106,7 +105,7 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
     private collectionAdminService: CollectionAdminService,
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
-    private organizationUserService: OrganizationUserService,
+    private organizationUserApiService: OrganizationUserApiService,
     private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
@@ -154,15 +153,23 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
       organization: organization$,
       collections: this.collectionAdminService.getAll(orgId),
       groups: groups$,
-      // Collection(s) needed to map readonlypermission for (potential) access selector disabled state
-      users: this.organizationUserService.getAllUsers(orgId, { includeCollections: true }),
+      users: this.organizationUserApiService.getAllMiniUserDetails(orgId),
     })
       .pipe(takeUntil(this.formGroup.controls.selectedOrg.valueChanges), takeUntil(this.destroy$))
       .subscribe(({ organization, collections: allCollections, groups, users }) => {
         this.organization = organization;
+
+        if (this.params.collectionId) {
+          this.collection = allCollections.find((c) => c.id === this.collectionId);
+
+          if (!this.collection) {
+            throw new Error("Could not find collection to edit.");
+          }
+        }
+
         this.accessItems = [].concat(
-          groups.map((group) => mapGroupToAccessItemView(group, this.collectionId)),
-          users.data.map((user) => mapUserToAccessItemView(user, this.collectionId)),
+          groups.map((group) => mapGroupToAccessItemView(group, this.collection)),
+          users.data.map((user) => mapUserToAccessItemView(user, this.collection)),
         );
 
         // Force change detection to update the access selector's items
@@ -172,14 +179,9 @@ export class CollectionDialogComponent implements OnInit, OnDestroy {
           ? allCollections.filter((c) => c.manage)
           : allCollections;
 
-        if (this.params.collectionId) {
-          this.collection = allCollections.find((c) => c.id === this.collectionId);
+        if (this.collection) {
           // Ensure we don't allow nesting the current collection within itself
           this.nestOptions = this.nestOptions.filter((c) => c.id !== this.collectionId);
-
-          if (!this.collection) {
-            throw new Error("Could not find collection to edit.");
-          }
 
           // Parse the name to find its parent name
           const { name, parent: parentName } = parseName(this.collection);
@@ -421,7 +423,10 @@ function validateCanManagePermission(control: AbstractControl) {
  * @param collectionId Current collection being viewed/edited
  * @returns AccessItemView customized to set a readonlyPermission to be displayed if the access selector is in a disabled state
  */
-function mapGroupToAccessItemView(group: GroupView, collectionId: string): AccessItemView {
+function mapGroupToAccessItemView(
+  group: GroupView,
+  collection: CollectionAdminView,
+): AccessItemView {
   return {
     id: group.id,
     type: AccessItemType.Group,
@@ -429,8 +434,8 @@ function mapGroupToAccessItemView(group: GroupView, collectionId: string): Acces
     labelName: group.name,
     readonly: false,
     readonlyPermission:
-      collectionId != null
-        ? convertToPermission(group.collections.find((gc) => gc.id == collectionId))
+      collection != null
+        ? convertToPermission(collection.groups.find((g) => g.id === group.id))
         : undefined,
   };
 }
@@ -442,8 +447,8 @@ function mapGroupToAccessItemView(group: GroupView, collectionId: string): Acces
  * @returns AccessItemView customized to set a readonlyPermission to be displayed if the access selector is in a disabled state
  */
 function mapUserToAccessItemView(
-  user: OrganizationUserUserDetailsResponse,
-  collectionId: string,
+  user: OrganizationUserUserMiniResponse,
+  collection: CollectionAdminView,
 ): AccessItemView {
   return {
     id: user.id,
@@ -455,9 +460,9 @@ function mapUserToAccessItemView(
     status: user.status,
     readonly: false,
     readonlyPermission:
-      collectionId != null
+      collection != null
         ? convertToPermission(
-            new CollectionAccessSelectionView(user.collections.find((uc) => uc.id == collectionId)),
+            new CollectionAccessSelectionView(collection.users.find((u) => u.id === user.id)),
           )
         : undefined,
   };

@@ -1,11 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { combineLatest, map, Observable, Subject, takeUntil } from "rxjs";
 
+import {
+  OrganizationUserApiService,
+  OrganizationUserResetPasswordEnrollmentRequest,
+} from "@bitwarden/admin-console/common";
 import { UserDecryptionOptionsServiceAbstraction } from "@bitwarden/auth/common";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
-import { OrganizationUserResetPasswordEnrollmentRequest } from "@bitwarden/common/admin-console/abstractions/organization-user/requests";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
@@ -15,7 +17,7 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SyncService } from "@bitwarden/common/platform/sync";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 
 import { OrganizationUserResetPasswordService } from "../../../../admin-console/organizations/members/services/organization-user-reset-password/organization-user-reset-password.service";
 import { EnrollMasterPasswordReset } from "../../../../admin-console/organizations/users/enroll-master-password-reset.component";
@@ -45,11 +47,12 @@ export class OrganizationOptionsComponent implements OnInit, OnDestroy {
     private policyService: PolicyService,
     private logService: LogService,
     private organizationApiService: OrganizationApiServiceAbstraction,
-    private organizationUserService: OrganizationUserService,
+    private organizationUserApiService: OrganizationUserApiService,
     private userDecryptionOptionsService: UserDecryptionOptionsServiceAbstraction,
     private dialogService: DialogService,
     private resetPasswordService: OrganizationUserResetPasswordService,
     private userVerificationService: UserVerificationService,
+    private toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -152,23 +155,25 @@ export class OrganizationOptionsComponent implements OnInit, OnDestroy {
         this.dialogService,
         { organization: org },
         this.resetPasswordService,
-        this.organizationUserService,
+        this.organizationUserApiService,
         this.platformUtilsService,
         this.i18nService,
         this.syncService,
         this.logService,
         this.userVerificationService,
+        this.toastService,
       );
     } else {
       // Remove reset password
       const request = new OrganizationUserResetPasswordEnrollmentRequest();
       request.masterPasswordHash = "ignored";
       request.resetPasswordKey = null;
-      this.actionPromise = this.organizationUserService.putOrganizationUserResetPasswordEnrollment(
-        this.organization.id,
-        this.organization.userId,
-        request,
-      );
+      this.actionPromise =
+        this.organizationUserApiService.putOrganizationUserResetPasswordEnrollment(
+          this.organization.id,
+          this.organization.userId,
+          request,
+        );
       try {
         await this.actionPromise;
         this.platformUtilsService.showToast(

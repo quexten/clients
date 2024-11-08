@@ -5,17 +5,21 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { mock } from "jest-mock-extended";
 import { BehaviorSubject } from "rxjs";
 
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { FakeAccountService, mockAccountServiceWith } from "@bitwarden/common/spec";
+import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
-import { CipherType } from "@bitwarden/common/vault/enums";
 import { ButtonComponent } from "@bitwarden/components";
 import { CipherAttachmentsComponent } from "@bitwarden/vault";
 
 import { PopupFooterComponent } from "../../../../../platform/popup/layout/popup-footer.component";
 import { PopupHeaderComponent } from "../../../../../platform/popup/layout/popup-header.component";
+import { PopupRouterCacheService } from "../../../../../platform/popup/view-cache/popup-router-cache.service";
 
 import { AttachmentsV2Component } from "./attachments-v2.component";
 
@@ -44,16 +48,13 @@ describe("AttachmentsV2Component", () => {
   const queryParams = new BehaviorSubject<{ cipherId: string }>({ cipherId: "5555-444-3333" });
   let cipherAttachment: CipherAttachmentsComponent;
   const navigate = jest.fn();
+  const back = jest.fn().mockResolvedValue(undefined);
 
-  const cipherDomain = {
-    type: CipherType.Login,
-    name: "Test Login",
-  };
-
-  const cipherServiceGet = jest.fn().mockResolvedValue(cipherDomain);
+  const mockUserId = Utils.newGuid() as UserId;
+  const accountService: FakeAccountService = mockAccountServiceWith(mockUserId);
 
   beforeEach(async () => {
-    cipherServiceGet.mockClear();
+    back.mockClear();
     navigate.mockClear();
 
     await TestBed.configureTestingModule({
@@ -62,6 +63,8 @@ describe("AttachmentsV2Component", () => {
         { provide: LogService, useValue: mock<LogService>() },
         { provide: ConfigService, useValue: mock<ConfigService>() },
         { provide: PlatformUtilsService, useValue: mock<PlatformUtilsService>() },
+        { provide: CipherService, useValue: mock<CipherService>() },
+        { provide: PopupRouterCacheService, useValue: { back } },
         { provide: I18nService, useValue: { t: (key: string) => key } },
         { provide: Router, useValue: { navigate } },
         {
@@ -71,10 +74,8 @@ describe("AttachmentsV2Component", () => {
           },
         },
         {
-          provide: CipherService,
-          useValue: {
-            get: cipherServiceGet,
-          },
+          provide: AccountService,
+          useValue: accountService,
         },
       ],
     })
@@ -115,9 +116,6 @@ describe("AttachmentsV2Component", () => {
 
     tick();
 
-    expect(navigate).toHaveBeenCalledWith(["/edit-cipher"], {
-      queryParams: { cipherId: "5555-444-3333", type: CipherType.Login },
-      replaceUrl: true,
-    });
+    expect(back).toHaveBeenCalledTimes(1);
   }));
 });

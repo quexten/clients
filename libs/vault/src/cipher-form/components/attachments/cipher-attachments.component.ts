@@ -19,11 +19,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import { firstValueFrom, map } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { CipherId } from "@bitwarden/common/types/guid";
+import { CipherId, UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { Cipher } from "@bitwarden/common/vault/models/domain/cipher";
 import { AttachmentView } from "@bitwarden/common/vault/models/view/attachment.view";
@@ -83,6 +85,9 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
   /** Emits after a file has been successfully uploaded */
   @Output() onUploadSuccess = new EventEmitter<void>();
 
+  /** Emits after a file has been successfully removed */
+  @Output() onRemoveSuccess = new EventEmitter<void>();
+
   cipher: CipherView;
 
   attachmentForm: CipherAttachmentForm = this.formBuilder.group({
@@ -90,6 +95,7 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
   });
 
   private cipherDomain: Cipher;
+  private activeUserId: UserId;
   private destroy$ = inject(DestroyRef);
 
   constructor(
@@ -98,6 +104,7 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private logService: LogService,
     private toastService: ToastService,
+    private accountService: AccountService,
   ) {
     this.attachmentForm.statusChanges.pipe(takeUntilDestroyed()).subscribe((status) => {
       if (!this.submitBtn) {
@@ -110,8 +117,11 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     this.cipherDomain = await this.cipherService.get(this.cipherId);
+    this.activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
     this.cipher = await this.cipherDomain.decrypt(
-      await this.cipherService.getKeyForCipherKeyDecryption(this.cipherDomain),
+      await this.cipherService.getKeyForCipherKeyDecryption(this.cipherDomain, this.activeUserId),
     );
 
     // Update the initial state of the submit button
@@ -178,11 +188,12 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
       this.cipherDomain = await this.cipherService.saveAttachmentWithServer(
         this.cipherDomain,
         file,
+        this.activeUserId,
       );
 
       // re-decrypt the cipher to update the attachments
       this.cipher = await this.cipherDomain.decrypt(
-        await this.cipherService.getKeyForCipherKeyDecryption(this.cipherDomain),
+        await this.cipherService.getKeyForCipherKeyDecryption(this.cipherDomain, this.activeUserId),
       );
 
       // Reset reactive form and input element
@@ -208,5 +219,7 @@ export class CipherAttachmentsComponent implements OnInit, AfterViewInit {
     if (index > -1) {
       this.cipher.attachments.splice(index, 1);
     }
+
+    this.onRemoveSuccess.emit();
   }
 }

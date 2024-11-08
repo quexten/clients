@@ -25,7 +25,7 @@
     "**/node_modules/argon2/package.json",
     "**/node_modules/argon2/build/Release/argon2.node"
   ],
-  "electronVersion": "31.3.1",
+  "electronVersion": "32.1.1",
   "generateUpdatesFilesForAllChannels": true,
   "publish": {
     "provider": "generic",
@@ -73,27 +73,39 @@
       "CFBundleDevelopmentRegion": "en"
     },
     "singleArchFiles": "node_modules/@bitwarden/desktop-napi/desktop_napi.darwin-*.node",
+    "extraFiles": [
+      {
+        "from": "desktop_native/dist/desktop_proxy.${platform}-${arch}",
+        "to": "MacOS/desktop_proxy"
+      },
+      {
+        "from": "desktop_native/dist/desktop_proxy.${platform}-${arch}",
+        "to": "MacOS/desktop_proxy.inherit"
+      }
+    ],
+    "signIgnore": ["MacOS/desktop_proxy", "MacOS/desktop_proxy.inherit"],
     "target": ["dmg", "zip"]
   },
   "win": {
     "electronUpdaterCompatibility": ">=0.0.1",
     "target": ["portable", "nsis-web", "appx"],
     "sign": "./sign.js",
-    "extraResources": [
+    "extraFiles": [
       {
-        "from": "../../node_modules/regedit/vbs",
-        "to": "regedit/vbs",
-        "filter": ["**/*"]
-      },
-      {
-        "from": "resources/native-messaging.bat",
-        "to": "native-messaging.bat"
+        "from": "desktop_native/dist/desktop_proxy.${platform}-${arch}.exe",
+        "to": "desktop_proxy.exe"
       }
     ]
   },
   "linux": {
     "category": "Utility",
     "synopsis": "A secure and free password manager for all of your devices.",
+    "extraFiles": [
+      {
+        "from": "desktop_native/dist/desktop_proxy.${platform}-${arch}",
+        "to": "desktop_proxy"
+      }
+    ],
     "target": ["deb", "freebsd", "rpm", "AppImage", "snap"],
     "desktop": {
       "Name": "Bitwarden",
@@ -234,7 +246,7 @@
     "autoStart": true,
     "base": "core22",
     "confinement": "strict",
-    "plugs": ["default", "password-manager-service"],
+    "plugs": ["default", "network-bind", "password-manager-service"],
     "stagePackages": ["default"]
   },
   "protocols": [

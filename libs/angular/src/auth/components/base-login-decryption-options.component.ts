@@ -17,6 +17,7 @@ import {
   take,
 } from "rxjs";
 
+import { OrganizationUserApiService } from "@bitwarden/admin-console/common";
 import {
   LoginEmailServiceAbstraction,
   UserDecryptionOptions,
@@ -24,7 +25,6 @@ import {
 } from "@bitwarden/auth/common";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { DeviceTrustServiceAbstraction } from "@bitwarden/common/auth/abstractions/device-trust.service.abstraction";
 import { DevicesServiceAbstraction } from "@bitwarden/common/auth/abstractions/devices/devices.service.abstraction";
@@ -32,13 +32,14 @@ import { PasswordResetEnrollmentServiceAbstraction } from "@bitwarden/common/aut
 import { SsoLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/sso-login.service.abstraction";
 import { TokenService } from "@bitwarden/common/auth/abstractions/token.service";
 import { KeysRequest } from "@bitwarden/common/models/request/keys.request";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { UserId } from "@bitwarden/common/types/guid";
+import { ToastService } from "@bitwarden/components";
+import { KeyService } from "@bitwarden/key-management";
 
 enum State {
   NewUser,
@@ -93,8 +94,8 @@ export class BaseLoginDecryptionOptionsComponent implements OnInit, OnDestroy {
     protected tokenService: TokenService,
     protected loginEmailService: LoginEmailServiceAbstraction,
     protected organizationApiService: OrganizationApiServiceAbstraction,
-    protected cryptoService: CryptoService,
-    protected organizationUserService: OrganizationUserService,
+    protected keyService: KeyService,
+    protected organizationUserApiService: OrganizationUserApiService,
     protected apiService: ApiService,
     protected i18nService: I18nService,
     protected validationService: ValidationService,
@@ -104,6 +105,7 @@ export class BaseLoginDecryptionOptionsComponent implements OnInit, OnDestroy {
     protected passwordResetEnrollmentService: PasswordResetEnrollmentServiceAbstraction,
     protected ssoLoginService: SsoLoginServiceAbstraction,
     protected accountService: AccountService,
+    protected toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -249,12 +251,12 @@ export class BaseLoginDecryptionOptionsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.loginEmailService.setEmail(this.data.userEmail);
+    this.loginEmailService.setLoginEmail(this.data.userEmail);
     await this.router.navigate(["/login-with-device"]);
   }
 
   async requestAdminApproval() {
-    this.loginEmailService.setEmail(this.data.userEmail);
+    this.loginEmailService.setLoginEmail(this.data.userEmail);
     await this.router.navigate(["/admin-approval-requested"]);
   }
 
@@ -271,15 +273,15 @@ export class BaseLoginDecryptionOptionsComponent implements OnInit, OnDestroy {
     this.loading = true;
     // errors must be caught in child components to prevent navigation
     try {
-      const { publicKey, privateKey } = await this.cryptoService.initAccount();
+      const { publicKey, privateKey } = await this.keyService.initAccount();
       const keysRequest = new KeysRequest(publicKey, privateKey.encryptedString);
       await this.apiService.postAccountKeys(keysRequest);
 
-      this.platformUtilsService.showToast(
-        "success",
-        null,
-        this.i18nService.t("accountSuccessfullyCreated"),
-      );
+      this.toastService.showToast({
+        variant: "success",
+        title: null,
+        message: this.i18nService.t("accountSuccessfullyCreated"),
+      });
 
       await this.passwordResetEnrollmentService.enroll(this.data.organizationId);
 

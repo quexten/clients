@@ -22,13 +22,12 @@ import {
 } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { ThemeType } from "@bitwarden/common/platform/enums";
-import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
 import { UserId } from "@bitwarden/common/types/guid";
 import { ButtonModule, I18nMockService } from "@bitwarden/components";
 
 import { RegistrationCheckEmailIcon } from "../../../../../../libs/auth/src/angular/icons/registration-check-email.icon";
 import { PopupRouterCacheService } from "../../../platform/popup/view-cache/popup-router-cache.service";
+import { AccountSwitcherService } from "../account-switching/services/account-switcher.service";
 
 import { ExtensionAnonLayoutWrapperDataService } from "./extension-anon-layout-wrapper-data.service";
 import {
@@ -47,7 +46,7 @@ const decorators = (options: {
   applicationVersion?: string;
   clientType?: ClientType;
   hostName?: string;
-  themeType?: ThemeType;
+  accounts?: any[];
 }) => {
   return [
     componentWrapperDecorator(
@@ -87,6 +86,13 @@ const decorators = (options: {
           },
         },
         {
+          provide: AccountSwitcherService,
+          useValue: {
+            availableAccounts$: of(options.accounts || []),
+            SPECIAL_ADD_ACCOUNT_ID: "addAccount",
+          } as Partial<AccountSwitcherService>,
+        },
+        {
           provide: AuthService,
           useValue: {
             activeAccountStatus$: of(AuthenticationStatus.Unlocked),
@@ -119,12 +125,6 @@ const decorators = (options: {
               Promise.resolve(options.applicationVersion || "FAKE_APP_VERSION"),
             getClientType: () => options.clientType || ClientType.Web,
           } as Partial<PlatformUtilsService>,
-        },
-        {
-          provide: ThemeStateService,
-          useValue: {
-            selectedTheme$: of(options.themeType || ThemeType.Light),
-          } as Partial<ThemeStateService>,
         },
         {
           provide: I18nService,
@@ -230,8 +230,12 @@ export const DefaultContentExample: Story = {
 
 // Dynamic Content Example
 const initialData: ExtensionAnonLayoutWrapperData = {
-  pageTitle: "setAStrongPassword",
-  pageSubtitle: "finishCreatingYourAccountBySettingAPassword",
+  pageTitle: {
+    key: "setAStrongPassword",
+  },
+  pageSubtitle: {
+    key: "finishCreatingYourAccountBySettingAPassword",
+  },
   pageIcon: LockIcon,
   showAcctSwitcher: true,
   showBackButton: true,
@@ -239,8 +243,12 @@ const initialData: ExtensionAnonLayoutWrapperData = {
 };
 
 const changedData: ExtensionAnonLayoutWrapperData = {
-  pageTitle: "enterpriseSingleSignOn",
-  pageSubtitle: "checkYourEmail",
+  pageTitle: {
+    key: "enterpriseSingleSignOn",
+  },
+  pageSubtitle: {
+    key: "checkYourEmail",
+  },
   pageIcon: RegistrationCheckEmailIcon,
   showAcctSwitcher: false,
   showBackButton: false,
@@ -297,6 +305,67 @@ export const DynamicContentExample: Story = {
             ],
           },
         ],
+      },
+    ],
+  }),
+};
+
+export const HasLoggedInAccountExample: Story = {
+  render: (args) => ({
+    props: args,
+    template: "<router-outlet></router-outlet>",
+  }),
+  decorators: decorators({
+    components: [DefaultPrimaryOutletExampleComponent],
+    routes: [
+      {
+        path: "**",
+        redirectTo: "has-logged-in-account",
+        pathMatch: "full",
+      },
+      {
+        path: "",
+        component: ExtensionAnonLayoutWrapperComponent,
+        children: [
+          {
+            path: "has-logged-in-account",
+            data: {
+              hasLoggedInAccount: true,
+              showAcctSwitcher: true,
+            },
+            children: [
+              {
+                path: "",
+                component: DefaultPrimaryOutletExampleComponent,
+              },
+              {
+                path: "",
+                component: DefaultSecondaryOutletExampleComponent,
+                outlet: "secondary",
+              },
+              {
+                path: "",
+                component: DefaultEnvSelectorOutletExampleComponent,
+                outlet: "environment-selector",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    accounts: [
+      {
+        name: "Test User",
+        email: "testuser@bitwarden.com",
+        id: "123e4567-e89b-12d3-a456-426614174000",
+        server: "bitwarden.com",
+        status: 2,
+        isActive: false,
+      },
+      {
+        name: "addAccount",
+        id: "addAccount",
+        isActive: false,
       },
     ],
   }),

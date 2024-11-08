@@ -60,6 +60,9 @@
       }
     }
   },
+  "welcomeBack": {
+    "message": "Laipni lūdzam atpakaļ"
+  },
   "moveToOrgDesc": {
     "message": "Izvēlies apvienību, uz kuru pārvietot šo vienumu. Pārvietošana nodod šī vienuma piederību apvienībai. Tu vairs nebūsi šī vienuma tiešais īpašnieks pēc tā pārvietošanas."
   },
@@ -259,6 +262,9 @@
   "generatePassword": {
     "message": "Veidot paroli"
   },
+  "generatePassphrase": {
+    "message": "Izveidot paroles vārdkopu"
+  },
   "type": {
     "message": "Veids"
   },
@@ -394,6 +400,10 @@
   "copyPassword": {
     "message": "Ievietot paroli starpliktuvē"
   },
+  "copyPassphrase": {
+    "message": "Ievietot paroles vārdkopu starpliktuvē",
+    "description": "Copy passphrase to clipboard"
+  },
   "copyUri": {
     "message": "Ievietot vietrādi starpliktuvē"
   },
@@ -407,16 +417,55 @@
     "message": "Mazākais pieļaujamais paroles garums"
   },
   "uppercase": {
-    "message": "Lielie burti (A-Z)"
+    "message": "Lielie burti (A-Z)",
+    "description": "deprecated. Use uppercaseLabel instead."
   },
   "lowercase": {
-    "message": "Mazie burti (a-z)"
+    "message": "Mazie burti (a-z)",
+    "description": "deprecated. Use lowercaseLabel instead."
   },
   "numbers": {
-    "message": "Cipari (0-9)"
+    "message": "Cipari (0-9)",
+    "description": "deprecated. Use numbersLabel instead."
   },
   "specialCharacters": {
     "message": "Īpašās rakstzīmes (!@#$%^&*)"
+  },
+  "include": {
+    "message": "Iekļaut",
+    "description": "Card header for password generator include block"
+  },
+  "uppercaseDescription": {
+    "message": "Iekļaut lielos burtus",
+    "description": "Tooltip for the password generator uppercase character checkbox"
+  },
+  "uppercaseLabel": {
+    "message": "A-Z",
+    "description": "Label for the password generator uppercase character checkbox"
+  },
+  "lowercaseDescription": {
+    "message": "Iekļaut mazos burtus",
+    "description": "Full description for the password generator lowercase character checkbox"
+  },
+  "lowercaseLabel": {
+    "message": "a-z",
+    "description": "Label for the password generator lowercase character checkbox"
+  },
+  "numbersDescription": {
+    "message": "Iekļaut ciparus",
+    "description": "Full description for the password generator numbers checkbox"
+  },
+  "numbersLabel": {
+    "message": "0-9",
+    "description": "Label for the password generator numbers checkbox"
+  },
+  "specialCharactersDescription": {
+    "message": "Iekļaut īpašās rakstzīmes",
+    "description": "Full description for the password generator special characters checkbox"
+  },
+  "specialCharactersLabel": {
+    "message": "!@#$%^&*",
+    "description": "Label for the password generator special characters checkbox"
   },
   "numWords": {
     "message": "Vārdu skaits"
@@ -442,7 +491,16 @@
     "description": "Minimum Special Characters"
   },
   "ambiguous": {
-    "message": "Izvairīties no viegli sajaucamām rakstzīmēm"
+    "message": "Izvairīties no viegli sajaucamām rakstzīmēm",
+    "description": "deprecated. Use avoidAmbiguous instead."
+  },
+  "avoidAmbiguous": {
+    "message": "Izvairīties no viegli sajaucamām rakstzīmēm",
+    "description": "Label for the avoid ambiguous characters checkbox."
+  },
+  "generatorPolicyInEffect": {
+    "message": "Veidotāja iespējām tika piemērotas uzņēmējdarbības nosacījumu prasības.",
+    "description": "Indicates that a policy limits the credential generator screen."
   },
   "searchCollection": {
     "message": "Meklēt krājumā"
@@ -499,14 +557,29 @@
   "createAccount": {
     "message": "Izveidot kontu"
   },
+  "newToBitwarden": {
+    "message": "Bitwarden iepriekš nav izmantots?"
+  },
   "setAStrongPassword": {
     "message": "Jāiestata droša parole"
   },
   "finishCreatingYourAccountBySettingAPassword": {
-    "message": "Jāpabeidz sava konta izveida ar paroles iestatīšanu"
+    "message": "Sava konta izveidošana jāpabeidz ar paroles iestatīšanu"
   },
   "logIn": {
     "message": "Pieteikties"
+  },
+  "logInToBitwarden": {
+    "message": "Pieteikties Bitwarden"
+  },
+  "logInWithPasskey": {
+    "message": "Pieteikties ar piekļuves atslēgu"
+  },
+  "loginWithDevice": {
+    "message": "Pieteikties ar ierīci"
+  },
+  "useSingleSignOn": {
+    "message": "Izmantot vienoto pieteikšanos"
   },
   "submit": {
     "message": "Iesniegt"
@@ -554,11 +627,32 @@
   "joinOrganization": {
     "message": "Pievienoties apvienībai"
   },
+  "joinOrganizationName": {
+    "message": "Pievienoties $ORGANIZATIONNAME$",
+    "placeholders": {
+      "organizationName": {
+        "content": "$1",
+        "example": "My Org Name"
+      }
+    }
+  },
   "finishJoiningThisOrganizationBySettingAMasterPassword": {
     "message": "Pabeigt pievienošanos šai apvienībai ar galvenās paroles iestatīšanu."
   },
   "settings": {
     "message": "Iestatījumi"
+  },
+  "accountEmail": {
+    "message": "Konta e-pasta adrese"
+  },
+  "requestHint": {
+    "message": "Pieprasīt norādi"
+  },
+  "requestPasswordHint": {
+    "message": "Pieprasīt paroles norādi"
+  },
+  "enterYourAccountEmailAddressAndYourPasswordHintWillBeSentToYou": {
+    "message": "Jāievada sava konta e-pasta adrese, un paroles norāde tiks nosūtīta"
   },
   "passwordHint": {
     "message": "Paroles norāde"
@@ -602,6 +696,12 @@
   },
   "newAccountCreated": {
     "message": "Jaunais konts ir izveidots. Tagad vari pieteikties."
+  },
+  "newAccountCreated2": {
+    "message": "Jaunais konts tika izveidots."
+  },
+  "youHaveBeenLoggedIn": {
+    "message": "Tu esi pieteicies."
   },
   "masterPassSent": {
     "message": "Mēs nosūtījām galvenās paroles norādi e-pastā."
@@ -753,6 +853,10 @@
   "baseUrl": {
     "message": "Servera URL"
   },
+  "selfHostBaseUrl": {
+    "message": "Pašmitināta servera URL",
+    "description": "Label for field requesting a self-hosted integration service URL"
+  },
   "apiUrl": {
     "message": "API servera URL"
   },
@@ -896,6 +1000,18 @@
   "yourVaultIsLocked": {
     "message": "Glabātava ir aizslēgta. Jāapliecina sava identitāte, lai turpinātu."
   },
+  "yourAccountIsLocked": {
+    "message": "Konts ir slēgts"
+  },
+  "or": {
+    "message": "vai"
+  },
+  "unlockWithBiometrics": {
+    "message": "Atslēgt ar biometriju"
+  },
+  "unlockWithMasterPassword": {
+    "message": "Atslēgt ar galveno paroli"
+  },
   "unlock": {
     "message": "Atslēgt"
   },
@@ -923,6 +1039,9 @@
   },
   "vaultTimeout": {
     "message": "Glabātavas noildze"
+  },
+  "vaultTimeout1": {
+    "message": "Noildze"
   },
   "vaultTimeoutDesc": {
     "message": "Izvēlēties, kad glabātavai iestāsies noildze un tiks izpildīta atlasītā darbība."
@@ -1128,6 +1247,9 @@
     "message": "Ievietot numuru starpliktuvē",
     "description": "Copy credit card number"
   },
+  "copyEmail": {
+    "message": "Ievietot e-pasta adresi starpliktuvē"
+  },
   "copySecurityCode": {
     "message": "Ievietot drošības kodu starpliktuvē",
     "description": "Copy credit card security code (CVV)"
@@ -1173,6 +1295,9 @@
   },
   "premiumPurchaseAlert": {
     "message": "Premium dalību ir iespējams iegādāties bitwarden.com tīmekļa glabātavā. Vai tagad apmeklēt tīmekļvietni?"
+  },
+  "premiumPurchaseAlertV2": {
+    "message": "Premium var iegādāties Bitwarden tīmekļa lietotnē sava konta iestatījumos."
   },
   "premiumCurrentMember": {
     "message": "Jūs esat premium dalībnieks!"
@@ -1275,6 +1400,9 @@
         "example": "Password"
       }
     }
+  },
+  "copySuccessful": {
+    "message": "Ievietošana starpliktuvē veiksmīga"
   },
   "errorRefreshingAccessToken": {
     "message": "Piekļuves pilnvaras atsvaizināšanas kļūda"
@@ -1543,7 +1671,7 @@
   "recommendedForSecurity": {
     "message": "Ieteicams drošībai."
   },
-  "lockWithMasterPassOnRestart": {
+  "lockWithMasterPassOnRestart1": {
     "message": "Aizslēgt ar galveno paroli pēc pārsāknēšanas"
   },
   "deleteAccount": {
@@ -1554,6 +1682,12 @@
   },
   "deleteAccountWarning": {
     "message": "Konta izdzēšana ir neatgriezeniska. To nevar atsaukt."
+  },
+  "cannotDeleteAccount": {
+    "message": "Nevar izdzēst kontu"
+  },
+  "cannotDeleteAccountDesc": {
+    "message": "Šo darbību nevar pabeigt, jo konts pieder apvienībai. Jāsazinās ar savas apvienības pārvaldītāju, lai noskaidrotu vairāk."
   },
   "accountDeleted": {
     "message": "Konts tika izdzēsts"
@@ -1621,7 +1755,7 @@
   },
   "lock": {
     "message": "Aizslēgt",
-    "description": "Verb form: to make secure or inaccesible by"
+    "description": "Verb form: to make secure or inaccessible by"
   },
   "trash": {
     "message": "Atkritne",
@@ -1664,6 +1798,15 @@
   "orgRequiresYouToSetPassword": {
     "message": "Apvienība pieprasa iestatīt galveno paroli.",
     "description": "Used as a card title description on the set password page to explain why the user is there"
+  },
+  "cardMetrics": {
+    "message": "no $TOTAL$",
+    "placeholders": {
+      "total": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
   "verificationRequired": {
     "message": "Nepieciešams apliecinājums",
@@ -1744,8 +1887,8 @@
   "enableBrowserIntegration": {
     "message": "Iespējot sasaistīšanu ar pārlūku"
   },
-  "enableBrowserIntegrationDesc": {
-    "message": "Tiek izmantota biometrijai pārlūkā."
+  "enableBrowserIntegrationDesc1": {
+    "message": "Tiek izmantots, lai ļautu atslēgšanu pārlūkos, kas nav Safari."
   },
   "enableDuckDuckGoBrowserIntegration": {
     "message": "Atļaut sasaistīšanu ar DuckDuckGo pārlūku"
@@ -2075,8 +2218,8 @@
   "minutes": {
     "message": "Minūtes"
   },
-  "vaultTimeoutPolicyInEffect": {
-    "message": "Apvienības nosacījumi ietekmē glabātavas noildzi. Lielākā atļautā glabātavas noildze ir $HOURS$ stunda(s) un $MINUTES$ minūte(s)",
+  "vaultTimeoutPolicyInEffect1": {
+    "message": "Ne vairāk kā $HOURS$ stunda(s) un $MINUTES$ minūte(s).",
     "placeholders": {
       "hours": {
         "content": "$1",
@@ -2225,11 +2368,15 @@
   "locked": {
     "message": "Aizslēgta"
   },
+  "yourVaultIsLockedV2": {
+    "message": "Glabātava ir slēgta"
+  },
   "unlocked": {
     "message": "Atslēgta"
   },
   "generator": {
-    "message": "Veidotājs"
+    "message": "Veidotājs",
+    "description": "Short for 'credential generator'."
   },
   "whatWouldYouLikeToGenerate": {
     "message": "Ko jūs vēlētos izveidot?"
@@ -2242,6 +2389,23 @@
   },
   "generateUsername": {
     "message": "Izveidot lietotājvārdu"
+  },
+  "generateEmail": {
+    "message": "Izveidot e-pastu"
+  },
+  "generatorBoundariesHint": {
+    "message": "Vērtībai jābūt starp $MIN$ un $MAX$",
+    "description": "Explains spin box minimum and maximum values to the user",
+    "placeholders": {
+      "min": {
+        "content": "$1",
+        "example": "8"
+      },
+      "max": {
+        "content": "$2",
+        "example": "128"
+      }
+    }
   },
   "usernameType": {
     "message": "Lietotājvārda veids"
@@ -2285,6 +2449,14 @@
   },
   "forwardedEmailDesc": {
     "message": "Izveidot e-pastu aizstājvārdu ar ārēju pārvirzīšanas pakalpojumu."
+  },
+  "forwarderDomainName": {
+    "message": "E-pasta domēns",
+    "description": "Labels the domain name email forwarder service option"
+  },
+  "forwarderDomainNameHint": {
+    "message": "Jāizvēlas domēns, kuru atbalsta atlasītais pakalpojums",
+    "description": "Guidance provided for email forwarding services that support multiple email domains."
   },
   "forwarderError": {
     "message": "$SERVICENAME$ kļūda: $ERRORMESSAGE$",
@@ -2577,6 +2749,9 @@
   "important": {
     "message": "Svarīgi:"
   },
+  "accessing": {
+    "message": "Piekļūst"
+  },
   "accessTokenUnableToBeDecrypted": {
     "message": "Notika izrakstīšanās, jo Tavu piekļuves pilnvaru nevarēja atšifrēt. Lūgums pieteikties atkārtoti, lai novērstu šo sarežģījumu."
   },
@@ -2628,9 +2803,6 @@
   "eu": {
     "message": "ES",
     "description": "European Union"
-  },
-  "loggingInOn": {
-    "message": "Piesakās"
   },
   "selfHostedServer": {
     "message": "pašizvietots"
@@ -2821,7 +2993,7 @@
     }
   },
   "duoHealthCheckResultsInNullAuthUrlError": {
-    "message": "Kļūda savienojuma izveidošanā ar Duo pakalpojumu. Jāizmanto cits divpakāpju pieteikšanāš veids vai jāvēršas pie Duo pēc palīdzības."
+    "message": "Kļūda savienojuma izveidošanā ar Duo pakalpojumu. Jāizmanto cits divpakāpju pieteikšanās veids vai jāvēršas pie Duo pēc palīdzības."
   },
   "launchDuoAndFollowStepsToFinishLoggingIn": {
     "message": "Jāpalaiž Duo un jāseko soļiem, lai pabeigtu pieteikšanos."
@@ -3049,5 +3221,11 @@
   },
   "textSends": {
     "message": "Teksta Send"
+  },
+  "ssoError": {
+    "message": "Netika atrasti brīvi vienotās (SSO) pieteikšanās porti."
+  },
+  "fileSavedToDevice": {
+    "message": "Datne saglabāta ierīcē. Tā ir atrodama ierīces lejupielāžu mapē."
   }
 }

@@ -1,6 +1,7 @@
 import { Observable } from "rxjs";
 
 import { DeviceType } from "@bitwarden/common/enums";
+import { isBrowserSafariApi } from "@bitwarden/platform";
 
 import { TabMessage } from "../../types/tab-messages";
 import { BrowserPlatformUtilsService } from "../services/platform-utils/browser-platform-utils.service";
@@ -9,10 +10,7 @@ import { registerContentScriptsPolyfill } from "./browser-api.register-content-s
 
 export class BrowserApi {
   static isWebExtensionsApi: boolean = typeof browser !== "undefined";
-  static isSafariApi: boolean =
-    navigator.userAgent.indexOf(" Safari/") !== -1 &&
-    navigator.userAgent.indexOf(" Chrome/") === -1 &&
-    navigator.userAgent.indexOf(" Chromium/") === -1;
+  static isSafariApi: boolean = isBrowserSafariApi();
   static isChromeApi: boolean = !BrowserApi.isSafariApi && typeof chrome !== "undefined";
   static isFirefoxOnAndroid: boolean =
     navigator.userAgent.indexOf("Firefox/") !== -1 && navigator.userAgent.indexOf("Android") !== -1;
@@ -60,11 +58,33 @@ export class BrowserApi {
   }
 
   static async createWindow(options: chrome.windows.CreateData): Promise<chrome.windows.Window> {
-    return new Promise((resolve) =>
-      chrome.windows.create(options, (window) => {
-        resolve(window);
-      }),
-    );
+    return new Promise((resolve) => {
+      chrome.windows.create(options, async (newWindow) => {
+        if (!BrowserApi.isSafariApi) {
+          return resolve(newWindow);
+        }
+        // Safari doesn't close the default extension popup when a new window is created so we need to
+        // manually trigger the close by focusing the main window after the new window is created
+        const allWindows = await new Promise<chrome.windows.Window[]>((resolve) => {
+          chrome.windows.getAll({ windowTypes: ["normal"] }, (windows) => resolve(windows));
+        });
+
+        const mainWindow = allWindows.find((window) => window.id !== newWindow.id);
+
+        // No main window found, resolve the new window
+        if (mainWindow == null || !mainWindow.id) {
+          return resolve(newWindow);
+        }
+
+        // Focus the main window to close the extension popup
+        chrome.windows.update(mainWindow.id, { focused: true }, () => {
+          // Refocus the newly created window
+          chrome.windows.update(newWindow.id, { focused: true }, () => {
+            resolve(newWindow);
+          });
+        });
+      });
+    });
   }
 
   /**
@@ -412,18 +432,9 @@ export class BrowserApi {
   }
 
   /**
-   * Handles reloading the extension, either by calling the window location
-   * to reload or by calling the extension's runtime to reload.
-   *
-   * @param globalContext - The global context to use for the reload.
+   * Handles reloading the extension using the underlying functionality exposed by the browser API.
    */
-  static reloadExtension(globalContext: (Window & typeof globalThis) | null) {
-    // The passed globalContext might be a ServiceWorkerGlobalScope, as a result
-    // we need to check if the location object exists before calling reload on it.
-    if (typeof globalContext?.location?.reload === "function") {
-      return (globalContext as any).location.reload(true);
-    }
-
+  static reloadExtension() {
     return chrome.runtime.reload();
   }
 

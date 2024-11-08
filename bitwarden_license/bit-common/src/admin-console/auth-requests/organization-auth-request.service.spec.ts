@@ -1,10 +1,13 @@
 import { MockProxy, mock } from "jest-mock-extended";
 
-import { OrganizationUserService } from "@bitwarden/common/admin-console/abstractions/organization-user/organization-user.service";
-import { OrganizationUserResetPasswordDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-user/responses";
+import {
+  OrganizationUserApiService,
+  OrganizationUserResetPasswordDetailsResponse,
+} from "@bitwarden/admin-console/common";
 import { ListResponse } from "@bitwarden/common/models/response/list.response";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
+import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
+import { KeyService } from "@bitwarden/key-management";
 
 import { OrganizationAuthRequestApiService } from "./organization-auth-request-api.service";
 import { OrganizationAuthRequestUpdateRequest } from "./organization-auth-request-update.request";
@@ -13,18 +16,21 @@ import { PendingAuthRequestView } from "./pending-auth-request.view";
 
 describe("OrganizationAuthRequestService", () => {
   let organizationAuthRequestApiService: MockProxy<OrganizationAuthRequestApiService>;
-  let cryptoService: MockProxy<CryptoService>;
-  let organizationUserService: MockProxy<OrganizationUserService>;
+  let keyService: MockProxy<KeyService>;
+  let encryptService: MockProxy<EncryptService>;
+  let organizationUserApiService: MockProxy<OrganizationUserApiService>;
   let organizationAuthRequestService: OrganizationAuthRequestService;
 
   beforeEach(() => {
     organizationAuthRequestApiService = mock<OrganizationAuthRequestApiService>();
-    cryptoService = mock<CryptoService>();
-    organizationUserService = mock<OrganizationUserService>();
+    keyService = mock<KeyService>();
+    encryptService = mock<EncryptService>();
+    organizationUserApiService = mock<OrganizationUserApiService>();
     organizationAuthRequestService = new OrganizationAuthRequestService(
       organizationAuthRequestApiService,
-      cryptoService,
-      organizationUserService,
+      keyService,
+      encryptService,
+      organizationUserApiService,
     );
   });
 
@@ -113,13 +119,13 @@ describe("OrganizationAuthRequestService", () => {
         OrganizationUserResetPasswordDetailsResponse,
       );
 
-      organizationUserService.getManyOrganizationUserAccountRecoveryDetails.mockResolvedValueOnce(
+      organizationUserApiService.getManyOrganizationUserAccountRecoveryDetails.mockResolvedValueOnce(
         organizationUserResetPasswordDetailsResponse,
       );
 
       const encryptedUserKey = new EncString("encryptedUserKey");
-      cryptoService.rsaDecrypt.mockResolvedValue(new Uint8Array(32));
-      cryptoService.rsaEncrypt.mockResolvedValue(encryptedUserKey);
+      encryptService.rsaDecrypt.mockResolvedValue(new Uint8Array(32));
+      encryptService.rsaEncrypt.mockResolvedValue(encryptedUserKey);
 
       const mockPendingAuthRequest = new PendingAuthRequestView();
       mockPendingAuthRequest.id = "requestId1";
@@ -155,13 +161,13 @@ describe("OrganizationAuthRequestService", () => {
           encryptedPrivateKey: "encryptedPrivateKey",
         });
 
-      organizationUserService.getOrganizationUserResetPasswordDetails.mockResolvedValue(
+      organizationUserApiService.getOrganizationUserResetPasswordDetails.mockResolvedValue(
         organizationUserResetPasswordDetailsResponse,
       );
 
       const encryptedUserKey = new EncString("encryptedUserKey");
-      cryptoService.rsaDecrypt.mockResolvedValue(new Uint8Array(32));
-      cryptoService.rsaEncrypt.mockResolvedValue(encryptedUserKey);
+      encryptService.rsaDecrypt.mockResolvedValue(new Uint8Array(32));
+      encryptService.rsaEncrypt.mockResolvedValue(encryptedUserKey);
 
       const mockPendingAuthRequest = new PendingAuthRequestView();
       mockPendingAuthRequest.id = "requestId1";

@@ -7,16 +7,15 @@ import { first, takeUntil } from "rxjs/operators";
 import { ManageTaxInformationComponent } from "@bitwarden/angular/billing/components";
 import { ProviderApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/provider/provider-api.service.abstraction";
 import { ProviderSetupRequest } from "@bitwarden/common/admin-console/models/request/provider/provider-setup.request";
-import { TaxInformation } from "@bitwarden/common/billing/models/domain";
 import { ExpandedTaxInfoUpdateRequest } from "@bitwarden/common/billing/models/request/expanded-tax-info-update.request";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
-import { CryptoService } from "@bitwarden/common/platform/abstractions/crypto.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
 import { ProviderKey } from "@bitwarden/common/types/key";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 import { ToastService } from "@bitwarden/components";
+import { KeyService } from "@bitwarden/key-management";
 
 @Component({
   selector: "provider-setup",
@@ -35,12 +34,6 @@ export class SetupComponent implements OnInit, OnDestroy {
     billingEmail: ["", [Validators.required, Validators.email]],
   });
 
-  protected readonly TaxInformation = TaxInformation;
-
-  protected showPaymentMethodWarningBanners$ = this.configService.getFeatureFlag$(
-    FeatureFlag.ShowPaymentMethodWarningBanners,
-  );
-
   protected enableConsolidatedBilling$ = this.configService.getFeatureFlag$(
     FeatureFlag.EnableConsolidatedBilling,
   );
@@ -51,7 +44,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     private router: Router,
     private i18nService: I18nService,
     private route: ActivatedRoute,
-    private cryptoService: CryptoService,
+    private keyService: KeyService,
     private syncService: SyncService,
     private validationService: ValidationService,
     private configService: ConfigService,
@@ -131,7 +124,7 @@ export class SetupComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const providerKey = await this.cryptoService.makeOrgKey<ProviderKey>();
+      const providerKey = await this.keyService.makeOrgKey<ProviderKey>();
       const key = providerKey[0].encryptedString;
 
       const request = new ProviderSetupRequest();

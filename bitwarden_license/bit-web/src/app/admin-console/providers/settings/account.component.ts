@@ -8,13 +8,12 @@ import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { ProviderApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/provider/provider-api.service.abstraction";
 import { ProviderUpdateRequest } from "@bitwarden/common/admin-console/models/request/provider/provider-update.request";
 import { ProviderResponse } from "@bitwarden/common/admin-console/models/response/provider/provider.response";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 
 @Component({
   selector: "provider-account",
@@ -33,9 +32,6 @@ export class AccountComponent implements OnDestroy, OnInit {
     providerName: ["" as ProviderResponse["name"]],
     providerBillingEmail: ["" as ProviderResponse["billingEmail"], Validators.email],
   });
-  protected enableDeleteProvider$ = this.configService.getFeatureFlag$(
-    FeatureFlag.EnableDeleteProvider,
-  );
 
   constructor(
     private apiService: ApiService,
@@ -49,6 +45,7 @@ export class AccountComponent implements OnDestroy, OnInit {
     private providerApiService: ProviderApiServiceAbstraction,
     private formBuilder: FormBuilder,
     private router: Router,
+    private toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -86,7 +83,11 @@ export class AccountComponent implements OnDestroy, OnInit {
     await this.providerApiService.putProvider(this.providerId, request);
     await this.syncService.fullSync(true);
     this.provider = await this.providerApiService.getProvider(this.providerId);
-    this.platformUtilsService.showToast("success", null, this.i18nService.t("providerUpdated"));
+    this.toastService.showToast({
+      variant: "success",
+      title: null,
+      message: this.i18nService.t("providerUpdated"),
+    });
   };
 
   async deleteProvider() {
@@ -110,11 +111,11 @@ export class AccountComponent implements OnDestroy, OnInit {
 
     try {
       await this.providerApiService.deleteProvider(this.providerId);
-      this.platformUtilsService.showToast(
-        "success",
-        this.i18nService.t("providerDeleted"),
-        this.i18nService.t("providerDeletedDesc"),
-      );
+      this.toastService.showToast({
+        variant: "success",
+        title: this.i18nService.t("providerDeleted"),
+        message: this.i18nService.t("providerDeletedDesc"),
+      });
     } catch (e) {
       this.logService.error(e);
     }

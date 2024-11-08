@@ -5,7 +5,11 @@ import {
   createAutofillPageDetailsMock,
   createAutofillScriptMock,
 } from "../spec/autofill-mocks";
-import { flushPromises, sendMockExtensionMessage } from "../spec/testing-utils";
+import {
+  flushPromises,
+  mockQuerySelectorAllDefinedCall,
+  sendMockExtensionMessage,
+} from "../spec/testing-utils";
 import { FormFieldElement } from "../types";
 
 let pageDetailsMock: AutofillPageDetails;
@@ -18,10 +22,6 @@ jest.mock("../services/collect-autofill-content.service", () => {
     CollectAutofillContentService: class extends module.CollectAutofillContentService {
       async getPageDetails(): Promise<AutofillPageDetails> {
         return pageDetailsMock;
-      }
-
-      deepQueryElements<T>(element: HTMLElement, queryString: string): T[] {
-        return Array.from(element.querySelectorAll(queryString)) as T[];
       }
 
       getAutofillFieldElementByOpid(opid: string) {
@@ -41,6 +41,8 @@ jest.mock("../services/collect-autofill-content.service", () => {
 jest.mock("../services/insert-autofill-content.service");
 
 describe("AutoSubmitLogin content script", () => {
+  const mockQuerySelectorAll = mockQuerySelectorAllDefinedCall();
+
   beforeEach(() => {
     jest.useFakeTimers();
     setupEnvironmentDefaults();
@@ -54,6 +56,7 @@ describe("AutoSubmitLogin content script", () => {
 
   afterAll(() => {
     jest.clearAllMocks();
+    mockQuerySelectorAll.mockRestore();
   });
 
   it("ends the auto-submit login workflow if the page does not contain any fields", async () => {

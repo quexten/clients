@@ -12,11 +12,14 @@ import {
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { OrgDomainApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization-domain/org-domain-api.service.abstraction";
 import { OrganizationDomainSsoDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-domain/responses/organization-domain-sso-details.response";
+import { VerifiedOrganizationDomainSsoDetailsResponse } from "@bitwarden/common/admin-console/abstractions/organization-domain/responses/verified-organization-domain-sso-details.response";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/auth/abstractions/master-password.service.abstraction";
 import { SsoLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/sso-login.service.abstraction";
 import { HttpStatusCode } from "@bitwarden/common/enums";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
+import { ListResponse } from "@bitwarden/common/models/response/list.response";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
@@ -25,6 +28,7 @@ import { LogService } from "@bitwarden/common/platform/abstractions/log.service"
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { ValidationService } from "@bitwarden/common/platform/abstractions/validation.service";
+import { ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
 
 @Component({
@@ -60,6 +64,7 @@ export class SsoComponent extends BaseSsoComponent implements OnInit {
     configService: ConfigService,
     masterPasswordService: InternalMasterPasswordServiceAbstraction,
     accountService: AccountService,
+    toastService: ToastService,
   ) {
     super(
       ssoLoginService,
@@ -78,6 +83,7 @@ export class SsoComponent extends BaseSsoComponent implements OnInit {
       configService,
       masterPasswordService,
       accountService,
+      toastService,
     );
     this.redirectUri = window.location.origin + "/sso-connector.html";
     this.clientId = "web";
@@ -104,13 +110,24 @@ export class SsoComponent extends BaseSsoComponent implements OnInit {
           // show loading spinner
           this.loggingIn = true;
           try {
-            const response: OrganizationDomainSsoDetailsResponse =
-              await this.orgDomainApiService.getClaimedOrgDomainByEmail(qParams.email);
+            if (await this.configService.getFeatureFlag(FeatureFlag.VerifiedSsoDomainEndpoint)) {
+              const response: ListResponse<VerifiedOrganizationDomainSsoDetailsResponse> =
+                await this.orgDomainApiService.getVerifiedOrgDomainsByEmail(qParams.email);
 
-            if (response?.ssoAvailable) {
-              this.identifierFormControl.setValue(response.organizationIdentifier);
-              await this.submit();
-              return;
+              if (response.data.length > 0) {
+                this.identifierFormControl.setValue(response.data[0].organizationIdentifier);
+                await this.submit();
+                return;
+              }
+            } else {
+              const response: OrganizationDomainSsoDetailsResponse =
+                await this.orgDomainApiService.getClaimedOrgDomainByEmail(qParams.email);
+
+              if (response?.ssoAvailable && response?.verifiedDate) {
+                this.identifierFormControl.setValue(response.organizationIdentifier);
+                await this.submit();
+                return;
+              }
             }
           } catch (error) {
             this.handleGetClaimedDomainByEmailError(error);

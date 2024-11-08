@@ -5,17 +5,23 @@ import { firstValueFrom, lastValueFrom } from "rxjs";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { SubscriptionResponse } from "@bitwarden/common/billing/models/response/subscription.response";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { DialogService } from "@bitwarden/components";
+import { DialogService, ToastService } from "@bitwarden/components";
 
+import {
+  AdjustStorageDialogV2Component,
+  AdjustStorageDialogV2ResultType,
+} from "../shared/adjust-storage-dialog/adjust-storage-dialog-v2.component";
 import {
   AdjustStorageDialogResult,
   openAdjustStorageDialog,
-} from "../shared/adjust-storage.component";
+} from "../shared/adjust-storage-dialog/adjust-storage-dialog.component";
 import {
   OffboardingSurveyDialogResultType,
   openOffboardingSurvey,
@@ -29,14 +35,16 @@ import { UpdateLicenseDialogResult } from "../shared/update-license-types";
 export class UserSubscriptionComponent implements OnInit {
   loading = false;
   firstLoaded = false;
-  adjustStorageAdd = true;
-  showUpdateLicense = false;
   sub: SubscriptionResponse;
   selfHosted = false;
   cloudWebVaultUrl: string;
 
   cancelPromise: Promise<any>;
   reinstatePromise: Promise<any>;
+
+  protected deprecateStripeSourcesAPI$ = this.configService.getFeatureFlag$(
+    FeatureFlag.AC2476_DeprecateStripeSourcesAPI,
+  );
 
   constructor(
     private apiService: ApiService,
@@ -48,8 +56,10 @@ export class UserSubscriptionComponent implements OnInit {
     private dialogService: DialogService,
     private environmentService: EnvironmentService,
     private billingAccountProfileStateService: BillingAccountProfileStateService,
+    private toastService: ToastService,
+    private configService: ConfigService,
   ) {
-    this.selfHosted = platformUtilsService.isSelfHost();
+    this.selfHosted = this.platformUtilsService.isSelfHost();
   }
 
   async ngOnInit() {
@@ -94,7 +104,11 @@ export class UserSubscriptionComponent implements OnInit {
     try {
       this.reinstatePromise = this.apiService.postReinstatePremium();
       await this.reinstatePromise;
-      this.platformUtilsService.showToast("success", null, this.i18nService.t("reinstated"));
+      this.toastService.showToast({
+        variant: "success",
+        title: null,
+        message: this.i18nService.t("reinstated"),
+      });
       // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.load();
@@ -145,15 +159,33 @@ export class UserSubscriptionComponent implements OnInit {
   };
 
   adjustStorage = async (add: boolean) => {
-    const dialogRef = openAdjustStorageDialog(this.dialogService, {
-      data: {
-        storageGbPrice: 4,
-        add: add,
-      },
-    });
-    const result = await lastValueFrom(dialogRef.closed);
-    if (result === AdjustStorageDialogResult.Adjusted) {
-      await this.load();
+    const deprecateStripeSourcesAPI = await firstValueFrom(this.deprecateStripeSourcesAPI$);
+
+    if (deprecateStripeSourcesAPI) {
+      const dialogRef = AdjustStorageDialogV2Component.open(this.dialogService, {
+        data: {
+          price: 4,
+          cadence: "year",
+          type: add ? "Add" : "Remove",
+        },
+      });
+
+      const result = await lastValueFrom(dialogRef.closed);
+
+      if (result === AdjustStorageDialogV2ResultType.Submitted) {
+        await this.load();
+      }
+    } else {
+      const dialogRef = openAdjustStorageDialog(this.dialogService, {
+        data: {
+          storageGbPrice: 4,
+          add: add,
+        },
+      });
+      const result = await lastValueFrom(dialogRef.closed);
+      if (result === AdjustStorageDialogResult.Adjusted) {
+        await this.load();
+      }
     }
   };
 
@@ -177,11 +209,28 @@ export class UserSubscriptionComponent implements OnInit {
       : 0;
   }
 
-  get storageProgressWidth() {
-    return this.storagePercentage < 5 ? 5 : 0;
-  }
-
   get title(): string {
     return this.i18nService.t(this.selfHosted ? "subscription" : "premiumMembership");
+  }
+
+  get subscriptionStatus(): string | null {
+    if (!this.subscription) {
+      return null;
+    } else {
+      /*
+       Premium users who sign up with PayPal will have their subscription activated by a webhook.
+       This is an arbitrary 15-second grace period where we show their subscription as active rather than
+       incomplete while we wait for our webhook to process the `invoice.created` event.
+      */
+      if (this.subscription.status === "incomplete") {
+        const periodStartMS = new Date(this.subscription.periodStartDate).getTime();
+        const nowMS = new Date().getTime();
+        return nowMS - periodStartMS <= 15000
+          ? this.i18nService.t("active")
+          : this.subscription.status;
+      }
+
+      return this.subscription.status;
+    }
   }
 }

@@ -73,7 +73,11 @@ class LegacyAutofillOverlayContentService implements LegacyAutofillOverlayConten
    * Satisfy the AutofillOverlayContentService interface.
    */
   messageHandlers = {} as AutofillOverlayContentExtensionMessageHandlers;
-  async setupInlineMenu(
+  clearUserFilledFields() {
+    // do nothing
+  }
+
+  async setupOverlayListeners(
     autofillFieldElement: ElementWithOpId<FormFieldElement>,
     autofillFieldData: AutofillField,
     pageDetails: AutofillPageDetails,

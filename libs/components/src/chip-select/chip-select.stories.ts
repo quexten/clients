@@ -1,6 +1,6 @@
 import { FormsModule } from "@angular/forms";
 import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
-import { getAllByRole, userEvent } from "@storybook/testing-library";
+import { getAllByRole, userEvent } from "@storybook/test";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 
@@ -40,7 +40,7 @@ export const Default: Story = {
       ...args,
     },
     template: /* html */ `
-      <bit-chip-select 
+      <bit-chip-select
         placeholderText="Folder"
         placeholderIcon="bwi-folder"
         [options]="options"
@@ -71,6 +71,44 @@ export const Default: Story = {
     const canvas = context.canvasElement;
     const buttons = getAllByRole(canvas, "button");
     await userEvent.click(buttons[0]);
+  },
+};
+
+export const FullWidth: Story = {
+  render: (args) => ({
+    props: {
+      ...args,
+    },
+    template: /* html */ `
+    <div class="tw-w-40">
+      <bit-chip-select
+        placeholderText="Folder"
+        placeholderIcon="bwi-folder"
+        [options]="options"
+        [ngModel]="value"
+        fullWidth
+      ></bit-chip-select>
+    </div>
+    `,
+  }),
+  args: {
+    options: [
+      {
+        label: "Foo",
+        value: "foo",
+        icon: "bwi-folder",
+      },
+      {
+        label: "Bar",
+        value: "bar",
+        icon: "bwi-exclamation-triangle tw-text-danger",
+      },
+      {
+        label: "Baz",
+        value: "baz",
+        disabled: true,
+      },
+    ],
   },
 };
 
@@ -138,7 +176,7 @@ export const Disabled: Story = {
       ...args,
     },
     template: /* html */ `
-      <bit-chip-select 
+      <bit-chip-select
         placeholderText="Folder"
         placeholderIcon="bwi-folder"
         [options]="options"

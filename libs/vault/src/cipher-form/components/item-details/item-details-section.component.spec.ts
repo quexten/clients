@@ -1,12 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
+import { By } from "@angular/platform-browser";
 import { mock, MockProxy } from "jest-mock-extended";
+import { BehaviorSubject } from "rxjs";
 
+import { CollectionView } from "@bitwarden/admin-console/common";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
-import { CollectionView } from "@bitwarden/common/vault/models/view/collection.view";
+import { SelectComponent } from "@bitwarden/components";
 
 import { CipherFormConfig } from "../../abstractions/cipher-form-config.service";
 import { CipherFormContainer } from "../../cipher-form-container";
@@ -19,6 +24,8 @@ describe("ItemDetailsSectionComponent", () => {
   let cipherFormProvider: MockProxy<CipherFormContainer>;
   let i18nService: MockProxy<I18nService>;
 
+  const activeAccount$ = new BehaviorSubject<{ email: string }>({ email: "test@example.com" });
+
   beforeEach(async () => {
     cipherFormProvider = mock<CipherFormContainer>();
     i18nService = mock<I18nService>();
@@ -28,6 +35,7 @@ describe("ItemDetailsSectionComponent", () => {
       providers: [
         { provide: CipherFormContainer, useValue: cipherFormProvider },
         { provide: I18nService, useValue: i18nService },
+        { provide: AccountService, useValue: { activeAccount$ } },
       ],
     }).compileComponents();
 
@@ -104,6 +112,43 @@ describe("ItemDetailsSectionComponent", () => {
       expect(updatedCipher.favorite).toBe(true);
     }));
 
+    it("should prioritize initialValues when editing an existing cipher ", fakeAsync(async () => {
+      component.config.allowPersonalOwnership = true;
+      component.config.organizations = [{ id: "org1" } as Organization];
+      component.config.collections = [
+        { id: "col1", name: "Collection 1", organizationId: "org1" } as CollectionView,
+        { id: "col2", name: "Collection 2", organizationId: "org1" } as CollectionView,
+      ];
+      component.originalCipherView = {
+        name: "cipher1",
+        organizationId: "org1",
+        folderId: "folder1",
+        collectionIds: ["col1"],
+        favorite: true,
+      } as CipherView;
+
+      component.config.initialValues = {
+        name: "new-name",
+        folderId: "new-folder",
+        organizationId: "bad-org" as OrganizationId, // Should not be set in edit mode
+        collectionIds: ["col2" as CollectionId],
+      };
+
+      await component.ngOnInit();
+      tick();
+
+      expect(cipherFormProvider.patchCipher).toHaveBeenCalled();
+      const patchFn = cipherFormProvider.patchCipher.mock.lastCall[0];
+
+      const updatedCipher = patchFn(new CipherView());
+
+      expect(updatedCipher.name).toBe("new-name");
+      expect(updatedCipher.organizationId).toBe("org1");
+      expect(updatedCipher.folderId).toBe("new-folder");
+      expect(updatedCipher.collectionIds).toEqual(["col2"]);
+      expect(updatedCipher.favorite).toBe(true);
+    }));
+
     it("should disable organizationId control if ownership change is not allowed", async () => {
       component.config.allowPersonalOwnership = false;
       component.config.organizations = [{ id: "org1" } as Organization];
@@ -166,6 +211,35 @@ describe("ItemDetailsSectionComponent", () => {
       component.config.allowPersonalOwnership = false;
       component.config.organizations = [{ id: "org1" } as Organization];
       expect(component.defaultOwner).toBe("org1");
+    });
+  });
+
+  describe("showPersonalOwnerOption", () => {
+    it("should show personal ownership when the configuration allows", () => {
+      component.config.mode = "edit";
+      component.config.allowPersonalOwnership = true;
+      component.config.organizations = [{ id: "134-433-22" } as Organization];
+      fixture.detectChanges();
+
+      const select = fixture.debugElement.query(By.directive(SelectComponent));
+      const { value, label } = select.componentInstance.items[0];
+
+      expect(value).toBeNull();
+      expect(label).toBe("test@example.com");
+    });
+
+    it("should show personal ownership when the control is disabled", async () => {
+      component.config.mode = "edit";
+      component.config.allowPersonalOwnership = false;
+      component.config.organizations = [{ id: "134-433-22" } as Organization];
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      const select = fixture.debugElement.query(By.directive(SelectComponent));
+
+      const { value, label } = select.componentInstance.items[0];
+      expect(value).toBeNull();
+      expect(label).toBe("test@example.com");
     });
   });
 

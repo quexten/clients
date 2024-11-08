@@ -72,11 +72,13 @@ export class Send extends Domain {
   async decrypt(): Promise<SendView> {
     const model = new SendView(this);
 
-    const cryptoService = Utils.getContainerService().getCryptoService();
+    const keyService = Utils.getContainerService().getKeyService();
+    const encryptService = Utils.getContainerService().getEncryptService();
 
     try {
-      model.key = await cryptoService.decryptToBytes(this.key, null);
-      model.cryptoKey = await cryptoService.makeSendKey(model.key);
+      const sendKeyEncryptionKey = await keyService.getUserKey();
+      model.key = await encryptService.decryptToBytes(this.key, sendKeyEncryptionKey);
+      model.cryptoKey = await keyService.makeSendKey(model.key);
     } catch (e) {
       // TODO: error?
     }

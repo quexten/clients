@@ -30,6 +30,7 @@ import { ConfigService } from "@bitwarden/common/platform/abstractions/config/co
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { ToastService } from "@bitwarden/components";
 
 import { ssoTypeValidator } from "./sso-type.validator";
 
@@ -60,6 +61,10 @@ export class SsoComponent implements OnInit, OnDestroy {
     "http://www.w3.org/2000/09/xmldsig#rsa-sha384",
     "http://www.w3.org/2000/09/xmldsig#rsa-sha512",
   ];
+
+  readonly samlSigningAlgorithmOptions: SelectOptions[] = this.samlSigningAlgorithms.map(
+    (algorithm) => ({ name: algorithm, value: algorithm }),
+  );
 
   readonly saml2SigningBehaviourOptions: SelectOptions[] = [
     {
@@ -187,6 +192,7 @@ export class SsoComponent implements OnInit, OnDestroy {
     private organizationService: OrganizationService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private configService: ConfigService,
+    private toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -280,7 +286,11 @@ export class SsoComponent implements OnInit, OnDestroy {
     const response = await this.organizationApiService.updateSso(this.organizationId, request);
     this.populateForm(response);
 
-    this.platformUtilsService.showToast("success", null, this.i18nService.t("ssoSettingsSaved"));
+    this.toastService.showToast({
+      variant: "success",
+      title: null,
+      message: this.i18nService.t("ssoSettingsSaved"),
+    });
   };
 
   async validateKeyConnectorUrl() {
@@ -328,10 +338,6 @@ export class SsoComponent implements OnInit, OnDestroy {
 
   get keyConnectorUrl() {
     return this.ssoConfigForm.get("keyConnectorUrl");
-  }
-
-  get samlSigningAlgorithmOptions(): SelectOptions[] {
-    return this.samlSigningAlgorithms.map((algorithm) => ({ name: algorithm, value: algorithm }));
   }
 
   /**

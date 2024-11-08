@@ -3,19 +3,18 @@ import { EVENTS, TYPE_CHECK } from "@bitwarden/common/autofill/constants";
 import AutofillScript, { AutofillInsertActions, FillScript } from "../models/autofill-script";
 import { FormFieldElement } from "../types";
 import {
+  currentlyInSandboxedIframe,
   elementIsFillableFormField,
   elementIsInputElement,
   elementIsSelectElement,
   elementIsTextAreaElement,
 } from "../utils";
 
+import { DomElementVisibilityService } from "./abstractions/dom-element-visibility.service";
 import { InsertAutofillContentService as InsertAutofillContentServiceInterface } from "./abstractions/insert-autofill-content.service";
 import { CollectAutofillContentService } from "./collect-autofill-content.service";
-import DomElementVisibilityService from "./dom-element-visibility.service";
 
 class InsertAutofillContentService implements InsertAutofillContentServiceInterface {
-  private readonly domElementVisibilityService: DomElementVisibilityService;
-  private readonly collectAutofillContentService: CollectAutofillContentService;
   private readonly autofillInsertActions: AutofillInsertActions = {
     fill_by_opid: ({ opid, value }) => this.handleFillFieldByOpidAction(opid, value),
     click_on_opid: ({ opid }) => this.handleClickOnFieldByOpidAction(opid),
@@ -27,12 +26,9 @@ class InsertAutofillContentService implements InsertAutofillContentServiceInterf
    * DomElementVisibilityService and CollectAutofillContentService classes.
    */
   constructor(
-    domElementVisibilityService: DomElementVisibilityService,
-    collectAutofillContentService: CollectAutofillContentService,
-  ) {
-    this.domElementVisibilityService = domElementVisibilityService;
-    this.collectAutofillContentService = collectAutofillContentService;
-  }
+    private domElementVisibilityService: DomElementVisibilityService,
+    private collectAutofillContentService: CollectAutofillContentService,
+  ) {}
 
   /**
    * Handles autofill of the forms on the current page based on the
@@ -44,7 +40,7 @@ class InsertAutofillContentService implements InsertAutofillContentServiceInterf
   async fillForm(fillScript: AutofillScript) {
     if (
       !fillScript.script?.length ||
-      this.fillingWithinSandboxedIframe() ||
+      currentlyInSandboxedIframe() ||
       this.userCancelledInsecureUrlAutofill(fillScript.savedUrls) ||
       this.userCancelledUntrustedIframeAutofill(fillScript)
     ) {
@@ -53,20 +49,6 @@ class InsertAutofillContentService implements InsertAutofillContentServiceInterf
 
     const fillActionPromises = fillScript.script.map(this.runFillScriptAction);
     await Promise.all(fillActionPromises);
-  }
-
-  /**
-   * Identifies if the execution of this script is happening
-   * within a sandboxed iframe.
-   * @returns {boolean}
-   * @private
-   */
-  private fillingWithinSandboxedIframe() {
-    return (
-      String(self.origin).toLowerCase() === "null" ||
-      globalThis.frameElement?.hasAttribute("sandbox") ||
-      globalThis.location.hostname === ""
-    );
   }
 
   /**

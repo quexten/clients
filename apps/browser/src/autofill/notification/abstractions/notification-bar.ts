@@ -1,9 +1,13 @@
+import { Theme } from "@bitwarden/common/platform/enums";
+
 type NotificationBarIframeInitData = {
   type?: string;
   isVaultLocked?: boolean;
-  theme?: string;
+  theme?: Theme;
   removeIndividualVault?: boolean;
   importType?: string;
+  applyRedesign?: boolean;
+  launchTimestamp?: number;
 };
 
 type NotificationBarWindowMessage = {

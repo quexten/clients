@@ -106,7 +106,7 @@ export class CopyCipherFieldService {
       return;
     }
 
-    if (valueToCopy == null || !cipher.viewPassword) {
+    if (valueToCopy == null) {
       return;
     }
 
@@ -125,7 +125,12 @@ export class CopyCipherFieldService {
     });
 
     if (action.event !== undefined) {
-      await this.eventCollectionService.collect(action.event, cipher.id);
+      await this.eventCollectionService.collect(
+        action.event,
+        cipher.id,
+        false,
+        cipher.organizationId,
+      );
     }
   }
 

@@ -54,6 +54,10 @@ module.exports = {
         600: rgba("--color-info-600"),
         700: rgba("--color-info-700"),
       },
+      art: {
+        primary: rgba("--color-art-primary"),
+        accent: rgba("--color-art-accent"),
+      },
       text: {
         main: rgba("--color-text-main"),
         muted: rgba("--color-text-muted"),
@@ -69,6 +73,7 @@ module.exports = {
         alt3: rgba("--color-background-alt3"),
         alt4: rgba("--color-background-alt4"),
       },
+      "marketing-logo": rgba("--color-marketing-logo"),
     },
     textColor: {
       main: rgba("--color-text-main"),
