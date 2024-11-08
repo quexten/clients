@@ -153,9 +153,14 @@ switch (platform) {
         localFileExisted = existsSync(
           join(__dirname, 'desktop_napi.linux-x64-musl.node')
         )
+        let glibcLocalFileExisted = existsSync(
+          join(__dirname, 'desktop_napi.linux-x64-gnu.node')
+        )
         try {
           if (localFileExisted) {
             nativeBinding = require('./desktop_napi.linux-x64-musl.node')
+          } else if (glibcLocalFileExisted) {
+            nativeBinding = require('./desktop_napi.linux-x64-gnu.node')
           } else {
             nativeBinding = require('@bitwarden/desktop-napi-linux-x64-musl')
           }
