@@ -113,7 +113,7 @@ jobs:
       - name: Check Rust version
         run: rustup --version
 
-      - name: Install gnome-keyring
+      - name: Install dependencies
         if: ${{ matrix.os=='ubuntu-22.04' }}
         run: |
           sudo apt-get update

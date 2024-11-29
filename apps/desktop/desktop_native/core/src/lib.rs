@@ -13,6 +13,5 @@ pub mod process_isolation;
 pub mod powermonitor;
 #[cfg(feature = "sys")]
 pub mod ssh_agent;
-
 #[cfg(feature = "sys")]
 pub mod fido2_client;
