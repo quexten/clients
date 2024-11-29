@@ -117,7 +117,7 @@ jobs:
         if: ${{ matrix.os=='ubuntu-latest' }}
         run: |
           sudo apt-get update
-          sudo apt-get install -y gnome-keyring dbus-x11
+          sudo apt-get install -y gnome-keyring dbus-x11 libusb-1.0-0-dev libudev-dev
 
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
