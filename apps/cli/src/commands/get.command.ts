@@ -1,3 +1,5 @@
+// FIXME: Update this file to be type safe and remove this and next line
+// @ts-strict-ignore
 import { firstValueFrom, map } from "rxjs";
 
 import { CollectionService, CollectionView } from "@bitwarden/admin-console/common";
@@ -21,7 +23,6 @@ import { LoginExport } from "@bitwarden/common/models/export/login.export";
 import { SecureNoteExport } from "@bitwarden/common/models/export/secure-note.export";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
-import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { SendType } from "@bitwarden/common/tools/send/enums/send-type";
@@ -58,15 +59,14 @@ export class GetCommand extends DownloadCommand {
     private auditService: AuditService,
     private keyService: KeyService,
     encryptService: EncryptService,
-    private stateService: StateService,
     private searchService: SearchService,
-    private apiService: ApiService,
+    protected apiService: ApiService,
     private organizationService: OrganizationService,
     private eventCollectionService: EventCollectionService,
     private accountProfileService: BillingAccountProfileStateService,
     private accountService: AccountService,
   ) {
-    super(encryptService);
+    super(encryptService, apiService);
   }
 
   async run(object: string, id: string, cmdOptions: Record<string, any>): Promise<Response> {
