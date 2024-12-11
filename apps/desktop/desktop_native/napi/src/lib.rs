@@ -555,6 +555,7 @@ pub mod fido2_hid_client {
     }
 }
 
+#[napi]
 pub mod autofill {
     #[napi]
     pub async fn run_command(value: String) -> napi::Result<String> {
