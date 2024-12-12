@@ -20,7 +20,7 @@
     "**/node_modules/@bitwarden/desktop-napi/index.js",
     "**/node_modules/@bitwarden/desktop-napi/desktop_napi.${platform}-${arch}*.node"
   ],
-  "electronVersion": "32.1.1",
+  "electronVersion": "33.2.1",
   "generateUpdatesFilesForAllChannels": true,
   "publish": {
     "provider": "generic",
@@ -241,7 +241,17 @@
     "autoStart": true,
     "base": "core22",
     "confinement": "strict",
-    "plugs": ["default", "network-bind", "password-manager-service", "u2f-devices"],
+    "plugs": [
+      "default",
+      "network-bind",
+      "u2f-devices",
+      "password-manager-service",
+      {
+        "polkit": {
+          "action-prefix": "com.bitwarden.Bitwarden"
+        }
+      }
+    ],
     "stagePackages": ["default"]
   },
   "protocols": [
