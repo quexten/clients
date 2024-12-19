@@ -122,6 +122,9 @@ export declare namespace ipc {
     send(message: string): number
   }
 }
+export declare namespace fido2_hid_client {
+  export function authenticate(challenge: string, credentials: Array<string>, rpid: string, pin: string): string
+}
 export declare namespace autofill {
   export function runCommand(value: string): Promise<string>
 }

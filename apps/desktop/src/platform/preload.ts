@@ -130,6 +130,16 @@ const localhostCallbackService = {
   },
 };
 
+const webauthn = {
+  webauthnAuthenticate: (
+    challenge: string,
+    credentials: Array<string>,
+    origin: string,
+  ): Promise<string> => {
+    return ipcRenderer.invoke("webauthn.authenticate", { challenge, credentials, origin });
+  },
+};
+
 export default {
   versions: {
     app: (): Promise<string> => ipcRenderer.invoke("appVersion"),
@@ -202,6 +212,7 @@ export default {
   crypto,
   ephemeralStore,
   localhostCallbackService,
+  webauthn,
 };
 
 function deviceType(): DeviceType {

@@ -43,6 +43,7 @@ import { DesktopCredentialStorageListener } from "./platform/main/desktop-creden
 import { MainCryptoFunctionService } from "./platform/main/main-crypto-function.service";
 import { MainSshAgentService } from "./platform/main/main-ssh-agent.service";
 import { VersionMain } from "./platform/main/version.main";
+import { WebauthnListener } from "./platform/main/webauthn-listener";
 import { DesktopSettingsService } from "./platform/services/desktop-settings.service";
 import { ElectronLogMainService } from "./platform/services/electron-log.main.service";
 import { ElectronStorageService } from "./platform/services/electron-storage.service";
@@ -79,6 +80,7 @@ export class Main {
   desktopAutofillSettingsService: DesktopAutofillSettingsService;
   versionMain: VersionMain;
   sshAgentService: MainSshAgentService;
+  webauthnListener: WebauthnListener;
 
   constructor() {
     // Set paths for portable builds
@@ -257,6 +259,9 @@ export class Main {
         this.sshAgentService.init();
       }
     });
+
+    this.webauthnListener = new WebauthnListener();
+    this.webauthnListener.init();
 
     new EphemeralValueStorageService();
     new SSOLocalhostCallbackService(this.environmentService, this.messagingService);

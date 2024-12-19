@@ -244,6 +244,7 @@
     "plugs": [
       "default",
       "network-bind",
+      "u2f-devices",
       "password-manager-service",
       {
         "polkit": {
