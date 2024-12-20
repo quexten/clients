@@ -140,7 +140,7 @@ jobs:
             npm
             echo 1 | rustup-init --default-toolchain stable --target x86_64-unknown-linux-musl
       - name: NPM install
-        run: cd napi && npm install
+        run: cd ../../../ && npm install
       - name: Build Native Module
         env:
           PKG_CONFIG_ALL_STATIC: true
