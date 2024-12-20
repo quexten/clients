@@ -23,7 +23,7 @@ on:
 defaults:
   run:
     shell: bash
-v
+
 jobs:
   electron-verify:
     name: Verify Electron Version
