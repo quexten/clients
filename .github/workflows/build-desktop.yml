@@ -143,6 +143,7 @@ jobs:
           PKG_CONFIG_ALL_STATIC: true
           TARGET: musl
         run: |
+          source $HOME/.cargo/env
           cargo build --release --target x86_64-unknown-linux-musl
 
   linux:
