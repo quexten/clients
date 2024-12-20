@@ -122,7 +122,7 @@ jobs:
     name: Desktop Native Linux Build
     runs-on: ubuntu-24.04
     container:
-      image: alpine:3.14
+      image: alpine:3.21
     needs: setup
     defaults:
       run:
