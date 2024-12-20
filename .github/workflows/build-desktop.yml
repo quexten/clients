@@ -51,8 +51,6 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-22.04
-    needs:
-      - check-run
     outputs:
       package_version: ${{ steps.retrieve-version.outputs.package_version }}
       release_channel: ${{ steps.release-channel.outputs.channel }}
