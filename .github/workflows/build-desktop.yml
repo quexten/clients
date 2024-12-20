@@ -136,8 +136,9 @@ jobs:
         run: |
           apk add --no-cache \
             build-base \
-            rust \
+            rustup \
             cargo
+          echo 1 | rustup-init --default-toolchain stable --target x86_64-unknown-linux-musl
       - name: Build Native Module
         run: |
           cargo build --release --target x86_64-unknown-linux-musl
