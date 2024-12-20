@@ -1,18 +1,6 @@
 name: Build Desktop
 
 on:
-  pull_request_target:
-    types: [opened, synchronize]
-    branches-ignore:
-      - "l10n_master"
-      - "cf-pages"
-    paths:
-      - "apps/desktop/**"
-      - "libs/**"
-      - "*"
-      - "!*.md"
-      - "!*.txt"
-      - ".github/workflows/build-desktop.yml"
   push:
     branches:
       - "main"
@@ -37,10 +25,6 @@ defaults:
     shell: bash
 
 jobs:
-  check-run:
-    name: Check PR run
-    uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
-
   electron-verify:
     name: Verify Electron Version
     runs-on: ubuntu-22.04
