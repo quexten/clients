@@ -139,6 +139,9 @@ jobs:
             rustup
             echo 1 | rustup-init --default-toolchain stable --target x86_64-unknown-linux-musl
       - name: Build Native Module
+        env:
+          PKG_CONFIG_ALL_STATIC: true
+          TARGET: musl
         run: |
           cargo build --release --target x86_64-unknown-linux-musl
 
@@ -224,13 +227,8 @@ jobs:
       - name: Build Native Module
         if: steps.cache.outputs.cache-hit != 'true'
         working-directory: apps/desktop/desktop_native
-        env:
-          PKG_CONFIG_ALLOW_CROSS: true
-          PKG_CONFIG_ALL_STATIC: true
-          TARGET: musl
         run: |
-          rustup target add x86_64-unknown-linux-musl
-          node build.js cross-platform
+          node build.js
 
       - name: Build application
         run: npm run dist:lin
