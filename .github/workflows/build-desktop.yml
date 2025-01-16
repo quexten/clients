@@ -350,8 +350,9 @@ jobs:
           node build.js cross-platform
 
       - name: Build application
-        run: npm run build
-        run: npm run pack:lin:arm64
+        run: |
+          npm run build
+          npm run pack:lin:arm64
 
       - name: Upload tar.gz artifact
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
