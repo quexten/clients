@@ -1,5 +1,15 @@
 name: Build Desktop
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+      - "rc"
+      - "hotfix-rc-*"
+  pull_request:
+    types: [opened, synchronize]
+
 defaults:
   run:
     shell: bash
