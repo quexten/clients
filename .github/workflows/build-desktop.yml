@@ -344,6 +344,7 @@ jobs:
           PKG_CONFIG_ALL_STATIC: true
           TARGET: musl
         run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
           rustup target add arm64-unknown-linux-musl
           node build.js cross-platform
 
