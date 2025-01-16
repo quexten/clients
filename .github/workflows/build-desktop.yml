@@ -346,7 +346,7 @@ jobs:
         run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           . "$HOME/.cargo/env" 
-          rustup target add arm64-unknown-linux-musl
+          rustup target add aarch64-unknown-linux-musl
           node build.js cross-platform
 
       - name: Build application
