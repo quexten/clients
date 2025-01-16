@@ -1,37 +1,5 @@
 name: Build Desktop
 
-on:
-  pull_request_target:
-    types: [opened, synchronize]
-    branches-ignore:
-      - 'l10n_master'
-      - 'cf-pages'
-    paths:
-      - 'apps/desktop/**'
-      - 'libs/**'
-      - '*'
-      - '!*.md'
-      - '!*.txt'
-      - '.github/workflows/build-desktop.yml'
-  push:
-    branches:
-      - 'main'
-      - 'rc'
-      - 'hotfix-rc-desktop'
-    paths:
-      - 'apps/desktop/**'
-      - 'libs/**'
-      - '*'
-      - '!*.md'
-      - '!*.txt'
-      - '.github/workflows/build-desktop.yml'
-  workflow_dispatch:
-    inputs:
-      sdk_branch:
-        description: "Custom SDK branch"
-        required: false
-        type: string
-
 defaults:
   run:
     shell: bash
