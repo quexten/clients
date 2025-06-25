@@ -2,7 +2,6 @@
 // @ts-strict-ignore
 import { CryptoFunctionService } from "@bitwarden/common/key-management/crypto/abstractions/crypto-function.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { SdkLoadService } from "@bitwarden/common/platform/abstractions/sdk/sdk-load.service";
 import { EncryptionType } from "@bitwarden/common/platform/enums";
 import { Decryptable } from "@bitwarden/common/platform/interfaces/decryptable.interface";
 import { Encrypted } from "@bitwarden/common/platform/interfaces/encrypted";
