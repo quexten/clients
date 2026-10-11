@@ -163,7 +163,6 @@ import { VaultListTableComponent } from "./vault-list-table/vault-list-table.com
 import { VaultListComponent } from "./vault-list.component";
 
 const BroadcasterSubscriptionId = "VaultComponent";
-const VAULT_RENDERED_MARK = "Vault rendered";
 
 /**
  * Screenshots of the redesigned vault, shown in the new experience dialog. Relative to the
