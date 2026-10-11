@@ -45,7 +45,10 @@ export class ResultsListComponent implements OnChanges {
   /** Returns the item-specific actions for a given result row. */
   getItemActions(item: MagnifySearchResultItem): MagnifyAction[] {
     return MAGNIFY_ACTIONS.filter(
-      (action) => action.magnifyItemType !== null && action.magnifyItemType === item.itemType,
+      (action) =>
+        action.magnifyItemType !== null &&
+        action.magnifyItemType === item.itemType &&
+        !(action.requiresTotp && !(isMagnifyLoginItem(item) && item.hasTotp)),
     );
   }
 

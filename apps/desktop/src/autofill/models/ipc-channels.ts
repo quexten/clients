@@ -35,4 +35,6 @@ export const MAGNIFY_IPC_CHANNELS = {
   MAGNIFY_COMMAND_RESPONSE: "autofill.magnifyCommandResponse",
   // Magnify render process -> Main process: focus the main BW window and close Magnify
   MAGNIFY_FOCUS_BITWARDEN: "autofill.magnifyFocusBitwarden",
+  // Magnify render process -> Main process: dismiss Magnify and return focus to the previous app
+  MAGNIFY_DISMISS: "autofill.magnifyDismiss",
 } as const;

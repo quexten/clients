@@ -33,6 +33,11 @@ export class CommandService {
     window.ipc.focusBitwarden();
   }
 
+  /** Dismisses Magnify and returns focus to the previously-focused app. */
+  dismiss(): void {
+    window.ipc.dismiss();
+  }
+
   /** Requests the main process to resize the magnify window to the given height. */
   resize(height: number): void {
     window.ipc.resize(height);
@@ -44,6 +49,11 @@ export class CommandService {
 
   async copyPassword(item: MagnifyLoginItem): Promise<string> {
     return (await window.ipc.sendCommand({ type: MagnifyCommand.CopyPassword, itemId: item.id }))
+      .result;
+  }
+
+  async copyTotp(item: MagnifyLoginItem): Promise<string> {
+    return (await window.ipc.sendCommand({ type: MagnifyCommand.CopyTotp, itemId: item.id }))
       .result;
   }
 

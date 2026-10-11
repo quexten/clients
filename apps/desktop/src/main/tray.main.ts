@@ -136,6 +136,10 @@ export class TrayMain {
    * the window - foregrounding is not a toggle.
    */
   async restoreFromTray() {
+    if (this.isDarwin()) {
+      app.show();
+    }
+
     if (this.windowMain.win == null) {
       // On macOS, closing the window via the red button destroys the BrowserWindow instance.
       await this.windowMain.createWindow();

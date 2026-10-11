@@ -16,6 +16,7 @@ import { AccountService } from "@bitwarden/common/auth/abstractions/account.serv
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
+import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import {
   ActiveUserStateProvider,
@@ -23,6 +24,7 @@ import {
   UserKeyDefinition,
 } from "@bitwarden/common/platform/state";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { CipherType } from "@bitwarden/common/vault/enums/cipher-type";
 import { buildCipherIcon } from "@bitwarden/common/vault/icon/build-cipher-icon";
 import type { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -72,6 +74,8 @@ export class DesktopMagnifyService implements OnDestroy {
     private cipherService: CipherService,
     private environmentService: EnvironmentService,
     private domainSettingsService: DomainSettingsService,
+    private billingAccountProfileStateService: BillingAccountProfileStateService,
+    private totpService: TotpService,
     private magnifyNavigationService: MagnifyNavigationService,
   ) {
     this.magnifyEnabledUserSetting$ = this.magnifyEnabledState.state$.pipe(
@@ -133,6 +137,12 @@ export class DesktopMagnifyService implements OnDestroy {
 
         case MagnifyCommand.CopyPassword: {
           const [error, result] = await this.copyPassword(request.itemId);
+          callback(error, result);
+          break;
+        }
+
+        case MagnifyCommand.CopyTotp: {
+          const [error, result] = await this.copyTotp(request.itemId);
           callback(error, result);
           break;
         }
@@ -212,6 +222,13 @@ export class DesktopMagnifyService implements OnDestroy {
     const iconsUrl = env.getIconsUrl();
     const showFavicons = await firstValueFrom(this.domainSettingsService.showFavicons$);
 
+    const activeAccount = await firstValueFrom(this.accountService.activeAccount$);
+    const hasPremium = activeAccount?.id
+      ? await firstValueFrom(
+          this.billingAccountProfileStateService.hasPremiumFromAnySource$(activeAccount.id),
+        )
+      : false;
+
     const response: MagnifyCommandResponse = {
       type: MagnifyCommand.SearchVault,
       results: matched.map((c) => {
@@ -229,6 +246,7 @@ export class DesktopMagnifyService implements OnDestroy {
           name: c.name,
           username: c.login?.username ?? "",
           iconUrl: buildCipherIcon(iconsUrl, c, showFavicons).image ?? null,
+          hasTotp: !!c.login?.hasTotp && (c.organizationUseTotp || hasPremium),
         };
       }),
     };
@@ -270,6 +288,41 @@ export class DesktopMagnifyService implements OnDestroy {
     }
 
     return [null, { type: MagnifyCommand.CopyPassword, result: cipher.login?.password ?? "" }];
+  }
+
+  /*
+    Returns the current TOTP code for a specific Login cipher
+    based on the copyTotp Magnify Command.
+  */
+  private async copyTotp(itemId: string): Promise<Result<MagnifyCommandResponse>> {
+    const [error, cipher] = await this.findCipher(itemId);
+    if (error) {
+      return [error, null];
+    }
+
+    return [null, { type: MagnifyCommand.CopyTotp, result: await this.getTotpCode(cipher) }];
+  }
+
+  private async getTotpCode(cipher: CipherView): Promise<string> {
+    const totpSecret = cipher.login?.totp;
+    if (!totpSecret) {
+      return "";
+    }
+    if (!cipher.organizationUseTotp && !(await this.userHasPremium())) {
+      return "";
+    }
+    const totp = await firstValueFrom(this.totpService.getCode$(totpSecret)).catch((): any => null);
+    return totp?.code ?? "";
+  }
+
+  private async userHasPremium(): Promise<boolean> {
+    const account = await firstValueFrom(this.accountService.activeAccount$);
+    if (!account?.id) {
+      return false;
+    }
+    return firstValueFrom(
+      this.billingAccountProfileStateService.hasPremiumFromAnySource$(account.id),
+    );
   }
 
   /*

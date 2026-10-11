@@ -50,24 +50,24 @@ export class SearchBarComponent implements AfterViewInit {
       return [];
     }
     return MAGNIFY_ACTIONS.filter(
-      (action) => action.magnifyItemType === null || action.magnifyItemType === item.itemType,
+      (action) =>
+        (action.magnifyItemType === null || action.magnifyItemType === item.itemType) &&
+        !(action.requiresTotp && !(isMagnifyLoginItem(item) && item.hasTotp)),
     );
   });
 
-  private readonly copyAndIndicate = <T extends MagnifySearchResultItem>(
+  private readonly copyAndDismiss = <T extends MagnifySearchResultItem>(
     guard: (item: MagnifySearchResultItem) => item is T,
-    actionId: string,
     copyFn: (item: T) => Promise<string>,
   ): void => {
-    const itemIndex = this.selectedIndex();
-    const item = this.results()[itemIndex];
+    const item = this.results()[this.selectedIndex()];
     if (item && guard(item)) {
-      void copyFn(item).then((value) => {
-        if (value) {
-          void navigator.clipboard.writeText(value);
-          this.completingAction.set({ actionId, itemIndex });
-          setTimeout(() => this.completingAction.set(null), 1500);
+      void copyFn(item).then(async (value) => {
+        if (!value) {
+          return;
         }
+        await navigator.clipboard.writeText(value);
+        this.commandService.dismiss();
       });
     }
   };
@@ -76,40 +76,37 @@ export class SearchBarComponent implements AfterViewInit {
     [
       "magnifyLoginItem-copyPassword",
       () =>
-        this.copyAndIndicate(isMagnifyLoginItem, "magnifyLoginItem-copyPassword", (item) =>
-          this.commandService.copyPassword(item),
-        ),
+        this.copyAndDismiss(isMagnifyLoginItem, (item) => this.commandService.copyPassword(item)),
     ],
     [
       "magnifyLoginItem-copyUsername",
       () => {
-        const itemIndex = this.selectedIndex();
-        const item = this.results()[itemIndex];
+        const item = this.results()[this.selectedIndex()];
         if (item && isMagnifyLoginItem(item) && item.username) {
-          void navigator.clipboard.writeText(item.username);
-          this.completingAction.set({ actionId: "magnifyLoginItem-copyUsername", itemIndex });
-          setTimeout(() => this.completingAction.set(null), 1500);
+          void navigator.clipboard
+            .writeText(item.username)
+            .then(() => this.commandService.dismiss());
         }
       },
     ],
     [
+      "magnifyLoginItem-copyTotp",
+      () => this.copyAndDismiss(isMagnifyLoginItem, (item) => this.commandService.copyTotp(item)),
+    ],
+    [
       "magnifyCardItem-copyCardNumber",
       () =>
-        this.copyAndIndicate(isMagnifyCardItem, "magnifyCardItem-copyCardNumber", (item) =>
-          this.commandService.copyCardNumber(item),
-        ),
+        this.copyAndDismiss(isMagnifyCardItem, (item) => this.commandService.copyCardNumber(item)),
     ],
     [
       "magnifyCardItem-copyCardCode",
       () =>
-        this.copyAndIndicate(isMagnifyCardItem, "magnifyCardItem-copyCardCode", (item) =>
-          this.commandService.copyCardCode(item),
-        ),
+        this.copyAndDismiss(isMagnifyCardItem, (item) => this.commandService.copyCardCode(item)),
     ],
     [
       "magnifyCardItem-copyCardExpiration",
       () =>
-        this.copyAndIndicate(isMagnifyCardItem, "magnifyCardItem-copyCardExpiration", (item) =>
+        this.copyAndDismiss(isMagnifyCardItem, (item) =>
           this.commandService.copyCardExpiration(item),
         ),
     ],
@@ -187,6 +184,12 @@ export class SearchBarComponent implements AfterViewInit {
       if (action.magnifyItemType !== null && action.magnifyItemType !== selectedItemType) {
         continue;
       }
+      if (
+        action.requiresTotp &&
+        !(selectedItem != null && isMagnifyLoginItem(selectedItem) && selectedItem.hasTotp)
+      ) {
+        continue;
+      }
       for (const combination of action.shortcuts) {
         if (this.matchesShortcut(event, combination)) {
           event.preventDefault();
@@ -199,9 +202,10 @@ export class SearchBarComponent implements AfterViewInit {
 
   onItemSelected(item: MagnifySearchResultItem): void {
     if (isMagnifyLoginItem(item)) {
-      void this.commandService.copyPassword(item).then((password) => {
+      void this.commandService.copyPassword(item).then(async (password) => {
         if (password) {
-          void navigator.clipboard.writeText(password);
+          await navigator.clipboard.writeText(password);
+          this.commandService.dismiss();
         }
       });
     }

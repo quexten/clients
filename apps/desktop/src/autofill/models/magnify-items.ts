@@ -22,6 +22,7 @@ export type MagnifyLoginItem = {
   name: string;
   username: string;
   iconUrl: string | null;
+  hasTotp: boolean;
 };
 
 /*

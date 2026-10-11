@@ -34,6 +34,9 @@ const ipc = {
   focusBitwarden: (): void => {
     ipcRenderer.send(MAGNIFY_IPC_CHANNELS.MAGNIFY_FOCUS_BITWARDEN);
   },
+  dismiss: (): void => {
+    ipcRenderer.send(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS);
+  },
 };
 
 contextBridge.exposeInMainWorld("ipc", ipc);

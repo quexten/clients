@@ -1,6 +1,6 @@
 import * as path from "path";
 
-import { ipcMain, globalShortcut, BrowserWindow, screen } from "electron";
+import { app, ipcMain, globalShortcut, BrowserWindow, screen } from "electron";
 
 import { LogService } from "@bitwarden/logging";
 
@@ -63,6 +63,11 @@ export class MainDesktopMagnifyService {
       this.windowMain.win.focus();
     });
 
+    // Magnify render process -> main process: dismiss Magnify and return focus to the previous app
+    ipcMain.on(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS, () => {
+      this.dismissMagnify();
+    });
+
     // Close the magnify window if the main BW window is closed
     this.windowMain.win.on("closed", () => {
       this.magnifyWindow?.close();
@@ -84,6 +89,7 @@ export class MainDesktopMagnifyService {
     ipcMain.removeHandler(MAGNIFY_IPC_CHANNELS.MAGNIFY_COMMAND);
     ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_RESIZE);
     ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_FOCUS_BITWARDEN);
+    ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS);
 
     // Also unregister the global shortcut
     this.disableMagnify();
@@ -110,7 +116,7 @@ export class MainDesktopMagnifyService {
   private async triggerMagnify() {
     // if already open: close the window
     if (this.magnifyWindow != null && !this.magnifyWindow.isDestroyed()) {
-      this.magnifyWindow.close();
+      this.dismissMagnify();
       return;
     }
 
@@ -118,6 +124,7 @@ export class MainDesktopMagnifyService {
     const win = new BrowserWindow({
       width: 640,
       height: 56,
+      show: false,
       frame: false,
       transparent: true,
       alwaysOnTop: true,
@@ -141,7 +148,7 @@ export class MainDesktopMagnifyService {
     // close the window when ESC pressed
     win.webContents.on("before-input-event", (_event, input) => {
       if (input.type === "keyDown" && input.key === "Escape") {
-        win.close();
+        this.dismissMagnify();
       }
     });
 
@@ -151,6 +158,16 @@ export class MainDesktopMagnifyService {
 
     // Position magnify window after loading to ensure it's properly rendered
     this.positionMagnifyWindow(win);
+
+    // Show the window and steal keyboard focus from the previously-focused app (e.g. Chrome)
+    if (process.platform === "darwin") {
+      app.show();
+    }
+    win.show();
+    win.focus();
+    if (process.platform === "darwin") {
+      app.focus({ steal: true });
+    }
   }
 
   /*
@@ -168,6 +185,26 @@ export class MainDesktopMagnifyService {
     const y = targetDisplay.bounds.y + (targetDisplay.bounds.height - 56) / 4;
 
     win.setPosition(Math.round(x), Math.round(y));
+  }
+
+  /*
+    Closes the magnify window and returns focus to the previously-focused app.
+    On macOS, when the main Bitwarden window is hidden (running in the background),
+    deactivating the app via app.hide() makes macOS reactivate the app that had
+    focus before Magnify opened.
+  */
+  private dismissMagnify(): void {
+    if (this.magnifyWindow != null && !this.magnifyWindow.isDestroyed()) {
+      this.magnifyWindow.close();
+    }
+    if (
+      process.platform === "darwin" &&
+      this.windowMain.win != null &&
+      !this.windowMain.win.isDestroyed() &&
+      !this.windowMain.win.isVisible()
+    ) {
+      app.hide();
+    }
   }
 
   /*

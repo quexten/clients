@@ -27,6 +27,7 @@ export const MagnifyCommand = Object.freeze({
   GetAuthStatus: "GetAuthStatus",
   SearchVault: "SearchVault",
   CopyPassword: "CopyPassword",
+  CopyTotp: "CopyTotp",
   ViewInBitwarden: "ViewInBitwarden",
   CopyCardNumber: "CopyCardNumber",
   CopyCardExpiration: "CopyCardExpiration",
@@ -63,6 +64,7 @@ export type MagnifyCommandRequest =
   | { type: typeof MagnifyCommand.GetAuthStatus }
   | { type: typeof MagnifyCommand.SearchVault; input: string }
   | { type: typeof MagnifyCommand.CopyPassword; itemId: string }
+  | { type: typeof MagnifyCommand.CopyTotp; itemId: string }
   | { type: typeof MagnifyCommand.ViewInBitwarden; itemId: string }
   | { type: typeof MagnifyCommand.CopyCardNumber; itemId: string }
   | { type: typeof MagnifyCommand.CopyCardExpiration; itemId: string; format?: string }
@@ -76,6 +78,7 @@ export type MagnifyCommandResponse =
   | { type: typeof MagnifyCommand.SearchVault; results: MagnifySearchResultItem[] }
   | { type: typeof MagnifyCommand.GetAuthStatus; status: MagnifyAuthStatus }
   | { type: typeof MagnifyCommand.CopyPassword; result: string }
+  | { type: typeof MagnifyCommand.CopyTotp; result: string }
   | { type: typeof MagnifyCommand.ViewInBitwarden }
   | { type: typeof MagnifyCommand.CopyCardNumber; result: string }
   | { type: typeof MagnifyCommand.CopyCardExpiration; result: string }

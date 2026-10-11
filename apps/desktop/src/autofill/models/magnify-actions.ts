@@ -16,6 +16,8 @@ import { MagnifyItem } from "./magnify-items";
                      or null if the action has no keyboard shortcut
   - completionText:  the text briefly shown in the UI after the action completes,
                      or null if no completion feedback is shown
+  - requiresTotp:    true if this action should only be offered for login items
+                     that actually have a TOTP code
 */
 export type MagnifyAction = {
   id: string;
@@ -26,6 +28,7 @@ export type MagnifyAction = {
   description: string;
   shortcuts: string[][] | null;
   completionText: string | null;
+  requiresTotp?: boolean;
 };
 
 /*
@@ -63,6 +66,17 @@ export const MAGNIFY_ACTIONS: MagnifyAction[] = [
     description: "Copy username",
     shortcuts: [["CommandOrControl", "Shift", "C"]],
     completionText: "✓ Copied",
+  },
+  {
+    id: "magnifyLoginItem-copyTotp",
+    magnifyItemType: MagnifyItem.Login,
+    labelMacOs: "⌥⌘T",
+    labelWindows: "Ctrl+Alt+T",
+    labelLinux: "Ctrl+Alt+T",
+    description: "Copy TOTP",
+    shortcuts: [["CommandOrControl", "Alt", "T"]],
+    completionText: "✓ Copied",
+    requiresTotp: true,
   },
   {
     id: "magnifyCardItem-copyCardNumber",

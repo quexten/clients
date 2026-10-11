@@ -128,6 +128,7 @@ import {
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { COPY_CLICK_LISTENER, DialogService, ToastService } from "@bitwarden/components";
 import {
   DEFAULT_FEATURE_FLAG_OVERRIDE_MENU_ENABLED,
@@ -703,6 +704,8 @@ const safeProviders: SafeProvider[] = [
       CipherServiceAbstraction,
       EnvironmentService,
       DomainSettingsService,
+      BillingAccountProfileStateService,
+      TotpService,
       MagnifyNavigationService,
     ],
   }),
