@@ -51,6 +51,7 @@ import { DesktopAutofillSettingsService } from "./autofill/services/desktop-auto
 import { DesktopBiometricsService } from "./key-management/biometrics/desktop.biometrics.service";
 import { MainBiometricsIPCListener } from "./key-management/biometrics/main-biometrics-ipc.listener";
 import { MainBiometricsService } from "./key-management/biometrics/main-biometrics.service";
+import { MainKeyManagementIpcListener } from "./key-management/unlock/main-key-management-ipc.listener";
 import { MenuMain } from "./main/menu/menu.main";
 import { AUTOSTART_FLAG, MessagingMain } from "./main/messaging.main";
 import { NativeMessagingMain } from "./main/native-messaging.main";
@@ -65,6 +66,7 @@ import { flagEnabled } from "./platform/flags";
 import { ClipboardMain } from "./platform/main/clipboard.main";
 import { DesktopCredentialStorageListener } from "./platform/main/desktop-credential-storage-listener";
 import { ElectronStorageService } from "./platform/main/electron-storage.service";
+import { MainSecureStorageService } from "./platform/main/main-secure-storage.service";
 import { SafeShell } from "./platform/main/safe-shell.main";
 import { CachedBackend } from "./platform/main/storage/cached-backend";
 import { ElectronStoreBackend } from "./platform/main/storage/electron-store-backend";
@@ -76,6 +78,7 @@ import { I18nMainService } from "./platform/services/i18n.main.service";
 import { IpcMainService } from "./platform/services/ipc.main.service";
 import { ElectronMainMessagingService } from "./services/electron-main-messaging.service";
 import { MainSdkLoadService } from "./services/main-sdk-load-service";
+import { MainServiceContainer } from "./services/main-service-container";
 
 export class Main {
   logService: ElectronLogMainService;
@@ -113,6 +116,7 @@ export class Main {
   mainDesktopAutotypeService: MainDesktopAutotypeService;
   ssoCookieMain: SsoCookieMain;
   ipcService: IpcService;
+  serviceContainer: MainServiceContainer;
 
   constructor() {
     // Set paths for portable builds
@@ -169,6 +173,7 @@ export class Main {
     this.logService = new ElectronLogMainService(null, app.getPath("userData"), flightRecorder);
 
     this.storageService = new ElectronStorageService(storageBackend);
+    const secureStorageService = new MainSecureStorageService(app.getName());
     this.memoryStorageService = new MemoryStorageService();
     this.memoryStorageForStateProviders = new SerializedMemoryStorageService();
     const storageServiceProvider = new StorageServiceProvider(
@@ -337,12 +342,48 @@ export class Main {
       this.windowMain,
     );
 
+    this.serviceContainer = new MainServiceContainer(
+      this.logService,
+      this.i18nService,
+      this.storageService,
+      secureStorageService,
+      storageServiceProvider,
+      singleUserStateProvider,
+      globalStateProvider,
+      stateProvider,
+      accountService,
+      this.environmentService,
+      this.messagingService,
+      this.biometricsService,
+      biometricStateService,
+      this.ipcService,
+      this.sharedUnlockSettingsService,
+      this.shell,
+    );
+
+    new MainKeyManagementIpcListener(
+      this.serviceContainer.unlockService,
+      this.serviceContainer.keyService,
+      accountService,
+      this.serviceContainer.stateProvider,
+      this.logService,
+    ).init();
+
     this.desktopAutofillSettingsService = new DesktopAutofillSettingsService(stateProvider);
 
     this.clipboardMain = new ClipboardMain();
     this.clipboardMain.init();
 
-    this.sshAgentService = new MainSshAgentService(this.logService, this.messagingService);
+    this.sshAgentService = new MainSshAgentService(
+      this.logService,
+      this.messagingService,
+      this.serviceContainer.cipherService,
+      this.serviceContainer.authService,
+      accountService,
+      this.desktopSettingsService,
+      this.i18nService,
+      this.windowMain,
+    );
 
     new EphemeralValueStorageService();
 
@@ -371,6 +412,7 @@ export class Main {
     app.on("will-quit", () => {
       this.mainDesktopAutotypeMvpService.dispose();
       this.mainDesktopAutotypeService.dispose();
+      this.sshAgentService.dispose();
       this.storageService.dispose();
     });
   }
@@ -459,16 +501,25 @@ export class Main {
           this.processDeepLink([url]);
         });
 
-        // Handle window visibility events
-        this.windowMain.win.on("hide", () => {
-          this.messagingService.send("windowHidden");
-        });
-        this.windowMain.win.on("minimize", () => {
-          this.messagingService.send("windowHidden");
-        });
+        // Handle window visibility events (the window may not exist when booting headless).
+        if (this.windowMain.win != null) {
+          this.windowMain.win.on("hide", () => {
+            this.messagingService.send("windowHidden");
+          });
+          this.windowMain.win.on("minimize", () => {
+            this.messagingService.send("windowHidden");
+          });
+        }
 
         await this.sdkLoadService.loadAndInit();
         await this.ipcService.init();
+
+        // Main owns the session: the SSH agent, never-lock auto-unlock, biometric unlocks, and the
+        // shared-unlock peer.
+        this.sshAgentService.init();
+        await this.serviceContainer.autoUnlock();
+        await this.biometricsService.setUnlockService(this.serviceContainer.unlockService);
+        await this.serviceContainer.sharedUnlockPeerService.start();
       },
       (e: any) => {
         this.logService.error("Error while running migrations:", e);

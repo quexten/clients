@@ -106,6 +106,7 @@ export class WindowMain {
   win: BrowserWindow;
   isQuitting = false;
   isClosing = false;
+  rendererTornDown = false;
   private isReloading = false;
 
   private windowStateChangeTimer: NodeJS.Timeout;
@@ -228,11 +229,8 @@ export class WindowMain {
               // icon or terminal while already running). Always bring us to the foreground.
               if (this.focusWindowCallback != null) {
                 void this.focusWindowCallback();
-              } else if (this.win != null) {
-                if (this.win.isMinimized() || !this.win.isVisible()) {
-                  this.win.show();
-                }
-                this.win.focus();
+              } else {
+                void this.ensureRenderer();
               }
               if (isWindows() || isLinux()) {
                 if (this.argvCallback != null) {
@@ -287,7 +285,9 @@ export class WindowMain {
             }
           }
 
-          await this.createWindow("full-app", show);
+          if (show) {
+            await this.createWindow("full-app", true);
+          }
           resolve();
 
           if (this.argvCallback != null) {
@@ -298,8 +298,9 @@ export class WindowMain {
         // Quit when all windows are closed.
         app.on("window-all-closed", () => {
           // On OS X it is common for applications and their menu bar
-          // to stay active until the user quits explicitly with Cmd + Q
-          if (!isMac() || this.isQuitting || isMacAppStore()) {
+          // to stay active until the user quits explicitly with Cmd + Q.
+          // A renderer torn down for background operation must not quit the main process.
+          if (this.isQuitting || isMacAppStore() || (!isMac() && !this.rendererTornDown)) {
             app.quit();
           }
         });
@@ -309,11 +310,8 @@ export class WindowMain {
           // dock icon is clicked and there are no other windows open.
           if (this.focusWindowCallback != null) {
             await this.focusWindowCallback();
-          } else if (this.win == null) {
-            await this.createWindow();
           } else {
-            // Show the window when clicking on Dock icon
-            this.win.show();
+            await this.ensureRenderer();
           }
         });
       } catch (e) {
@@ -330,6 +328,35 @@ export class WindowMain {
       applyMainWindowStyles(this.win, this.windowStates[mainWindowSizeKey]);
       this.win.show();
     }
+  }
+
+  /**
+   * Destroys the renderer so the app runs with only the main process. The `close` handler set up
+   * by {@link TrayMain} lets this close proceed, and `window-all-closed` keeps the process alive
+   * while `rendererTornDown` is set.
+   */
+  destroyRenderer(): void {
+    if (this.win == null || this.win.isDestroyed()) {
+      return;
+    }
+    this.rendererTornDown = true;
+    this.win.close();
+  }
+
+  /**
+   * Ensures a live, visible renderer exists, recreating it (and, through the renderer's boot path,
+   * re-seeding its SDK) if it was torn down.
+   */
+  async ensureRenderer(): Promise<void> {
+    if (this.win == null || this.win.isDestroyed()) {
+      await this.createWindow();
+      return;
+    }
+    if (this.win.isMinimized()) {
+      this.win.restore();
+    }
+    this.win.show();
+    this.win.focus();
   }
 
   private getWindowUrl(partial: Partial<url.UrlObject> = {}): string {
@@ -449,6 +476,7 @@ export class WindowMain {
     template: "full-app" | "modal-app" = "full-app",
     show: boolean = true,
   ): Promise<void> {
+    this.rendererTornDown = false;
     this.windowStates[mainWindowSizeKey] = await this.getWindowState(
       this.defaultWidth,
       this.defaultHeight,

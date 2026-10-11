@@ -9,7 +9,6 @@ import { TokenService } from "@bitwarden/common/auth/abstractions/token.service"
 import { TwoFactorService } from "@bitwarden/common/auth/two-factor";
 import { EventUploadService as EventUploadServiceAbstraction } from "@bitwarden/common/dirt/event-logs";
 import { EventUploadService } from "@bitwarden/common/dirt/event-logs/services/event-upload.service";
-import { SharedUnlockPeerService } from "@bitwarden/common/key-management/shared-unlock";
 import { DefaultVaultTimeoutService } from "@bitwarden/common/key-management/vault-timeout";
 import { I18nService as I18nServiceAbstraction } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService as PlatformUtilsServiceAbstraction } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -19,11 +18,10 @@ import { ServerNotificationsService } from "@bitwarden/common/platform/server-no
 import { ContainerService } from "@bitwarden/common/platform/services/container.service";
 import { MigrationRunner } from "@bitwarden/common/platform/services/migration-runner";
 import { UserId } from "@bitwarden/common/types/guid";
-import { BiometricsService, KeyService as KeyServiceAbstraction } from "@bitwarden/key-management";
+import { KeyService as KeyServiceAbstraction } from "@bitwarden/key-management";
 // eslint-disable-next-line no-restricted-imports
 import { EncryptService, LegacyCompatKeyService } from "@bitwarden/legacy-crypto";
 import { LogService } from "@bitwarden/logging";
-import { UnlockService } from "@bitwarden/unlock";
 
 import { DesktopAutofillService } from "../../autofill/services/desktop-autofill.service";
 import { DesktopAutotypeMvpService } from "../../autofill/services/desktop-autotype-mvp.service";
@@ -34,6 +32,7 @@ import { ServerCommunicationConfigService } from "../../platform/services/server
 import { VersionService } from "../../platform/services/version.service";
 import { BiometricMessageHandlerService } from "../../services/biometric-message-handler.service";
 import { NativeMessagingService } from "../../services/native-messaging.service";
+import { SeedService } from "../../services/seed.service";
 
 import { UpdateRestartService } from "./update-restart.service";
 
@@ -51,9 +50,9 @@ export class InitService {
     private nativeMessagingService: NativeMessagingService,
     private themingService: AbstractThemingService,
     private encryptService: EncryptService,
-    private unlockService: UnlockService,
     private accountService: AccountService,
     private tokenService: TokenService,
+    private seedService: SeedService,
     private versionService: VersionService,
     private sshAgentService: SshAgentService,
     private autofillService: DesktopAutofillService,
@@ -61,9 +60,7 @@ export class InitService {
     private autotypeService: DesktopAutotypeService,
     private sdkLoadService: SdkLoadService,
     private ipcService: IpcService,
-    private sharedUnlockPeerService: SharedUnlockPeerService,
     private biometricMessageHandlerService: BiometricMessageHandlerService,
-    private biometricsService: BiometricsService,
     private legacyCompatKeyService: LegacyCompatKeyService,
     @Inject(DOCUMENT) private document: Document,
     private readonly migrationRunner: MigrationRunner,
@@ -77,7 +74,6 @@ export class InitService {
     return async () => {
       await this.sdkLoadService.loadAndInit();
       await this.ipcService.init();
-      await this.biometricsService.setUnlockService(this.unlockService);
       await this.sshAgentService.init();
       this.nativeMessagingService.init();
       await this.migrationRunner.waitForCompletion(); // Desktop will run migrations in the main process
@@ -86,19 +82,9 @@ export class InitService {
       const userIds = Object.keys(accounts) as UserId[];
       await this.tokenService.cleanupTokenStorage(userIds);
 
-      // For each acct, we must await the process of unlocking with the never-lock key
-      // if it is set, to avoid race conditions of any code trying to access the user key
-      // from mem. A failure to unlock one account leaves that account locked rather than
-      // failing app initialization for every other account.
-      await Promise.all(
-        userIds.map(async (userId) => {
-          try {
-            await this.unlockService.unlockWithAutoUnlockKey(userId);
-          } catch (e) {
-            this.logService.error("[InitService] Failed to auto-unlock user on startup", e);
-          }
-        }),
-      );
+      // Main owns the session and has already auto-unlocked any never-lock accounts. Re-seed the
+      // renderer's SDK from the unlocked state main reports.
+      await this.seedService.seed();
 
       await this.serverCommunicationConfigService.init();
       await this.vaultTimeoutService.init(true);
@@ -121,7 +107,6 @@ export class InitService {
       containerService.attachToGlobal(this.win);
       this.automationDriver.attachToGlobal(this.win);
 
-      await this.sharedUnlockPeerService.start();
       await this.biometricMessageHandlerService.init();
       await this.autofillService.init();
       await this.autotypeMvpService.init();
