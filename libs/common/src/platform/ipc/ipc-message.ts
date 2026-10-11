@@ -11,10 +11,8 @@ export interface ForwardedIpcMessage {
   originalSource: Source;
 }
 
-export interface SerializedOutgoingMessage extends Omit<
-  OutgoingMessage,
-  typeof Symbol.dispose | "free" | "payload"
-> {
+export interface SerializedOutgoingMessage
+  extends Omit<OutgoingMessage, typeof Symbol.dispose | "free" | "payload"> {
   payload: number[];
 }
 

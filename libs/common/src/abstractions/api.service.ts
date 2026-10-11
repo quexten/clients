@@ -124,7 +124,10 @@ export abstract class ApiService {
 
   abstract postIdentityToken(
     request:
-      PasswordTokenRequest | SsoTokenRequest | UserApiTokenRequest | WebAuthnLoginTokenRequest,
+      | PasswordTokenRequest
+      | SsoTokenRequest
+      | UserApiTokenRequest
+      | WebAuthnLoginTokenRequest,
   ): Promise<
     | IdentityTokenResponse
     | IdentityTwoFactorResponse

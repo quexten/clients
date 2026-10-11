@@ -1,5 +1,5 @@
 export default {
-  "*": "prettier --cache --ignore-unknown --write",
+  "*": "biome format --write --no-errors-on-unmatched",
   "*.ts": "eslint --cache --cache-strategy content --fix",
   "apps/desktop/desktop_native/**/*.rs": (stagedFiles) => {
     const relativeFiles = stagedFiles.map((f) =>

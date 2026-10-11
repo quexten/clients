@@ -45,5 +45,6 @@ export function getWebExtSender(message: unknown): chrome.runtime.MessageSender 
   }
 
   return (message as Record<symbol, unknown>)[WEB_EXT_SENDER] as
-    chrome.runtime.MessageSender | undefined;
+    | chrome.runtime.MessageSender
+    | undefined;
 }

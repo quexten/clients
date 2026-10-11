@@ -793,11 +793,13 @@ function createSeededVaultPopupListFiltersService(
   const collectionServiceMock = {
     decryptedCollections$: () => seededCollections$,
     getAllNested: () =>
-      seededCollections$.value.map((c): TreeNode<CollectionView> => ({
-        children: [],
-        node: c,
-        parent: null as any,
-      })),
+      seededCollections$.value.map(
+        (c): TreeNode<CollectionView> => ({
+          children: [],
+          node: c,
+          parent: null as any,
+        }),
+      ),
   } as any;
 
   const folderServiceMock = {

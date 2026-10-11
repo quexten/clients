@@ -15,7 +15,9 @@ const LOGIN_SESSION_TIMEOUT_LENGTH = 5 * 60 * 1000; // 5 minutes
 
 export const LOGIN_SESSION_EXPIRED = new CommandDefinition("loginSessionExpired");
 
-export class DefaultLoginStrategySessionTimeoutService implements LoginStrategySessionTimeoutService {
+export class DefaultLoginStrategySessionTimeoutService
+  implements LoginStrategySessionTimeoutService
+{
   private sessionTimeoutSubscription: Subscription | undefined;
 
   loginSessionTimeout$: Observable<void>;

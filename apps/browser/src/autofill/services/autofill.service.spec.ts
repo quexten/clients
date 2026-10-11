@@ -4888,11 +4888,7 @@ describe("AutofillService", () => {
       const formId = "changePasswordForm";
 
       const passwordTriple = (
-        opts: {
-          currentAc?: string | null;
-          middleAc?: string | null;
-          newAc?: string | null;
-        } = {},
+        opts: { currentAc?: string | null; middleAc?: string | null; newAc?: string | null } = {},
       ) => {
         const currentAc = opts.currentAc ?? "current-password";
         const middleAc = opts.middleAc !== undefined ? opts.middleAc : "off";

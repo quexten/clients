@@ -7,7 +7,8 @@ export interface AutofillUserVerificationCommand extends AutofillCommandDefiniti
 }
 
 export type AutofillUserVerificationParams =
-  WindowsAutofillUserVerificationParams | MacOsAutofillUserVerificationParams;
+  | WindowsAutofillUserVerificationParams
+  | MacOsAutofillUserVerificationParams;
 
 export type WindowsAutofillUserVerificationParams = {
   /** Base64 encoded bytes of the handle of the window to attach the prompt to. */

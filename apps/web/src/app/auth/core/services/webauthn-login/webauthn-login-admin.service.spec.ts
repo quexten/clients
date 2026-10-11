@@ -451,7 +451,10 @@ function createCredentialCreateOptions(): CredentialCreateOptionsView {
 function createDeviceResponse({
   prfEnabled = false,
   prfResult = false,
-}: { prfEnabled?: boolean; prfResult?: boolean } = {}): PublicKeyCredential {
+}: {
+  prfEnabled?: boolean;
+  prfResult?: boolean;
+} = {}): PublicKeyCredential {
   const credential = {
     id: "Y29yb2l1IHdhcyBoZXJl",
     rawId: new Uint8Array([0x74, 0x65, 0x73, 0x74]),
@@ -496,7 +499,9 @@ function createDeviceResponse({
 
 function getDeviceResponse({
   prfResult = false,
-}: { prfResult?: boolean } = {}): PublicKeyCredential {
+}: {
+  prfResult?: boolean;
+} = {}): PublicKeyCredential {
   const credential = {
     id: "Y29yb2l1IHdhcyBoZXJl",
     rawId: new Uint8Array([0x74, 0x65, 0x73, 0x74]),

@@ -234,9 +234,11 @@ export type EnhancedGuard<T> = ((obj: unknown) => obj is T) & {
  * });
  * ```
  */
-export function createValidator<T>(validators: {
-  [K in keyof T]: (value: unknown) => value is T[K];
-}): EnhancedGuard<T> {
+export function createValidator<T>(
+  validators: {
+    [K in keyof T]: (value: unknown) => value is T[K];
+  },
+): EnhancedGuard<T> {
   const keys = Object.keys(validators) as (keyof T)[];
 
   const guard = function (obj: unknown): obj is T {

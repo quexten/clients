@@ -11,7 +11,10 @@ import {
 } from "./vault-filter.type";
 
 export type VaultFilterType =
-  OrganizationFilter | CipherTypeFilter | FolderFilter | CollectionFilter;
+  | OrganizationFilter
+  | CipherTypeFilter
+  | FolderFilter
+  | CollectionFilter;
 
 export const VaultFilterLabel = {
   OrganizationFilter: "organizationFilter",

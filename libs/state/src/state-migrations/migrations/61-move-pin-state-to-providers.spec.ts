@@ -17,18 +17,18 @@ function preMigrationState() {
     },
     global_account_accounts: {
       // prettier-ignore
-      "AccountOne": {
+      AccountOne: {
         email: "account-one@email.com",
         name: "Account One",
       },
       // prettier-ignore
-      "AccountTwo": {
+      AccountTwo: {
         email: "account-two@email.com",
         name: "Account Two",
       },
     },
     // prettier-ignore
-    "AccountOne": {
+    AccountOne: {
       settings: {
         pinKeyEncryptedUserKey: "AccountOne_pinKeyEncryptedUserKeyPersistent",
         protectedPin: "AccountOne_userKeyEncryptedPin", // note the name change
@@ -40,7 +40,7 @@ function preMigrationState() {
       otherStuff: "otherStuff3",
     },
     // prettier-ignore
-    "AccountTwo": {
+    AccountTwo: {
       settings: {
         otherStuff: "otherStuff4",
       },
@@ -60,25 +60,25 @@ function postMigrationState() {
     },
     global_account_accounts: {
       // prettier-ignore
-      "AccountOne": {
+      AccountOne: {
         email: "account-one@email.com",
         name: "Account One",
       },
       // prettier-ignore
-      "AccountTwo": {
+      AccountTwo: {
         email: "account-two@email.com",
         name: "Account Two",
       },
     },
     // prettier-ignore
-    "AccountOne": {
+    AccountOne: {
       settings: {
         otherStuff: "otherStuff2",
       },
       otherStuff: "otherStuff3",
     },
     // prettier-ignore
-    "AccountTwo": {
+    AccountTwo: {
       settings: {
         otherStuff: "otherStuff4",
       },

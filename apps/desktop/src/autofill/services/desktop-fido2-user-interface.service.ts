@@ -115,7 +115,9 @@ function throwOnAbort<T>(signal: AbortSignal): MonoTypeOperatorFunction<T> {
     );
 }
 
-export class DesktopFido2UserInterfaceService implements Fido2UserInterfaceServiceAbstraction<NativeWindowObject> {
+export class DesktopFido2UserInterfaceService
+  implements Fido2UserInterfaceServiceAbstraction<NativeWindowObject>
+{
   constructor(
     private authService: AuthService,
     private cipherService: CipherService,

@@ -107,7 +107,8 @@ export class AccessRuleEditComponent {
 
   private readonly organizationId = this.route.snapshot.params.organizationId as OrganizationId;
   private readonly accessRuleId = this.route.snapshot.params.accessRuleId as
-    AccessRuleId | undefined;
+    | AccessRuleId
+    | undefined;
 
   protected readonly editing = this.accessRuleId != null;
   protected readonly durationOptions = ACCESS_RULE_DURATION_PRESETS;

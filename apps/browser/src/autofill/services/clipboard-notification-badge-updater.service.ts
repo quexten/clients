@@ -19,10 +19,9 @@ export class ClipboardNotificationBadgeUpdaterService {
     this.badgeService.setState(StateName, () => {
       return combineLatest({
         account: this.accountService.activeAccount$,
-        shouldShow:
-          this.autofillSettingsService.showClipboardSettingUpdateNotification$.pipe(
-            distinctUntilChanged(),
-          ),
+        shouldShow: this.autofillSettingsService.showClipboardSettingUpdateNotification$.pipe(
+          distinctUntilChanged(),
+        ),
       }).pipe(
         map(({ account, shouldShow }) => {
           if (!account || !shouldShow) {

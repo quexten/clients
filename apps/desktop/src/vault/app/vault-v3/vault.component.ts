@@ -687,8 +687,9 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
 
     /** Rows come from the route's scope under VFO1, and from the query-param filter otherwise. */
     const rowFilter$ = combineLatest([this.vfo1Foundation$, this.vaultScope$, filter$]).pipe(
-      map(([vfo1Foundation, scope, filter]): FilterFunction =>
-        vfo1Foundation ? (cipher) => cipherInScope(cipher, scope) : createFilterFunction(filter),
+      map(
+        ([vfo1Foundation, scope, filter]): FilterFunction =>
+          vfo1Foundation ? (cipher) => cipherInScope(cipher, scope) : createFilterFunction(filter),
       ),
     );
 

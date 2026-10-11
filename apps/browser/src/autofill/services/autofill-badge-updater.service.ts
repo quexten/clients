@@ -29,8 +29,9 @@ export class AutofillBadgeUpdaterService {
     this.badgeService.setState(StateName, (tab) => {
       return combineLatest({
         account: this.accountService.activeAccount$,
-        enableBadgeCounter:
-          this.badgeSettingsService.enableBadgeCounter$.pipe(distinctUntilChanged()),
+        enableBadgeCounter: this.badgeSettingsService.enableBadgeCounter$.pipe(
+          distinctUntilChanged(),
+        ),
         ciphers: ciphers$.pipe(delay(100)), // Delay to allow cipherService.getAllDecryptedForUrl to pick up changes
       }).pipe(
         mergeMap(async ({ account, enableBadgeCounter }) => {

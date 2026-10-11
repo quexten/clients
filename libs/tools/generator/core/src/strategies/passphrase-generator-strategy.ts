@@ -19,10 +19,9 @@ import { PASSPHRASE_SETTINGS } from "./storage";
  * @deprecated Legacy TS strategy. Generate passphrases through the SDK-backed
  * {@link CredentialGeneratorService.generate$} instead.
  */
-export class PassphraseGeneratorStrategy implements GeneratorStrategy<
-  PassphraseGenerationOptions,
-  PassphraseGeneratorPolicy
-> {
+export class PassphraseGeneratorStrategy
+  implements GeneratorStrategy<PassphraseGenerationOptions, PassphraseGeneratorPolicy>
+{
   /** instantiates the password generator strategy.
    *  @param legacy generates the passphrase
    *  @param stateProvider provides durable state

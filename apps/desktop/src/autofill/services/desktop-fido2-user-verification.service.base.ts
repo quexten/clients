@@ -17,7 +17,9 @@ import {
  * Runs the native `userVerification` command, leaving each platform to supply
  * the parameters and prompt text that its OS expects.
  */
-export abstract class DesktopFido2UserVerificationServiceBase implements DesktopFido2UserVerificationService {
+export abstract class DesktopFido2UserVerificationServiceBase
+  implements DesktopFido2UserVerificationService
+{
   /** Prefix identifying this implementation in logs. */
   protected abstract readonly logPrefix: string;
 

@@ -626,11 +626,7 @@ describe("LockComponent", () => {
       ],
     ])(
       "should set active unlock option to $1 when %s",
-      async (
-        description: string,
-        unlockOptions: UnlockOptions,
-        expectedOption: UnlockOptionValue,
-      ) => {
+      async (description: string, unlockOptions: UnlockOptions, expectedOption: UnlockOptionValue) => {
         await component["setDefaultActiveUnlockOption"](unlockOptions);
 
         expect(component.activeUnlockOption).toBe(expectedOption);

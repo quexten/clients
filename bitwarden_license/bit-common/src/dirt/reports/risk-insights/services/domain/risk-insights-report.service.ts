@@ -151,11 +151,13 @@ export class RiskInsightsReportService {
     }
 
     // No previous applications, return all as non-critical with no review date
-    return reports.map((report): OrganizationReportApplication => ({
-      applicationName: report.applicationName,
-      isCritical: false,
-      reviewedDate: null,
-    }));
+    return reports.map(
+      (report): OrganizationReportApplication => ({
+        applicationName: report.applicationName,
+        isCritical: false,
+        reviewedDate: null,
+      }),
+    );
   }
 
   /**

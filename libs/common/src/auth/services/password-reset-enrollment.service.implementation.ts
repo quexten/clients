@@ -24,7 +24,9 @@ import { PasswordResetEnrollmentServiceAbstraction } from "../abstractions/passw
 
 import { getUserId } from "./account.service";
 
-export class PasswordResetEnrollmentServiceImplementation implements PasswordResetEnrollmentServiceAbstraction {
+export class PasswordResetEnrollmentServiceImplementation
+  implements PasswordResetEnrollmentServiceAbstraction
+{
   constructor(
     protected organizationApiService: OrganizationApiServiceAbstraction,
     protected accountService: AccountService,

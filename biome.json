@@ -1,0 +1,43 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!apps/browser/src/_locales/**",
+      "!apps/browser/src/safari/**",
+      "!apps/desktop/src/locales/**",
+      "!apps/desktop/dist-safari/**",
+      "!apps/desktop/desktop_native/**",
+      "!apps/cli/src/locales/**",
+      "!apps/cli/.github/**",
+      "!apps/web/.github/**",
+      "!apps/web/src/404/bootstrap.min.css",
+      "!apps/web/src/locales/**",
+      "!libs/.github/**",
+      "!.github/workflows/**",
+      "!libs/common/src/types/deep-jsonify.ts"
+    ]
+  },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 100,
+    "indentStyle": "space",
+    "indentWidth": 2
+  }
+}
