@@ -748,12 +748,12 @@ describe("SshAgentService – sign request authorization", () => {
     expect(mockLoginRequest).toHaveBeenCalled();
   });
 
-  it("does not show an OS notification when no authorization is required", async () => {
+  it("shows an OS notification even when no authorization is required", async () => {
     promptBehaviorSubject.next(SshAgentPromptType.Never);
     sendSignRequest();
     await flush();
 
-    expect(mockLoginRequest).not.toHaveBeenCalled();
+    expect(mockLoginRequest).toHaveBeenCalled();
   });
 
   it("Always: shows dialog and denies when user rejects", async () => {
