@@ -13,6 +13,7 @@ import {
   AutomationBiometricMessage,
   AutomationBiometricRequest,
 } from "./biometrics/automation-biometric-message";
+import { SeedResponse, UnlockRequest, UnlockResponse } from "./unlock/unlock-ipc.types";
 
 const biometric = {
   authenticateWithBiometrics: (): Promise<boolean> =>
@@ -99,7 +100,15 @@ const automation = {
   },
 };
 
+// Unlock / session-state surface, owned by the main process.
+const session = {
+  requestSeed: (): Promise<SeedResponse> => ipcRenderer.invoke("keyManagement.requestSeed"),
+  unlock: (request: UnlockRequest): Promise<UnlockResponse> =>
+    ipcRenderer.invoke("keyManagement.unlock", request),
+};
+
 export default {
   biometric,
   automation,
+  session,
 };

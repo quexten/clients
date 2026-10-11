@@ -120,11 +120,6 @@ import { DefaultSdkLoadService } from "@bitwarden/common/platform/services/sdk/d
 import { NoopSdkClientFactory } from "@bitwarden/common/platform/services/sdk/noop-sdk-client-factory";
 import { NoopSdkLoadService } from "@bitwarden/common/platform/services/sdk/noop-sdk-load.service";
 import { SystemService } from "@bitwarden/common/platform/services/system.service";
-import {
-  ActiveUserStateProvider,
-  GlobalStateProvider,
-  StateProvider,
-} from "@bitwarden/common/platform/state";
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
@@ -160,6 +155,7 @@ import {
   WebCryptoFunctionService,
 } from "@bitwarden/legacy-crypto";
 import { FlightRecorderLogRecorderService } from "@bitwarden/logging-angular";
+import { ActiveUserStateProvider, GlobalStateProvider, StateProvider } from "@bitwarden/state";
 import { SerializedMemoryStorageService } from "@bitwarden/storage-core";
 import {
   SHARE_ITEM_PRESENTER,
@@ -202,6 +198,7 @@ import { DesktopBiometricsService } from "../../key-management/biometrics/deskto
 import { RendererBiometricsService } from "../../key-management/biometrics/renderer-biometrics.service";
 import { DesktopLockComponentService } from "../../key-management/lock/services/desktop-lock-component.service";
 import { DesktopSessionTimeoutTypeService } from "../../key-management/session-timeout/services/desktop-session-timeout-type.service";
+import { RendererUnlockService } from "../../key-management/unlock/renderer-unlock.service";
 import { flagEnabled } from "../../platform/flags";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { ElectronLogRendererService } from "../../platform/services/electron-log.renderer.service";
@@ -229,6 +226,7 @@ import { DesktopDeviceManagementComponentService } from "../../services/desktop-
 import { DuckDuckGoMessageHandlerService } from "../../services/duckduckgo-message-handler.service";
 import { EncryptedMessageHandlerService } from "../../services/encrypted-message-handler.service";
 import { NativeMessagingService } from "../../services/native-messaging.service";
+import { SeedService } from "../../services/seed.service";
 import { DesktopShareItemPresenter } from "../tools/share-item/desktop-share-item.presenter";
 
 import { DesktopFileDownloadService } from "./desktop-file-download.service";
@@ -472,6 +470,13 @@ const safeProviders: SafeProvider[] = [
     useClass: DefaultSharedUnlockSettingsService,
     deps: [StateProvider],
   }),
+  // Main owns the session; the renderer forwards every unlock over IPC and re-seeds its SDK.
+  safeProvider({
+    provide: UnlockService,
+    useClass: RendererUnlockService,
+    deps: [StateProvider, MessageListener],
+  }),
+  safeProvider(SeedService),
   safeProvider({
     provide: SharedUnlockPeerService,
     useClass: DefaultSharedUnlockPeerService,

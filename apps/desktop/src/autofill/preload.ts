@@ -12,29 +12,9 @@ import {
 import { MagnifyCommandRequest, MagnifyCommandResponse } from "./models/magnify-commands";
 
 const sshAgent = {
-  init: async () => {
-    await ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.INIT);
-  },
-  replace: (keys: { name: string; privateKey: string; cipherId: string }[]): Promise<void> =>
-    ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.REPLACE, keys),
   signRequestResponse: async (requestId: number, accepted: boolean) => {
     await ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.SIGN_REQUEST_RESPONSE, { requestId, accepted });
   },
-  listRequestResponse: async (requestId: number, accepted: boolean) => {
-    await ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.LIST_KEYS_RESPONSE, { requestId, accepted });
-  },
-  // The address (unix socket path or Windows named pipe) SSH clients must connect to.
-  getSocketAddress: (): Promise<string> =>
-    ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.GET_SOCKET_ADDRESS),
-  // Whether SSH clients on this machine already reach the Bitwarden agent.
-  isConfigured: (): Promise<boolean> => ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.IS_CONFIGURED),
-  // Configures the machine so that SSH clients reach the Bitwarden agent.
-  applyConfiguration: (): Promise<void> =>
-    ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.APPLY_CONFIGURATION),
-  isLoaded(): Promise<boolean> {
-    return ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.IS_LOADED);
-  },
-  stop: async () => ipcRenderer.invoke(SSH_AGENT_IPC_CHANNELS.STOP),
 };
 
 // MVP, delete with PM-41067

@@ -91,12 +91,12 @@ export class TrayMain {
     });
 
     win.on("close", async (e: Event) => {
-      if (this.windowMain.isQuitting) {
+      if (this.windowMain.isQuitting || this.windowMain.rendererTornDown) {
         return;
       }
 
       if (await firstValueFrom(this.desktopSettingsService.runInBackground$)) {
-        // Keep running in the background: closing the window hides it to the tray.
+        // Keep running in the background: tear the renderer down instead of hiding it.
         e.preventDefault();
         this.hideToTray();
       } else {
@@ -122,9 +122,7 @@ export class TrayMain {
 
   hideToTray() {
     this.showTray();
-    if (this.windowMain.win != null) {
-      this.windowMain.win.hide();
-    }
+    this.windowMain.destroyRenderer();
     if (this.isDarwin()) {
       this.hideDock();
     }
@@ -140,17 +138,7 @@ export class TrayMain {
       app.show();
     }
 
-    if (this.windowMain.win == null) {
-      // On macOS, closing the window via the red button destroys the BrowserWindow instance.
-      await this.windowMain.createWindow();
-      this.windowMain.win.show();
-    } else {
-      if (this.windowMain.win.isMinimized()) {
-        this.windowMain.win.restore();
-      }
-      this.windowMain.show();
-      this.windowMain.win.focus();
-    }
+    await this.windowMain.ensureRenderer();
 
     if (this.isDarwin()) {
       this.showDock();
@@ -203,6 +191,9 @@ export class TrayMain {
     this.windowMain.isQuitting = true;
     if (this.windowMain.win != null) {
       this.windowMain.win.close();
+    } else {
+      // The renderer was already torn down, so there is no window whose close would trigger quit.
+      app.quit();
     }
   }
 
