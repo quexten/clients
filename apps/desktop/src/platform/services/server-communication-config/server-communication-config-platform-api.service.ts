@@ -24,7 +24,9 @@ export const SSO_COOKIE_VENDOR_CALLBACK_COMMAND = new CommandDefinition<{ urlStr
  * - Returns undefined on timeout/cancellation (not error)
  *
  */
-export class ServerCommunicationConfigPlatformApiService implements ServerCommunicationConfigPlatformApi {
+export class ServerCommunicationConfigPlatformApiService
+  implements ServerCommunicationConfigPlatformApi
+{
   // Tracks the hostname and shared promise for the full flow (dialog + callback).
   // Used for deduplication: a second call for the same hostname returns this promise directly.
   private pendingHostname: string | null = null;

@@ -6,10 +6,9 @@ import { LOCAL_USER_DATA_KEY } from "../platform/services/key-state/local-user-d
 import { SdkRecordMapper } from "../platform/services/sdk/client-managed-state";
 import { UserKeyDefinition } from "../platform/state";
 
-export class LocalUserDataKeyRecordMapper implements SdkRecordMapper<
-  LocalUserDataKey,
-  LocalUserDataKeyState
-> {
+export class LocalUserDataKeyRecordMapper
+  implements SdkRecordMapper<LocalUserDataKey, LocalUserDataKeyState>
+{
   userKeyDefinition(): UserKeyDefinition<Record<string, LocalUserDataKey>> {
     return LOCAL_USER_DATA_KEY;
   }

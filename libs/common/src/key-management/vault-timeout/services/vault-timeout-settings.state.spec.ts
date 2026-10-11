@@ -9,10 +9,10 @@ describe.each([
   [VAULT_TIMEOUT, 5],
 ])(
   "deserializes state key definitions",
-  (
-    keyDefinition: UserKeyDefinition<VaultTimeoutAction> | UserKeyDefinition<VaultTimeout>,
-    state: VaultTimeoutAction | VaultTimeout | boolean,
-  ) => {
+  (keyDefinition: UserKeyDefinition<VaultTimeoutAction> | UserKeyDefinition<VaultTimeout>, state:
+    | VaultTimeoutAction
+    | VaultTimeout
+    | boolean) => {
     function getTypeDescription(value: any): string {
       if (Array.isArray(value)) {
         return "array";

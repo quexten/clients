@@ -61,7 +61,8 @@ import { IpcListenerBindFn } from "../models/ipc-handler.type";
 import type { NativeWindowObject } from "./desktop-fido2-user-interface.service";
 
 type NativeCredentialSyncFeatureFlag =
-  typeof FeatureFlag.MacOsNativeCredentialSync | typeof FeatureFlag.WindowsNativeCredentialSync;
+  | typeof FeatureFlag.MacOsNativeCredentialSync
+  | typeof FeatureFlag.WindowsNativeCredentialSync;
 
 @Injectable()
 export class DesktopAutofillService implements OnDestroy {

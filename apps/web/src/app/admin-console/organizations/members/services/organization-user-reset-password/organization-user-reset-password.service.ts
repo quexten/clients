@@ -48,10 +48,13 @@ export type RecoverAccountRequest = {
 @Injectable({
   providedIn: "root",
 })
-export class OrganizationUserResetPasswordService implements UserKeyRotationKeyRecoveryProvider<
-  OrganizationUserResetPasswordWithIdRequest,
-  OrganizationUserResetPasswordEntry
-> {
+export class OrganizationUserResetPasswordService
+  implements
+    UserKeyRotationKeyRecoveryProvider<
+      OrganizationUserResetPasswordWithIdRequest,
+      OrganizationUserResetPasswordEntry
+    >
+{
   constructor(
     private keyService: KeyService,
     private encryptService: EncryptService,

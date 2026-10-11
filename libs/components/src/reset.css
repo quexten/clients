@@ -1,7 +1,7 @@
 /**
  * Reset styles to be consistent with Bootstrap reset
  * Reassess when Bootstrap is removed and Tailwind preflight is added
-*/
+ */
 
 fieldset {
   min-width: 0;

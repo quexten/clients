@@ -17,10 +17,9 @@ import { PASSWORD_SETTINGS } from "./storage";
  * @deprecated Legacy TS strategy. Generate passwords through the SDK-backed
  * {@link CredentialGeneratorService.generate$} instead.
  */
-export class PasswordGeneratorStrategy implements GeneratorStrategy<
-  PasswordGenerationOptions,
-  PasswordGeneratorPolicy
-> {
+export class PasswordGeneratorStrategy
+  implements GeneratorStrategy<PasswordGenerationOptions, PasswordGeneratorPolicy>
+{
   /** instantiates the password generator strategy.
    *  @param legacy generates the password
    */

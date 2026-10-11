@@ -14,10 +14,9 @@ export type DialogCloseRef = {
   closed: boolean;
 };
 
-export abstract class DialogRef<R = unknown, C = unknown> implements Pick<
-  CdkDialogRefBase<R, C>,
-  "close" | "closed" | "disableClose" | "componentInstance"
-> {
+export abstract class DialogRef<R = unknown, C = unknown>
+  implements Pick<CdkDialogRefBase<R, C>, "close" | "closed" | "disableClose" | "componentInstance">
+{
   abstract readonly isDrawer?: boolean;
 
   // --- From CdkDialogRefBase ---

@@ -67,4 +67,13 @@ type Misc =
   | "misc.other";
 
 export type EnpassItemTemplate =
-  Login | CreditCard | Identity | Note | Password | Finance | License | Travel | Computer | Misc;
+  | Login
+  | CreditCard
+  | Identity
+  | Note
+  | Password
+  | Finance
+  | License
+  | Travel
+  | Computer
+  | Misc;

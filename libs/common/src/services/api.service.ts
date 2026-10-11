@@ -160,7 +160,10 @@ export class ApiService implements ApiServiceAbstraction {
 
   async postIdentityToken(
     request:
-      UserApiTokenRequest | PasswordTokenRequest | SsoTokenRequest | WebAuthnLoginTokenRequest,
+      | UserApiTokenRequest
+      | PasswordTokenRequest
+      | SsoTokenRequest
+      | WebAuthnLoginTokenRequest,
   ): Promise<
     | IdentityTokenResponse
     | IdentityTwoFactorResponse

@@ -31,4 +31,6 @@ export interface EncryptedMigration {
 }
 
 export type MigrationRequirement =
-  "needsMigration" | "needsMigrationWithMasterPassword" | "noMigrationNeeded";
+  | "needsMigration"
+  | "needsMigrationWithMasterPassword"
+  | "noMigrationNeeded";

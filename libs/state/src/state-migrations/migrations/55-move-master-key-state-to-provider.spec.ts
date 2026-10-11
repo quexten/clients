@@ -17,7 +17,7 @@ function preMigrationState() {
     },
     authenticatedAccounts: ["FirstAccount", "SecondAccount", "ThirdAccount"],
     // prettier-ignore
-    "FirstAccount": {
+    FirstAccount: {
       profile: {
         forceSetPasswordReason: "FirstAccount_forceSetPasswordReason",
         keyHash: "FirstAccount_keyHash",
@@ -29,7 +29,7 @@ function preMigrationState() {
       otherStuff: "otherStuff3",
     },
     // prettier-ignore
-    "SecondAccount": {
+    SecondAccount: {
       profile: {
         forceSetPasswordReason: "SecondAccount_forceSetPasswordReason",
         keyHash: "SecondAccount_keyHash",
@@ -41,7 +41,7 @@ function preMigrationState() {
       otherStuff: "otherStuff5",
     },
     // prettier-ignore
-    "ThirdAccount": {
+    ThirdAccount: {
       profile: {
         otherStuff: "otherStuff6",
       },
@@ -65,25 +65,25 @@ function postMigrationState() {
     },
     authenticatedAccounts: ["FirstAccount", "SecondAccount"],
     // prettier-ignore
-    "FirstAccount": {
+    FirstAccount: {
       profile: {
         otherStuff: "overStuff2",
       },
       otherStuff: "otherStuff3",
     },
     // prettier-ignore
-    "SecondAccount": {
+    SecondAccount: {
       profile: {
         otherStuff: "otherStuff4",
       },
       otherStuff: "otherStuff5",
     },
     // prettier-ignore
-    "ThirdAccount": {
+    ThirdAccount: {
       profile: {
         otherStuff: "otherStuff6",
       },
-  },
+    },
   };
 }
 

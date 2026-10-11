@@ -26,13 +26,10 @@ describe.each([
   [SECURITY_STAMP_MEMORY, "securityStamp"],
 ])(
   "deserializes state key definitions",
-  (
-    keyDefinition:
-      | UserKeyDefinition<string>
-      | UserKeyDefinition<boolean>
-      | KeyDefinition<Record<string, string>>,
-    state: string | boolean | Record<string, string>,
-  ) => {
+  (keyDefinition:
+    | UserKeyDefinition<string>
+    | UserKeyDefinition<boolean>
+    | KeyDefinition<Record<string, string>>, state: string | boolean | Record<string, string>) => {
     function getTypeDescription(value: any): string {
       if (isRecord(value)) {
         return "Record<string, string>";

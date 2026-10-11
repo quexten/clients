@@ -479,29 +479,21 @@ describe("VaultComponent", () => {
 
     it.each(cases)(
       "%s",
-      fakeAsync(
-        (
-          _label: string,
-          empty: boolean,
-          noResults: boolean,
-          deactivated: boolean,
-          expectedKey: ExpectedKey,
-        ) => {
-          const empty$ = itemsSvc.emptyVault$ as BehaviorSubject<boolean>;
-          const noResults$ = itemsSvc.noFilteredResults$ as BehaviorSubject<boolean>;
-          const deactivated$ = itemsSvc.showDeactivatedOrg$ as BehaviorSubject<boolean>;
+      fakeAsync((_label: string, empty: boolean, noResults: boolean, deactivated: boolean, expectedKey: ExpectedKey) => {
+        const empty$ = itemsSvc.emptyVault$ as BehaviorSubject<boolean>;
+        const noResults$ = itemsSvc.noFilteredResults$ as BehaviorSubject<boolean>;
+        const deactivated$ = itemsSvc.showDeactivatedOrg$ as BehaviorSubject<boolean>;
 
-          empty$.next(empty);
-          noResults$.next(noResults);
-          deactivated$.next(deactivated);
-          tick();
+        empty$.next(empty);
+        noResults$.next(noResults);
+        deactivated$.next(deactivated);
+        tick();
 
-          const expectedValue =
-            expectedKey === null ? null : (component as any).VaultStateEnum[expectedKey];
+        const expectedValue =
+          expectedKey === null ? null : (component as any).VaultStateEnum[expectedKey];
 
-          expect((component as any).vaultState).toBe(expectedValue);
-        },
-      ),
+        expect((component as any).vaultState).toBe(expectedValue);
+      }),
     );
   });
 

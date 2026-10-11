@@ -64,13 +64,10 @@ describe("DefaultStateProvider", () => {
     ],
   ])(
     "Shared behavior for %s",
-    (
-      _testName: string,
-      methodUnderTest: (
-        keyDefinition: UserKeyDefinition<string>,
-        userId?: UserId,
-      ) => Observable<string>,
-    ) => {
+    (_testName: string, methodUnderTest: (
+      keyDefinition: UserKeyDefinition<string>,
+      userId?: UserId,
+    ) => Observable<string>) => {
       const keyDefinition = new UserKeyDefinition<string>(
         new StateDefinition("test", "disk"),
         "test",

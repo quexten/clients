@@ -8,7 +8,9 @@ import { DesktopFido2UserVerificationService } from "./desktop-fido2-user-verifi
  * Verification always fails rather than throwing, so ceremonies that require it
  * are rejected by the authenticator while ceremonies that don't are unaffected.
  */
-export class DesktopFido2UnsupportedUserVerificationService implements DesktopFido2UserVerificationService {
+export class DesktopFido2UnsupportedUserVerificationService
+  implements DesktopFido2UserVerificationService
+{
   constructor(private readonly logService: LogService) {}
 
   async verify(): Promise<boolean> {

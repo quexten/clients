@@ -27,7 +27,7 @@
 /* Buttons, badges, and chips. Bare `button` covers the chip and `bitButton` button forms; links
  * stay at 8px even when rendered as a button. */
 [data-bit-item-end-slot]
-  > *:is(button:not([bitLink]), a[bitButton], a[bit-chip-action], [bitBadge], bit-badge, bit-chip),
+> *:is(button:not([bitLink]), a[bitButton], a[bit-chip-action], [bitBadge], bit-badge, bit-chip),
 [data-bit-item-end-slot]
   > *:has(
     button:not([bitLink]),

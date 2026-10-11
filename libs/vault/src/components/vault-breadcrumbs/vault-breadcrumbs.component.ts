@@ -156,12 +156,14 @@ export class VaultBreadcrumbsComponent {
         label: this.i18nService.t("sharedFolders"),
         route: this.sharedFoldersRoute(),
       },
-      ...this.collectionBreadcrumbs().map((folder): TrailCrumb => ({
-        key: folder.id,
-        icon: "bwi-shared-folder",
-        label: sharedFolderName(folder),
-        route: this.sharedFolderRoute(folder),
-      })),
+      ...this.collectionBreadcrumbs().map(
+        (folder): TrailCrumb => ({
+          key: folder.id,
+          icon: "bwi-shared-folder",
+          label: sharedFolderName(folder),
+          route: this.sharedFolderRoute(folder),
+        }),
+      ),
       this.currentCrumb("shared-folder", "bwi-shared-folder", this.currentFolderName()),
     ];
   });

@@ -13,7 +13,9 @@ import { UserAsymmetricKeysRegenerationService } from "../abstractions/user-asym
 const PERF_TRACK_GROUP = PerfTrackGroup.Unlock;
 const PERF_TRACK = "Key Regeneration";
 
-export class DefaultUserAsymmetricKeysRegenerationService implements UserAsymmetricKeysRegenerationService {
+export class DefaultUserAsymmetricKeysRegenerationService
+  implements UserAsymmetricKeysRegenerationService
+{
   constructor(
     private keyService: KeyService,
     private logService: LogService,

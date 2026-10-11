@@ -54,7 +54,10 @@ type IdentityResponse =
 
 export abstract class LoginStrategyData {
   abstract readonly tokenRequest:
-    UserApiTokenRequest | PasswordTokenRequest | SsoTokenRequest | WebAuthnLoginTokenRequest;
+    | UserApiTokenRequest
+    | PasswordTokenRequest
+    | SsoTokenRequest
+    | WebAuthnLoginTokenRequest;
 
   /** User's entered email obtained pre-login. */
   abstract readonly userEnteredEmail?: string;
