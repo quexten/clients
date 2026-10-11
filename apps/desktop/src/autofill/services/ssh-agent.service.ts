@@ -426,6 +426,7 @@ export class SshAgentService implements OnDestroy {
 
     if (await this.needsAuthorization(cipherId, isAgentForwarding, hostFingerprint)) {
       ipc.platform.focusWindow();
+      await this.showAuthorizationNotification(cipher.name, application);
       const dialogRef = ApproveSshRequestComponent.open(
         this.dialogService,
         cipher.name,
@@ -442,6 +443,21 @@ export class SshAgentService implements OnDestroy {
       }
     } else {
       return ipc.autofill.sshAgent.signRequestResponse(requestId, true);
+    }
+  }
+
+  // Shows an OS notification so the user is alerted to a sign request that needs their
+  // authorization, even when the Bitwarden window is not focused or visible.
+  private async showAuthorizationNotification(cipherName: string, application: string) {
+    try {
+      await ipc.auth.loginRequest(
+        this.i18nService.t("sshAgentApprovalNotificationTitle"),
+        this.i18nService.t("sshAgentApprovalNotificationBody", application, cipherName),
+        this.i18nService.t("close"),
+      );
+    } catch (e) {
+      // A notification failure must not block or refuse the underlying sign request.
+      this.logService.error("Failed to show the SSH agent authorization notification", e);
     }
   }
 
