@@ -401,17 +401,25 @@ module.exports.buildConfig = function buildConfig(params) {
       styles: [path.resolve(__dirname, "src/css/tailwind.css")],
       theme_head: path.resolve(__dirname, "src/theme.ts"),
     },
-    cache:
-      NODE_ENV === "production"
-        ? false
-        : {
-            type: "filesystem",
-            allowCollectingMemory: true,
-            cacheDirectory: path.resolve(__dirname, "../../node_modules/.cache/webpack"),
-            buildDependencies: {
-              config: [__filename],
-            },
-          },
+    cache: {
+      type: "filesystem",
+      allowCollectingMemory: true,
+      cacheDirectory: path.resolve(__dirname, "../../node_modules/.cache/webpack"),
+      // Invalidate the cache whenever any build-affecting config changes. Source files
+      // and resolved modules are tracked automatically via the snapshot.
+      buildDependencies: {
+        config: [
+          __filename,
+          path.resolve(__dirname, "webpack.config.js"),
+          path.resolve(__dirname, "tsconfig.build.json"),
+          path.resolve(__dirname, "tsconfig.json"),
+          path.resolve(__dirname, "tailwind.config.js"),
+          path.resolve(__dirname, "postcss.config.js"),
+          path.resolve(__dirname, "../../babel.config.json"),
+          path.resolve(__dirname, "../../tsconfig.base.json"),
+        ],
+      },
+    },
     snapshot: {
       unmanagedPaths: [path.resolve(__dirname, "../../node_modules/@bitwarden/")],
     },
@@ -430,14 +438,14 @@ module.exports.buildConfig = function buildConfig(params) {
       minimize: NODE_ENV === "production",
       minimizer: [
         new TerserPlugin({
+          // esbuild is ~20–50x faster than Terser for equivalent minification and is
+          // already a transitive dependency of the workspace (via Vite/Storybook).
+          minify: TerserPlugin.esbuildMinify,
           terserOptions: {
-            safari10: true,
-            // Replicate Angular CLI behaviour
-            compress: {
-              global_defs: {
-                ngDevMode: false,
-                ngI18nClosureMode: false,
-              },
+            // Replicate Angular CLI behaviour: strip dev-only code paths.
+            define: {
+              ngDevMode: "false",
+              ngI18nClosureMode: "false",
             },
           },
         }),
