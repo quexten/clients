@@ -305,6 +305,7 @@ export class MainServiceContainer {
       this.policyService,
       this.accountService,
       this.restrictedItemTypesService,
+      this.configService,
     );
 
     this.sdkService = new DefaultSdkService(
@@ -321,6 +322,7 @@ export class MainServiceContainer {
       this.v2UpgradeTokenStateService,
       this.managedSettingsService,
       this.appIdService,
+      this.logService,
       customUserAgent,
     );
 
@@ -379,6 +381,7 @@ export class MainServiceContainer {
       this.i18nService,
       this.cipherService,
       this.stateProvider,
+      this.logService,
     );
 
     this.stateEventRunnerService = new DefaultStateEventRunnerService(
@@ -431,6 +434,7 @@ export class MainServiceContainer {
       this.sharedUnlockSettingsService,
       this.unlockService,
       this.configService,
+      this.stateProvider,
     );
 
     this.taskSchedulerService = new DefaultTaskSchedulerService(this.logService);
