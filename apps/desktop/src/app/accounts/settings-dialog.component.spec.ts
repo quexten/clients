@@ -70,6 +70,7 @@ import { DesktopAutofillSettingsService } from "../../autofill/services/desktop-
 import { DesktopAutofillService } from "../../autofill/services/desktop-autofill.service";
 import { DesktopAutotypeMvpService } from "../../autofill/services/desktop-autotype-mvp.service";
 import { DesktopAutotypeService } from "../../autofill/services/desktop-autotype.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { SshAgentSetupDialogComponent } from "../components/ssh-agent-setup-dialog.component";
@@ -114,6 +115,7 @@ describe("SettingsDialogComponent", () => {
   const dialogService = mock<DialogService>();
   const desktopAutotypeMvpService = mock<DesktopAutotypeMvpService>();
   const desktopAutotypeService = mock<DesktopAutotypeService>();
+  const desktopMagnifyService = mock<DesktopMagnifyService>();
   const desktopAutofillService = mock<DesktopAutofillService>();
   const billingAccountProfileStateService = mock<BillingAccountProfileStateService>();
   const configService = mock<ConfigService>();
@@ -192,6 +194,7 @@ describe("SettingsDialogComponent", () => {
         { provide: ToastService, useValue: mock<ToastService>() },
         { provide: DesktopAutotypeMvpService, useValue: desktopAutotypeMvpService },
         { provide: DesktopAutotypeService, useValue: desktopAutotypeService },
+        { provide: DesktopMagnifyService, useValue: desktopMagnifyService },
         { provide: DesktopAutofillService, useValue: desktopAutofillService },
         { provide: BillingAccountProfileStateService, useValue: billingAccountProfileStateService },
         { provide: VaultCopyButtonsService, useValue: vaultCopyButtonsService },
@@ -238,6 +241,7 @@ describe("SettingsDialogComponent", () => {
     desktopAutotypeMvpService.autotypeKeyboardShortcut$ = of(["Control", "Alt", "B"]);
     desktopAutotypeService.autotypeEnabledUserSetting$ = of(false);
     desktopAutotypeService.autotypeKeyboardShortcut$ = of(["Control", "Alt", "G"]);
+    desktopMagnifyService.magnifyEnabledUserSetting$ = of(false);
     billingAccountProfileStateService.hasPremiumFromAnySource$.mockReturnValue(of(false));
     configService.getFeatureFlag$.mockReturnValue(of(false));
     vaultCopyButtonsService.showQuickCopyActions$ = of(false);

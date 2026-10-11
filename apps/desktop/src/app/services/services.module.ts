@@ -120,7 +120,11 @@ import { DefaultSdkLoadService } from "@bitwarden/common/platform/services/sdk/d
 import { NoopSdkClientFactory } from "@bitwarden/common/platform/services/sdk/noop-sdk-client-factory";
 import { NoopSdkLoadService } from "@bitwarden/common/platform/services/sdk/noop-sdk-load.service";
 import { SystemService } from "@bitwarden/common/platform/services/system.service";
-import { GlobalStateProvider, StateProvider } from "@bitwarden/common/platform/state";
+import {
+  ActiveUserStateProvider,
+  GlobalStateProvider,
+  StateProvider,
+} from "@bitwarden/common/platform/state";
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
@@ -191,6 +195,8 @@ import { DesktopFido2UnsupportedUserVerificationService } from "../../autofill/s
 import { DesktopFido2UserInterfaceService } from "../../autofill/services/desktop-fido2-user-interface.service";
 import { DesktopFido2UserVerificationService } from "../../autofill/services/desktop-fido2-user-verification.service.abstraction";
 import { DesktopFido2WindowsUserVerificationService } from "../../autofill/services/desktop-fido2-windows-user-verification.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
+import { MagnifyNavigationService } from "../../autofill/services/magnify-navigation.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { RendererBiometricsService } from "../../key-management/biometrics/renderer-biometrics.service";
 import { DesktopLockComponentService } from "../../key-management/lock/services/desktop-lock-component.service";
@@ -686,6 +692,18 @@ const safeProviders: SafeProvider[] = [
       GlobalStateProvider,
       PlatformUtilsServiceAbstraction,
       BillingAccountProfileStateService,
+    ],
+  }),
+  safeProvider({
+    provide: DesktopMagnifyService,
+    deps: [
+      ActiveUserStateProvider,
+      AuthService,
+      AccountService,
+      CipherServiceAbstraction,
+      EnvironmentService,
+      DomainSettingsService,
+      MagnifyNavigationService,
     ],
   }),
   // Autotype MVP only: must only be consumed within the Autotype MVP scope

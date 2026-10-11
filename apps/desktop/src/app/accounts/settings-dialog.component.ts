@@ -76,6 +76,7 @@ import {
 } from "../../autofill/services/desktop-autofill.service";
 import { DesktopAutotypeMvpService } from "../../autofill/services/desktop-autotype-mvp.service";
 import { DesktopAutotypeService } from "../../autofill/services/desktop-autotype.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
 import { DesktopPremiumUpgradePromptService } from "../../billing/services/desktop-premium-upgrade-prompt.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
@@ -137,6 +138,7 @@ export class SettingsDialogComponent implements OnInit {
   private readonly desktopSettingsService = inject(DesktopSettingsService);
   private readonly desktopAutotypeMvpService = inject(DesktopAutotypeMvpService);
   private readonly desktopAutotypeService = inject(DesktopAutotypeService);
+  private readonly desktopMagnifyService = inject(DesktopMagnifyService);
   private readonly biometricStateService = inject(BiometricStateService);
   private readonly biometricsService = inject(DesktopBiometricsService);
   private readonly desktopAutofillSettingsService = inject(DesktopAutofillSettingsService);
@@ -214,6 +216,7 @@ export class SettingsDialogComponent implements OnInit {
     runInBackground: false,
     openAtLogin: false,
     enableHardwareAcceleration: true,
+    enableMagnify: false,
     enableSshAgent: false,
     sshAgentPromptBehavior: SshAgentPromptType.Always,
     allowScreenshots: false,
@@ -327,6 +330,7 @@ export class SettingsDialogComponent implements OnInit {
       enableHardwareAcceleration: await firstValueFrom(
         this.desktopSettingsService.hardwareAcceleration$,
       ),
+      enableMagnify: await firstValueFrom(this.desktopMagnifyService.magnifyEnabledUserSetting$),
       enableSshAgent: await firstValueFrom(this.desktopSettingsService.sshAgentEnabled$),
       sshAgentPromptBehavior: await firstValueFrom(
         this.desktopSettingsService.sshAgentPromptBehavior$,
@@ -708,6 +712,10 @@ export class SettingsDialogComponent implements OnInit {
     await this.desktopSettingsService.setHardwareAcceleration(
       this.form.value.enableHardwareAcceleration,
     );
+  }
+
+  protected async saveEnableMagnify() {
+    await this.desktopMagnifyService.setMagnifyEnabledState(this.form.value.enableMagnify);
   }
 
   protected async saveSshAgent() {

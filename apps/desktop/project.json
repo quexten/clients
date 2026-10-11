@@ -78,6 +78,54 @@
         }
       }
     },
+    "build-magnify-preload": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/desktop/build/magnify"],
+      "options": {
+        "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name magnify-preload",
+        "cwd": "apps/desktop"
+      },
+      "configurations": {
+        "development": {
+          "command": "cross-env NODE_ENV=development webpack --config webpack.config.js --config-name magnify-preload"
+        },
+        "production": {
+          "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name magnify-preload"
+        }
+      }
+    },
+    "build-magnify": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/desktop/build/magnify"],
+      "options": {
+        "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name magnify",
+        "cwd": "apps/desktop"
+      },
+      "configurations": {
+        "development": {
+          "command": "cross-env NODE_ENV=development webpack --config webpack.config.js --config-name magnify"
+        },
+        "production": {
+          "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name magnify"
+        }
+      }
+    },
+    "serve-magnify": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cross-env NODE_ENV=development webpack serve --config webpack.magnify.js",
+        "cwd": "apps/desktop"
+      }
+    },
+    "test-magnify": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/apps/desktop/magnify"],
+      "options": {
+        "command": "npx jest --config jest.config.js --testPathPattern='src/magnify'",
+        "cwd": "apps/desktop"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-native"],
@@ -87,7 +135,9 @@
         "commands": [
           "nx run desktop:build-main",
           "nx run desktop:build-preload",
-          "nx run desktop:build-renderer"
+          "nx run desktop:build-renderer",
+          "nx run desktop:build-magnify",
+          "nx run desktop:build-magnify-preload"
         ]
       },
       "configurations": {
@@ -95,28 +145,36 @@
           "commands": [
             "nx run desktop:build-main --configuration=oss",
             "nx run desktop:build-preload --configuration=oss",
-            "nx run desktop:build-renderer --configuration=oss"
+            "nx run desktop:build-renderer --configuration=oss",
+            "nx run desktop:build-magnify --configuration=production",
+            "nx run desktop:build-magnify-preload --configuration=production"
           ]
         },
         "oss-dev": {
           "commands": [
             "nx run desktop:build-main --configuration=oss-dev",
             "nx run desktop:build-preload --configuration=oss-dev",
-            "nx run desktop:build-renderer --configuration=oss-dev"
+            "nx run desktop:build-renderer --configuration=oss-dev",
+            "nx run desktop:build-magnify --configuration=development",
+            "nx run desktop:build-magnify-preload --configuration=development"
           ]
         },
         "commercial": {
           "commands": [
             "nx run desktop:build-main --configuration=commercial",
             "nx run desktop:build-preload --configuration=commercial",
-            "nx run desktop:build-renderer --configuration=commercial"
+            "nx run desktop:build-renderer --configuration=commercial",
+            "nx run desktop:build-magnify --configuration=production",
+            "nx run desktop:build-magnify-preload --configuration=production"
           ]
         },
         "commercial-dev": {
           "commands": [
             "nx run desktop:build-main --configuration=commercial-dev",
             "nx run desktop:build-preload --configuration=commercial-dev",
-            "nx run desktop:build-renderer --configuration=commercial-dev"
+            "nx run desktop:build-renderer --configuration=commercial-dev",
+            "nx run desktop:build-magnify --configuration=development",
+            "nx run desktop:build-magnify-preload --configuration=development"
           ]
         }
       }
