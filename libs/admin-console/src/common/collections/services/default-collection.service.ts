@@ -30,6 +30,7 @@ import { ServiceUtils } from "@bitwarden/common/vault/service-utils";
 import { KeyService } from "@bitwarden/key-management";
 // eslint-disable-next-line no-restricted-imports
 import { EncryptService } from "@bitwarden/legacy-crypto";
+import { PerfTrackGroup } from "@bitwarden/logging";
 
 import { CollectionEncryptionService } from "../abstractions/collection-encryption.service";
 import { CollectionService } from "../abstractions/collection.service";
@@ -119,11 +120,11 @@ export class DefaultCollectionService implements CollectionService {
     ]).pipe(
       switchMap(([collections]) => {
         const decryptMeasurement = this.logService.startMeasurement(
-          "Unlock",
+          PerfTrackGroup.Unlock,
           "Collections",
           "decryptMany",
         );
-        return from(this.collectionEncryptionService.decryptMany(collections ?? [], userId)).pipe(
+        return this.collectionEncryptionService.decryptMany(collections ?? [], userId).pipe(
           tap((views) => decryptMeasurement.finish([["Items", views.length]])),
           map((views) => views.sort(Utils.getSortFunction(this.i18nService, "name"))),
           // Cache successful decryptions (delayWhen only runs on emitted values, so a failure
@@ -156,9 +157,11 @@ export class DefaultCollectionService implements CollectionService {
       return collections;
     });
 
-    const decryptedCollections = await this.collectionEncryptionService.decryptMany(
-      [Collection.fromCollectionData(toUpdate)],
-      userId,
+    const decryptedCollections = await firstValueFrom(
+      this.collectionEncryptionService.decryptMany(
+        [Collection.fromCollectionData(toUpdate)],
+        userId,
+      ),
     );
 
     await this.decryptedState(userId).update((collections) => {

@@ -43,11 +43,9 @@ import {
   EncryptedString,
   EncryptService,
   EncString,
-  SignedPublicKey,
   SymmetricCryptoKey,
-  WrappedSigningKey,
 } from "@bitwarden/legacy-crypto";
-import { measured } from "@bitwarden/logging";
+import { measured, PerfTrackGroup } from "@bitwarden/logging";
 import { WrappedAccountCryptographicState } from "@bitwarden/sdk-internal";
 
 import {
@@ -56,7 +54,7 @@ import {
 } from "./abstractions/key.service";
 import { BiometricsService } from "./biometrics/biometric.service";
 
-const PERF_TRACK_GROUP = "KeyManagement";
+const PERF_TRACK_GROUP = PerfTrackGroup.KeyManagement;
 const PERF_TRACK = "DefaultKeyService";
 
 export class DefaultKeyService implements KeyServiceAbstraction {
@@ -402,21 +400,6 @@ export class DefaultKeyService implements KeyServiceAbstraction {
     );
   }
 
-  userSigningKey$(userId: UserId): Observable<WrappedSigningKey | null> {
-    return this.accountCryptographyStateService.accountCryptographicState$(userId).pipe(
-      map((state: WrappedAccountCryptographicState | null) => {
-        if (state == null) {
-          return null;
-        }
-        if ("V2" in state) {
-          return state.V2.signing_key as WrappedSigningKey;
-        } else {
-          return null;
-        }
-      }),
-    );
-  }
-
   orgKeys$(userId: UserId): Observable<Record<OrganizationId, OrgKey> | null> {
     return this.cipherDecryptionKeys$(userId).pipe(map((keys) => keys?.orgKeys ?? null));
   }
@@ -435,7 +418,7 @@ export class DefaultKeyService implements KeyServiceAbstraction {
         ]).pipe(
           switchMap(async ([encryptedOrgKeys, providerKeys]) => {
             const measurement = this.logService.startMeasurement(
-              "Unlock",
+              PerfTrackGroup.Unlock,
               "Crypto",
               "Reencrypt Organization Keys",
             );
@@ -536,21 +519,6 @@ export class DefaultKeyService implements KeyServiceAbstraction {
           // Combine them back together
           map((orgKeys) => ({ userKey: userKeys.userKey, orgKeys: orgKeys })),
         );
-      }),
-    );
-  }
-
-  userSignedPublicKey$(userId: UserId): Observable<SignedPublicKey | null> {
-    return this.accountCryptographyStateService.accountCryptographicState$(userId).pipe(
-      map((state: WrappedAccountCryptographicState | null) => {
-        if (state == null) {
-          return null;
-        }
-        if ("V2" in state) {
-          return state.V2.signed_public_key as SignedPublicKey;
-        } else {
-          return null;
-        }
       }),
     );
   }

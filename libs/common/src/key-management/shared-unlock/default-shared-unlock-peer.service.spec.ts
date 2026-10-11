@@ -13,6 +13,7 @@ import { EnvironmentService } from "../../platform/abstractions/environment.serv
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { asUuid } from "../../platform/abstractions/sdk/sdk.service";
 import { IpcService } from "../../platform/ipc";
+import { StateProvider } from "../../platform/state";
 import { UserId } from "../../types/guid";
 import { VaultTimeoutSettingsService } from "../vault-timeout/abstractions/vault-timeout-settings.service";
 
@@ -32,6 +33,7 @@ describe("DefaultSharedUnlockPeerService", () => {
   let settingsService: MockProxy<SharedUnlockSettingsService>;
   let unlockService: MockProxy<UnlockService>;
   let configService: MockProxy<ConfigService>;
+  let stateProvider: MockProxy<StateProvider>;
   let peer: MockProxy<SharedUnlockPeer>;
   let driver: JsSharedUnlockDriver;
 
@@ -47,7 +49,7 @@ describe("DefaultSharedUnlockPeerService", () => {
 
   /** Builds a peer service wired to the mocks above. */
   function build(): DefaultSharedUnlockPeerService {
-    return new DefaultSharedUnlockPeerService(
+    const service = new DefaultSharedUnlockPeerService(
       ipcService,
       accountService,
       lockService,
@@ -57,11 +59,13 @@ describe("DefaultSharedUnlockPeerService", () => {
       settingsService,
       unlockService,
       configService,
-      (_ipcClient, sharedUnlockDriver) => {
-        driver = sharedUnlockDriver;
-        return peer;
-      },
+      stateProvider,
     );
+    service.peerFactory = (_ipcClient, sharedUnlockDriver) => {
+      driver = sharedUnlockDriver;
+      return peer;
+    };
+    return service;
   }
 
   /**
@@ -92,6 +96,7 @@ describe("DefaultSharedUnlockPeerService", () => {
     settingsService = mock<SharedUnlockSettingsService>();
     unlockService = mock<UnlockService>();
     configService = mock<ConfigService>();
+    stateProvider = mock<StateProvider>();
     peer = mock<SharedUnlockPeer>();
 
     featureEnabled = new BehaviorSubject(true);

@@ -20,6 +20,7 @@ import { EnvironmentService } from "../../platform/abstractions/environment.serv
 import { PlatformUtilsService } from "../../platform/abstractions/platform-utils.service";
 import { asUuid } from "../../platform/abstractions/sdk/sdk.service";
 import { IpcService } from "../../platform/ipc";
+import { StateProvider } from "../../platform/state";
 import { UserId } from "../../types/guid";
 import { VaultTimeoutSettingsService } from "../vault-timeout/abstractions/vault-timeout-settings.service";
 
@@ -50,6 +51,8 @@ const defaultPeerFactory: SharedUnlockPeerFactory = (ipcClient, driver) =>
 
 export class DefaultSharedUnlockPeerService implements SharedUnlockPeerService {
   private peer: SharedUnlockPeer | null = null;
+  /** Builds the SDK peer. Public so tests can stand in for the wasm type. */
+  peerFactory: SharedUnlockPeerFactory = defaultPeerFactory;
   private readonly reportedStates = new Map<UserId, ReplaySubject<PeerLockState>>();
   /** The live destination subscription per account, which is also the set of accounts seen so far. */
   private readonly destinationSubscriptions = new Map<UserId, Subscription>();
@@ -65,7 +68,7 @@ export class DefaultSharedUnlockPeerService implements SharedUnlockPeerService {
     private sharedUnlockSettingsService: SharedUnlockSettingsService,
     private unlockService: UnlockService,
     private configService: ConfigService,
-    private peerFactory: SharedUnlockPeerFactory = defaultPeerFactory,
+    private stateProvider: StateProvider,
   ) {}
 
   async start(abortController?: AbortController): Promise<void> {
@@ -76,6 +79,7 @@ export class DefaultSharedUnlockPeerService implements SharedUnlockPeerService {
       this.platformUtilsService,
       this.vaultTimeoutSettingsService,
       this.environmentService,
+      this.stateProvider,
       (userId, lockState) => this.reportedState(userId).next(lockState),
     );
 

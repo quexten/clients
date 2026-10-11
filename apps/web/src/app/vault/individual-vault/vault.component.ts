@@ -9,7 +9,6 @@ import {
   OnInit,
   viewChild,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationExtras, Params, Router } from "@angular/router";
 import { combineLatest, firstValueFrom, lastValueFrom, Observable, of, Subject } from "rxjs";
 import {
@@ -60,9 +59,7 @@ import { getUserId } from "@bitwarden/common/auth/services/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { BillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/billing-api.service.abstraction";
 import { EventCollectionService, EventType } from "@bitwarden/common/dirt/event-logs";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
-import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -126,6 +123,7 @@ import {
   openDeleteSharedFolderDialog,
   VaultOrganizationUserNotificationsComponent,
   Vfo1TerminologyService,
+  VAULT_RENDERED_MARK,
 } from "@bitwarden/vault";
 import { OrganizationWarningsService } from "@bitwarden/web-vault/app/billing/organizations/warnings/services";
 
@@ -151,7 +149,6 @@ import { VaultHeaderComponent } from "./vault-header/vault-header.component";
 import { VaultOnboardingComponent } from "./vault-onboarding/vault-onboarding.component";
 
 const BroadcasterSubscriptionId = "VaultComponent";
-const VAULT_RENDERED_MARK = "Vault rendered";
 
 type EmptyStateType = "trash" | "favorites" | "archive";
 
@@ -226,11 +223,6 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
   private vaultItemDialogRef?: DialogRef<VaultItemDialogResult> | undefined;
 
   protected showAddCipherBtn: boolean = false;
-
-  protected readonly btnTextAddCreateFeatureFlag = toSignal(
-    this.configService.getFeatureFlag$(FeatureFlag.PM32380_BtnTextAddCreate),
-    { initialValue: false },
-  );
 
   organizations$ = this.accountService.activeAccount$
     .pipe(map((a) => a?.id))
@@ -353,7 +345,6 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
     private premiumUpgradePromptService: PremiumUpgradePromptService,
     private webVaultPromptService: WebVaultPromptService,
     private vaultBatchBarService: VaultBatchBarService<C>,
-    private configService: ConfigService,
   ) {}
 
   async ngOnInit() {
