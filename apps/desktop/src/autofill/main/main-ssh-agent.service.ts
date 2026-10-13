@@ -297,14 +297,26 @@ export class MainSshAgentService {
         }
         resolve(accepted);
       });
-      void this.windowMain.ensureRenderer();
-      this.messagingService.send(SSH_AGENT_IPC_CHANNELS.SIGN_REQUEST, {
-        requestId: id,
-        cipherName: cipher.name,
-        application: application,
-        isAgentForwarding: isAgentForwarding,
-        namespace: data.signRequest.namespace,
-      });
+
+      // The renderer may have been torn down (running in the background), in which case the
+      // SIGN_REQUEST message would be dropped before its dialog host has subscribed. Recreate the
+      // renderer and wait for it to finish booting before sending, so the prompt reliably appears.
+      void this.windowMain
+        .ensureRendererReady()
+        .then(() => {
+          this.messagingService.send(SSH_AGENT_IPC_CHANNELS.SIGN_REQUEST, {
+            requestId: id,
+            cipherName: cipher.name,
+            application: application,
+            isAgentForwarding: isAgentForwarding,
+            namespace: data.signRequest.namespace,
+          });
+        })
+        .catch((e: unknown) => {
+          this.pendingRequests.delete(id);
+          this.logService.error("Failed to show the SSH sign request prompt", e);
+          resolve(false);
+        });
     });
   }
 

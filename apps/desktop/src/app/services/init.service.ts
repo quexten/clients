@@ -114,6 +114,10 @@ export class InitService {
       await this.autotypeMvpService.init();
       await this.autotypeService.init();
       await this.magnifyService.init();
+
+      // The main process waits on this before pushing messages that need a live renderer listener
+      // (e.g. the SSH sign-request dialog), so it must be the last step of renderer init.
+      ipc.platform.rendererReady();
     };
   }
 }

@@ -107,6 +107,8 @@ export class WindowMain {
   isQuitting = false;
   isClosing = false;
   rendererTornDown = false;
+  private rendererIsReady = false;
+  private rendererReadyWaiters: (() => void)[] = [];
   private isReloading = false;
 
   private windowStateChangeTimer: NodeJS.Timeout;
@@ -177,6 +179,13 @@ export class WindowMain {
         this.win.show();
         this.win.focus();
       }
+    });
+
+    // The renderer reports that it has fully booted (all init services subscribed) so the main
+    // process can wait for it before pushing messages that need a live listener, e.g. the SSH
+    // sign-request dialog. Re-armed on every (re)creation of the window.
+    ipcMain.on("renderer-ready", () => {
+      this.markRendererReady();
     });
 
     ipcMain.on("window-hide", () => {
@@ -341,6 +350,7 @@ export class WindowMain {
       return;
     }
     this.rendererTornDown = true;
+    this.rendererIsReady = false;
     this.win.close();
   }
 
@@ -351,13 +361,50 @@ export class WindowMain {
   async ensureRenderer(): Promise<void> {
     if (this.win == null || this.win.isDestroyed()) {
       await this.createWindow();
-      return;
     }
     if (this.win.isMinimized()) {
       this.win.restore();
     }
     this.win.show();
     this.win.focus();
+  }
+
+  /**
+   * Ensures a live renderer exists and then waits until it reports being fully booted, so callers
+   * can push a message that needs an active renderer listener (e.g. the SSH approval dialog). Used
+   * after a renderer has been torn down and must be recreated before the message is delivered.
+   */
+  async ensureRendererReady(): Promise<void> {
+    await this.ensureRenderer();
+    await this.waitForRendererReady();
+  }
+
+  /** Called by the renderer (via the "renderer-ready" IPC) once it has finished booting. */
+  markRendererReady(): void {
+    this.rendererIsReady = true;
+    const waiters = this.rendererReadyWaiters;
+    this.rendererReadyWaiters = [];
+    waiters.forEach((resolve) => resolve());
+  }
+
+  /**
+   * Resolves immediately when the current renderer has already reported ready, otherwise resolves
+   * on the next "renderer-ready" signal (or after `timeoutMs`, to avoid blocking callers forever).
+   */
+  waitForRendererReady(timeoutMs = 15_000): Promise<void> {
+    if (this.rendererIsReady) {
+      return Promise.resolve();
+    }
+    return new Promise<void>((resolve) => {
+      const timer = setTimeout(() => {
+        this.rendererReadyWaiters = this.rendererReadyWaiters.filter((w) => w !== resolve);
+        resolve();
+      }, timeoutMs);
+      this.rendererReadyWaiters.push(() => {
+        clearTimeout(timer);
+        resolve();
+      });
+    });
   }
 
   private getWindowUrl(partial: Partial<url.UrlObject> = {}): string {
@@ -478,6 +525,7 @@ export class WindowMain {
     show: boolean = true,
   ): Promise<void> {
     this.rendererTornDown = false;
+    this.rendererIsReady = false;
     this.windowStates[mainWindowSizeKey] = await this.getWindowState(
       this.defaultWidth,
       this.defaultHeight,

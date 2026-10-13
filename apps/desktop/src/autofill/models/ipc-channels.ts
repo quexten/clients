@@ -37,4 +37,7 @@ export const MAGNIFY_IPC_CHANNELS = {
   MAGNIFY_FOCUS_BITWARDEN: "autofill.magnifyFocusBitwarden",
   // Magnify render process -> Main process: dismiss Magnify and return focus to the previous app
   MAGNIFY_DISMISS: "autofill.magnifyDismiss",
+  // Main process -> Magnify render process: relay a keyboard shortcut that collides with an
+  // application menu role accelerator (⌘C copy / ⌘X cut) so the renderer can dispatch its own action
+  MAGNIFY_SHORTCUT: "autofill.magnifyShortcut",
 } as const;

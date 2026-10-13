@@ -414,6 +414,13 @@ export class Main {
     this.mainDesktopMagnifyService = new MainDesktopMagnifyService(
       this.logService,
       this.windowMain,
+      this.serviceContainer.authService,
+      accountService,
+      this.serviceContainer.cipherService,
+      this.environmentService,
+      this.serviceContainer.domainSettingsService,
+      this.serviceContainer.sdkService,
+      this.serviceContainer.stateProvider,
     );
 
     app.on("will-quit", () => {

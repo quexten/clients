@@ -123,7 +123,6 @@ import { SystemService } from "@bitwarden/common/platform/services/system.servic
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
-import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { COPY_CLICK_LISTENER, DialogService, ToastService } from "@bitwarden/components";
 import {
   DEFAULT_FEATURE_FLAG_OVERRIDE_MENU_ENABLED,
@@ -702,17 +701,7 @@ const safeProviders: SafeProvider[] = [
   }),
   safeProvider({
     provide: DesktopMagnifyService,
-    deps: [
-      ActiveUserStateProvider,
-      AuthService,
-      AccountService,
-      CipherServiceAbstraction,
-      EnvironmentService,
-      DomainSettingsService,
-      BillingAccountProfileStateService,
-      TotpService,
-      MagnifyNavigationService,
-    ],
+    deps: [ActiveUserStateProvider, MagnifyNavigationService],
   }),
   // Autotype MVP only: must only be consumed within the Autotype MVP scope
   safeProvider({

@@ -38,6 +38,14 @@ export class CommandService {
     window.ipc.dismiss();
   }
 
+  /**
+   * Registers a listener for keyboard shortcuts relayed from the main process (⌘C/⌘X, which collide
+   * with the application menu's copy/cut roles). Returns a function that unregisters the listener.
+   */
+  onShortcut(listener: (shortcut: string[]) => void): () => void {
+    return window.ipc.onShortcut(listener);
+  }
+
   /** Requests the main process to resize the magnify window to the given height. */
   resize(height: number): void {
     window.ipc.resize(height);

@@ -106,8 +106,9 @@ export class SettingsV2Component {
     switchMap((userId) => this.autoConfirmService.canManageAutoConfirm$(userId)),
   );
 
-  protected readonly featureFlagOverrideMenuEnabled$ = inject(FeatureFlagOverrideMenuService)
-    .enabled$;
+  protected readonly featureFlagOverrideMenuEnabled$ = inject(
+    FeatureFlagOverrideMenuService,
+  ).enabled$;
 
   constructor(
     private readonly nudgesService: NudgesService,

@@ -134,13 +134,17 @@ export class TrayMain {
    * the window - foregrounding is not a toggle.
    */
   async restoreFromTray() {
-    if (this.isDarwin()) {
-      app.show();
-    }
-
     await this.windowMain.ensureRenderer();
 
     if (this.isDarwin()) {
+      // ensureRenderer() shows and focuses the window, but macOS keeps keyboard focus with the
+      // previously-active app unless we activate and steal it. Do the steal once the window
+      // exists, then re-show and re-focus so a freshly recreated window ends up key. app.show()
+      // also un-hides the app in case a prior Magnify dismiss hid it.
+      app.show();
+      app.focus({ steal: true });
+      this.windowMain.win?.show();
+      this.windowMain.win?.focus();
       this.showDock();
     }
   }

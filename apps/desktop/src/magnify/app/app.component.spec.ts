@@ -13,6 +13,7 @@ describe("AppComponent", () => {
     getAuthStatus: jest.fn().mockResolvedValue(MagnifyAuthStatus.Unlocked),
     resize: jest.fn(),
     focusBitwarden: jest.fn(),
+    onShortcut: jest.fn(() => jest.fn()),
   };
 
   beforeEach(async () => {

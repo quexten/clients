@@ -5551,7 +5551,7 @@
         "content": "$1",
         "example": "OpenSSH"
       },
-      "cipherName": {
+      "cipher_name": {
         "content": "$2",
         "example": "My SSH key"
       }

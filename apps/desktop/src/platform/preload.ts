@@ -152,6 +152,7 @@ export default {
   },
   focusWindow: () => ipcRenderer.send("window-focus"),
   hideWindow: () => ipcRenderer.send("window-hide"),
+  rendererReady: () => ipcRenderer.send("renderer-ready"),
   log: (level: LogLevelType, message?: any, ...optionalParams: any[]) =>
     ipcRenderer.invoke("ipc.log", { level, message, optionalParams }),
 

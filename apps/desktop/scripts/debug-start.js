@@ -81,8 +81,18 @@ const { commands } = concurrently(
       prefixColor: "cyan",
     },
     {
+      name: "Mag",
+      command: watchCommand("magnify"),
+      prefixColor: "blue",
+    },
+    {
+      name: "MagPrel",
+      command: watchCommand("magnify-preload"),
+      prefixColor: "red",
+    },
+    {
       name: "Elec",
-      command: `npx wait-on ./build/main.js ./build/index.html ./build/app/main.js && ${EXEC}"${electronBinary}" --no-sandbox ${INSPECT_FLAG} --remote-debugging-port=9222 ${DEBUG_MARKER} ${args.join(
+      command: `npx wait-on ./build/main.js ./build/index.html ./build/app/main.js ./build/magnify/index.html ./build/magnify/preload.js && ${EXEC}"${electronBinary}" --no-sandbox ${INSPECT_FLAG} --remote-debugging-port=9222 ${DEBUG_MARKER} ${args.join(
         " ",
       )} ./build`,
       prefixColor: "green",

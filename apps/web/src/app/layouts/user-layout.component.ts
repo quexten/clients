@@ -99,8 +99,9 @@ export class UserLayoutComponent implements OnInit {
     () => this.coachmarkService.activeStepId() === "importData",
   );
 
-  protected readonly featureFlagOverrideMenuEnabled$ = inject(FeatureFlagOverrideMenuService)
-    .enabled$;
+  protected readonly featureFlagOverrideMenuEnabled$ = inject(
+    FeatureFlagOverrideMenuService,
+  ).enabled$;
   private readonly dialogService = inject(DialogService);
 
   constructor(

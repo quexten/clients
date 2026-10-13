@@ -37,6 +37,13 @@ const ipc = {
   dismiss: (): void => {
     ipcRenderer.send(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS);
   },
+  onShortcut: (callback: (shortcut: string[]) => void): (() => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, shortcut: string[]) => callback(shortcut);
+    ipcRenderer.on(MAGNIFY_IPC_CHANNELS.MAGNIFY_SHORTCUT, listener);
+    return () => {
+      ipcRenderer.removeListener(MAGNIFY_IPC_CHANNELS.MAGNIFY_SHORTCUT, listener);
+    };
+  },
 };
 
 contextBridge.exposeInMainWorld("ipc", ipc);

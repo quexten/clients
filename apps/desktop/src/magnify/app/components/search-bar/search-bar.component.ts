@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   ViewChild,
   computed,
   signal,
@@ -20,8 +21,6 @@ import { SEARCH_BAR_HEIGHT, calculateWindowHeight } from "../../utils/magnify-la
 import { ActionBarComponent } from "../action-bar/action-bar.component";
 import { ResultsListComponent } from "../results-list/results-list.component";
 
-const MODIFIER_KEYS = new Set(["Meta", "Control", "Shift", "Alt", "CommandOrControl"]);
-
 @Component({
   selector: "search-bar",
   standalone: true,
@@ -30,7 +29,7 @@ const MODIFIER_KEYS = new Set(["Meta", "Control", "Shift", "Alt", "CommandOrCont
   styleUrl: "./search-bar.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchBarComponent implements AfterViewInit {
+export class SearchBarComponent implements AfterViewInit, OnDestroy {
   // eslint-disable-next-line @angular-eslint/prefer-signals
   @ViewChild("searchInput") searchInput!: ElementRef<HTMLInputElement>;
 
@@ -43,6 +42,9 @@ export class SearchBarComponent implements AfterViewInit {
 
   /** The last height sent to the main process — used to skip redundant IPC resize calls. */
   private readonly lastSentHeight = signal<number>(SEARCH_BAR_HEIGHT);
+
+  /** Unsubscribes from the main process's relayed ⌘C/⌘X shortcuts. */
+  private readonly unsubscribeShortcut: () => void;
 
   readonly activeActions = computed(() => {
     const item = this.results()[this.selectedIndex()];
@@ -112,7 +114,17 @@ export class SearchBarComponent implements AfterViewInit {
     ],
   ]);
 
-  constructor(private readonly commandService: CommandService) {}
+  constructor(private readonly commandService: CommandService) {
+    // The main process relays ⌘C/⌘X here because those collide with the application menu's copy/cut
+    // roles; dispatch them through the same path as the renderer's own keydown handling.
+    this.unsubscribeShortcut = this.commandService.onShortcut((shortcut) => {
+      this.dispatchAction(shortcut);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeShortcut();
+  }
 
   ngAfterViewInit() {
     this.searchInput.nativeElement.focus();
@@ -174,7 +186,14 @@ export class SearchBarComponent implements AfterViewInit {
     }
 
     // All other actions are driven by MAGNIFY_ACTIONS shortcuts.
-    // Only consider actions that apply to the currently selected item's type.
+    this.dispatchAction(this.combinationFromKeyboardEvent(event));
+  }
+
+  /**
+   * Dispatches the Magnify action whose shortcut matches the given combination, taking the
+   * currently selected item's type (and TOTP availability) into account.
+   */
+  private dispatchAction(combination: string[]): void {
     const selectedItem = this.results()[this.selectedIndex()];
     const selectedItemType = selectedItem?.itemType ?? null;
     for (const action of MAGNIFY_ACTIONS) {
@@ -190,9 +209,8 @@ export class SearchBarComponent implements AfterViewInit {
       ) {
         continue;
       }
-      for (const combination of action.shortcuts) {
-        if (this.matchesShortcut(event, combination)) {
-          event.preventDefault();
+      for (const actionCombination of action.shortcuts) {
+        if (this.combinationsMatch(combination, actionCombination)) {
           this.actionHandlers.get(action.id)?.();
           return;
         }
@@ -216,53 +234,34 @@ export class SearchBarComponent implements AfterViewInit {
   }
 
   /**
-   * Returns true if the given KeyboardEvent matches the combination.
-   *
-   * A combination is an array of key strings, e.g. ["Meta", "C"] or ["Enter"].
-   * Modifier keys ("Meta", "Control", "Shift", "Alt") are checked against the
-   * event's modifier booleans exactly — modifiers present in the combination
-   * must be active, and modifiers absent from the combination must not be active.
-   * The remaining non-modifier key is matched against event.key case-insensitively.
+   * Reduces a KeyboardEvent to a canonical shortcut combination of modifier + primary-key strings,
+   * matching the shape of MAGNIFY_ACTIONS[].shortcuts. The primary key follows the logical key
+   * (event.key) so shortcuts match the user's keyboard layout; Option-composed keys (⌥⌘T) fall back
+   * to the physical key (event.code).
    */
-  private matchesShortcut(event: KeyboardEvent, combination: string[]): boolean {
-    const modifiers = combination.filter((k) => MODIFIER_KEYS.has(k));
-    const primaryKeys = combination.filter((k) => !MODIFIER_KEYS.has(k));
-
-    if (primaryKeys.length !== 1) {
-      return false;
+  private combinationFromKeyboardEvent(event: KeyboardEvent): string[] {
+    const combination: string[] = [];
+    if (event.metaKey || event.ctrlKey) {
+      combination.push("CommandOrControl");
     }
-
-    const primaryKey = primaryKeys[0];
-
-    if (event.key.toLowerCase() !== primaryKey.toLowerCase()) {
-      return false;
+    if (event.shiftKey) {
+      combination.push("Shift");
     }
-
-    const hasCommandOrControl = modifiers.includes("CommandOrControl");
-
-    // CommandOrControl matches either Meta (macOS) or Control (Windows/Linux).
-    // When it is present, skip the individual Meta/Control checks — one of them
-    // must be active and the other need not be.
-    if (hasCommandOrControl) {
-      if (!event.metaKey && !event.ctrlKey) {
-        return false;
-      }
-    } else {
-      if (event.metaKey !== modifiers.includes("Meta")) {
-        return false;
-      }
-      if (event.ctrlKey !== modifiers.includes("Control")) {
-        return false;
-      }
+    if (event.altKey) {
+      combination.push("Alt");
     }
+    combination.push(
+      /^[A-Za-z]$/.test(event.key)
+        ? event.key.toUpperCase()
+        : /^Key[A-Z]$/.test(event.code)
+          ? event.code.slice(3)
+          : event.key,
+    );
+    return combination;
+  }
 
-    if (event.shiftKey !== modifiers.includes("Shift")) {
-      return false;
-    }
-    if (event.altKey !== modifiers.includes("Alt")) {
-      return false;
-    }
-
-    return true;
+  /** True when both combinations hold the same modifier + primary-key set (order-independent). */
+  private combinationsMatch(a: string[], b: string[]): boolean {
+    return a.length === b.length && a.every((key) => b.includes(key));
   }
 }
