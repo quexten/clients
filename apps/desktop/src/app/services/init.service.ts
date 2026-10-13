@@ -25,6 +25,7 @@ import { EncryptService, LegacyCompatKeyService } from "@bitwarden/legacy-crypto
 import { DesktopAutofillService } from "../../autofill/services/desktop-autofill.service";
 import { DesktopAutotypeMvpService } from "../../autofill/services/desktop-autotype-mvp.service";
 import { DesktopAutotypeService } from "../../autofill/services/desktop-autotype.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
 import { SshAgentService } from "../../autofill/services/ssh-agent.service";
 import { I18nRendererService } from "../../platform/services/i18n.renderer.service";
 import { ServerCommunicationConfigService } from "../../platform/services/server-communication-config/server-communication-config.service";
@@ -55,6 +56,7 @@ export class InitService {
     private autofillService: DesktopAutofillService,
     private autotypeMvpService: DesktopAutotypeMvpService,
     private autotypeService: DesktopAutotypeService,
+    private magnifyService: DesktopMagnifyService,
     private sdkLoadService: SdkLoadService,
     private ipcService: IpcService,
     private biometricMessageHandlerService: BiometricMessageHandlerService,
@@ -103,6 +105,7 @@ export class InitService {
       await this.autofillService.init();
       await this.autotypeMvpService.init();
       await this.autotypeService.init();
+      await this.magnifyService.init();
     };
   }
 }

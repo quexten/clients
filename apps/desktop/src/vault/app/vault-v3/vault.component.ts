@@ -155,6 +155,7 @@ import {
 
 import { DesktopHeaderComponent } from "../../../app/layout/header/desktop-header.component";
 import { ImportDesktopComponent } from "../../../app/tools/import/import-desktop.component";
+import { MagnifyNavigationService } from "../../../autofill/services/magnify-navigation.service";
 import { AssignCollectionsDesktopComponent } from "../vault/assign-collections";
 
 import { AssignCollectionsDesktopDialogAdapter } from "./bulk-action-dialogs/assign-collections-desktop-dialog.adapter";
@@ -248,6 +249,7 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
   private vfo1TerminologyService = inject(Vfo1TerminologyService);
   private folderService = inject(FolderService);
   private vaultNavService = inject(VaultNavService);
+  private magnifyNavigationService = inject(MagnifyNavigationService);
 
   private destroyRef = inject(DestroyRef);
   private cipherFormConfigService = inject(CipherFormConfigService);
@@ -689,6 +691,18 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
         }
       });
     });
+
+    this.magnifyNavigationService.viewInBitwarden$
+      .pipe(
+        concatMap(async (itemId) => {
+          const cipher = this.ciphers.find((c) => c.id === itemId);
+          if (cipher) {
+            await this.viewCipher(cipher);
+          }
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe();
 
     this.routedVaultFilterBridgeService.activeFilter$
       .pipe(takeUntil(this.destroy$))

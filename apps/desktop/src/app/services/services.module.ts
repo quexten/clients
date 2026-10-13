@@ -127,6 +127,7 @@ import { SystemService } from "@bitwarden/common/platform/services/system.servic
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
+import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { COPY_CLICK_LISTENER, DialogService, ToastService } from "@bitwarden/components";
 import { GeneratorServicesModule } from "@bitwarden/generator-components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
@@ -153,7 +154,7 @@ import {
 } from "@bitwarden/legacy-crypto";
 import { FlightRecorderLogRecorderService } from "@bitwarden/logging-angular";
 import { ManagedSettingsService } from "@bitwarden/managed-settings";
-import { GlobalStateProvider, StateProvider } from "@bitwarden/state";
+import { ActiveUserStateProvider, GlobalStateProvider, StateProvider } from "@bitwarden/state";
 import { SerializedMemoryStorageService } from "@bitwarden/storage-core";
 import {
   SHARE_ITEM_PRESENTER,
@@ -190,6 +191,8 @@ import { DesktopFido2UnsupportedUserVerificationService } from "../../autofill/s
 import { DesktopFido2UserInterfaceService } from "../../autofill/services/desktop-fido2-user-interface.service";
 import { DesktopFido2UserVerificationService } from "../../autofill/services/desktop-fido2-user-verification.service.abstraction";
 import { DesktopFido2WindowsUserVerificationService } from "../../autofill/services/desktop-fido2-windows-user-verification.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
+import { MagnifyNavigationService } from "../../autofill/services/magnify-navigation.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { RendererBiometricsService } from "../../key-management/biometrics/renderer-biometrics.service";
 import { DesktopRendererKeyService } from "../../key-management/desktop-renderer-key.service";
@@ -691,6 +694,20 @@ const safeProviders: SafeProvider[] = [
       GlobalStateProvider,
       PlatformUtilsServiceAbstraction,
       BillingAccountProfileStateService,
+    ],
+  }),
+  safeProvider({
+    provide: DesktopMagnifyService,
+    deps: [
+      ActiveUserStateProvider,
+      AuthService,
+      AccountService,
+      CipherServiceAbstraction,
+      EnvironmentService,
+      DomainSettingsService,
+      BillingAccountProfileStateService,
+      TotpService,
+      MagnifyNavigationService,
     ],
   }),
   // Autotype MVP only: must only be consumed within the Autotype MVP scope

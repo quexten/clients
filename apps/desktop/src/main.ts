@@ -45,6 +45,7 @@ import { SSOLocalhostCallbackService } from "./auth/services/sso-localhost-callb
 import { DesktopAutofillMain } from "./autofill/main/main-desktop-autofill.service";
 import { MainDesktopAutotypeMvpService } from "./autofill/main/main-desktop-autotype-mvp.service";
 import { MainDesktopAutotypeService } from "./autofill/main/main-desktop-autotype.service";
+import { MainDesktopMagnifyService } from "./autofill/main/main-desktop-magnify.service";
 import { MainSshAgentService } from "./autofill/main/main-ssh-agent.service";
 import { DesktopAutofillSettingsService } from "./autofill/services/desktop-autofill-settings.service";
 import { BiometricsUnlockDriver } from "./key-management/biometrics/biometrics-unlock.driver";
@@ -114,6 +115,7 @@ export class Main {
   sdkLoadService: SdkLoadService;
   mainDesktopAutotypeMvpService: MainDesktopAutotypeMvpService;
   mainDesktopAutotypeService: MainDesktopAutotypeService;
+  mainDesktopMagnifyService: MainDesktopMagnifyService;
   ssoCookieMain: SsoCookieMain;
   ipcService: IpcService;
   serviceContainer: MainServiceContainer;
@@ -409,10 +411,18 @@ export class Main {
       this.windowMain,
     );
 
+    this.mainDesktopMagnifyService = new MainDesktopMagnifyService(
+      this.logService,
+      this.windowMain,
+      accountService,
+      this.serviceContainer.keyService,
+    );
+
     app.on("will-quit", () => {
       this.mainDesktopAutotypeMvpService.dispose();
       this.mainDesktopAutotypeService.dispose();
       this.sshAgentService.dispose();
+      this.mainDesktopMagnifyService.dispose();
       this.storageService.dispose();
     });
   }
@@ -544,6 +554,8 @@ export class Main {
 
         await this.biometricsService.setUnlockService(this.serviceContainer.unlockService);
         await this.serviceContainer.sharedUnlockPeerService.start();
+
+        await this.mainDesktopMagnifyService.init();
       },
       (e: any) => {
         this.logService.error("Error while running migrations:", e);
