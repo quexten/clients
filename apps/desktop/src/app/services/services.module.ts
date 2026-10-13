@@ -78,11 +78,9 @@ import {
 } from "@bitwarden/common/key-management/process-reload";
 import { SessionTimeoutTypeService } from "@bitwarden/common/key-management/session-timeout";
 import {
-  SharedUnlockPeerService,
   SharedUnlockSettingsService,
   DefaultSharedUnlockSettingsService,
 } from "@bitwarden/common/key-management/shared-unlock";
-import { DefaultSharedUnlockPeerService } from "@bitwarden/common/key-management/shared-unlock/default-shared-unlock-peer.service";
 import {
   VaultTimeoutSettingsService,
   VaultTimeoutStringType,
@@ -120,7 +118,6 @@ import { DefaultSdkLoadService } from "@bitwarden/common/platform/services/sdk/d
 import { NoopSdkClientFactory } from "@bitwarden/common/platform/services/sdk/noop-sdk-client-factory";
 import { NoopSdkLoadService } from "@bitwarden/common/platform/services/sdk/noop-sdk-load.service";
 import { SystemService } from "@bitwarden/common/platform/services/system.service";
-import { GlobalStateProvider, StateProvider } from "@bitwarden/common/platform/state";
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { CipherService as CipherServiceAbstraction } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
@@ -131,7 +128,6 @@ import {
   KdfConfigService,
   KeyService,
   KeyService as KeyServiceAbstraction,
-  DefaultKeyService,
   BiometricStateService,
   BiometricsService,
 } from "@bitwarden/key-management";
@@ -150,13 +146,14 @@ import {
   WebCryptoFunctionService,
 } from "@bitwarden/legacy-crypto";
 import { FlightRecorderLogRecorderService } from "@bitwarden/logging-angular";
+import { GlobalStateProvider, StateProvider } from "@bitwarden/state";
 import { SerializedMemoryStorageService } from "@bitwarden/storage-core";
 import {
   SHARE_ITEM_PRESENTER,
   SHARE_PASSWORD_REPROMPT,
   ShareButtonComponent,
 } from "@bitwarden/tools-share";
-import { LockService, UnlockService } from "@bitwarden/unlock";
+import { UnlockService } from "@bitwarden/unlock";
 import {
   CipherFormGenerationService,
   DefaultSshImportPromptService,
@@ -188,8 +185,10 @@ import { DesktopFido2UserVerificationService } from "../../autofill/services/des
 import { DesktopFido2WindowsUserVerificationService } from "../../autofill/services/desktop-fido2-windows-user-verification.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { RendererBiometricsService } from "../../key-management/biometrics/renderer-biometrics.service";
+import { DesktopRendererKeyService } from "../../key-management/desktop-renderer-key.service";
 import { DesktopLockComponentService } from "../../key-management/lock/services/desktop-lock-component.service";
 import { DesktopSessionTimeoutTypeService } from "../../key-management/session-timeout/services/desktop-session-timeout-type.service";
+import { RendererUnlockService } from "../../key-management/unlock/renderer-unlock.service";
 import { flagEnabled } from "../../platform/flags";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { ElectronLogRendererService } from "../../platform/services/electron-log.renderer.service";
@@ -430,7 +429,7 @@ const safeProviders: SafeProvider[] = [
   }),
   safeProvider({
     provide: KeyServiceAbstraction,
-    useClass: DefaultKeyService,
+    useClass: DesktopRendererKeyService,
     deps: [
       CryptoFunctionServiceAbstraction,
       EncryptService,
@@ -440,6 +439,7 @@ const safeProviders: SafeProvider[] = [
       StateProvider,
       AccountCryptographicStateService,
       BiometricsService,
+      MessageListener,
     ],
   }),
   safeProvider({
@@ -451,21 +451,11 @@ const safeProviders: SafeProvider[] = [
     useClass: DefaultSharedUnlockSettingsService,
     deps: [StateProvider],
   }),
+  // Main owns the session; the renderer forwards every unlock over IPC and re-seeds its SDK.
   safeProvider({
-    provide: SharedUnlockPeerService,
-    useClass: DefaultSharedUnlockPeerService,
-    deps: [
-      IpcService,
-      AccountService,
-      LockService,
-      PlatformUtilsServiceAbstraction,
-      VaultTimeoutSettingsService,
-      EnvironmentService,
-      SharedUnlockSettingsService,
-      UnlockService,
-      ConfigService,
-      StateProvider,
-    ],
+    provide: UnlockService,
+    useClass: RendererUnlockService,
+    deps: [StateProvider, MessageListener],
   }),
   safeProvider({
     provide: DesktopAutofillSettingsService,
