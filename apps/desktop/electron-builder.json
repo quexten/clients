@@ -34,6 +34,7 @@
     "category": "public.app-category.productivity",
     "darkModeSupport": true,
     "gatekeeperAssess": false,
+    "sign": "./scripts/sign-macos.js",
     "hardenedRuntime": true,
     "entitlements": "resources/entitlements.mac.plist",
     "entitlementsInherit": "resources/entitlements.mac.inherit.plist",
@@ -70,7 +71,6 @@
       ],
       "CFBundleDevelopmentRegion": "en"
     },
-    "provisioningProfile": "bitwarden_stable_desktop_developer_id.provisionprofile",
     "singleArchFiles": "node_modules/@bitwarden/desktop-napi/desktop_napi.darwin-*.node",
     "x64ArchFiles": "{**/desktop_napi.darwin-*.node,**/bufferutil/**/darwin-*/*.node}",
     "extraFiles": [
@@ -181,8 +181,7 @@
     "extendInfo": {
       "LSMinimumSystemVersion": "12",
       "ElectronTeamID": "LTZ2PFU5D6"
-    },
-    "provisioningProfile": "bitwarden_stable_desktop_appstore.provisionprofile"
+    }
   },
   "nsisWeb": {
     "oneClick": false,
