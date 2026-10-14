@@ -212,6 +212,17 @@
           <input
             type="checkbox"
             bitCheckbox
+            formControlName="enableMagnify"
+            (change)="saveEnableMagnify()"
+          />
+          <bit-label>{{ "enableMagnify" | i18n }}</bit-label>
+          <bit-hint>{{ "enableMagnifyDesc" | i18n }}</bit-hint>
+        </bit-form-control>
+
+        <bit-form-control>
+          <input
+            type="checkbox"
+            bitCheckbox
             formControlName="enableSshAgent"
             (change)="saveSshAgent()"
           />

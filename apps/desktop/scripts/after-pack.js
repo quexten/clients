@@ -109,11 +109,16 @@ async function doBuild(context) {
 
     const packageId = context.packager.appInfo.id;
 
+    // Ad-hoc signing (`CSC_NAME=-`) has no Developer ID certificate, so hardened runtime
+    // (`--options runtime`) and timestamping do not apply and would produce an inconsistent
+    // signature that macOS rejects at launch. Real identities keep the hardened runtime flags.
+    const runtimeArgs = id === "-" ? "" : "--timestamp --options runtime";
+
     if (is_mas) {
       const entitlementsName = "entitlements.desktop_proxy.plist";
       const entitlementsPath = path.join(__dirname, "..", "resources", entitlementsName);
       child_process.execSync(
-        `codesign -s '${id}' -i ${packageId} -f --timestamp --options runtime --entitlements "${entitlementsPath}" "${proxyPath}"`,
+        `codesign -s '${id}' -i ${packageId} -f ${runtimeArgs} --entitlements "${entitlementsPath}" "${proxyPath}"`,
       );
 
       const inheritEntitlementsName = "entitlements.desktop_proxy.inherit.plist";
@@ -124,7 +129,7 @@ async function doBuild(context) {
         inheritEntitlementsName,
       );
       child_process.execSync(
-        `codesign -s '${id}' -i ${packageId} -f --timestamp --options runtime --entitlements "${inheritEntitlementsPath}" "${inheritProxyPath}"`,
+        `codesign -s '${id}' -i ${packageId} -f ${runtimeArgs} --entitlements "${inheritEntitlementsPath}" "${inheritProxyPath}"`,
       );
     } else {
       // For non-Appstore builds, we don't need the inherit binary as they are not sandboxed,
@@ -132,10 +137,10 @@ async function doBuild(context) {
       const entitlementsName = "entitlements.mac.inherit.plist";
       const entitlementsPath = path.join(__dirname, "..", "resources", entitlementsName);
       child_process.execSync(
-        `codesign -s '${id}' -i ${packageId} -f --timestamp --options runtime --entitlements "${entitlementsPath}" "${proxyPath}"`,
+        `codesign -s '${id}' -i ${packageId} -f ${runtimeArgs} --entitlements "${entitlementsPath}" "${proxyPath}"`,
       );
       child_process.execSync(
-        `codesign -s '${id}' -i ${packageId} -f --timestamp --options runtime --entitlements "${entitlementsPath}" "${inheritProxyPath}"`,
+        `codesign -s '${id}' -i ${packageId} -f ${runtimeArgs} --entitlements "${entitlementsPath}" "${inheritProxyPath}"`,
       );
     }
   }

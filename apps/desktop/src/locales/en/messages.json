@@ -5686,6 +5686,22 @@
   "sshkeyApprovalMessageSuffix": {
     "message": "in order to"
   },
+  "sshAgentApprovalNotificationTitle": {
+    "message": "SSH key request"
+  },
+  "sshAgentApprovalNotificationBody": {
+    "message": "$APPLICATION$ is requesting access to $CIPHER_NAME$",
+    "placeholders": {
+      "application": {
+        "content": "$1",
+        "example": "OpenSSH"
+      },
+      "cipher_name": {
+        "content": "$2",
+        "example": "My SSH key"
+      }
+    }
+  },
   "sshActionLogin": {
     "message": "authenticate to a server"
   },
@@ -7238,5 +7254,11 @@
         "example": "4"
       }
     }
+  },
+  "enableMagnify": {
+    "message": "Enable Magnify"
+  },
+  "enableMagnifyDesc": {
+    "message": "Press Ctrl+Shift+Space to open the Magnify search bar. Use it to search your vault and perform actions without leaving the current window."
   }
 }
