@@ -27,11 +27,8 @@ import { ProviderSubscriptionStatusComponent } from "../../billing/providers/sub
 import { ProviderSubscriptionComponent } from "../../billing/providers/subscription/provider-subscription.component";
 import { EventsComponent } from "../../dirt/provider-events/events.component";
 
-import { AcceptProviderComponent } from "./manage/accept-provider.component";
-import { AddEditMemberDialogComponent } from "./manage/dialogs/add-edit-member-dialog.component";
 import { BulkConfirmDialogComponent } from "./manage/dialogs/bulk-confirm-dialog.component";
 import { BulkRemoveDialogComponent } from "./manage/dialogs/bulk-remove-dialog.component";
-import { MembersComponent } from "./manage/members.component";
 import { ProviderActionsService } from "./manage/services/provider-actions/provider-actions.service";
 import { ProvidersLayoutComponent } from "./providers-layout.component";
 import { ProvidersRoutingModule } from "./providers-routing.module";
@@ -59,10 +56,7 @@ import { WebProviderService } from "./services/web-provider.service";
     BulkRemoveDialogComponent,
   ],
   declarations: [
-    AcceptProviderComponent,
     EventsComponent,
-    MembersComponent,
-    AddEditMemberDialogComponent,
     InvoicesComponent,
     NoInvoicesComponent,
     ProviderBillingHistoryComponent,
