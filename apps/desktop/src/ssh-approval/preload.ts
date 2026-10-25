@@ -1,11 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 import { SSH_APPROVAL_IPC_CHANNELS } from "../autofill/models/ipc-channels";
-import {
-  MiniUnlockMethod,
-  MiniUnlockResult,
-  SshApprovalState,
-} from "../autofill/models/ssh-approval";
+import { MiniUnlockMethod, MiniUnlockResult } from "../autofill/models/mini-unlock";
+import { SshApprovalState } from "../autofill/models/ssh-approval";
 
 /**
  * Preload script for the SSH approval window.

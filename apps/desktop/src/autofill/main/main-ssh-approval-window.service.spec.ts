@@ -13,12 +13,8 @@ import { MainMiniUnlockService } from "../../key-management/unlock/main-mini-unl
 import { WindowMain } from "../../main/window.main";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { SSH_APPROVAL_IPC_CHANNELS } from "../models/ipc-channels";
-import {
-  MiniUnlockMethod,
-  MiniUnlockResult,
-  SshApprovalMode,
-  SshApprovalRequest,
-} from "../models/ssh-approval";
+import { MiniUnlockMethod, MiniUnlockResult } from "../models/mini-unlock";
+import { SshApprovalMode, SshApprovalRequest } from "../models/ssh-approval";
 
 import { MainSshApprovalWindowService } from "./main-ssh-approval-window.service";
 
@@ -122,6 +118,7 @@ describe("MainSshApprovalWindowService", () => {
     i18nService.t.mockImplementation((key: string) => key);
 
     miniUnlockService = mock<MainMiniUnlockService>();
+    miniUnlockService.strings.mockReturnValue({ locked: "yourVaultIsLockedV2" } as never);
     miniUnlockService.options.mockResolvedValue({
       masterPassword: true,
       pin: false,

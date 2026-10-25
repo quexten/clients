@@ -3,5 +3,5 @@
   "angularCompilerOptions": {
     "strictTemplates": true
   },
-  "include": ["src/magnify/**/*.ts"]
+  "include": ["src/magnify/**/*.ts", "src/mini-unlock/**/*.ts"]
 }

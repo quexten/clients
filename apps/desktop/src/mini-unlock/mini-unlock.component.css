@@ -1,0 +1,119 @@
+/* Self-contained so any mini window can host it without global styles. */
+:host {
+  --mu-bg: #ffffff;
+  --mu-text-primary: #1b2029;
+  --mu-text-secondary: #5a6170;
+  --mu-border: #d3d6db;
+  --mu-accent: #175ddc;
+  --mu-accent-text: #ffffff;
+  --mu-danger: #c83522;
+
+  display: block;
+  background: var(--mu-bg);
+  color: var(--mu-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --mu-bg: #1f242e;
+    --mu-text-primary: #ffffff;
+    --mu-text-secondary: #b9bec7;
+    --mu-border: #4a505c;
+    --mu-accent: #6a9bf5;
+    --mu-accent-text: #1f242e;
+    --mu-danger: #ff8d85;
+  }
+}
+
+.mini-unlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--mu-text-secondary);
+}
+
+button {
+  font: inherit;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--mu-border);
+  background: transparent;
+  color: var(--mu-text-primary);
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--mu-accent);
+  border-color: var(--mu-accent);
+  color: var(--mu-accent-text);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--mu-border);
+}
+
+.tabs button {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 6px 10px;
+  color: var(--mu-text-secondary);
+}
+
+.tabs button.active {
+  border-bottom-color: var(--mu-accent);
+  color: var(--mu-text-primary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-weight: 500;
+}
+
+input {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--mu-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--mu-text-primary);
+}
+
+input.mono {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.block {
+  width: 100%;
+}
+
+.error {
+  margin: 0;
+  color: var(--mu-danger);
+}

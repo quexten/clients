@@ -34,6 +34,10 @@ export const MAGNIFY_IPC_CHANNELS = {
   MAGNIFY_FOCUS_BITWARDEN: "autofill.magnifyFocusBitwarden",
   // Magnify render process -> Main process: dismiss Magnify and return focus to the previous app
   MAGNIFY_DISMISS: "autofill.magnifyDismiss",
+  // Magnify render process -> Main process: unlock options and strings for the mini unlock
+  MAGNIFY_GET_UNLOCK_STATE: "autofill.magnifyGetUnlockState",
+  // Magnify render process -> Main process: unlock with a method and optional secret
+  MAGNIFY_UNLOCK: "autofill.magnifyUnlock",
 } as const;
 
 export const SSH_APPROVAL_IPC_CHANNELS = {

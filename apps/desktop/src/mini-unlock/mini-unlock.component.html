@@ -1,6 +1,8 @@
 <div class="mini-unlock">
   <h1 class="title">{{ strings().locked }}</h1>
-  <p class="subtitle">{{ strings().unlockRequired }}</p>
+  @if (strings().unlockRequired) {
+    <p class="subtitle">{{ strings().unlockRequired }}</p>
+  }
 
   @if (methods().length > 1) {
     <div class="tabs" role="tablist">

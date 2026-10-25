@@ -3,5 +3,5 @@
   "angularCompilerOptions": {
     "strictTemplates": true
   },
-  "include": ["src/ssh-approval/**/*.ts"]
+  "include": ["src/ssh-approval/**/*.ts", "src/mini-unlock/**/*.ts"]
 }

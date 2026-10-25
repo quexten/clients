@@ -379,20 +379,24 @@ export class Main {
     this.clipboardMain = new ClipboardMain();
     this.clipboardMain.init();
 
+    // Unlocks main's session from the mini windows (SSH approval, Magnify).
+    const miniUnlockService = new MainMiniUnlockService(
+      this.serviceContainer.unlockService,
+      this.biometricsService,
+      biometricStateService,
+      this.serviceContainer.userDecryptionOptionsService,
+      this.serviceContainer.pinService,
+      this.messagingService,
+      this.i18nService,
+      this.logService,
+    );
+
     this.sshApprovalWindowService = new MainSshApprovalWindowService(
       this.logService,
       this.windowMain,
       accountService,
       this.serviceContainer.authService,
-      new MainMiniUnlockService(
-        this.serviceContainer.unlockService,
-        this.biometricsService,
-        biometricStateService,
-        this.serviceContainer.userDecryptionOptionsService,
-        this.serviceContainer.pinService,
-        this.messagingService,
-        this.logService,
-      ),
+      miniUnlockService,
       this.desktopSettingsService,
       this.i18nService,
     );
@@ -437,7 +441,8 @@ export class Main {
       this.logService,
       this.windowMain,
       accountService,
-      this.serviceContainer.keyService,
+      this.serviceContainer.authService,
+      miniUnlockService,
     );
 
     app.on("will-quit", () => {

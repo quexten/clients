@@ -3,6 +3,7 @@ import { of } from "rxjs";
 
 import { UserDecryptionOptionsServiceAbstraction } from "@bitwarden/auth/common";
 import { PinServiceAbstraction } from "@bitwarden/common/key-management/pin/pin.service.abstraction";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessageSender } from "@bitwarden/common/platform/messaging";
 import {
   BiometricsService,
@@ -13,7 +14,7 @@ import { LogService } from "@bitwarden/logging";
 import { UnlockService } from "@bitwarden/unlock";
 import { UserId } from "@bitwarden/user-core";
 
-import { MiniUnlockMethod, MiniUnlockResult } from "../../autofill/models/ssh-approval";
+import { MiniUnlockMethod, MiniUnlockResult } from "../../autofill/models/mini-unlock";
 
 import { MainMiniUnlockService } from "./main-mini-unlock.service";
 
@@ -26,6 +27,7 @@ describe("MainMiniUnlockService", () => {
   const userDecryptionOptionsService = mock<UserDecryptionOptionsServiceAbstraction>();
   const pinService = mock<PinServiceAbstraction>();
   const messagingService = mock<MessageSender>();
+  const i18nService = mock<I18nService>();
 
   let service: MainMiniUnlockService;
 
@@ -38,8 +40,21 @@ describe("MainMiniUnlockService", () => {
       userDecryptionOptionsService,
       pinService,
       messagingService,
+      i18nService,
       mock<LogService>(),
     );
+  });
+
+  describe("strings", () => {
+    it("localizes the mini unlock and leaves the subtitle to the host", () => {
+      i18nService.t.mockImplementation((key: string) => `t:${key}`);
+
+      const strings = service.strings();
+
+      expect(strings.locked).toBe("t:yourVaultIsLockedV2");
+      expect(strings.invalidPin).toBe("t:invalidPin");
+      expect(strings.unlockRequired).toBe("");
+    });
   });
 
   describe("options", () => {

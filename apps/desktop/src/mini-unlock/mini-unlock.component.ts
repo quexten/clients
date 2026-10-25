@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from "@angular/core";
@@ -14,9 +15,10 @@ import {
   MiniUnlockMethod,
   MiniUnlockOptions,
   MiniUnlockResult,
-  SshApprovalStrings,
-} from "../../../../autofill/models/ssh-approval";
-import { ApprovalIpcService } from "../../../services/approval-ipc.service";
+  MiniUnlockStrings,
+} from "../autofill/models/mini-unlock";
+
+import { MiniUnlockClient } from "./mini-unlock-client";
 
 // Same priority as the lock screen: biometrics, then PIN, then master password.
 const METHOD_ORDER: MiniUnlockMethod[] = [
@@ -33,10 +35,13 @@ const METHOD_ORDER: MiniUnlockMethod[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiniUnlockComponent {
-  private readonly ipc = inject(ApprovalIpcService);
+  private readonly client = inject(MiniUnlockClient);
 
   readonly options = input.required<MiniUnlockOptions>();
-  readonly strings = input.required<SshApprovalStrings>();
+  readonly strings = input.required<MiniUnlockStrings>();
+
+  /** Emits once the vault is unlocked. */
+  readonly unlocked = output<void>();
 
   protected readonly Method = MiniUnlockMethod;
   protected readonly methods = computed(() => METHOD_ORDER.filter((m) => this.options()[m]));
@@ -92,8 +97,11 @@ export class MiniUnlockComponent {
     this.busy.set(true);
     this.error.set(null);
     try {
-      const result = await this.ipc.unlock(method, secret);
+      const result = await this.client.unlock(method, secret);
       this.error.set(this.errorFor(method, result));
+      if (result === MiniUnlockResult.Success) {
+        this.unlocked.emit();
+      }
     } catch {
       this.error.set(this.strings().errorOccurred);
     } finally {
@@ -101,7 +109,6 @@ export class MiniUnlockComponent {
     }
   }
 
-  // On success main switches the window to the approval view, so there is nothing to show.
   private errorFor(method: MiniUnlockMethod, result: MiniUnlockResult): string | null {
     const strings = this.strings();
     switch (result) {

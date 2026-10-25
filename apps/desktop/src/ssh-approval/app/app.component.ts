@@ -9,10 +9,10 @@ import {
 } from "@angular/core";
 
 import { SshApprovalMode, SshApprovalState } from "../../autofill/models/ssh-approval";
+import { MiniUnlockComponent } from "../../mini-unlock/mini-unlock.component";
 import { ApprovalIpcService } from "../services/approval-ipc.service";
 
 import { ApproveRequestComponent } from "./components/approve-request/approve-request.component";
-import { MiniUnlockComponent } from "./components/mini-unlock/mini-unlock.component";
 
 @Component({
   selector: "ssh-approval-root",

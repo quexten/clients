@@ -9,11 +9,17 @@ import {
   MagnifyLoginItem,
   MagnifySearchResultItem,
 } from "../../autofill/models/magnify-commands";
+import {
+  MiniUnlockMethod,
+  MiniUnlockResult,
+  MiniUnlockState,
+} from "../../autofill/models/mini-unlock";
+import { MiniUnlockClient } from "../../mini-unlock/mini-unlock-client";
 
 @Injectable({
   providedIn: "root",
 })
-export class CommandService {
+export class CommandService implements MiniUnlockClient {
   async getAuthStatus(): Promise<MagnifyAuthStatus> {
     const request: MagnifyCommandRequest = {
       type: MagnifyCommand.GetAuthStatus,
@@ -36,6 +42,16 @@ export class CommandService {
   /** Dismisses Magnify and returns focus to the previously-focused app. */
   dismiss(): void {
     window.ipc.dismiss();
+  }
+
+  /** Unlock options and strings for the mini unlock; null when there is no account. */
+  getUnlockState(): Promise<MiniUnlockState | null> {
+    return window.ipc.getUnlockState();
+  }
+
+  /** Unlocks the vault in the main process, without opening the full app. */
+  unlock(method: MiniUnlockMethod, secret?: string): Promise<MiniUnlockResult> {
+    return window.ipc.unlock(method, secret);
   }
 
   /** Requests the main process to resize the magnify window to the given height. */

@@ -14,9 +14,8 @@ import { WindowMain } from "../../main/window.main";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { isDev } from "../../utils";
 import { SSH_APPROVAL_IPC_CHANNELS } from "../models/ipc-channels";
+import { MiniUnlockMethod, MiniUnlockResult } from "../models/mini-unlock";
 import {
-  MiniUnlockMethod,
-  MiniUnlockResult,
   SshApprovalMode,
   SshApprovalRequest,
   SshApprovalState,
@@ -29,12 +28,6 @@ const INITIAL_HEIGHT = 240;
 // The Rust agent gives up on a request after 60 s (APPROVAL_CALLBACK_TIMEOUT), so a prompt must
 // never outlive it.
 const SESSION_TIMEOUT_MS = 60_000;
-
-const BIOMETRICS_BUTTON_KEYS: Partial<Record<NodeJS.Platform, string>> = {
-  darwin: "unlockWithTouchId",
-  win32: "unlockWithWindowsHello",
-  linux: "unlockWithPolkit",
-};
 
 /** Asks the user something inside an open session. Each call resolves with their answer. */
 export interface SshApprovalPrompt {
@@ -315,6 +308,8 @@ export class MainSshApprovalWindowService {
   private strings(request: SshApprovalRequest | null): SshApprovalStrings {
     const t = (key: string) => this.i18nService.t(key);
     return {
+      ...this.miniUnlockService.strings(),
+      unlockRequired: t("sshAgentUnlockRequired"),
       title: t("sshkeyApprovalTitle"),
       forwardingWarningTitle: t("agentForwardingWarningTitle"),
       forwardingWarningText: t("agentForwardingWarningText"),
@@ -323,16 +318,6 @@ export class MainSshApprovalWindowService {
       action: t(MainSshApprovalWindowService.actionKey(request?.namespace)),
       authorize: t("authorize"),
       deny: t("deny"),
-      locked: t("yourVaultIsLockedV2"),
-      unlockRequired: t("sshAgentUnlockRequired"),
-      masterPassword: t("masterPass"),
-      pin: t("pin"),
-      unlock: t("unlock"),
-      unlockWithBiometrics: t(BIOMETRICS_BUTTON_KEYS[process.platform] ?? "unlockWithBiometrics"),
-      invalidMasterPassword: t("invalidMasterPassword"),
-      invalidPin: t("invalidPin"),
-      tooManyAttempts: t("tooManyInvalidPinEntryAttemptsLoggingOut"),
-      errorOccurred: t("errorOccurred"),
     };
   }
 

@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { MiniUnlockResult } from "../../autofill/models/mini-unlock";
 import {
-  MiniUnlockResult,
   SshApprovalMode,
   SshApprovalState,
   SshApprovalStrings,
 } from "../../autofill/models/ssh-approval";
+import { MiniUnlockClient } from "../../mini-unlock/mini-unlock-client";
 import { ApprovalIpcService } from "../services/approval-ipc.service";
 
 import { AppComponent } from "./app.component";
@@ -53,7 +54,10 @@ describe("AppComponent", () => {
     jest.clearAllMocks();
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [{ provide: ApprovalIpcService, useValue: ipc }],
+      providers: [
+        { provide: ApprovalIpcService, useValue: ipc },
+        { provide: MiniUnlockClient, useValue: ipc },
+      ],
     }).compileComponents();
   });
 

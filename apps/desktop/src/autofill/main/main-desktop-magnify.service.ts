@@ -4,16 +4,20 @@ import { app, ipcMain, globalShortcut, BrowserWindow, screen } from "electron";
 import { firstValueFrom } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
-import { KeyService } from "@bitwarden/key-management";
+import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
+import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { LogService } from "@bitwarden/logging";
 
+import { MainMiniUnlockService } from "../../key-management/unlock/main-mini-unlock.service";
 import { WindowMain } from "../../main/window.main";
 import { MAGNIFY_IPC_CHANNELS } from "../models/ipc-channels";
 import {
+  MagnifyAuthStatus,
   MagnifyCommand,
   MagnifyCommandRequest,
   MagnifyCommandResponse,
 } from "../models/magnify-commands";
+import { MiniUnlockMethod, MiniUnlockResult, MiniUnlockState } from "../models/mini-unlock";
 
 export class MainDesktopMagnifyService {
   private MAGNIFY_KEYBOARD_SHORTCUT = "CommandOrControl+Shift+Space";
@@ -26,11 +30,15 @@ export class MainDesktopMagnifyService {
   // racing it and being silently dropped.
   private magnifyListenerReady = false;
 
+  // Set while unlocking from Magnify: the OS biometric prompt takes focus, which must not close it.
+  private unlocking = false;
+
   constructor(
     private logService: LogService,
     private windowMain: WindowMain,
     private accountService: AccountService,
-    private keyService: KeyService,
+    private authService: AuthService,
+    private miniUnlockService: MainMiniUnlockService,
   ) {}
 
   async init(): Promise<void> {
@@ -83,6 +91,21 @@ export class MainDesktopMagnifyService {
       this.dismissMagnify();
     });
 
+    // Magnify render process -> main process: unlock options and strings for the mini unlock
+    ipcMain.handle(MAGNIFY_IPC_CHANNELS.MAGNIFY_GET_UNLOCK_STATE, (event) => {
+      this.assertMagnifySender(event);
+      return this.unlockState();
+    });
+
+    // Magnify render process -> main process: unlock main's session without the full app
+    ipcMain.handle(
+      MAGNIFY_IPC_CHANNELS.MAGNIFY_UNLOCK,
+      (event, method: MiniUnlockMethod, secret?: string) => {
+        this.assertMagnifySender(event);
+        return this.unlock(method, secret);
+      },
+    );
+
     // Close the magnify window if the main BW window is closed
     this.windowMain.win.on("closed", () => {
       this.magnifyWindow?.close();
@@ -106,6 +129,8 @@ export class MainDesktopMagnifyService {
     ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_RESIZE);
     ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_FOCUS_BITWARDEN);
     ipcMain.removeAllListeners(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS);
+    ipcMain.removeHandler(MAGNIFY_IPC_CHANNELS.MAGNIFY_GET_UNLOCK_STATE);
+    ipcMain.removeHandler(MAGNIFY_IPC_CHANNELS.MAGNIFY_UNLOCK);
 
     // Also unregister the global shortcut
     this.disableMagnify();
@@ -158,7 +183,9 @@ export class MainDesktopMagnifyService {
 
     // emitted when the window loses focus
     win.on("blur", () => {
-      win.close();
+      if (!this.unlocking) {
+        win.close();
+      }
     });
 
     // close the window when ESC pressed
@@ -232,12 +259,17 @@ export class MainDesktopMagnifyService {
     _event: Electron.IpcMainInvokeEvent,
     command: MagnifyCommandRequest,
   ): Promise<MagnifyCommandResponse> {
-    // The BW renderer may have been torn down for background operation. Recreate it and wait for
-    // its magnify command listener to be registered before relaying, otherwise the relay would be
-    // silently dropped (or throw when the window is gone) and the invoke would hang. Surface the
-    // window only when the vault is locked, so the user can unlock it.
+    // Main owns the session, so it answers auth status itself. Magnify unlocks in place, so the
+    // full app never needs to come up.
+    if (command.type === MagnifyCommand.GetAuthStatus) {
+      return { type: MagnifyCommand.GetAuthStatus, status: await this.authStatus() };
+    }
+
+    // The BW renderer may have been torn down for background operation. Recreate it (hidden) and
+    // wait for its magnify command listener to be registered before relaying, otherwise the relay
+    // would be silently dropped (or throw when the window is gone) and the invoke would hang.
     const previousWin = this.windowMain.win;
-    await this.windowMain.ensureRenderer(await this.shouldShowRenderer());
+    await this.windowMain.ensureRenderer(false);
     if (this.windowMain.win !== previousWin) {
       this.magnifyListenerReady = false;
     }
@@ -299,18 +331,49 @@ export class MainDesktopMagnifyService {
     });
   }
 
-  /*
-    Whether the main window must be surfaced for the current command. It is shown when the active
-    account is locked so the user can unlock; when there is no active account, or the vault is
-    already unlocked, the renderer can be (re)created hidden and magnify stays in the background.
-  */
-  private async shouldShowRenderer(): Promise<boolean> {
-    const activeAccount = await firstValueFrom(this.accountService.activeAccount$);
-    if (activeAccount == null) {
-      return false;
+  private async authStatus(): Promise<MagnifyAuthStatus> {
+    switch (await firstValueFrom(this.authService.activeAccountStatus$)) {
+      case AuthenticationStatus.Unlocked:
+        return MagnifyAuthStatus.Unlocked;
+      case AuthenticationStatus.Locked:
+        return MagnifyAuthStatus.Locked;
+      default:
+        return MagnifyAuthStatus.LoggedOut;
+    }
+  }
+
+  private async unlockState(): Promise<MiniUnlockState | null> {
+    const account = await firstValueFrom(this.accountService.activeAccount$);
+    if (account == null) {
+      return null;
+    }
+    return {
+      options: await this.miniUnlockService.options(account.id),
+      strings: this.miniUnlockService.strings(),
+    };
+  }
+
+  private async unlock(method: MiniUnlockMethod, secret?: string): Promise<MiniUnlockResult> {
+    const account = await firstValueFrom(this.accountService.activeAccount$);
+    if (account == null) {
+      return MiniUnlockResult.Error;
     }
 
-    const userKey = await firstValueFrom(this.keyService.userKey$(activeAccount.id));
-    return userKey == null;
+    this.unlocking = true;
+    try {
+      return await this.miniUnlockService.unlock(account.id, method, secret);
+    } finally {
+      this.unlocking = false;
+      // Biometrics may have moved focus away; give it back to Magnify.
+      if (this.magnifyWindow != null && !this.magnifyWindow.isDestroyed()) {
+        this.magnifyWindow.focus();
+      }
+    }
+  }
+
+  private assertMagnifySender(event: Electron.IpcMainInvokeEvent): void {
+    if (this.magnifyWindow == null || event.sender !== this.magnifyWindow.webContents) {
+      throw new Error("Rejected Magnify unlock IPC from an unknown sender");
+    }
   }
 }

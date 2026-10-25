@@ -1,16 +1,14 @@
 import { Injectable, NgZone, inject } from "@angular/core";
 
-import {
-  MiniUnlockMethod,
-  MiniUnlockResult,
-  SshApprovalState,
-} from "../../autofill/models/ssh-approval";
+import { MiniUnlockMethod, MiniUnlockResult } from "../../autofill/models/mini-unlock";
+import { SshApprovalState } from "../../autofill/models/ssh-approval";
+import { MiniUnlockClient } from "../../mini-unlock/mini-unlock-client";
 
 /** Wraps the preload bridge so components stay testable and run callbacks inside Angular. */
 @Injectable({
   providedIn: "root",
 })
-export class ApprovalIpcService {
+export class ApprovalIpcService implements MiniUnlockClient {
   private readonly zone = inject(NgZone);
 
   getState(): Promise<SshApprovalState | null> {

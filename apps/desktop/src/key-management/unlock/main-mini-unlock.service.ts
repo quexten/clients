@@ -2,6 +2,7 @@ import { firstValueFrom } from "rxjs";
 
 import { UserDecryptionOptionsServiceAbstraction } from "@bitwarden/auth/common";
 import { PinServiceAbstraction } from "@bitwarden/common/key-management/pin/pin.service.abstraction";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessageSender } from "@bitwarden/common/platform/messaging";
 import {
   BiometricsService,
@@ -16,10 +17,17 @@ import {
   MiniUnlockMethod,
   MiniUnlockOptions,
   MiniUnlockResult,
-} from "../../autofill/models/ssh-approval";
+  MiniUnlockStrings,
+} from "../../autofill/models/mini-unlock";
 
 // Matches the lock screen: too many wrong PINs logs the user out.
 const MAX_PIN_ATTEMPTS = 5;
+
+const BIOMETRICS_BUTTON_KEYS: Partial<Record<NodeJS.Platform, string>> = {
+  darwin: "unlockWithTouchId",
+  win32: "unlockWithWindowsHello",
+  linux: "unlockWithPolkit",
+};
 
 /**
  * Unlocks the session owned by the main process on behalf of a mini window, without the full
@@ -35,8 +43,26 @@ export class MainMiniUnlockService {
     private readonly userDecryptionOptionsService: UserDecryptionOptionsServiceAbstraction,
     private readonly pinService: PinServiceAbstraction,
     private readonly messagingService: MessageSender,
+    private readonly i18nService: I18nService,
     private readonly logService: LogService,
   ) {}
+
+  /** Localized strings for the mini unlock. `unlockRequired` is left empty for the host to set. */
+  strings(): MiniUnlockStrings {
+    const t = (key: string) => this.i18nService.t(key);
+    return {
+      locked: t("yourVaultIsLockedV2"),
+      unlockRequired: "",
+      masterPassword: t("masterPass"),
+      pin: t("pin"),
+      unlock: t("unlock"),
+      unlockWithBiometrics: t(BIOMETRICS_BUTTON_KEYS[process.platform] ?? "unlockWithBiometrics"),
+      invalidMasterPassword: t("invalidMasterPassword"),
+      invalidPin: t("invalidPin"),
+      tooManyAttempts: t("tooManyInvalidPinEntryAttemptsLoggingOut"),
+      errorOccurred: t("errorOccurred"),
+    };
+  }
 
   /** Unlock methods available to the user, as the desktop lock screen computes them. */
   async options(userId: UserId): Promise<MiniUnlockOptions> {

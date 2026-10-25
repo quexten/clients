@@ -2,6 +2,11 @@ import { contextBridge, ipcRenderer } from "electron";
 
 import { MAGNIFY_IPC_CHANNELS } from "../autofill/models/ipc-channels";
 import { MagnifyCommandRequest, MagnifyCommandResponse } from "../autofill/models/magnify-commands";
+import {
+  MiniUnlockMethod,
+  MiniUnlockResult,
+  MiniUnlockState,
+} from "../autofill/models/mini-unlock";
 
 /**
  * Bitwarden Preload script.
@@ -37,6 +42,10 @@ const ipc = {
   dismiss: (): void => {
     ipcRenderer.send(MAGNIFY_IPC_CHANNELS.MAGNIFY_DISMISS);
   },
+  getUnlockState: (): Promise<MiniUnlockState | null> =>
+    ipcRenderer.invoke(MAGNIFY_IPC_CHANNELS.MAGNIFY_GET_UNLOCK_STATE),
+  unlock: (method: MiniUnlockMethod, secret?: string): Promise<MiniUnlockResult> =>
+    ipcRenderer.invoke(MAGNIFY_IPC_CHANNELS.MAGNIFY_UNLOCK, method, secret),
 };
 
 contextBridge.exposeInMainWorld("ipc", ipc);
