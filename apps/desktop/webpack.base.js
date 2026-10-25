@@ -47,6 +47,11 @@ const DEFAULT_PARAMS = {
  *    tsConfig: string;
  *    htmlTemplate: string;
  *  };
+ *  sshApproval: {
+ *    entry: string;
+ *    tsConfig: string;
+ *    htmlTemplate: string;
+ *  };
  *  outputPath?: string;
  *  importAliases?: import("webpack").ResolveOptions["alias"];
  * }} params
@@ -416,6 +421,12 @@ module.exports.buildConfig = function buildConfig(params) {
       htmlTemplate: params.magnify.htmlTemplate,
       outputPath: path.join(params.outputPath, "magnify"),
     }),
+    ...module.exports.buildSshApprovalConfig({
+      entry: params.sshApproval.entry,
+      tsConfig: params.sshApproval.tsConfig,
+      htmlTemplate: params.sshApproval.htmlTemplate,
+      outputPath: path.join(params.outputPath, "ssh-approval"),
+    }),
   ];
 };
 
@@ -428,12 +439,52 @@ module.exports.buildConfig = function buildConfig(params) {
  * }} params
  */
 module.exports.buildMagnifyConfig = function buildMagnifyConfig(params) {
+  return module.exports.buildMiniAppConfig({
+    ...params,
+    name: "magnify",
+    preloadEntry: path.resolve(__dirname, "src/magnify/preload.ts"),
+    preloadTsConfig: path.resolve(__dirname, "tsconfig.magnify.preload.json"),
+  });
+};
+
+/**
+ * @param {{
+ *  entry: string;
+ *  tsConfig: string;
+ *  htmlTemplate: string;
+ *  outputPath: string;
+ * }} params
+ */
+module.exports.buildSshApprovalConfig = function buildSshApprovalConfig(params) {
+  return module.exports.buildMiniAppConfig({
+    ...params,
+    name: "ssh-approval",
+    preloadEntry: path.resolve(__dirname, "src/ssh-approval/preload.ts"),
+    preloadTsConfig: path.resolve(__dirname, "tsconfig.ssh-approval.preload.json"),
+  });
+};
+
+/**
+ * Builds a lightweight secondary-window renderer (its own Angular bundle and preload), e.g.
+ * Magnify or the SSH approval window.
+ *
+ * @param {{
+ *  name: string;
+ *  entry: string;
+ *  tsConfig: string;
+ *  htmlTemplate: string;
+ *  preloadEntry: string;
+ *  preloadTsConfig: string;
+ *  outputPath: string;
+ * }} params
+ */
+module.exports.buildMiniAppConfig = function buildMiniAppConfig(params) {
   const { NODE_ENV, ENV } = module.exports.getEnv();
   const envConfig = configurator.load(NODE_ENV);
 
   /** @type {import('webpack').Configuration} */
-  const magnifyConfig = {
-    name: "magnify",
+  const appConfig = {
+    name: params.name,
     mode: NODE_ENV,
     devtool: "source-map",
     target: "web",
@@ -584,13 +635,13 @@ module.exports.buildMagnifyConfig = function buildMagnifyConfig(params) {
     ],
   };
 
-  const magnifyPreloadConfig = {
-    name: "magnify-preload",
+  const preloadConfig = {
+    name: `${params.name}-preload`,
     mode: NODE_ENV,
     target: "electron-preload",
     node: { __dirname: false, __filename: false },
     entry: {
-      preload: path.resolve(__dirname, "src/magnify/preload.ts"),
+      preload: params.preloadEntry,
     },
     output: {
       filename: "[name].js",
@@ -604,7 +655,7 @@ module.exports.buildMagnifyConfig = function buildMagnifyConfig(params) {
           test: /\.tsx?$/,
           use: {
             loader: "ts-loader",
-            options: { configFile: path.resolve(__dirname, "tsconfig.magnify.preload.json") },
+            options: { configFile: params.preloadTsConfig },
           },
           exclude: /node_modules\/(?!(@bitwarden)\/).*/,
         },
@@ -625,5 +676,5 @@ module.exports.buildMagnifyConfig = function buildMagnifyConfig(params) {
     ],
   };
 
-  return [magnifyConfig, magnifyPreloadConfig];
+  return [appConfig, preloadConfig];
 };

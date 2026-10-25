@@ -91,8 +91,18 @@ const { commands } = concurrently(
       prefixColor: "white",
     },
     {
+      name: "Ssh",
+      command: watchCommand("ssh-approval"),
+      prefixColor: "blue",
+    },
+    {
+      name: "SshPrel",
+      command: watchCommand("ssh-approval-preload"),
+      prefixColor: "white",
+    },
+    {
       name: "Elec",
-      command: `npx wait-on ./build/main.js ./build/index.html ./build/app/main.js ./build/magnify/index.html ./build/magnify/preload.js && ${EXEC}"${electronBinary}" --no-sandbox ${INSPECT_FLAG} --remote-debugging-port=9222 ${DEBUG_MARKER} ${args.join(
+      command: `npx wait-on ./build/main.js ./build/index.html ./build/app/main.js ./build/magnify/index.html ./build/magnify/preload.js ./build/ssh-approval/index.html ./build/ssh-approval/preload.js && ${EXEC}"${electronBinary}" --no-sandbox ${INSPECT_FLAG} --remote-debugging-port=9222 ${DEBUG_MARKER} ${args.join(
         " ",
       )} ./build`,
       prefixColor: "green",

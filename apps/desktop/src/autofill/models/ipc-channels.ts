@@ -12,8 +12,6 @@ export const SSH_AGENT_IPC_CHANNELS = {
   IS_LOADED: "sshagent.isloaded",
   STOP: "sshagent.stop",
   REPLACE: "sshagent.replace",
-  SIGN_REQUEST: "sshagent.signrequest",
-  SIGN_REQUEST_RESPONSE: "sshagent.signrequestresponse",
   LIST_KEYS_REQUEST: "sshagent.listkeysrequest",
   LIST_KEYS_RESPONSE: "sshagent.listkeysresponse",
 } as const;
@@ -36,4 +34,17 @@ export const MAGNIFY_IPC_CHANNELS = {
   MAGNIFY_FOCUS_BITWARDEN: "autofill.magnifyFocusBitwarden",
   // Magnify render process -> Main process: dismiss Magnify and return focus to the previous app
   MAGNIFY_DISMISS: "autofill.magnifyDismiss",
+} as const;
+
+export const SSH_APPROVAL_IPC_CHANNELS = {
+  // Approval render process -> Main process: current mode, request, unlock options and strings
+  GET_STATE: "sshApproval.getState",
+  // Main process -> Approval render process: the state changed (e.g. unlock -> approve)
+  STATE_CHANGED: "sshApproval.stateChanged",
+  // Approval render process -> Main process: unlock with a method and optional secret
+  UNLOCK: "sshApproval.unlock",
+  // Approval render process -> Main process: the user authorized or denied the request
+  RESPOND: "sshApproval.respond",
+  // Approval render process -> Main process: fit the window to its content height
+  RESIZE: "sshApproval.resize",
 } as const;

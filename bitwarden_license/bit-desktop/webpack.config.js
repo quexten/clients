@@ -35,6 +35,11 @@ module.exports = (webpackConfig, context) => {
         tsConfig: path.resolve(context.context.root, "apps/desktop/tsconfig.magnify.json"),
         htmlTemplate: path.resolve(__dirname, "../../apps/desktop/src/magnify/index.html"),
       },
+      sshApproval: {
+        entry: path.resolve(__dirname, "../../apps/desktop/src/ssh-approval/main.ts"),
+        tsConfig: path.resolve(context.context.root, "apps/desktop/tsconfig.ssh-approval.json"),
+        htmlTemplate: path.resolve(__dirname, "../../apps/desktop/src/ssh-approval/index.html"),
+      },
       outputPath: path.resolve(context.context.root, context.options.outputPath),
       importAliases: [
         {
@@ -63,6 +68,11 @@ module.exports = (webpackConfig, context) => {
         entry: path.resolve(__dirname, "../../apps/desktop/src/magnify/main.ts"),
         tsConfig: path.resolve(__dirname, "../../apps/desktop/tsconfig.magnify.json"),
         htmlTemplate: path.resolve(__dirname, "../../apps/desktop/src/magnify/index.html"),
+      },
+      sshApproval: {
+        entry: path.resolve(__dirname, "../../apps/desktop/src/ssh-approval/main.ts"),
+        tsConfig: path.resolve(__dirname, "../../apps/desktop/tsconfig.ssh-approval.json"),
+        htmlTemplate: path.resolve(__dirname, "../../apps/desktop/src/ssh-approval/index.html"),
       },
       importAliases: [
         {

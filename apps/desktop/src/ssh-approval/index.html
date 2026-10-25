@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-src 'none';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bitwarden</title>
+    <base href="" />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text-primary: #1b2029;
+        --text-secondary: #5a6170;
+        --border: #d3d6db;
+        --accent: #175ddc;
+        --accent-text: #ffffff;
+        --warning-bg: #fff4e0;
+        --warning-text: #7a4b00;
+        --danger: #c83522;
+        color-scheme: light dark;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1f242e;
+          --text-primary: #ffffff;
+          --text-secondary: #b9bec7;
+          --border: #4a505c;
+          --accent: #6a9bf5;
+          --accent-text: #1f242e;
+          --warning-bg: #4a3a1a;
+          --warning-text: #ffd48a;
+          --danger: #ff8d85;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button {
+        font: inherit;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-primary);
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-text);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+    </style>
+  </head>
+  <body>
+    <ssh-approval-root></ssh-approval-root>
+  </body>
+</html>

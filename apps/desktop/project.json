@@ -94,6 +94,22 @@
         }
       }
     },
+    "build-ssh-approval-preload": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/desktop/build/ssh-approval"],
+      "options": {
+        "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name ssh-approval-preload",
+        "cwd": "apps/desktop"
+      },
+      "configurations": {
+        "development": {
+          "command": "cross-env NODE_ENV=development webpack --config webpack.config.js --config-name ssh-approval-preload"
+        },
+        "production": {
+          "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name ssh-approval-preload"
+        }
+      }
+    },
     "build-magnify": {
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/apps/desktop/build/magnify"],
@@ -107,6 +123,22 @@
         },
         "production": {
           "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name magnify"
+        }
+      }
+    },
+    "build-ssh-approval": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/desktop/build/ssh-approval"],
+      "options": {
+        "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name ssh-approval",
+        "cwd": "apps/desktop"
+      },
+      "configurations": {
+        "development": {
+          "command": "cross-env NODE_ENV=development webpack --config webpack.config.js --config-name ssh-approval"
+        },
+        "production": {
+          "command": "cross-env NODE_ENV=production webpack --config webpack.config.js --config-name ssh-approval"
         }
       }
     },
@@ -126,6 +158,14 @@
         "cwd": "apps/desktop"
       }
     },
+    "test-ssh-approval": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/apps/desktop/ssh-approval"],
+      "options": {
+        "command": "npx jest --config jest.config.js --testPathPattern='src/ssh-approval'",
+        "cwd": "apps/desktop"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-native"],
@@ -137,7 +177,9 @@
           "nx run desktop:build-preload",
           "nx run desktop:build-renderer",
           "nx run desktop:build-magnify",
-          "nx run desktop:build-magnify-preload"
+          "nx run desktop:build-magnify-preload",
+          "nx run desktop:build-ssh-approval",
+          "nx run desktop:build-ssh-approval-preload"
         ]
       },
       "configurations": {
@@ -147,7 +189,9 @@
             "nx run desktop:build-preload --configuration=oss",
             "nx run desktop:build-renderer --configuration=oss",
             "nx run desktop:build-magnify --configuration=production",
-            "nx run desktop:build-magnify-preload --configuration=production"
+            "nx run desktop:build-magnify-preload --configuration=production",
+            "nx run desktop:build-ssh-approval --configuration=production",
+            "nx run desktop:build-ssh-approval-preload --configuration=production"
           ]
         },
         "oss-dev": {
@@ -156,7 +200,9 @@
             "nx run desktop:build-preload --configuration=oss-dev",
             "nx run desktop:build-renderer --configuration=oss-dev",
             "nx run desktop:build-magnify --configuration=development",
-            "nx run desktop:build-magnify-preload --configuration=development"
+            "nx run desktop:build-magnify-preload --configuration=development",
+            "nx run desktop:build-ssh-approval --configuration=development",
+            "nx run desktop:build-ssh-approval-preload --configuration=development"
           ]
         },
         "commercial": {
@@ -165,7 +211,9 @@
             "nx run desktop:build-preload --configuration=commercial",
             "nx run desktop:build-renderer --configuration=commercial",
             "nx run desktop:build-magnify --configuration=production",
-            "nx run desktop:build-magnify-preload --configuration=production"
+            "nx run desktop:build-magnify-preload --configuration=production",
+            "nx run desktop:build-ssh-approval --configuration=production",
+            "nx run desktop:build-ssh-approval-preload --configuration=production"
           ]
         },
         "commercial-dev": {
@@ -174,7 +222,9 @@
             "nx run desktop:build-preload --configuration=commercial-dev",
             "nx run desktop:build-renderer --configuration=commercial-dev",
             "nx run desktop:build-magnify --configuration=development",
-            "nx run desktop:build-magnify-preload --configuration=development"
+            "nx run desktop:build-magnify-preload --configuration=development",
+            "nx run desktop:build-ssh-approval --configuration=development",
+            "nx run desktop:build-ssh-approval-preload --configuration=development"
           ]
         }
       }

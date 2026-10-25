@@ -2,7 +2,7 @@
 // @ts-strict-ignore
 import * as path from "path";
 
-import { ipcMain, Notification } from "electron";
+import { Notification } from "electron";
 import {
   catchError,
   combineLatest,
@@ -16,11 +16,8 @@ import {
   skip,
   Subject,
   switchMap,
-  take,
   takeUntil,
   tap,
-  timeout,
-  TimeoutError,
 } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
@@ -28,7 +25,6 @@ import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -36,8 +32,12 @@ import { sshagent } from "@bitwarden/desktop-napi";
 
 import { WindowMain } from "../../main/window.main";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
-import { SSH_AGENT_IPC_CHANNELS } from "../models/ipc-channels";
 import { SshAgentPromptType } from "../models/ssh-agent-setting";
+
+import {
+  MainSshApprovalWindowService,
+  SshApprovalPrompt,
+} from "./main-ssh-approval-window.service";
 
 /**
  * Namespacing for cached sign authorizations.
@@ -53,34 +53,24 @@ type AuthorizationScope = (typeof AuthorizationScope)[keyof typeof Authorization
  *
  * The socket server, protocol parsing, and signing run in Rust (via napi). This service now also
  * provisions the agent's keys (decrypting vault SSH-key ciphers), owns the sign-authorization cache
- * and prompt-behavior decision, and — only when a prompt is genuinely needed — force-shows the
- * renderer and delegates the approval dialog to it over the `SIGN_REQUEST`/`SIGN_REQUEST_RESPONSE`
- * round-trip. The renderer is therefore a pure dialog host.
+ * and prompt-behavior decision. Unlocking and approving happen in the small approval window
+ * ({@link MainSshApprovalWindowService}), so the full renderer is never needed.
  */
 export class MainSshAgentService {
-  private static readonly UNLOCK_REQUEST_TIMEOUT = 60_000;
-
-  // The napi callback requestSign() is awaited directly by the Rust agent, so it must return a
-  // Promise that resolves with the user's decision. When a dialog is needed the renderer responds
-  // over IPC, so this map correlates each in-flight request id back to its waiting Promise.
-  private pendingRequests = new Map<number, (accepted: boolean) => void>();
-  private requestId = 0;
   private agentState: sshagent.SshAgentState;
   private authorizedHosts: Map<string, Set<string>> = new Map();
   private destroy$ = new Subject<void>();
 
   constructor(
     private logService: LogService,
-    private messagingService: MessagingService,
     private cipherService: CipherService,
     private authService: AuthService,
     private accountService: AccountService,
     private desktopSettingsService: DesktopSettingsService,
     private i18nService: I18nService,
     private windowMain: WindowMain,
-  ) {
-    this.registerIpcHandlers();
-  }
+    private approvalWindow: MainSshApprovalWindowService,
+  ) {}
 
   /** Starts the reactive key-provisioning and authorization-reset pipelines. */
   init(): void {
@@ -178,16 +168,6 @@ export class MainSshAgentService {
     this.destroy$.complete();
   }
 
-  private registerIpcHandlers() {
-    ipcMain.handle(
-      SSH_AGENT_IPC_CHANNELS.SIGN_REQUEST_RESPONSE,
-      async (_, { requestId, accepted }: { requestId: number; accepted: boolean }) => {
-        this.pendingRequests.get(requestId)?.(accepted);
-        this.pendingRequests.delete(requestId);
-      },
-    );
-  }
-
   private async initAgent(): Promise<void> {
     const signCb = (_err: Error | null, data: sshagent.SignRequestData) => this.requestSign(data);
     const listCb = (_err: Error | null) => this.requestListKeys();
@@ -226,8 +206,12 @@ export class MainSshAgentService {
       .map((c) => ({ name: c.name, privateKey: c.sshKey.privateKey, cipherId: c.id }));
   }
 
-  private async requestListKeys(): Promise<boolean> {
-    if (!(await this.waitForUnlock())) {
+  private requestListKeys(): Promise<boolean> {
+    return this.approvalWindow.session((prompt) => this.listKeys(prompt));
+  }
+
+  private async listKeys(prompt: SshApprovalPrompt): Promise<boolean> {
+    if (!(await prompt.unlock())) {
       return false;
     }
 
@@ -249,7 +233,11 @@ export class MainSshAgentService {
     if (!(await firstValueFrom(this.desktopSettingsService.sshAgentEnabled$))) {
       return false;
     }
-    if (!(await this.waitForUnlock())) {
+    return this.approvalWindow.session((prompt) => this.sign(prompt, data));
+  }
+
+  private async sign(prompt: SshApprovalPrompt, data: sshagent.SignRequestData): Promise<boolean> {
+    if (!(await prompt.unlock())) {
       return false;
     }
 
@@ -288,26 +276,22 @@ export class MainSshAgentService {
       return true;
     }
 
-    const id = ++this.requestId;
-    return new Promise((resolve) => {
-      this.pendingRequests.set(id, (accepted) => {
-        if (accepted) {
-          this.storeAuthorizedHost(data.cipherId, isAgentForwarding, hostFingerprint);
-        }
-        resolve(accepted);
-      });
-      void this.windowMain.ensureRenderer();
-      this.messagingService.send(SSH_AGENT_IPC_CHANNELS.SIGN_REQUEST, {
-        requestId: id,
-        cipherName: cipher.name,
-        application: application,
-        isAgentForwarding: isAgentForwarding,
-        namespace: data.signRequest.namespace,
-      });
+    const accepted = await prompt.approve({
+      cipherName: cipher.name,
+      application,
+      isAgentForwarding,
+      namespace: data.signRequest.namespace,
     });
+    if (accepted) {
+      this.storeAuthorizedHost(data.cipherId, isAgentForwarding, hostFingerprint);
+    }
+    return accepted;
   }
 
-  private async showSignRequestNotification(cipherName: string, application: string): Promise<void> {
+  private async showSignRequestNotification(
+    cipherName: string,
+    application: string,
+  ): Promise<void> {
     try {
       const alert = new Notification({
         title: this.i18nService.t("sshAgentApprovalNotificationTitle"),
@@ -315,36 +299,15 @@ export class MainSshAgentService {
         closeButtonText: this.i18nService.t("close"),
         icon: path.join(__dirname, "images/icon.png"),
       });
+      // Bring up the approval prompt if one is open, the full app otherwise.
       alert.addListener("click", () => {
-        void this.windowMain.ensureRenderer();
+        if (!this.approvalWindow.focus()) {
+          void this.windowMain.ensureRenderer();
+        }
       });
       alert.show();
     } catch (e) {
       this.logService.error("Failed to show the SSH agent sign request notification", e);
-    }
-  }
-
-  private async waitForUnlock(): Promise<boolean> {
-    const status = await firstValueFrom(this.authService.activeAccountStatus$);
-    if (status === AuthenticationStatus.Unlocked) {
-      return true;
-    }
-
-    await this.windowMain.ensureRenderer();
-    try {
-      await firstValueFrom(
-        this.authService.activeAccountStatus$.pipe(
-          filter((s) => s === AuthenticationStatus.Unlocked),
-          take(1),
-          timeout({ first: MainSshAgentService.UNLOCK_REQUEST_TIMEOUT }),
-        ),
-      );
-      return true;
-    } catch (e: unknown) {
-      if (e instanceof TimeoutError) {
-        this.logService.info("SSH agent sign request timed out waiting for unlock");
-      }
-      return false;
     }
   }
 

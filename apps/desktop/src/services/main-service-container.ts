@@ -10,6 +10,7 @@ import { AutofillSettingsService } from "@bitwarden/common/autofill/services/aut
 import { DefaultDomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
 import { DefaultAccountCryptographicStateService } from "@bitwarden/common/key-management/account-cryptography/default-account-cryptographic-state.service";
 import { MasterPasswordService } from "@bitwarden/common/key-management/master-password/services/master-password.service";
+import { PinService } from "@bitwarden/common/key-management/pin/pin.service.implementation";
 import { SharedUnlockSettingsService } from "@bitwarden/common/key-management/shared-unlock";
 import { DefaultSharedUnlockPeerService } from "@bitwarden/common/key-management/shared-unlock/default-shared-unlock-peer.service";
 import { DefaultV2UpgradeTokenStateService } from "@bitwarden/common/key-management/upgrade-token/services/default-v2-upgrade-token-state.service";
@@ -99,6 +100,7 @@ export class MainServiceContainer {
   readonly managedSettingsService: DefaultManagedSettingsService;
   readonly sdkClientFactory: DefaultSdkClientFactory;
   readonly sdkService: DefaultSdkService;
+  readonly pinService: PinService;
   readonly registerSdkService: DefaultRegisterSdkService;
   readonly domainSettingsService: DefaultDomainSettingsService;
   readonly autofillSettingsService: AutofillSettingsService;
@@ -320,6 +322,7 @@ export class MainServiceContainer {
       this.logService,
       customUserAgent,
     );
+    this.pinService = new PinService(this.sdkService);
 
     this.registerSdkService = new DefaultRegisterSdkService(
       this.sdkClientFactory,

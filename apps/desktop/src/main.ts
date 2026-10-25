@@ -47,12 +47,14 @@ import { MainDesktopAutotypeMvpService } from "./autofill/main/main-desktop-auto
 import { MainDesktopAutotypeService } from "./autofill/main/main-desktop-autotype.service";
 import { MainDesktopMagnifyService } from "./autofill/main/main-desktop-magnify.service";
 import { MainSshAgentService } from "./autofill/main/main-ssh-agent.service";
+import { MainSshApprovalWindowService } from "./autofill/main/main-ssh-approval-window.service";
 import { DesktopAutofillSettingsService } from "./autofill/services/desktop-autofill-settings.service";
 import { BiometricsUnlockDriver } from "./key-management/biometrics/biometrics-unlock.driver";
 import { DesktopBiometricsService } from "./key-management/biometrics/desktop.biometrics.service";
 import { MainBiometricsIPCListener } from "./key-management/biometrics/main-biometrics-ipc.listener";
 import { MainBiometricsService } from "./key-management/biometrics/main-biometrics.service";
 import { MainKeyManagementIpcListener } from "./key-management/unlock/main-key-management-ipc.listener";
+import { MainMiniUnlockService } from "./key-management/unlock/main-mini-unlock.service";
 import { MenuMain } from "./main/menu/menu.main";
 import { AUTOSTART_FLAG, MessagingMain } from "./main/messaging.main";
 import { NativeMessagingMain } from "./main/native-messaging.main";
@@ -112,6 +114,7 @@ export class Main {
   versionMain: VersionMain;
   shell: SafeShell;
   sshAgentService: MainSshAgentService;
+  sshApprovalWindowService: MainSshApprovalWindowService;
   sdkLoadService: SdkLoadService;
   mainDesktopAutotypeMvpService: MainDesktopAutotypeMvpService;
   mainDesktopAutotypeService: MainDesktopAutotypeService;
@@ -376,15 +379,34 @@ export class Main {
     this.clipboardMain = new ClipboardMain();
     this.clipboardMain.init();
 
+    this.sshApprovalWindowService = new MainSshApprovalWindowService(
+      this.logService,
+      this.windowMain,
+      accountService,
+      this.serviceContainer.authService,
+      new MainMiniUnlockService(
+        this.serviceContainer.unlockService,
+        this.biometricsService,
+        biometricStateService,
+        this.serviceContainer.userDecryptionOptionsService,
+        this.serviceContainer.pinService,
+        this.messagingService,
+        this.logService,
+      ),
+      this.desktopSettingsService,
+      this.i18nService,
+    );
+    this.sshApprovalWindowService.init();
+
     this.sshAgentService = new MainSshAgentService(
       this.logService,
-      this.messagingService,
       this.serviceContainer.cipherService,
       this.serviceContainer.authService,
       accountService,
       this.desktopSettingsService,
       this.i18nService,
       this.windowMain,
+      this.sshApprovalWindowService,
     );
 
     new EphemeralValueStorageService();
@@ -422,6 +444,7 @@ export class Main {
       this.mainDesktopAutotypeMvpService.dispose();
       this.mainDesktopAutotypeService.dispose();
       this.sshAgentService.dispose();
+      this.sshApprovalWindowService.dispose();
       this.mainDesktopMagnifyService.dispose();
       this.storageService.dispose();
     });
