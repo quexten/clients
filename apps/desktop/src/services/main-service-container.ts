@@ -274,12 +274,32 @@ export class MainServiceContainer {
       this.stateService,
       this.tokenService,
     );
+    this.sdkService = new DefaultSdkService(
+      this.sdkClientFactory,
+      this.environmentService,
+      this.platformUtilsService,
+      this.accountService,
+      () => this.kdfConfigService,
+      () => this.keyService,
+      () => this.accountCryptographicStateService,
+      () => this.apiService,
+      this.stateProvider,
+      () => this.configService,
+      this.v2UpgradeTokenStateService,
+      this.managedSettingsService,
+      this.appIdService,
+      this.logService,
+      customUserAgent,
+    );
+    this.pinService = new PinService(this.sdkService);
+
     this.configService = new DefaultConfigService(
       configApiService,
       this.environmentService,
       this.logService,
       this.stateProvider,
       this.authService,
+      this.sdkService,
     );
 
     this.domainSettingsService = new DefaultDomainSettingsService(
@@ -305,25 +325,6 @@ export class MainServiceContainer {
       this.configService,
     );
 
-    this.sdkService = new DefaultSdkService(
-      this.sdkClientFactory,
-      this.environmentService,
-      this.platformUtilsService,
-      this.accountService,
-      this.kdfConfigService,
-      this.keyService,
-      this.accountCryptographicStateService,
-      this.apiService,
-      this.stateProvider,
-      this.configService,
-      this.v2UpgradeTokenStateService,
-      this.managedSettingsService,
-      this.appIdService,
-      this.logService,
-      customUserAgent,
-    );
-    this.pinService = new PinService(this.sdkService);
-
     this.registerSdkService = new DefaultRegisterSdkService(
       this.sdkClientFactory,
       this.environmentService,
@@ -337,11 +338,7 @@ export class MainServiceContainer {
       customUserAgent,
     );
 
-    this.fileUploadService = new FileUploadService(
-      this.logService,
-      this.apiService,
-      this.configService,
-    );
+    this.fileUploadService = new FileUploadService(this.logService, this.apiService);
 
     this.cipherEncryptionService = new DefaultCipherEncryptionService(
       this.sdkService,
@@ -351,7 +348,6 @@ export class MainServiceContainer {
     this.cipherFileUploadService = new CipherFileUploadService(
       this.apiService,
       this.fileUploadService,
-      this.configService,
       this.cipherSdkService,
     );
 

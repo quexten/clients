@@ -1,6 +1,6 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { APP_INITIALIZER, Injector, NgModule } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, merge } from "rxjs";
 
@@ -176,6 +176,10 @@ import {
   Vfo1TerminologyService,
   PasswordRepromptService,
   SHARE_ITEM_ENTRY_POINT,
+  VFO1_FILTERS_STEP,
+  VFO1_SHARED_FOLDERS_STEP,
+  VFO1_VAULT_LIST_STEP,
+  VFO1_WALKTHROUGH_STEPS,
 } from "@bitwarden/vault";
 
 import { DesktopLoginComponentService } from "../../auth/login/desktop-login-component.service";
@@ -241,6 +245,10 @@ import { DesktopSetInitialPasswordService } from "./set-initial-password/desktop
  */
 const safeProviders: SafeProvider[] = [
   safeProvider(InitService),
+  safeProvider({
+    provide: VFO1_WALKTHROUGH_STEPS,
+    useValue: [VFO1_VAULT_LIST_STEP, VFO1_SHARED_FOLDERS_STEP, VFO1_FILTERS_STEP],
+  }),
   safeProvider({
     provide: CipherFormGenerationService,
     useClass: DesktopCredentialGenerationService,
@@ -481,7 +489,9 @@ const safeProviders: SafeProvider[] = [
       Fido2AuthenticatorServiceAbstraction,
       AccountService,
       AuthService,
+      EnvironmentService,
       PlatformUtilsService,
+      DesktopFido2UserInterfaceService,
     ],
   }),
   safeProvider({
@@ -616,24 +626,48 @@ const safeProviders: SafeProvider[] = [
     deps: [],
   }),
   // Main owns the user key; the renderer's SDK reads it from main over IPC via a desktop state bridge.
+  // Mirrors the jslib SdkService provider: services that depend on SdkService are resolved lazily.
   safeProvider({
     provide: SdkService,
-    useClass: DesktopRendererSdkService,
+    useFactory: (
+      sdkClientFactory: SdkClientFactory,
+      environmentService: EnvironmentService,
+      platformUtilsService: PlatformUtilsServiceAbstraction,
+      accountService: AccountServiceAbstraction,
+      stateProvider: StateProvider,
+      v2UpgradeTokenStateService: V2UpgradeTokenStateService,
+      managedSettingsService: ManagedSettingsService,
+      appIdService: AppIdServiceAbstraction,
+      logService: LogService,
+      injector: Injector,
+    ) =>
+      new DesktopRendererSdkService(
+        sdkClientFactory,
+        environmentService,
+        platformUtilsService,
+        accountService,
+        () => injector.get(KdfConfigService),
+        () => injector.get(KeyService),
+        () => injector.get(AccountCryptographicStateService),
+        () => injector.get(ApiServiceAbstraction),
+        stateProvider,
+        () => injector.get(ConfigService),
+        v2UpgradeTokenStateService,
+        managedSettingsService,
+        appIdService,
+        logService,
+      ),
     deps: [
       SdkClientFactory,
       EnvironmentService,
       PlatformUtilsServiceAbstraction,
       AccountServiceAbstraction,
-      KdfConfigService,
-      KeyService,
-      AccountCryptographicStateService,
-      ApiServiceAbstraction,
       StateProvider,
-      ConfigService,
       V2UpgradeTokenStateService,
       ManagedSettingsService,
       AppIdServiceAbstraction,
       LogService,
+      Injector,
     ],
   }),
   safeProvider({
