@@ -35,8 +35,10 @@ import { getCredentialsForAutofill } from "@bitwarden/common/platform/services/f
 import { Fido2Utils } from "@bitwarden/common/platform/services/fido2/fido2-utils";
 import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
-import { CipherType } from "@bitwarden/common/vault/enums";
-import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
+import {
+  CipherViewLike,
+  CipherViewLikeUtils,
+} from "@bitwarden/common/vault/utils/cipher-view-like-utils";
 import { autofill, passkey_authenticator } from "@bitwarden/desktop-napi";
 type PasskeyAssertionRequest = autofill.PasskeyAssertionRequest;
 type PasskeyAssertionResponse = autofill.PasskeyAssertionResponse;
@@ -247,15 +249,15 @@ export class DesktopAutofillService implements OnDestroy {
           ]).pipe(
             // Only proceed when the vault is unlocked
             filter(([, status]) => status === AuthenticationStatus.Unlocked),
-            // Then get cipher views
-            switchMap(([userId]) => this.cipherService.cipherViews$(userId)),
+            // Then get cipher list views: the sync needs no decrypted secrets
+            switchMap(([userId]) => this.cipherService.cipherListViews$(userId)),
           );
         }),
         // No filter for empty arrays here - we want to sync even if there are 0 items
-        filter((cipherViewMap) => cipherViewMap !== null),
+        filter((ciphers) => ciphers !== null),
         debounceTime(100),
 
-        mergeMap((cipherViewMap) => this.sync(Object.values(cipherViewMap ?? []))),
+        mergeMap((ciphers) => this.sync(ciphers ?? [])),
         takeUntil(this.destroy$),
       )
       .subscribe();
@@ -279,13 +281,13 @@ export class DesktopAutofillService implements OnDestroy {
       throw new Error("No active user found");
     }
 
-    const cipherViewMap = await firstValueFrom(this.cipherService.cipherViews$(userId));
-    this.logService.info(`Performing AdHoc sync over ${cipherViewMap?.length ?? 0} ciphers`);
-    await this.sync(Object.values(cipherViewMap ?? []));
+    const ciphers = await firstValueFrom(this.cipherService.cipherListViews$(userId));
+    this.logService.info(`Performing AdHoc sync over ${ciphers?.length ?? 0} ciphers`);
+    await this.sync(ciphers ?? []);
   }
 
   /** Give metadata about all available credentials in the users vault */
-  async sync(cipherViews: CipherView[]) {
+  async sync(ciphers: CipherViewLike[]) {
     const status = await this.status();
     if (status.type === "error") {
       return this.logService.error("Error getting autofill status", status.error);
@@ -300,33 +302,36 @@ export class DesktopAutofillService implements OnDestroy {
     let passwordCredentials: AutofillPasswordCredential[] = [];
 
     if (status.value.support.password) {
-      passwordCredentials = cipherViews
-        .filter(
-          (cipher) =>
-            !cipher.isDeleted &&
-            cipher.type === CipherType.Login &&
-            cipher.login.uris?.length > 0 &&
-            cipher.login.uris.some(
-              (uri) => uri.match !== UriMatchStrategy.Never && !Utils.isNullOrWhitespace(uri.uri),
-            ) &&
-            !Utils.isNullOrWhitespace(cipher.login.username) &&
-            !Utils.isNullOrWhitespace(cipher.login.password),
-        )
-        .map((cipher) => ({
-          type: "password",
-          cipherId: cipher.id,
-          uri: cipher.login.uris.find(
-            (uri) => uri.match !== UriMatchStrategy.Never && !Utils.isNullOrWhitespace(uri.uri),
-          )!.uri as string,
-          username: cipher.login.username as string,
-        }));
+      passwordCredentials = ciphers.flatMap((cipher): AutofillPasswordCredential[] => {
+        const login = CipherViewLikeUtils.getLogin(cipher);
+        const uri = login?.uris?.find(
+          (uri) => uri.match !== UriMatchStrategy.Never && !Utils.isNullOrWhitespace(uri.uri),
+        );
+        if (
+          CipherViewLikeUtils.isDeleted(cipher) ||
+          uri == null ||
+          Utils.isNullOrWhitespace(login?.username) ||
+          !CipherViewLikeUtils.hasCopyableValue(cipher, "password")
+        ) {
+          return [];
+        }
+
+        return [
+          {
+            type: "password",
+            cipherId: CipherViewLikeUtils.getId(cipher)!,
+            uri: uri.uri as string,
+            username: login!.username as string,
+          },
+        ];
+      });
     }
 
     if (status.value.support.fido2) {
       // Filter out passkey requests if the RP ID is this account's web vault
       // hostname, so a vault can't hold the passkey that unlocks itself.
       const vaultRpId = await this.activeVaultRpId();
-      fido2Credentials = (await getCredentialsForAutofill(cipherViews))
+      fido2Credentials = (await getCredentialsForAutofill(ciphers))
         .filter((credential) => !isVaultRpId(credential.rpId, vaultRpId))
         .map((credential) => ({
           type: "fido2",

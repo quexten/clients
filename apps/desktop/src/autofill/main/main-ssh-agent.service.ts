@@ -25,9 +25,14 @@ import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
+import {
+  CipherViewLike,
+  CipherViewLikeUtils,
+} from "@bitwarden/common/vault/utils/cipher-view-like-utils";
 import { sshagent } from "@bitwarden/desktop-napi";
 
 import { WindowMain } from "../../main/window.main";
@@ -124,9 +129,10 @@ export class MainSshAgentService {
                 return EMPTY;
               }
               return from(this.ensureAgentRunning()).pipe(
-                switchMap(() => this.cipherService.cipherViews$(account.id)),
+                switchMap(() => this.cipherService.cipherListViews$(account.id)),
                 filter((views) => views != null),
-                map((views) => this.toAgentKeys(views)),
+                switchMap((views) => this.sshKeyCiphers(account.id, views)),
+                map((ciphers) => this.toAgentKeys(ciphers)),
                 distinctUntilChanged((prev, curr) => {
                   if (prev.length !== curr.length) {
                     return false;
@@ -198,6 +204,24 @@ export class MainSshAgentService {
     }
   }
 
+  /**
+   * Full views of the SSH key ciphers only: the agent needs their private keys, and picking them
+   * on list views spares decrypting the rest of the vault.
+   */
+  private async sshKeyCiphers(userId: UserId, listViews: CipherViewLike[]): Promise<CipherView[]> {
+    const ids = listViews
+      .filter(
+        (cipher) =>
+          CipherViewLikeUtils.getType(cipher) === CipherType.SshKey &&
+          !CipherViewLikeUtils.isDeleted(cipher) &&
+          !CipherViewLikeUtils.isArchived(cipher),
+      )
+      .map((cipher) => CipherViewLikeUtils.getId(cipher))
+      .filter((id) => id != null);
+
+    return this.cipherService.getAllDecryptedForIds(userId, ids);
+  }
+
   private toAgentKeys(
     ciphers: CipherView[],
   ): { name: string; privateKey: string; cipherId: string }[] {
@@ -220,8 +244,10 @@ export class MainSshAgentService {
       if (account == null) {
         return false;
       }
-      const ciphers = await this.cipherService.getAllDecrypted(account.id);
-      this.replace(this.toAgentKeys(ciphers ?? []));
+      const listViews = await firstValueFrom(
+        this.cipherService.cipherListViews$(account.id).pipe(filter((views) => views != null)),
+      );
+      this.replace(this.toAgentKeys(await this.sshKeyCiphers(account.id, listViews)));
       return true;
     } catch (e) {
       this.logService.error("Failed to push SSH keys to the agent", e);
@@ -241,21 +267,20 @@ export class MainSshAgentService {
       return false;
     }
 
-    let ciphers: CipherView[];
+    let cipher: CipherView | undefined;
     try {
       const account = await firstValueFrom(this.accountService.activeAccount$);
       if (account == null) {
         return false;
       }
-      ciphers = await this.cipherService.getAllDecrypted(account.id);
+      [cipher] = await this.cipherService.getAllDecryptedForIds(account.id, [data.cipherId]);
     } catch (e) {
-      this.logService.error("Failed to decrypt the vault for an SSH sign request", e);
+      this.logService.error("Failed to decrypt the key for an SSH sign request", e);
       return false;
     }
 
     // The agent derives cipherId from its own keystore, which outlives a vault lock and an account
     // switch, so a cipher received in the request might not be present in the active vault.
-    const cipher = ciphers?.find((c) => c.id === data.cipherId);
     if (cipher == null) {
       this.logService.error(
         "SSH sign request received for key not in the active vault; rejecting.",

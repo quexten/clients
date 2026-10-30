@@ -76,6 +76,15 @@ describe("MainSshAgentService", () => {
 
   let service: MainSshAgentService;
 
+  /** The vault the service reads: list views to pick SSH keys, full views for the ones it decrypts. */
+  function setVault(ciphers: unknown[]): void {
+    const views = ciphers as CipherView[];
+    cipherService.cipherListViews$.mockReturnValue(of(views as never));
+    cipherService.getAllDecryptedForIds.mockImplementation(async (_userId, ids) =>
+      views.filter((cipher) => ids.includes(cipher.id)),
+    );
+  }
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -105,8 +114,7 @@ describe("MainSshAgentService", () => {
     authService.authStatusFor$.mockReturnValue(of(AuthenticationStatus.Unlocked));
     desktopSettingsService.sshAgentEnabled$ = sshAgentEnabled$;
     desktopSettingsService.sshAgentPromptBehavior$ = sshAgentPromptBehavior$;
-    cipherService.cipherViews$.mockReturnValue(of([]));
-    cipherService.getAllDecrypted.mockResolvedValue([]);
+    setVault([]);
     i18nService.t.mockImplementation((key: string, ...args: string[]) => {
       if (key === "unknownApplication") {
         return "Unknown application";
@@ -156,9 +164,7 @@ describe("MainSshAgentService", () => {
 
   describe("key provisioning", () => {
     it("starts the agent and pushes SSH-key ciphers when enabled and unlocked", async () => {
-      cipherService.cipherViews$.mockReturnValue(
-        of([makeSshCipher("c1", "Key 1", "pk-1"), makeSshCipher("c2", "Key 2", "pk-2")]),
-      );
+      setVault([makeSshCipher("c1", "Key 1", "pk-1"), makeSshCipher("c2", "Key 2", "pk-2")]);
 
       service.init();
       await flush();
@@ -188,7 +194,7 @@ describe("MainSshAgentService", () => {
         { ...makeSshCipher("c4", "Archived", "pk-4"), isArchived: true },
       ] as unknown as CipherView[];
 
-      cipherService.cipherViews$.mockReturnValue(of(ciphers));
+      setVault(ciphers);
 
       service.init();
       await flush();
@@ -217,8 +223,7 @@ describe("MainSshAgentService", () => {
     }
 
     beforeEach(async () => {
-      cipherService.getAllDecrypted.mockResolvedValue([cipher]);
-      cipherService.cipherViews$.mockReturnValue(of([cipher]));
+      setVault([cipher]);
 
       // Trigger `serve` so the sign/list callbacks are captured.
       service.init();
@@ -232,7 +237,7 @@ describe("MainSshAgentService", () => {
     });
 
     it("returns false when the requested cipher is not in the active vault", async () => {
-      cipherService.getAllDecrypted.mockResolvedValue([]);
+      setVault([]);
 
       expect(await capturedSignCb(null, signData())).toBe(false);
       expect(logService.error).toHaveBeenCalled();
@@ -279,9 +284,10 @@ describe("MainSshAgentService", () => {
 
     it("resolves false without decrypting when unlock is not completed", async () => {
       prompt.unlock.mockResolvedValue(false);
+      cipherService.getAllDecryptedForIds.mockClear();
 
       expect(await capturedSignCb(null, signData())).toBe(false);
-      expect(cipherService.getAllDecrypted).not.toHaveBeenCalled();
+      expect(cipherService.getAllDecryptedForIds).not.toHaveBeenCalled();
       expect(prompt.approve).not.toHaveBeenCalled();
     });
 
@@ -325,7 +331,7 @@ describe("MainSshAgentService", () => {
 
   describe("requestListKeys", () => {
     beforeEach(async () => {
-      cipherService.getAllDecrypted.mockResolvedValue([makeSshCipher("c1", "Key", "pk")]);
+      setVault([makeSshCipher("c1", "Key", "pk")]);
 
       service.init();
       await flush();
@@ -363,8 +369,7 @@ describe("MainSshAgentService", () => {
     }
 
     beforeEach(async () => {
-      cipherService.getAllDecrypted.mockResolvedValue([cipher]);
-      cipherService.cipherViews$.mockReturnValue(of([cipher]));
+      setVault([cipher]);
       sshAgentPromptBehavior$.next(SshAgentPromptType.RememberUntilLock);
 
       service.init();
