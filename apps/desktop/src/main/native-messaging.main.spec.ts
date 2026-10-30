@@ -220,6 +220,29 @@ describe("NativeMessagingMain", () => {
     });
 
     describe("generateManifests", () => {
+      describe("with BITWARDEN_ADDITIONAL_EXTENSION_IDS", () => {
+        afterEach(() => {
+          delete process.env.BITWARDEN_ADDITIONAL_EXTENSION_IDS;
+        });
+
+        it("allows the extra extension ids in the Chrome manifest", async () => {
+          mkdirSync(chrome, { recursive: true });
+          process.env.BITWARDEN_ADDITIONAL_EXTENSION_IDS =
+            " aaaabbbbccccddddeeeeffffgggghhhh, chrome-extension://iiiijjjjkkkkllllmmmmnnnnoooopppp/ ,";
+
+          await sut.generateManifests();
+
+          expect(manifestIn(chrome)?.allowed_origins).toEqual(
+            expect.arrayContaining([
+              "chrome-extension://nngceckbapebfimnlniiiahkandclblb/",
+              "chrome-extension://aaaabbbbccccddddeeeeffffgggghhhh/",
+              "chrome-extension://iiiijjjjkkkkllllmmmmnnnnoooopppp/",
+            ]),
+          );
+          expect(manifestIn(chrome)?.allowed_origins).toHaveLength(6);
+        });
+      });
+
       it("installs the Firefox manifest when only the Firefox profile directory exists", async () => {
         mkdirSync(firefoxProfiles, { recursive: true });
 

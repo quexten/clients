@@ -20,6 +20,10 @@ import { isDev } from "../utils";
 import { isWindowsStore } from "./platform-utils.main";
 import { WindowMain } from "./window.main";
 
+/** Environment variable holding extension ids to allow, see {@link NativeMessagingMain.loadChromeIds}. */
+const ADDITIONAL_EXTENSION_IDS_ENV = "BITWARDEN_ADDITIONAL_EXTENSION_IDS";
+const CHROME_EXTENSION_SCHEME = "chrome-extension://";
+
 export class NativeMessagingMain {
   private ipcServer: ipc.NativeIpcServer | null;
   /** Connected clients by id, with the type each announced; `Unknown` until it announces. */
@@ -562,6 +566,21 @@ export class NativeMessagingMain {
       // Opera extension
       "chrome-extension://ccnckbpmaceehanjmeomladnmlffdjgn/",
     ]);
+
+    // Comma-separated extension ids or origins to allow besides the published ones, e.g. a
+    // self-built extension: BITWARDEN_ADDITIONAL_EXTENSION_IDS=abcdefghijklmnopabcdefghijklmnop
+    for (const id of (process.env[ADDITIONAL_EXTENSION_IDS_ENV] ?? "").split(",")) {
+      const trimmed = id.trim();
+      if (trimmed === "") {
+        continue;
+      }
+
+      ids.add(
+        trimmed.startsWith(CHROME_EXTENSION_SCHEME)
+          ? trimmed
+          : `${CHROME_EXTENSION_SCHEME}${trimmed}/`,
+      );
+    }
 
     if (!isDev()) {
       return Array.from(ids);
