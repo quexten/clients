@@ -419,6 +419,8 @@ export class MainServiceContainer {
       this.biometricsService,
       this.biometricStateService,
       this.v2UpgradeTokenStateService,
+      this.keyService,
+      this.sdkService,
       this.autoUnlockService,
       this.messagingService,
     );

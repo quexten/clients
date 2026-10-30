@@ -3,11 +3,13 @@ import { AccountCryptographicStateService } from "@bitwarden/common/key-manageme
 import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/key-management/master-password/abstractions/master-password.service.abstraction";
 import { V2UpgradeTokenStateService } from "@bitwarden/common/key-management/upgrade-token/abstractions/v2-upgrade-token-state.service.abstraction";
 import { RegisterSdkService } from "@bitwarden/common/platform/abstractions/sdk/register-sdk.service";
+import { SdkService } from "@bitwarden/common/platform/abstractions/sdk/sdk.service";
 import { MessageSender } from "@bitwarden/common/platform/messaging";
 import {
   BiometricsService,
   BiometricStateService,
   KdfConfigService,
+  KeyService,
 } from "@bitwarden/key-management";
 // eslint-disable-next-line no-restricted-imports
 import { SymmetricCryptoKey } from "@bitwarden/legacy-crypto";
@@ -34,6 +36,8 @@ export class MainUnlockService extends DefaultUnlockService {
     biometricsService: BiometricsService,
     biometricStateService: BiometricStateService,
     v2UpgradeTokenStateService: V2UpgradeTokenStateService,
+    keyService: KeyService,
+    sdkService: SdkService,
     autoUnlockService: AutoUnlockService,
     private readonly messageSender: MessageSender,
   ) {
@@ -48,6 +52,8 @@ export class MainUnlockService extends DefaultUnlockService {
       biometricsService,
       biometricStateService,
       v2UpgradeTokenStateService,
+      keyService,
+      sdkService,
       autoUnlockService,
     );
   }
