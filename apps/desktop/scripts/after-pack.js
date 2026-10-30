@@ -249,8 +249,7 @@ async function addElectronFuses(context) {
 
 function copyMacOsAutofillExtension(context) {
   // Building the extension needs Bitwarden's signing profiles, so a local package without them
-  // can opt out. Unsigned, e.g.:
-  // BITWARDEN_SKIP_AUTOFILL_EXTENSION=true APPLE_NOTARIZE=false CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack:dir
+  // can opt out. `npm run pack:dir` (and `dist:dir`) does, and also skips signing and notarizing.
   if (process.env[SKIP_AUTOFILL_EXTENSION_ENV] === "true") {
     console.log(`[macOS] Skipping the Autofill extension (${SKIP_AUTOFILL_EXTENSION_ENV})`);
     return;
