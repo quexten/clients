@@ -17,7 +17,6 @@ import { PureCrypto } from "@bitwarden/sdk-internal";
 import { AccountService } from "../../../auth/abstractions/account.service";
 import { ForceSetPasswordReason } from "../../../auth/models/domain/force-set-password-reason";
 import { assertNonNullish } from "../../../auth/utils";
-import { FeatureFlag, getFeatureFlagValue } from "../../../enums/feature-flag.enum";
 import { SdkLoadService } from "../../../platform/abstractions/sdk/sdk-load.service";
 import { Utils } from "../../../platform/misc/utils";
 import { USER_SERVER_CONFIG } from "../../../platform/services/config/default-config.service";
@@ -76,9 +75,9 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
 
     // Note: We can't use the config service as an abstraction here because it creates a circular dependency: ConfigService -> ConfigApiService -> ApiService -> VaultTimeoutSettingsService -> KeyService -> MP service.
     return this.stateProvider.getUser(userId, USER_SERVER_CONFIG).state$.pipe(
-      map((serverConfig) =>
-        getFeatureFlagValue(serverConfig, FeatureFlag.PM31088_MasterPasswordServiceEmitSalt),
-      ),
+      // Forced off: this reads the server config directly, so flag overrides don't apply, and the
+      // flag's path expects unlock data a freshly started process doesn't have in its state yet.
+      map(() => false),
       switchMap((enabled) =>
         iif(
           () => enabled,

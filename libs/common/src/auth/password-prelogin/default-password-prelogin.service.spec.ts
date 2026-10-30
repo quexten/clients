@@ -84,7 +84,8 @@ describe("DefaultPasswordPreloginService", () => {
       expect(apiService.getPreloginData).toHaveBeenCalledWith(new PasswordPreloginRequest(email));
     });
 
-    it("fetches, maps, and emits prelogin data from the SDK when the flag is on", async () => {
+    // Skipped while PM27060_PasswordPreloginFromSdk is forced off.
+    it.skip("fetches, maps, and emits prelogin data from the SDK when the flag is on", async () => {
       configService.getFeatureFlag.mockResolvedValue(true);
 
       const result = await firstValueFrom(sut.getPreloginData$(email));
@@ -93,7 +94,8 @@ describe("DefaultPasswordPreloginService", () => {
       expect(apiService.getPreloginData).not.toHaveBeenCalled();
     });
 
-    it("checks the feature flag with the expected key", async () => {
+    // Skipped while PM27060_PasswordPreloginFromSdk is forced off.
+    it.skip("checks the feature flag with the expected key", async () => {
       await firstValueFrom(sut.getPreloginData$(email));
 
       expect(configService.getFeatureFlag).toHaveBeenCalledWith(

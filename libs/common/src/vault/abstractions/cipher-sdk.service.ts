@@ -59,6 +59,34 @@ export abstract class CipherSdkService {
   ): Promise<CipherView | undefined>;
 
   /**
+   * Updates only the user fields of a cipher (folder, favorite) on the server using the SDK.
+   * Needs no edit permission.
+   *
+   * @param cipher The cipher view carrying the new user fields
+   * @param userId The user ID to use for SDK client
+   * @returns A promise that resolves to the updated cipher view
+   */
+  abstract updateUserFieldsWithServer(
+    cipher: CipherView,
+    userId: UserId,
+  ): Promise<CipherView | undefined>;
+
+  /**
+   * Updates a restricted cipher on the server using the SDK, editing against its revealed view,
+   * since local state holds only the restricted copy.
+   *
+   * @param cipher The cipher view to update
+   * @param original The revealed (full) view the edit started from
+   * @param userId The user ID to use for SDK client
+   * @returns A promise that resolves to the updated cipher view, which is restricted
+   */
+  abstract updateWithRevealedOriginal(
+    cipher: CipherView,
+    original: CipherView,
+    userId: UserId,
+  ): Promise<CipherView | undefined>;
+
+  /**
    * Deletes a cipher on the server using the SDK.
    *
    * @param id The cipher ID to delete
@@ -240,11 +268,13 @@ export abstract class CipherSdkService {
    * @param cipherId The cipher to attach the new file to
    * @param request Encrypted attachment metadata (key, fileName, fileSize, lastKnownRevisionDate)
    * @param userId The user ID to use for SDK client
+   * @param asAdmin Whether to use the admin endpoint, which does not update local state
    */
   abstract createAttachment(
     cipherId: CipherId,
     request: CreateAttachmentRequest,
     userId: UserId,
+    asAdmin?: boolean,
   ): Promise<CreatedAttachment>;
 
   /**
@@ -274,12 +304,20 @@ export abstract class CipherSdkService {
   ): Promise<CipherView | undefined>;
 
   /**
-   * Lists and decrypts all ciphers from state using the SDK.
+   * Decrypts every given cipher into a full view, typically the whole vault, using the SDK.
    *
+   * Legacy: it keeps every full view, so every password, decrypted at once. Prefer list views,
+   * and fully decrypt only the ciphers needed. A caller that really has to go over the whole vault
+   * should do it through an iterator in the SDK, which decrypts one cipher at a time.
+   *
+   * @param ciphers The encrypted ciphers to decrypt
    * @param userId The user ID to use for SDK client
    * @returns A promise that resolves to the decrypt result containing successes and failures
    */
-  abstract getAllDecrypted(userId: UserId): Promise<DecryptAllCiphersResult>;
+  abstract legacyDecryptFullViewList(
+    ciphers: Cipher[],
+    userId: UserId,
+  ): Promise<DecryptAllCiphersResult>;
 
   /**
    * Fetches all ciphers for an organization from the API using the SDK.

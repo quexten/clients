@@ -1,0 +1,63 @@
+<div class="mini-unlock">
+  <h1 class="title">{{ strings().locked }}</h1>
+  @if (strings().unlockRequired) {
+    <p class="subtitle">{{ strings().unlockRequired }}</p>
+  }
+
+  @if (methods().length > 1) {
+    <div class="tabs" role="tablist">
+      @for (m of methods(); track m) {
+        <button
+          type="button"
+          role="tab"
+          [id]="'miniUnlock_tab_' + m"
+          [class.active]="m === method()"
+          [attr.aria-selected]="m === method()"
+          (click)="select(m)"
+        >
+          {{ label(m) }}
+        </button>
+      }
+    </div>
+  }
+
+  @switch (method()) {
+    @case (Method.Biometrics) {
+      <button
+        type="button"
+        class="primary block"
+        id="miniUnlock_button_biometrics"
+        [disabled]="busy()"
+        (click)="unlockWithBiometrics()"
+      >
+        {{ strings().unlockWithBiometrics }}
+      </button>
+    }
+    @case (null) {}
+    @default {
+      <form (submit)="submit($event, secret.value)">
+        <label [for]="'miniUnlock_input_' + method()">{{ label(method()!) }}</label>
+        <input
+          #secret
+          type="password"
+          autocomplete="off"
+          [id]="'miniUnlock_input_' + method()"
+          [class.mono]="method() === Method.Pin"
+          [disabled]="busy()"
+        />
+        <button
+          type="submit"
+          class="primary block"
+          id="miniUnlock_button_submit"
+          [disabled]="busy()"
+        >
+          {{ strings().unlock }}
+        </button>
+      </form>
+    }
+  }
+
+  @if (error(); as message) {
+    <p class="error" id="miniUnlock_text_error" role="alert">{{ message }}</p>
+  }
+</div>

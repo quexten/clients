@@ -21,8 +21,26 @@ import {
   UserId,
 } from "../../types/guid";
 import { CipherSdkService, DecryptAllCiphersResult } from "../abstractions/cipher-sdk.service";
+import { RestrictedCipherWriteError } from "../abstractions/cipher.service";
 import { Cipher } from "../models/domain/cipher";
 import { CipherView } from "../models/view/cipher.view";
+
+/**
+ * Ciphers per SDK call in {@link DefaultCipherSdkService.legacyDecryptFullViewList}. Bounds the
+ * SDK's peak memory to one batch of inputs and outputs, while keeping the calls few.
+ */
+const DECRYPT_BATCH_SIZE = 250;
+
+/**
+ * The SDK refuses an edit of a restricted cipher locally (`GatedCipher`) or when the original it
+ * was given is itself restricted (`PartialOriginal`). Vault shows one message for both.
+ */
+function toRestrictedCipherWriteError(error: unknown): unknown {
+  return isEditCipherError(error) &&
+    (error.variant === "GatedCipher" || error.variant === "PartialOriginal")
+    ? new RestrictedCipherWriteError()
+    : error;
+}
 
 export class DefaultCipherSdkService implements CipherSdkService {
   constructor(
@@ -93,7 +111,54 @@ export class DefaultCipherSdkService implements CipherSdkService {
         }),
         catchError((error: unknown) => {
           this.logService.error(`Failed to update cipher: ${error}`);
-          throw error;
+          throw toRestrictedCipherWriteError(error);
+        }),
+      ),
+    );
+  }
+
+  // SDK ask: edit_partial persists the write response with no restricted-copy guard. Guard every stored write response at the repository level.
+  async updateUserFieldsWithServer(
+    cipher: CipherView,
+    userId: UserId,
+  ): Promise<CipherView | undefined> {
+    return await firstValueFrom(
+      this.sdkService.userClient$(userId).pipe(
+        switchMap(async (sdk) => {
+          using ref = sdk.take();
+          const result = await ref.value
+            .vault()
+            .ciphers()
+            .edit_partial(cipher.toSdkPartialUpdateCipherRequest());
+          return CipherView.fromSdkCipherView(result);
+        }),
+        catchError((error: unknown) => {
+          this.logService.error(`Failed to update cipher: ${error}`);
+          throw toRestrictedCipherWriteError(error);
+        }),
+      ),
+    );
+  }
+
+  async updateWithRevealedOriginal(
+    cipher: CipherView,
+    original: CipherView,
+    userId: UserId,
+  ): Promise<CipherView | undefined> {
+    return await firstValueFrom(
+      this.sdkService.userClient$(userId).pipe(
+        switchMap(async (sdk) => {
+          using ref = sdk.take();
+          // `edit` builds its original from local state, which holds only the restricted copy.
+          const result = await ref.value
+            .vault()
+            .ciphers()
+            .edit_gated(cipher.toSdkUpdateCipherRequest(), original.toSdkCipherView());
+          return CipherView.fromSdkCipherView(result);
+        }),
+        catchError((error: unknown) => {
+          this.logService.error(`Failed to update cipher: ${error}`);
+          throw toRestrictedCipherWriteError(error);
         }),
       ),
     );
@@ -397,12 +462,17 @@ export class DefaultCipherSdkService implements CipherSdkService {
     cipherId: CipherId,
     request: CreateAttachmentRequest,
     userId: UserId,
+    asAdmin = false,
   ): Promise<CreatedAttachment> {
     return await firstValueFrom(
       this.sdkService.userClient$(userId).pipe(
         switchMap(async (sdk) => {
           using ref = sdk.take();
-          return await ref.value.vault().attachments().create_attachment(asUuid(cipherId), request);
+          const attachments = ref.value.vault().attachments();
+
+          return asAdmin
+            ? await attachments.admin().create_attachment(asUuid(cipherId), request)
+            : await attachments.create_attachment(asUuid(cipherId), request);
         }),
         catchError((error: unknown) => {
           this.logService.error(`Failed to create attachment: ${error}`);
@@ -457,19 +527,36 @@ export class DefaultCipherSdkService implements CipherSdkService {
     );
   }
 
-  async getAllDecrypted(userId: UserId): Promise<DecryptAllCiphersResult> {
+  async legacyDecryptFullViewList(
+    ciphers: Cipher[],
+    userId: UserId,
+  ): Promise<DecryptAllCiphersResult> {
     return await firstValueFrom(
       this.sdkService.userClient$(userId).pipe(
         switchMap(async (sdk) => {
           using ref = sdk.take();
           const sdkCiphersClient = ref.value.vault().ciphers();
 
-          const decryptResult = await sdkCiphersClient.get_all();
+          const result: DecryptAllCiphersResult = { successes: [], failures: [] };
 
-          return this.toDecryptAllCiphersResult(decryptResult);
+          // In batches: WebAssembly memory grows to the largest call and never shrinks. For
+          // example, decrypting a 12.000 item vault in one call permanently raises the SDK memory
+          // by 130MB.
+          for (let start = 0; start < ciphers.length; start += DECRYPT_BATCH_SIZE) {
+            const batch = ciphers.slice(start, start + DECRYPT_BATCH_SIZE);
+            const decryptResult = await sdkCiphersClient.decrypt_list_full_with_failures(
+              batch.map((cipher) => cipher.toSdkCipher()),
+            );
+
+            const { successes, failures } = this.toDecryptAllCiphersResult(decryptResult);
+            result.successes.push(...successes);
+            result.failures.push(...failures);
+          }
+
+          return result;
         }),
         catchError((error: unknown) => {
-          this.logService.error(`Failed to list and decrypt ciphers: ${error}`);
+          this.logService.error(`Failed to decrypt ciphers: ${error}`);
           throw error;
         }),
       ),
@@ -648,7 +735,6 @@ export class DefaultCipherSdkService implements CipherSdkService {
             const result = await sdkCiphersClient.update_collection(
               asUuid(cipherId),
               collectionIds.map((id) => asUuid(id)),
-              false,
             );
             return CipherView.fromSdkCipherView(result);
           } catch (e) {

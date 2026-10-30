@@ -1,5 +1,3 @@
-// FIXME: Update this file to be type safe and remove this and next line
-// @ts-strict-ignore
 import "core-js/proposals/explicit-resource-management";
 
 import * as path from "path";
@@ -31,7 +29,7 @@ import { DefaultBiometricStateService } from "@bitwarden/key-management";
 // eslint-disable-next-line no-restricted-imports
 import { NodeCryptoFunctionService } from "@bitwarden/legacy-crypto/node";
 import { FlightRecorderLogRecorder } from "@bitwarden/logging";
-import { FlightRecorderClient } from "@bitwarden/sdk-internal";
+import { FlightRecorderClient, ipcRegisterBiometricsHandlers } from "@bitwarden/sdk-internal";
 import {
   DefaultActiveUserStateProvider,
   DefaultDerivedStateProvider,
@@ -41,16 +39,22 @@ import {
   DefaultStateProvider,
 } from "@bitwarden/state-internal";
 import { SerializedMemoryStorageService, StorageServiceProvider } from "@bitwarden/storage-core";
+import { UserId } from "@bitwarden/user-core";
 
 import { SSOLocalhostCallbackService } from "./auth/services/sso-localhost-callback.service";
 import { DesktopAutofillMain } from "./autofill/main/main-desktop-autofill.service";
 import { MainDesktopAutotypeMvpService } from "./autofill/main/main-desktop-autotype-mvp.service";
 import { MainDesktopAutotypeService } from "./autofill/main/main-desktop-autotype.service";
+import { MainDesktopMagnifyService } from "./autofill/main/main-desktop-magnify.service";
 import { MainSshAgentService } from "./autofill/main/main-ssh-agent.service";
+import { MainSshApprovalWindowService } from "./autofill/main/main-ssh-approval-window.service";
 import { DesktopAutofillSettingsService } from "./autofill/services/desktop-autofill-settings.service";
+import { BiometricsUnlockDriver } from "./key-management/biometrics/biometrics-unlock.driver";
 import { DesktopBiometricsService } from "./key-management/biometrics/desktop.biometrics.service";
 import { MainBiometricsIPCListener } from "./key-management/biometrics/main-biometrics-ipc.listener";
 import { MainBiometricsService } from "./key-management/biometrics/main-biometrics.service";
+import { MainKeyManagementIpcListener } from "./key-management/unlock/main-key-management-ipc.listener";
+import { MainMiniUnlockService } from "./key-management/unlock/main-mini-unlock.service";
 import { MenuMain } from "./main/menu/menu.main";
 import { AUTOSTART_FLAG, MessagingMain } from "./main/messaging.main";
 import { NativeMessagingMain } from "./main/native-messaging.main";
@@ -65,6 +69,7 @@ import { flagEnabled } from "./platform/flags";
 import { ClipboardMain } from "./platform/main/clipboard.main";
 import { DesktopCredentialStorageListener } from "./platform/main/desktop-credential-storage-listener";
 import { ElectronStorageService } from "./platform/main/electron-storage.service";
+import { MainSecureStorageService } from "./platform/main/main-secure-storage.service";
 import { SafeShell } from "./platform/main/safe-shell.main";
 import { CachedBackend } from "./platform/main/storage/cached-backend";
 import { ElectronStoreBackend } from "./platform/main/storage/electron-store-backend";
@@ -76,6 +81,8 @@ import { I18nMainService } from "./platform/services/i18n.main.service";
 import { IpcMainService } from "./platform/services/ipc.main.service";
 import { ElectronMainMessagingService } from "./services/electron-main-messaging.service";
 import { MainSdkLoadService } from "./services/main-sdk-load-service";
+import { MainServiceContainer } from "./services/main-service-container";
+import { MainVaultIpcListener } from "./vault/main/main-vault-ipc.listener";
 
 export class Main {
   logService: ElectronLogMainService;
@@ -108,11 +115,14 @@ export class Main {
   versionMain: VersionMain;
   shell: SafeShell;
   sshAgentService: MainSshAgentService;
+  sshApprovalWindowService: MainSshApprovalWindowService;
   sdkLoadService: SdkLoadService;
   mainDesktopAutotypeMvpService: MainDesktopAutotypeMvpService;
   mainDesktopAutotypeService: MainDesktopAutotypeService;
+  mainDesktopMagnifyService: MainDesktopMagnifyService;
   ssoCookieMain: SsoCookieMain;
   ipcService: IpcService;
+  serviceContainer: MainServiceContainer;
 
   constructor() {
     // Set paths for portable builds
@@ -169,6 +179,7 @@ export class Main {
     this.logService = new ElectronLogMainService(null, app.getPath("userData"), flightRecorder);
 
     this.storageService = new ElectronStorageService(storageBackend);
+    const secureStorageService = new MainSecureStorageService(app.getName());
     this.memoryStorageService = new MemoryStorageService();
     this.memoryStorageForStateProviders = new SerializedMemoryStorageService();
     const storageServiceProvider = new StorageServiceProvider(
@@ -337,12 +348,73 @@ export class Main {
       this.windowMain,
     );
 
+    this.serviceContainer = new MainServiceContainer(
+      this.logService,
+      this.i18nService,
+      this.storageService,
+      secureStorageService,
+      storageServiceProvider,
+      singleUserStateProvider,
+      globalStateProvider,
+      stateProvider,
+      accountService,
+      this.environmentService,
+      this.messagingService,
+      this.biometricsService,
+      biometricStateService,
+      this.ipcService,
+      this.sharedUnlockSettingsService,
+      this.shell,
+    );
+
+    new MainKeyManagementIpcListener(
+      this.serviceContainer.unlockService,
+      this.serviceContainer.keyService,
+      accountService,
+      this.serviceContainer.stateProvider,
+      this.logService,
+    ).init();
+
+    new MainVaultIpcListener(this.serviceContainer.cipherService).init();
+
     this.desktopAutofillSettingsService = new DesktopAutofillSettingsService(stateProvider);
 
     this.clipboardMain = new ClipboardMain();
     this.clipboardMain.init();
 
-    this.sshAgentService = new MainSshAgentService(this.logService, this.messagingService);
+    // Unlocks main's session from the mini windows (SSH approval, Magnify).
+    const miniUnlockService = new MainMiniUnlockService(
+      this.serviceContainer.unlockService,
+      this.biometricsService,
+      biometricStateService,
+      this.serviceContainer.userDecryptionOptionsService,
+      this.serviceContainer.pinService,
+      this.messagingService,
+      this.i18nService,
+      this.logService,
+    );
+
+    this.sshApprovalWindowService = new MainSshApprovalWindowService(
+      this.logService,
+      this.windowMain,
+      accountService,
+      this.serviceContainer.authService,
+      miniUnlockService,
+      this.desktopSettingsService,
+      this.i18nService,
+    );
+    this.sshApprovalWindowService.init();
+
+    this.sshAgentService = new MainSshAgentService(
+      this.logService,
+      this.serviceContainer.cipherService,
+      this.serviceContainer.authService,
+      accountService,
+      this.desktopSettingsService,
+      this.i18nService,
+      this.windowMain,
+      this.sshApprovalWindowService,
+    );
 
     new EphemeralValueStorageService();
 
@@ -368,9 +440,20 @@ export class Main {
       this.windowMain,
     );
 
+    this.mainDesktopMagnifyService = new MainDesktopMagnifyService(
+      this.logService,
+      this.windowMain,
+      accountService,
+      this.serviceContainer.authService,
+      miniUnlockService,
+    );
+
     app.on("will-quit", () => {
       this.mainDesktopAutotypeMvpService.dispose();
       this.mainDesktopAutotypeService.dispose();
+      this.sshAgentService.dispose();
+      this.sshApprovalWindowService.dispose();
+      this.mainDesktopMagnifyService.dispose();
       this.storageService.dispose();
     });
   }
@@ -396,6 +479,14 @@ export class Main {
         // before `windowMain.init()`, so the renderer always finds main's IPC client and handlers ready.
         await this.sdkLoadService.loadAndInit();
         await this.ipcService.init();
+
+        // The browser extension and the CLI reach the desktop app over native messaging, and their
+        // messages are answered by main's client. The renderer's own biometrics handlers are not on
+        // that path (the renderer is not even alive when it is headless), so main answers them.
+        await ipcRegisterBiometricsHandlers(
+          this.ipcService.client,
+          new BiometricsUnlockDriver(this.biometricsService, this.serviceContainer.unlockService),
+        );
 
         await this.windowMain.init(showWindow);
         this.ssoCookieMain.init(this.windowMain.session);
@@ -465,13 +556,37 @@ export class Main {
           this.processDeepLink([url]);
         });
 
-        // Handle window visibility events
-        this.windowMain.win.on("hide", () => {
-          this.messagingService.send("windowHidden");
-        });
-        this.windowMain.win.on("minimize", () => {
-          this.messagingService.send("windowHidden");
-        });
+        // Handle window visibility events (the window may not exist when booting headless).
+        if (this.windowMain.win != null) {
+          this.windowMain.win.on("hide", () => {
+            this.messagingService.send("windowHidden");
+          });
+          this.windowMain.win.on("minimize", () => {
+            this.messagingService.send("windowHidden");
+          });
+        }
+
+        // Main owns the session: the SSH agent, never-lock auto-unlock, biometric unlocks, and the
+        // shared-unlock peer.
+        this.sshAgentService.init();
+
+        // Unlock every account with a never-lock ("auto") key, so the renderer re-seeds unlocked.
+        const accounts = await firstValueFrom(this.serviceContainer.accountService.accounts$);
+        for (const userId of Object.keys(accounts) as UserId[]) {
+          try {
+            await this.serviceContainer.unlockService.unlockWithAutoUnlockKey(userId);
+          } catch (e) {
+            this.logService.error(
+              "[MainServiceContainer] Failed to auto-unlock user on startup",
+              e,
+            );
+          }
+        }
+
+        await this.biometricsService.setUnlockService(this.serviceContainer.unlockService);
+        await this.serviceContainer.sharedUnlockPeerService.start();
+
+        await this.mainDesktopMagnifyService.init();
       },
       (e: any) => {
         this.logService.error("Error while running migrations:", e);

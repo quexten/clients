@@ -15,7 +15,7 @@ import {
   PasswordPreloginData,
   PasswordPreloginService,
 } from "@bitwarden/common/auth/password-prelogin";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { MasterPasswordSalt } from "@bitwarden/common/key-management/master-password/types/master-password.types";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
 import { UserId } from "@bitwarden/common/types/guid";
 import { MasterKey } from "@bitwarden/common/types/key";
@@ -148,9 +148,9 @@ export class PasswordLoginStrategy extends LoginStrategy<PasswordLoginStrategyDa
     email: string,
     preFetchedPreloginData?: PasswordPreloginData,
   ): Promise<MasterKey> {
-    const useSdkForPrelogin = await this.configService.getFeatureFlag(
-      FeatureFlag.PM27060_PasswordPreloginFromSdk,
-    );
+    // Forced off, like in DefaultPasswordPreloginService: both read the flag at different times,
+    // and a mismatch takes a salt the API's prelogin data doesn't have.
+    const useSdkForPrelogin = false;
 
     // if we have prefetched prelogin data, use it
     if (preFetchedPreloginData) {
@@ -161,13 +161,13 @@ export class PasswordLoginStrategy extends LoginStrategy<PasswordLoginStrategyDa
       if (useSdkForPrelogin) {
         return this.legacyCompatKeyService.makeMasterKey(
           masterPassword,
-          preFetchedPreloginData.salt,
+          preFetchedPreloginData.salt as MasterPasswordSalt,
           preFetchedPreloginData.kdfConfig,
         );
       } else {
         return this.legacyCompatKeyService.makeMasterKey(
           masterPassword,
-          email,
+          this.masterPasswordService.emailToSalt(email),
           preFetchedPreloginData.kdfConfig,
         );
       }
@@ -187,13 +187,13 @@ export class PasswordLoginStrategy extends LoginStrategy<PasswordLoginStrategyDa
     if (useSdkForPrelogin) {
       return this.legacyCompatKeyService.makeMasterKey(
         masterPassword,
-        preloginData.salt,
+        preloginData.salt as MasterPasswordSalt,
         preloginData.kdfConfig,
       );
     } else {
       return this.legacyCompatKeyService.makeMasterKey(
         masterPassword,
-        email,
+        this.masterPasswordService.emailToSalt(email),
         preloginData.kdfConfig,
       );
     }

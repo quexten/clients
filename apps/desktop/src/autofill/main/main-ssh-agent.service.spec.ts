@@ -1,17 +1,30 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+import { Notification } from "electron";
+import { mock } from "jest-mock-extended";
+import { BehaviorSubject, of } from "rxjs";
 
-import { ipcMain } from "electron";
-
-import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
+import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
+import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { UserId } from "@bitwarden/common/types/guid";
+import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
+import { CipherType } from "@bitwarden/common/vault/enums";
+import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { sshagent } from "@bitwarden/desktop-napi";
-import { LogService } from "@bitwarden/logging";
+
+import { WindowMain } from "../../main/window.main";
+import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
+import { SshAgentPromptType } from "../models/ssh-agent-setting";
 
 import { MainSshAgentService } from "./main-ssh-agent.service";
+import {
+  MainSshApprovalWindowService,
+  SshApprovalPrompt,
+} from "./main-ssh-approval-window.service";
 
 jest.mock("electron", () => ({
-  ipcMain: {
-    handle: jest.fn(),
-  },
+  Notification: jest.fn(),
 }));
 
 jest.mock("@bitwarden/desktop-napi", () => ({
@@ -22,237 +35,357 @@ jest.mock("@bitwarden/desktop-napi", () => ({
   },
 }));
 
+type IpcHandler = (...args: unknown[]) => unknown;
+
+function makeSshCipher(id: string, name: string, privateKey: string): CipherView {
+  return {
+    id,
+    name,
+    type: CipherType.SshKey,
+    isDeleted: false,
+    isArchived: false,
+    sshKey: { privateKey },
+  } as unknown as CipherView;
+}
+
+/** Flush pending microtasks and one macrotask cycle so async RxJS pipelines settle. */
+const flush = () => new Promise<void>((resolve) => setTimeout(resolve));
+
 describe("MainSshAgentService", () => {
-  let mockLogService: jest.Mocked<LogService>;
-  let mockMessagingService: jest.Mocked<MessagingService>;
+  const userId = "user-1" as UserId;
 
-  let ipcHandlers: Map<string, Function>;
-  let mockAgentState: {
-    isRunning: jest.Mock;
-    replace: jest.Mock;
-    stop: jest.Mock;
-  };
+  let logService: ReturnType<typeof mock<LogService>>;
+  let cipherService: ReturnType<typeof mock<CipherService>>;
+  let authService: ReturnType<typeof mock<AuthService>>;
+  let accountService: ReturnType<typeof mock<AccountService>>;
+  let desktopSettingsService: ReturnType<typeof mock<DesktopSettingsService>>;
+  let i18nService: ReturnType<typeof mock<I18nService>>;
+  let windowMain: ReturnType<typeof mock<WindowMain>>;
+  let approvalWindow: ReturnType<typeof mock<MainSshApprovalWindowService>>;
+  let prompt: { unlock: jest.Mock; approve: jest.Mock };
 
+  let activeAccount$: BehaviorSubject<unknown>;
+  let activeAccountStatus$: BehaviorSubject<AuthenticationStatus>;
+  let sshAgentEnabled$: BehaviorSubject<boolean>;
+  let sshAgentPromptBehavior$: BehaviorSubject<SshAgentPromptType>;
+
+  let agentState: { isRunning: jest.Mock; replace: jest.Mock; stop: jest.Mock };
+  let shownNotification: { on: jest.Mock; show: jest.Mock };
   let capturedSignCb: (err: Error | null, data: sshagent.SignRequestData) => Promise<boolean>;
   let capturedListCb: (err: Error | null) => Promise<boolean>;
 
-  beforeEach(async () => {
-    ipcHandlers = new Map();
+  let service: MainSshAgentService;
 
-    mockLogService = {
-      info: jest.fn(),
-      error: jest.fn(),
-      debug: jest.fn(),
-      warning: jest.fn(),
-    } as any;
+  /** The vault the service reads: list views to pick SSH keys, full views for the ones it decrypts. */
+  function setVault(ciphers: unknown[]): void {
+    const views = ciphers as CipherView[];
+    cipherService.cipherListViews$.mockReturnValue(of(views as never));
+    cipherService.getAllDecryptedForIds.mockImplementation(async (_userId, ids) =>
+      views.filter((cipher) => ids.includes(cipher.id)),
+    );
+  }
 
-    mockMessagingService = {
-      send: jest.fn(),
-    } as any;
+  beforeEach(() => {
+    jest.clearAllMocks();
 
-    mockAgentState = {
+    logService = mock<LogService>();
+    cipherService = mock<CipherService>();
+    authService = mock<AuthService>();
+    accountService = mock<AccountService>();
+    desktopSettingsService = mock<DesktopSettingsService>();
+    i18nService = mock<I18nService>();
+    windowMain = mock<WindowMain>();
+    approvalWindow = mock<MainSshApprovalWindowService>();
+    prompt = {
+      unlock: jest.fn().mockResolvedValue(true),
+      approve: jest.fn().mockResolvedValue(true),
+    };
+    approvalWindow.session.mockImplementation((fn) =>
+      (fn as (p: SshApprovalPrompt) => Promise<unknown>)(prompt),
+    );
+
+    activeAccount$ = new BehaviorSubject<unknown>({ id: userId });
+    activeAccountStatus$ = new BehaviorSubject<AuthenticationStatus>(AuthenticationStatus.Unlocked);
+    sshAgentEnabled$ = new BehaviorSubject<boolean>(true);
+    sshAgentPromptBehavior$ = new BehaviorSubject<SshAgentPromptType>(SshAgentPromptType.Always);
+
+    accountService.activeAccount$ = activeAccount$ as never;
+    authService.activeAccountStatus$ = activeAccountStatus$;
+    authService.authStatusFor$.mockReturnValue(of(AuthenticationStatus.Unlocked));
+    desktopSettingsService.sshAgentEnabled$ = sshAgentEnabled$;
+    desktopSettingsService.sshAgentPromptBehavior$ = sshAgentPromptBehavior$;
+    setVault([]);
+    i18nService.t.mockImplementation((key: string, ...args: string[]) => {
+      if (key === "unknownApplication") {
+        return "Unknown application";
+      }
+      if (key === "sshAgentApprovalNotificationTitle") {
+        return "SSH key request";
+      }
+      if (key === "sshAgentApprovalNotificationBody") {
+        return `${args[0]} requests ${args[1]}`;
+      }
+      if (key === "close") {
+        return "Close";
+      }
+      return key;
+    });
+
+    agentState = {
       isRunning: jest.fn().mockReturnValue(true),
       replace: jest.fn(),
       stop: jest.fn(),
     };
+    shownNotification = { on: jest.fn(), show: jest.fn() };
 
-    (ipcMain.handle as jest.Mock).mockImplementation((channel: string, handler: Function) => {
-      ipcHandlers.set(channel, handler);
-    });
-
+    (Notification as unknown as jest.Mock).mockImplementation(() => shownNotification);
     (sshagent.SshAgentState.serve as jest.Mock).mockImplementation(
-      (sign: Function, list: Function) => {
-        capturedSignCb = sign as any;
-        capturedListCb = list as any;
-        return Promise.resolve(mockAgentState);
+      (sign: IpcHandler, list: IpcHandler) => {
+        capturedSignCb = sign as (
+          err: Error | null,
+          data: sshagent.SignRequestData,
+        ) => Promise<boolean>;
+        capturedListCb = list as (err: Error | null) => Promise<boolean>;
+        return Promise.resolve(agentState);
       },
     );
 
-    new MainSshAgentService(mockLogService, mockMessagingService);
-    await ipcHandlers.get("sshagent.init")!({});
-    await Promise.resolve(); // let agentState settle
+    service = new MainSshAgentService(
+      logService,
+      cipherService,
+      authService,
+      accountService,
+      desktopSettingsService,
+      i18nService,
+      windowMain,
+      approvalWindow,
+    );
   });
 
-  describe("constructor", () => {
-    // Handlers are registered up front rather than on INIT, so a call that arrives before the
-    // agent is started is a no-op instead of an Electron "No handler registered" throw.
-    it.each([
-      "sshagent.init",
-      "sshagent.isloaded",
-      "sshagent.replace",
-      "sshagent.signrequestresponse",
-      "sshagent.stop",
-      "sshagent.listkeysresponse",
-    ])("should register the %s IPC handler", (channel) => {
-      expect(ipcHandlers.has(channel)).toBe(true);
-    });
-  });
+  describe("key provisioning", () => {
+    it("starts the agent and pushes SSH-key ciphers when enabled and unlocked", async () => {
+      setVault([makeSshCipher("c1", "Key 1", "pk-1"), makeSshCipher("c2", "Key 2", "pk-2")]);
 
-  describe("sshagent.isloaded IPC handler", () => {
-    it("should return false before sshagent.init IPC is called", async () => {
-      // Create a fresh service that has not received the INIT IPC call
-      new MainSshAgentService(mockLogService, mockMessagingService);
-      const handler = ipcHandlers.get("sshagent.isloaded")!;
-      expect(await handler({})).toBe(false);
+      service.init();
+      await flush();
+
+      expect(sshagent.SshAgentState.serve).toHaveBeenCalled();
+      expect(agentState.replace).toHaveBeenCalledWith([
+        { name: "Key 1", privateKey: "pk-1", cipherId: "c1" },
+        { name: "Key 2", privateKey: "pk-2", cipherId: "c2" },
+      ]);
     });
 
-    it("should return agentState.isRunning() after sshagent.init IPC resolves", async () => {
-      const handler = ipcHandlers.get("sshagent.isloaded")!;
-      expect(await handler({})).toBe(true);
+    it("stops the agent when the ssh agent is disabled", async () => {
+      service.init();
+      await flush();
+
+      sshAgentEnabled$.next(false);
+      await flush();
+
+      expect(agentState.stop).toHaveBeenCalled();
     });
 
-    it("should return false after sshagent.stop is called", async () => {
-      await ipcHandlers.get("sshagent.stop")!({});
-      const handler = ipcHandlers.get("sshagent.isloaded")!;
-      expect(await handler({})).toBe(false);
-    });
-  });
+    it("excludes non-SSH-key, deleted, and archived ciphers", async () => {
+      const ciphers = [
+        makeSshCipher("c1", "Key 1", "pk-1"),
+        { id: "c2", name: "Login", type: CipherType.Login, isDeleted: false, isArchived: false },
+        { ...makeSshCipher("c3", "Deleted", "pk-3"), isDeleted: true },
+        { ...makeSshCipher("c4", "Archived", "pk-4"), isArchived: true },
+      ] as unknown as CipherView[];
 
-  describe("sshagent.init IPC handler", () => {
-    it("should call sshagent.SshAgentState.serve with sign and list callbacks", () => {
-      expect(sshagent.SshAgentState.serve).toHaveBeenCalledWith(
-        expect.any(Function),
-        expect.any(Function),
-      );
-    });
+      setVault(ciphers);
 
-    it("should log success after serve resolves", async () => {
-      expect(mockLogService.info).toHaveBeenCalledWith("SSH agent started");
-    });
+      service.init();
+      await flush();
 
-    it("should log error if serve rejects", async () => {
-      const error = new Error("napi bind failed");
-      (sshagent.SshAgentState.serve as jest.Mock).mockRejectedValueOnce(error);
-
-      // Re-create service and invoke INIT again with the rejecting mock
-      new MainSshAgentService(mockLogService, mockMessagingService);
-      await ipcHandlers.get("sshagent.init")!({});
-      await Promise.resolve(); // propagates rejection through .then()
-      await Promise.resolve(); // .catch() handler runs
-
-      expect(mockLogService.error).toHaveBeenCalledWith("SSH agent encountered an error: ", error);
+      expect(agentState.replace).toHaveBeenCalledWith([
+        { name: "Key 1", privateKey: "pk-1", cipherId: "c1" },
+      ]);
     });
   });
 
-  describe("requestSign (via sign callback)", () => {
-    const mockSignData = {
-      cipherId: "cipher-abc",
-      signRequest: {
-        publicKey: { keyType: "Ed25519", keypair: "keypair-data" },
-        processName: "ssh",
-        isForwarding: false,
-        namespace: "ssh",
-      },
-    } as unknown as sshagent.SignRequestData;
+  describe("requestSign", () => {
+    const cipher = makeSshCipher("cipher-1", "My Key", "pk-1");
 
-    it("should send sshagent.signrequest with the correct fields", () => {
-      void capturedSignCb(null, mockSignData);
+    function signData(overrides: Partial<sshagent.SignRequest> = {}): sshagent.SignRequestData {
+      return {
+        cipherId: "cipher-1",
+        signRequest: {
+          publicKey: { alg: "ssh-ed25519", blob: [] },
+          processName: "ssh",
+          isForwarding: false,
+          namespace: "ssh",
+          hostFingerprint: "SHA256:abc",
+          ...overrides,
+        },
+      } as unknown as sshagent.SignRequestData;
+    }
 
-      expect(mockMessagingService.send).toHaveBeenCalledWith("sshagent.signrequest", {
-        cipherId: "cipher-abc",
-        requestId: 1,
-        processName: "ssh",
+    beforeEach(async () => {
+      setVault([cipher]);
+
+      // Trigger `serve` so the sign/list callbacks are captured.
+      service.init();
+      await flush();
+    });
+
+    it("returns false when the ssh agent is disabled", async () => {
+      sshAgentEnabled$.next(false);
+
+      expect(await capturedSignCb(null, signData())).toBe(false);
+    });
+
+    it("returns false when the requested cipher is not in the active vault", async () => {
+      setVault([]);
+
+      expect(await capturedSignCb(null, signData())).toBe(false);
+      expect(logService.error).toHaveBeenCalled();
+    });
+
+    it("shows an OS notification for every sign request", async () => {
+      sshAgentPromptBehavior$.next(SshAgentPromptType.Never);
+
+      await capturedSignCb(null, signData());
+
+      expect(Notification).toHaveBeenCalledWith({
+        title: "SSH key request",
+        body: "ssh requests My Key",
+        closeButtonText: "Close",
+      });
+      expect(shownNotification.show).toHaveBeenCalled();
+    });
+
+    it("approves without prompting when the prompt behavior is Never", async () => {
+      sshAgentPromptBehavior$.next(SshAgentPromptType.Never);
+
+      expect(await capturedSignCb(null, signData())).toBe(true);
+      expect(prompt.approve).not.toHaveBeenCalled();
+    });
+
+    it("asks the approval window when Always", async () => {
+      sshAgentPromptBehavior$.next(SshAgentPromptType.Always);
+
+      expect(await capturedSignCb(null, signData())).toBe(true);
+      expect(prompt.approve).toHaveBeenCalledWith({
+        cipherName: "My Key",
+        application: "ssh",
         isAgentForwarding: false,
         namespace: "ssh",
-        hostFingerprint: undefined,
       });
     });
 
-    it("should resolve with true when the renderer accepts", async () => {
-      const signPromise = capturedSignCb(null, mockSignData);
+    it("resolves false when the user denies", async () => {
+      sshAgentPromptBehavior$.next(SshAgentPromptType.Always);
+      prompt.approve.mockResolvedValue(false);
 
-      const responseHandler = ipcHandlers.get("sshagent.signrequestresponse")!;
-      await responseHandler({}, { requestId: 1, accepted: true });
-
-      expect(await signPromise).toBe(true);
+      expect(await capturedSignCb(null, signData())).toBe(false);
     });
 
-    it("should resolve with false when the renderer rejects", async () => {
-      const signPromise = capturedSignCb(null, mockSignData);
+    it("resolves false without decrypting when unlock is not completed", async () => {
+      prompt.unlock.mockResolvedValue(false);
+      cipherService.getAllDecryptedForIds.mockClear();
 
-      const responseHandler = ipcHandlers.get("sshagent.signrequestresponse")!;
-      await responseHandler({}, { requestId: 1, accepted: false });
-
-      expect(await signPromise).toBe(false);
+      expect(await capturedSignCb(null, signData())).toBe(false);
+      expect(cipherService.getAllDecryptedForIds).not.toHaveBeenCalled();
+      expect(prompt.approve).not.toHaveBeenCalled();
     });
-  });
 
-  describe("requestListKeys (via list callback)", () => {
-    it("should send sshagent.listkeysrequest with a requestId", () => {
-      void capturedListCb(null);
+    it("does not open a session when the ssh agent is disabled", async () => {
+      sshAgentEnabled$.next(false);
 
-      expect(mockMessagingService.send).toHaveBeenCalledWith("sshagent.listkeysrequest", {
-        requestId: expect.any(Number),
+      await capturedSignCb(null, signData());
+
+      expect(approvalWindow.session).not.toHaveBeenCalled();
+    });
+
+    describe("RememberUntilLock", () => {
+      beforeEach(() => {
+        sshAgentPromptBehavior$.next(SshAgentPromptType.RememberUntilLock);
+      });
+
+      it("prompts on the first request and then approves the remembered host", async () => {
+        expect(await capturedSignCb(null, signData())).toBe(true);
+        expect(prompt.approve).toHaveBeenCalledTimes(1);
+
+        expect(await capturedSignCb(null, signData())).toBe(true);
+        expect(prompt.approve).toHaveBeenCalledTimes(1);
+      });
+
+      it("does not remember a denied host", async () => {
+        prompt.approve.mockResolvedValue(false);
+        await capturedSignCb(null, signData());
+        await capturedSignCb(null, signData());
+
+        expect(prompt.approve).toHaveBeenCalledTimes(2);
+      });
+
+      it("prompts again for a different host", async () => {
+        await capturedSignCb(null, signData());
+        await capturedSignCb(null, signData({ hostFingerprint: "SHA256:def" }));
+
+        expect(prompt.approve).toHaveBeenCalledTimes(2);
       });
     });
+  });
 
-    it("should resolve with true when the renderer accepts", async () => {
-      const listPromise = capturedListCb(null);
+  describe("requestListKeys", () => {
+    beforeEach(async () => {
+      setVault([makeSshCipher("c1", "Key", "pk")]);
 
-      const responseHandler = ipcHandlers.get("sshagent.listkeysresponse")!;
-      await responseHandler({}, { requestId: 1, accepted: true });
-
-      expect(await listPromise).toBe(true);
+      service.init();
+      await flush();
     });
 
-    it("should resolve with false when the renderer rejects", async () => {
-      const listPromise = capturedListCb(null);
+    it("replaces the agent keys with the decrypted SSH ciphers", async () => {
+      expect(await capturedListCb(null)).toBe(true);
 
-      const responseHandler = ipcHandlers.get("sshagent.listkeysresponse")!;
-      await responseHandler({}, { requestId: 1, accepted: false });
+      expect(agentState.replace).toHaveBeenCalledWith([
+        { name: "Key", privateKey: "pk", cipherId: "c1" },
+      ]);
+    });
 
-      expect(await listPromise).toBe(false);
+    it("returns false when unlock is not completed", async () => {
+      prompt.unlock.mockResolvedValue(false);
+
+      expect(await capturedListCb(null)).toBe(false);
     });
   });
 
-  describe("sshagent.replace IPC handler", () => {
-    const keys = [{ name: "My Key", privateKey: "key-data", cipherId: "cipher-1" }];
+  describe("authorization reset", () => {
+    const cipher = makeSshCipher("cipher-1", "My Key", "pk-1");
 
-    it("should call replace with the provided keys", async () => {
-      const handler = ipcHandlers.get("sshagent.replace")!;
-      await handler({}, keys);
+    function signData(): sshagent.SignRequestData {
+      return {
+        cipherId: "cipher-1",
+        signRequest: {
+          publicKey: { alg: "ssh-ed25519", blob: [] },
+          processName: "ssh",
+          isForwarding: false,
+          namespace: "ssh",
+          hostFingerprint: "SHA256:abc",
+        },
+      } as unknown as sshagent.SignRequestData;
+    }
 
-      expect(mockAgentState.replace).toHaveBeenCalledWith(keys);
+    beforeEach(async () => {
+      setVault([cipher]);
+      sshAgentPromptBehavior$.next(SshAgentPromptType.RememberUntilLock);
+
+      service.init();
+      await flush();
     });
 
-    it("should not call replace when agent is not running", async () => {
-      mockAgentState.isRunning.mockReturnValue(false);
+    it("forgets remembered hosts when the vault locks", async () => {
+      await capturedSignCb(null, signData());
+      expect(prompt.approve).toHaveBeenCalledTimes(1);
 
-      const handler = ipcHandlers.get("sshagent.replace")!;
-      await handler({}, keys);
+      activeAccountStatus$.next(AuthenticationStatus.Locked);
+      activeAccountStatus$.next(AuthenticationStatus.Unlocked);
+      await flush();
 
-      expect(mockAgentState.replace).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("sshagent.stop IPC handler", () => {
-    it("should call stop on the agent state", async () => {
-      const handler = ipcHandlers.get("sshagent.stop")!;
-      await handler({});
-
-      expect(mockAgentState.stop).toHaveBeenCalled();
-    });
-
-    it("should be a no-op when called a second time after the agent is cleared", async () => {
-      const handler = ipcHandlers.get("sshagent.stop")!;
-      await handler({});
-      mockAgentState.stop.mockClear();
-
-      // agentState is now null; second call should not throw or call stop again
-      await expect(handler({})).resolves.not.toThrow();
-      expect(mockAgentState.stop).not.toHaveBeenCalled();
-    });
-
-    it("should allow the server to restart via INIT after a stop", async () => {
-      (sshagent.SshAgentState.serve as jest.Mock).mockClear();
-
-      const stopHandler = ipcHandlers.get("sshagent.stop")!;
-      await stopHandler({});
-
-      await ipcHandlers.get("sshagent.init")!({});
-      await Promise.resolve();
-
-      expect(sshagent.SshAgentState.serve).toHaveBeenCalledTimes(1);
+      await capturedSignCb(null, signData());
+      expect(prompt.approve).toHaveBeenCalledTimes(2);
     });
   });
 });

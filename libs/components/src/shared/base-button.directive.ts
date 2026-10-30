@@ -4,6 +4,9 @@ import { debounce, interval } from "rxjs";
 
 import { ButtonType } from "./button-like.abstraction";
 
+/** Delay before a loading button shows its spinner, so quick actions don't flash one. */
+export const BUTTON_SPINNER_DELAY_MS = 75;
+
 export const focusRing = [
   "focus-visible:tw-ring-2",
   "focus-visible:tw-ring-offset-1",
@@ -323,6 +326,12 @@ export class BaseButtonDirective {
 
   readonly loading = model<boolean>(false);
 
+  /**
+   * Shows the spinner as soon as `loading` starts, skipping the debounce. For actions that block
+   * the main thread, e.g. a key derivation, where waiting for the debounce delays the action.
+   */
+  readonly instantSpinner = input(false, { transform: booleanAttribute });
+
   readonly disabled = model<boolean>(false);
 
   readonly disabledAttr = computed(() => {
@@ -345,7 +354,11 @@ export class BaseButtonDirective {
    * recommended. TODO -- find better way to use debounce with signals (CL-596)
    */
   readonly showLoadingStyle = toSignal(
-    toObservable(this.loading).pipe(debounce((isLoading) => interval(isLoading ? 75 : 0))),
+    toObservable(this.loading).pipe(
+      debounce((isLoading) =>
+        interval(isLoading && !this.instantSpinner() ? BUTTON_SPINNER_DELAY_MS : 0),
+      ),
+    ),
   );
 
   /**

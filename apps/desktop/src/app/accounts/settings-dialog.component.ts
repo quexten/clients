@@ -74,6 +74,7 @@ import {
 } from "../../autofill/services/desktop-autofill.service";
 import { DesktopAutotypeMvpService } from "../../autofill/services/desktop-autotype-mvp.service";
 import { DesktopAutotypeService } from "../../autofill/services/desktop-autotype.service";
+import { DesktopMagnifyService } from "../../autofill/services/desktop-magnify.service";
 import { DesktopPremiumUpgradePromptService } from "../../billing/services/desktop-premium-upgrade-prompt.service";
 import { DesktopBiometricsService } from "../../key-management/biometrics/desktop.biometrics.service";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
@@ -133,6 +134,7 @@ export class SettingsDialogComponent implements OnInit {
   private readonly desktopSettingsService = inject(DesktopSettingsService);
   private readonly desktopAutotypeMvpService = inject(DesktopAutotypeMvpService);
   private readonly desktopAutotypeService = inject(DesktopAutotypeService);
+  private readonly desktopMagnifyService = inject(DesktopMagnifyService);
   private readonly biometricStateService = inject(BiometricStateService);
   private readonly biometricsService = inject(DesktopBiometricsService);
   private readonly desktopAutofillSettingsService = inject(DesktopAutofillSettingsService);
@@ -202,6 +204,7 @@ export class SettingsDialogComponent implements OnInit {
     runInBackground: false,
     openAtLogin: false,
     enableHardwareAcceleration: true,
+    enableMagnify: false,
     enableSshAgent: false,
     sshAgentPromptBehavior: SshAgentPromptType.Always,
     allowScreenshots: false,
@@ -315,6 +318,7 @@ export class SettingsDialogComponent implements OnInit {
       enableHardwareAcceleration: await firstValueFrom(
         this.desktopSettingsService.hardwareAcceleration$,
       ),
+      enableMagnify: await firstValueFrom(this.desktopMagnifyService.magnifyEnabledUserSetting$),
       enableSshAgent: await firstValueFrom(this.desktopSettingsService.sshAgentEnabled$),
       sshAgentPromptBehavior: await firstValueFrom(
         this.desktopSettingsService.sshAgentPromptBehavior$,
@@ -462,6 +466,9 @@ export class SettingsDialogComponent implements OnInit {
     } catch (error) {
       this.logService.error("Error updating unlock with biometrics: ", error);
       this.form.controls.biometric.setValue(false, { emitEvent: false });
+      // Keep the stored state in line with the form, e.g. when storing the key failed.
+      const userId = await firstValueFrom(this.accountService.activeAccount$.pipe(getUserId));
+      await this.biometricStateService.setBiometricUnlockEnabled(false, userId);
       this.validationService.showError(error);
     } finally {
       this.messagingService.send("redrawMenu");
@@ -500,6 +507,10 @@ export class SettingsDialogComponent implements OnInit {
     }
 
     await this.biometricStateService.setBiometricUnlockEnabled(true, activeUserId);
+    // Stored first, so biometric unlock works even if the persistent enrollment below fails.
+    const userKey = await firstValueFrom(this.keyService.userKey$(activeUserId));
+    await this.biometricsService.setBiometricProtectedUnlockKeyForUser(activeUserId, userKey);
+
     if (this.isWindows || this.isLinux) {
       // Recommended settings for Windows Hello and Linux system authentication
       this.form.controls.autoPromptBiometrics.setValue(false);
@@ -508,13 +519,27 @@ export class SettingsDialogComponent implements OnInit {
       // If the user doesn't have a MP or PIN then they have to use biometrics on app restart.
       if (!this.userHasMasterPassword() && !this.userHasPinSet()) {
         // Allow biometric unlock on app restart so the user doesn't get into a bad state.
+        // A failed enrollment (e.g. cancelled Windows Hello prompt) is not fatal: the key stored
+        // above still allows biometric unlock.
         await this.enrollPersistentBiometricIfNeeded(activeUserId);
       } else {
-        this.form.controls.requireMasterPasswordOnAppRestart.setValue(true);
+        // Awaited instead of emitted: the change handler deletes the biometric key before storing
+        // it again, and running it in parallel races the validation below.
+        this.form.controls.requireMasterPasswordOnAppRestart.setValue(true, { emitEvent: false });
+        await this.updateRequireMasterPasswordOnAppRestart(true, activeUserId);
+      }
+    } else if (this.isMac) {
+      // Touch ID always persists the key. Enrolling records the enrolled key id, so the
+      // re-enrollment migration detects a key rotation. A failure is not fatal: the key stored
+      // above still allows biometric unlock.
+      try {
+        await this.biometricsService.enrollPersistent(activeUserId, userKey);
+      } catch (error) {
+        this.logService.error("Error enrolling persistent biometric unlock: ", error);
+        this.validationService.showError(error);
       }
     }
-    const userKey = await firstValueFrom(this.keyService.userKey$(activeUserId));
-    await this.biometricsService.setBiometricProtectedUnlockKeyForUser(activeUserId, userKey);
+
     await this.autoUnlockService.refreshAutoUnlockKey(activeUserId);
 
     // Validate the key is stored in case biometrics fail.
@@ -552,12 +577,17 @@ export class SettingsDialogComponent implements OnInit {
    * Persists the user key so biometrics alone can unlock the vault after an app restart.
    */
   private async enrollPersistentBiometricIfNeeded(userId: UserId): Promise<void> {
-    if (!(await this.biometricsService.hasPersistentKey(userId))) {
-      const userKey = await firstValueFrom(this.keyService.userKey$(userId));
-      await this.biometricsService.enrollPersistent(userId, userKey);
-      this.form.controls.requireMasterPasswordOnAppRestart.setValue(false, {
-        emitEvent: false,
-      });
+    try {
+      if (!(await this.biometricsService.hasPersistentKey(userId))) {
+        const userKey = await firstValueFrom(this.keyService.userKey$(userId));
+        await this.biometricsService.enrollPersistent(userId, userKey);
+        this.form.controls.requireMasterPasswordOnAppRestart.setValue(false, {
+          emitEvent: false,
+        });
+      }
+    } catch (error) {
+      this.logService.error("Error enrolling persistent biometric unlock: ", error);
+      this.validationService.showError(error);
     }
   }
 
@@ -692,6 +722,10 @@ export class SettingsDialogComponent implements OnInit {
     await this.desktopSettingsService.setHardwareAcceleration(
       this.form.value.enableHardwareAcceleration,
     );
+  }
+
+  protected async saveEnableMagnify() {
+    await this.desktopMagnifyService.setMagnifyEnabledState(this.form.value.enableMagnify);
   }
 
   protected async saveSshAgent() {

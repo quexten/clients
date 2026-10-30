@@ -127,6 +127,7 @@ import {
   ObservableStorageService,
 } from "@bitwarden/common/platform/abstractions/storage.service";
 import { ActionsService } from "@bitwarden/common/platform/actions";
+import { IpcService } from "@bitwarden/common/platform/ipc";
 import { Message, MessageListener, MessageSender } from "@bitwarden/common/platform/messaging";
 // eslint-disable-next-line no-restricted-imports -- Used for dependency injection
 import { SubjectMessageSender } from "@bitwarden/common/platform/messaging/internal";
@@ -146,7 +147,10 @@ import { UnsupportedSystemNotificationsService } from "@bitwarden/common/platfor
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
 import { InternalSendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
 import { CipherArchiveService } from "@bitwarden/common/vault/abstractions/cipher-archive.service";
+import { CipherEncryptionService } from "@bitwarden/common/vault/abstractions/cipher-encryption.service";
+import { CipherSdkService } from "@bitwarden/common/vault/abstractions/cipher-sdk.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
+import { CipherFileUploadService } from "@bitwarden/common/vault/abstractions/file-upload/cipher-file-upload.service";
 import { FolderApiServiceAbstraction } from "@bitwarden/common/vault/abstractions/folder/folder-api.service.abstraction";
 import { InternalFolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { TotpService as TotpServiceAbstraction } from "@bitwarden/common/vault/abstractions/totp.service";
@@ -231,6 +235,7 @@ import { BrowserApi } from "../../platform/browser/browser-api";
 import { runInsideAngular } from "../../platform/browser/run-inside-angular.operator";
 /* eslint-disable no-restricted-imports */
 import { ZonedMessageListenerService } from "../../platform/browser/zoned-message-listener.service";
+import { IpcForegroundService } from "../../platform/ipc/ipc-foreground.service";
 import { ChromeMessageSender } from "../../platform/messaging/chrome-message.sender";
 /* eslint-enable no-restricted-imports */
 import { ForegroundServerNotificationsService } from "../../platform/notifications/foreground-server-notifications.service";
@@ -258,6 +263,7 @@ import {
 import { fromChromeRuntimeMessaging } from "../../platform/utils/from-chrome-runtime-messaging";
 import { BrowserAutofillNudgeService } from "../../vault/popup/services/browser-autofill-nudge.service";
 import { Fido2UserVerificationService } from "../../vault/services/fido2-user-verification.service";
+import { ForegroundCipherService } from "../../vault/services/foreground-cipher.service";
 import { ExtensionAnonLayoutWrapperDataService } from "../components/extension-anon-layout-wrapper/extension-anon-layout-wrapper-data.service";
 
 import { DebounceNavigationService } from "./debounce-navigation.service";
@@ -279,6 +285,28 @@ const DISK_BACKUP_LOCAL_STORAGE = new SafeInjectionToken<
  */
 const safeProviders: SafeProvider[] = [
   safeProvider(InitService),
+  safeProvider({
+    provide: CipherService,
+    useClass: ForegroundCipherService,
+    deps: [
+      MessageListener,
+      KeyService,
+      LegacyCompatKeyService,
+      DomainSettingsService,
+      ApiService,
+      I18nServiceAbstraction,
+      AutofillSettingsServiceAbstraction,
+      EncryptService,
+      CipherFileUploadService,
+      ConfigService,
+      StateProvider,
+      AccountServiceAbstraction,
+      LogService,
+      CipherEncryptionService,
+      MessagingServiceAbstraction,
+      CipherSdkService,
+    ],
+  }),
   safeProvider(DebounceNavigationService),
   safeProvider(DialogService),
   safeProvider(PopupCloseWarningService),
@@ -305,6 +333,11 @@ const safeProviders: SafeProvider[] = [
       return new ConsoleLogService(isDev, null, recorder);
     },
     deps: [FlightRecorderLogRecorderService],
+  }),
+  safeProvider({
+    provide: IpcService,
+    useClass: IpcForegroundService,
+    deps: [PlatformUtilsService, LogService],
   }),
   safeProvider({
     provide: EnvironmentService,
@@ -339,6 +372,7 @@ const safeProviders: SafeProvider[] = [
       StateProvider,
       AccountCryptographicStateService,
       BiometricsService,
+      SdkService,
     ],
   }),
   safeProvider({
@@ -737,6 +771,8 @@ const safeProviders: SafeProvider[] = [
       BiometricsService,
       BiometricStateService,
       V2UpgradeTokenStateService,
+      KeyService,
+      SdkService,
       AutoUnlockService,
       MessageSender,
       MessageListener,

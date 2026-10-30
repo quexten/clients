@@ -1,0 +1,35 @@
+<div class="approve-request">
+  <h1 class="title">{{ strings().title }}</h1>
+
+  @if (request().isAgentForwarding) {
+    <div class="warning" id="approveRequest_callout_forwarding" role="alert">
+      <strong>{{ strings().forwardingWarningTitle }}</strong>
+      <span>{{ strings().forwardingWarningText }}</span>
+    </div>
+  }
+
+  <p class="message">
+    <b>{{ request().application }}</b> {{ strings().messageInfix }}
+    <b>{{ request().cipherName }}</b> {{ strings().messageSuffix }} {{ strings().action }}
+  </p>
+
+  <div class="actions">
+    <button
+      type="button"
+      id="approveRequest_button_deny"
+      [disabled]="busy()"
+      (click)="respond(false)"
+    >
+      {{ strings().deny }}
+    </button>
+    <button
+      type="button"
+      class="primary"
+      id="approveRequest_button_authorize"
+      [disabled]="busy()"
+      (click)="respond(true)"
+    >
+      {{ strings().authorize }}
+    </button>
+  </div>
+</div>
