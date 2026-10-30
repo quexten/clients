@@ -6,6 +6,10 @@ const path = require("path");
 const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
 const builder = require("electron-builder");
 const fse = require("fs-extra");
+
+/** Set to "true" to package for macOS without the Autofill extension, e.g. locally. */
+const SKIP_AUTOFILL_EXTENSION_ENV = "BITWARDEN_SKIP_AUTOFILL_EXTENSION";
+
 exports.default = run;
 
 const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS == "true";
@@ -244,12 +248,20 @@ async function addElectronFuses(context) {
 }
 
 function copyMacOsAutofillExtension(context) {
+  // Building the extension needs Bitwarden's signing profiles, so a local package without them
+  // can opt out. Unsigned, e.g.:
+  // BITWARDEN_SKIP_AUTOFILL_EXTENSION=true APPLE_NOTARIZE=false CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack:dir
+  if (process.env[SKIP_AUTOFILL_EXTENSION_ENV] === "true") {
+    console.log(`[macOS] Skipping the Autofill extension (${SKIP_AUTOFILL_EXTENSION_ENV})`);
+    return;
+  }
+
   const extensionPath = path.join(__dirname, "../macos/dist/autofill-extension.appex");
   // Every macOS build ships the extension, so a missing one is a broken build rather than a
   // configuration that leaves it out.
   if (!fse.existsSync(extensionPath)) {
     throw new Error(
-      `Autofill extension not found at ${extensionPath}; macOS builds must include it. Build it first with one of the "build:macos-extension:*" npm scripts.`,
+      `Autofill extension not found at ${extensionPath}; macOS builds must include it. Build it first with one of the "build:macos-extension:*" npm scripts, or set ${SKIP_AUTOFILL_EXTENSION_ENV}=true for a local package without it.`,
     );
   }
   copyMacOsPlugin(context, "Autofill extension", extensionPath);
