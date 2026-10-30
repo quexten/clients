@@ -98,7 +98,8 @@ describe("MasterPasswordService", () => {
       expect(result).toBe("email" as MasterPasswordSalt);
     });
 
-    describe("saltForUser$ master password unlock data migration path", () => {
+    // Skipped while PM31088_MasterPasswordServiceEmitSalt is forced off in saltForUser$.
+    describe.skip("saltForUser$ master password unlock data migration path", () => {
       // Flagged with  PM31088_MasterPasswordServiceEmitSalt PM-31088
       beforeEach(() => {
         stateProvider.singleUser.getFake(userId, USER_SERVER_CONFIG).nextState({

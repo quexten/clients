@@ -15,7 +15,6 @@ import {
   PasswordPreloginData,
   PasswordPreloginService,
 } from "@bitwarden/common/auth/password-prelogin";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { MasterPasswordSalt } from "@bitwarden/common/key-management/master-password/types/master-password.types";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
 import { UserId } from "@bitwarden/common/types/guid";
@@ -149,9 +148,9 @@ export class PasswordLoginStrategy extends LoginStrategy<PasswordLoginStrategyDa
     email: string,
     preFetchedPreloginData?: PasswordPreloginData,
   ): Promise<MasterKey> {
-    const useSdkForPrelogin = await this.configService.getFeatureFlag(
-      FeatureFlag.PM27060_PasswordPreloginFromSdk,
-    );
+    // Forced off, like in DefaultPasswordPreloginService: both read the flag at different times,
+    // and a mismatch takes a salt the API's prelogin data doesn't have.
+    const useSdkForPrelogin = false;
 
     // if we have prefetched prelogin data, use it
     if (preFetchedPreloginData) {

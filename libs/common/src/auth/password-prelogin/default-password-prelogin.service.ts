@@ -5,7 +5,6 @@ import { Observable, catchError, firstValueFrom, from, shareReplay } from "rxjs"
 import { fromSdkKdfConfig } from "@bitwarden/legacy-crypto";
 import { PasswordPreloginResponse as SdkPasswordPreloginResponse } from "@bitwarden/sdk-internal";
 
-import { FeatureFlag } from "../../enums/feature-flag.enum";
 import { ConfigService } from "../../platform/abstractions/config/config.service";
 import { SdkService } from "../../platform/abstractions/sdk/sdk.service";
 
@@ -53,9 +52,9 @@ export class DefaultPasswordPreloginService implements PasswordPreloginService {
 
   private async fetchPreloginData(email: string): Promise<PasswordPreloginData> {
     // TODO: PM-40137 - Remove this flag
-    const useSdk = await this.configService.getFeatureFlag(
-      FeatureFlag.PM27060_PasswordPreloginFromSdk,
-    );
+    // Forced off, like in PasswordLoginStrategy: both read the flag at different times, and a
+    // mismatch takes a salt the API's prelogin data doesn't have.
+    const useSdk = false;
 
     return useSdk ? this.fetchPreloginDataFromSdk(email) : this.fetchPreloginDataFromApi(email);
   }
