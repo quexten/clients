@@ -82,6 +82,7 @@ import { IpcMainService } from "./platform/services/ipc.main.service";
 import { ElectronMainMessagingService } from "./services/electron-main-messaging.service";
 import { MainSdkLoadService } from "./services/main-sdk-load-service";
 import { MainServiceContainer } from "./services/main-service-container";
+import { MainVaultIpcListener } from "./vault/main/main-vault-ipc.listener";
 
 export class Main {
   logService: ElectronLogMainService;
@@ -373,6 +374,8 @@ export class Main {
       this.serviceContainer.stateProvider,
       this.logService,
     ).init();
+
+    new MainVaultIpcListener(this.serviceContainer.cipherService).init();
 
     this.desktopAutofillSettingsService = new DesktopAutofillSettingsService(stateProvider);
 
