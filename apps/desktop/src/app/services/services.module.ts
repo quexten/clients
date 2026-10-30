@@ -458,6 +458,7 @@ const safeProviders: SafeProvider[] = [
       StateProvider,
       AccountCryptographicStateService,
       BiometricsService,
+      SdkService,
       MessageListener,
     ],
   }),

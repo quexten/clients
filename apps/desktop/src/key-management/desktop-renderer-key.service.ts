@@ -3,6 +3,7 @@ import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, Observable 
 import { AccountCryptographicStateService } from "@bitwarden/common/key-management/account-cryptography/account-cryptographic-state.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { SdkService } from "@bitwarden/common/platform/abstractions/sdk/sdk.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { CommandDefinition, MessageListener } from "@bitwarden/common/platform/messaging";
 import { StateProvider } from "@bitwarden/common/platform/state";
@@ -40,6 +41,7 @@ export class DesktopRendererKeyService extends DefaultKeyService {
     stateProvider: StateProvider,
     accountCryptographyStateService: AccountCryptographicStateService,
     biometricsService: BiometricsService,
+    sdkService: SdkService,
     private readonly messageListener: MessageListener,
   ) {
     super(
@@ -51,6 +53,7 @@ export class DesktopRendererKeyService extends DefaultKeyService {
       stateProvider,
       accountCryptographyStateService,
       biometricsService,
+      sdkService,
     );
 
     this.messageListener

@@ -185,6 +185,32 @@ export class MainServiceContainer {
 
     this.appIdService = new AppIdService(this.storageService, this.logService);
 
+    const customUserAgent =
+      "Bitwarden/" +
+      this.platformUtilsService.getApplicationVersionSync() +
+      " (" +
+      this.platformUtilsService.getDeviceString().toUpperCase() +
+      ")";
+    this.managedSettingsService = new DefaultManagedSettingsService(SdkLoadService.Ready);
+    this.sdkClientFactory = new DefaultSdkClientFactory();
+    this.sdkService = new DefaultSdkService(
+      this.sdkClientFactory,
+      this.environmentService,
+      this.platformUtilsService,
+      this.accountService,
+      () => this.kdfConfigService,
+      () => this.keyService,
+      () => this.accountCryptographicStateService,
+      () => this.apiService,
+      this.stateProvider,
+      () => this.configService,
+      this.v2UpgradeTokenStateService,
+      this.managedSettingsService,
+      this.appIdService,
+      this.logService,
+      customUserAgent,
+    );
+
     this.keyService = new DefaultKeyService(
       this.cryptoFunctionService,
       this.encryptService,
@@ -194,6 +220,7 @@ export class MainServiceContainer {
       this.stateProvider,
       this.accountCryptographicStateService,
       this.biometricsService,
+      this.sdkService,
     );
 
     this.autoUnlockService = new DefaultAutoUnlockService(
@@ -220,9 +247,6 @@ export class MainServiceContainer {
     this.organizationService = new DefaultOrganizationService(this.stateProvider);
     this.newPolicyService = new DefaultNewPolicyService(this.stateProvider);
 
-    this.managedSettingsService = new DefaultManagedSettingsService(SdkLoadService.Ready);
-    this.sdkClientFactory = new DefaultSdkClientFactory();
-
     this.policyService = new DefaultPolicyService(
       this.stateProvider,
       this.organizationService,
@@ -245,13 +269,6 @@ export class MainServiceContainer {
       sessionTimeoutTypeService,
     );
 
-    const customUserAgent =
-      "Bitwarden/" +
-      this.platformUtilsService.getApplicationVersionSync() +
-      " (" +
-      this.platformUtilsService.getDeviceString().toUpperCase() +
-      ")";
-
     this.apiService = new NodeApiService(
       this.tokenService,
       this.platformUtilsService,
@@ -273,23 +290,6 @@ export class MainServiceContainer {
       this.apiService,
       this.stateService,
       this.tokenService,
-    );
-    this.sdkService = new DefaultSdkService(
-      this.sdkClientFactory,
-      this.environmentService,
-      this.platformUtilsService,
-      this.accountService,
-      () => this.kdfConfigService,
-      () => this.keyService,
-      () => this.accountCryptographicStateService,
-      () => this.apiService,
-      this.stateProvider,
-      () => this.configService,
-      this.v2UpgradeTokenStateService,
-      this.managedSettingsService,
-      this.appIdService,
-      this.logService,
-      customUserAgent,
     );
     this.pinService = new PinService(this.sdkService);
 
